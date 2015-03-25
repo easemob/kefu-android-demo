@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4"
+    tools:context=".FirstActivity" >
+
+    <RelativeLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView 
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="#C4C4C4"
+            />
+    </RelativeLayout>
+    
+    
+    <RelativeLayout 
+        android:layout_height="52dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        >
+        <TextView 
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#c4c4c4"
+            android:layout_alignParentTop="true"/>
+    <RadioGroup 
+        android:id="@+id/main_btn_group"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_height="52dp"
+        android:background="#ddF2F1F1"
+        android:layout_width="match_parent">
+        <!-- <TextView 
+            android:layout_height="1dip"
+            android:layout_width="match_parent"
+            android:background="#C3C3C3"/> -->        
+        <LinearLayout 
+            android:id="@+id/ll_shop"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:onClick="onTabClick"
+            >
+	        <ImageButton 
+	            android:id="@+id/imageButton_shop"
+	            android:layout_marginTop="6dp"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_width="wrap_content"
+	            android:onClick="onTabClick"
+	            android:layout_gravity="center_horizontal"
+	            android:background="@drawable/image_shop_unclick"
+	            />
+            <RadioButton 
+	            android:id="@+id/main_btn_home_page"
+	            android:layout_height="wrap_content"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_weight="1"
+	            android:button="@null"
+	            android:onClick="onTabClick"
+	            android:textColor="#ED5485"
+	            android:textSize="12sp"
+	            android:text="@string/shopping"/>
+        </LinearLayout>
+        
+        <LinearLayout 
+            android:id="@+id/ll_setting"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:onClick="onTabClick"
+            >
+	        <ImageButton 
+	            android:id="@+id/imageButton_setting"
+	            android:layout_marginTop="6dp"
+	            android:gravity="center"
+	            android:layout_height="wrap_content"
+	            android:layout_width="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:onClick="onTabClick"
+	            android:background="@drawable/image_setting_unclick"
+	            />
+            <RadioButton 
+	            android:id="@+id/main_btn_setting_page"
+	            android:layout_height="wrap_content"
+	            android:layout_width="match_parent"
+	            android:gravity="center"
+	            android:layout_weight="1"
+	            android:button="@null"
+	            android:onClick="onTabClick"
+	            android:textColor="#929292"
+	            android:textSize="12sp"
+	            android:text="@string/setting"/>
+        </LinearLayout>
+    </RadioGroup>
+    </RelativeLayout>
+
+</RelativeLayout>
