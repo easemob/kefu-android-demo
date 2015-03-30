@@ -512,12 +512,16 @@ public class MessageAdapter extends BaseAdapter{
 			e.printStackTrace();
 		}
 		if(stname!=null){
+			holder.title.setVisibility(View.VISIBLE);
+			holder.name.setVisibility(View.VISIBLE);
+			holder.price.setVisibility(View.VISIBLE);
+			
 			holder.title.setText("我正在看：");
 			holder.name.setText(stname);
 			holder.price.setText(stprice);
-			stname=null;
-			stprice=null;
 		}
+		stname=null;
+		stprice=null;
 		holder.iv.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {

@@ -28,13 +28,13 @@
 	<ScrollView 
 	    android:layout_below="@id/rl_shop_detail_title"
 	    android:layout_height="wrap_content"
-	    android:layout_width="wrap_content">
+	    android:layout_width="match_parent">
         <ImageView
             android:id="@+id/iv_buy"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:src="@drawable/shop_image_details"/>
+            />
     </ScrollView>
     <RelativeLayout 
         android:id="@+id/rl_tochat"

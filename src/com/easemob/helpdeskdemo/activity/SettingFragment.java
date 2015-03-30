@@ -1,9 +1,7 @@
 package com.easemob.helpdeskdemo.activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -17,16 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.webkit.WebView.FindListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.chat.EMChatConfig;
 import com.easemob.helpdeskdemo.R;
 
 public class SettingFragment extends Fragment {
@@ -35,6 +31,7 @@ public class SettingFragment extends Fragment {
 	private TextView tv1, tv2;
 	SharedPreferences sharedPreFerencesAppkey, sharedPreFerencesCustomer;
 	private TextView editTextCustomer,editTextAppKey;
+	private String stForAppkey;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,7 +104,7 @@ public class SettingFragment extends Fragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (resultCode) {
 		case 1:
-			String stForAppkey = data.getExtras().getString("forappkey");
+			stForAppkey = data.getExtras().getString("forappkey");
 			if (stForAppkey.equals(tv1.getText().toString())) {
 				return;
 			} else {
@@ -118,11 +115,24 @@ public class SettingFragment extends Fragment {
 		case 2:
 			String stForZhanghao = data.getExtras().getString("forzhanghao");
 			tv2.setText(stForZhanghao);
+			//保存账号到share中
+			String stCustomer = editTextCustomer
+					.getText().toString();
+			SharedPreferences sharedPreFerences = getActivity()
+					.getSharedPreferences(
+							"customernumber",
+							Context.MODE_PRIVATE);
+			Editor editor = sharedPreFerences
+					.edit();
+			editor.putString("customerkey",
+					stCustomer);
+			editor.commit();
 			break;
 		}
 	}
 
 	private void showCustomMessage() {
+		Toast.makeText(getActivity(), stForAppkey, 0).show();
 		final Dialog lDialog = new Dialog(getActivity(), R.style.MyAlertDialog);
 		lDialog.setContentView(R.layout.r_okcanceldialogview);
 		((Button) lDialog.findViewById(R.id.ok))
@@ -130,21 +140,6 @@ public class SettingFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						// write your code to do things after users clicks
-						// CANCEL
-						String stCustomer = editTextCustomer
-								.getText().toString();
-						SharedPreferences sharedPreFerences = getActivity()
-								.getSharedPreferences(
-										"customernumber",
-										Context.MODE_PRIVATE);
-						Editor editor = sharedPreFerences
-								.edit();
-						editor.putString("customerkey",
-								stCustomer);
-						editor.commit();
-
-						String stAppKey = editTextAppKey
-								.getText().toString();
 						SharedPreferences sharedPreFerencesAppKey = getActivity()
 								.getSharedPreferences(
 										"customerappkey",
@@ -152,16 +147,15 @@ public class SettingFragment extends Fragment {
 						Editor edit = sharedPreFerencesAppKey
 								.edit();
 						edit.putString("customerappkey",
-								stAppKey);
+								stForAppkey);
 						edit.commit();
-
 						SharedPreferences share = getActivity()
 								.getSharedPreferences("shared",
 										Context.MODE_PRIVATE);
 						Editor edi = share.edit();// 获取编辑器
 						edi.clear();
 						edi.commit();
-
+						EMChatConfig.getInstance().setAppKey(stForAppkey);
 						// 退出登录
 						HXSDKHelper.getInstance().logout(
 								new EMCallBack() {
@@ -181,12 +175,9 @@ public class SettingFragment extends Fragment {
 											String message) {
 									}
 								});
-
 						// kill掉这个进程
 						Process.killProcess(android.os.Process
 								.myPid());
-						
-						
 						lDialog.dismiss();
 					}
 				});

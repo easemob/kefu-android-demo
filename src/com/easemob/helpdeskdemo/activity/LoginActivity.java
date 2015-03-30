@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMGroupManager;
@@ -60,6 +61,7 @@ public class LoginActivity extends BaseActivity {
 	SharedPreferences sharedPreferences;
 	private String image,price;
 
+	private ProgressDialog progressDialog = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,16 +83,19 @@ public class LoginActivity extends BaseActivity {
 			editor.putString("pwd", currentPassword);
 			editor.commit();
 
-			final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-			pd.setCanceledOnTouchOutside(false);
-			pd.setOnCancelListener(new OnCancelListener() {
+			progressDialog = new ProgressDialog(LoginActivity.this);
+			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.setOnCancelListener(new OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					progressShow = false;
 				}
 			});
-			pd.setMessage(getResources().getString(R.string.system_is_regist));
-			pd.show();
+			progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
+//			if(pd.isShowing()){
+//			}else{
+			progressDialog.show();
+//			}
 			CreateAccountTask task = new CreateAccountTask();
 			task.execute(currentUsername, currentPassword);
 		} else {
@@ -102,10 +107,68 @@ public class LoginActivity extends BaseActivity {
 			// startActivity(new Intent(LoginActivity.this,
 			// ChatActivity.class));
 			// finish();
+			
+			if(EMChat.getInstance().isLoggedIn()){
+//				EMChatManager.getInstance().logout(null);
+				final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
+				pd.setCanceledOnTouchOutside(false);
+				pd.setOnCancelListener(new OnCancelListener() {
 
-			Intent intent = new Intent(LoginActivity.this,
-					com.easemob.helpdeskdemo.activity.AlertDialog.class);
-			startActivityForResult(intent, REQUEST_CODE_SETNICK);
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						progressShow = false;
+					}
+				});
+				pd.setMessage(getResources().getString(
+						R.string.is_contact_customer));
+				pd.show();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							EMChatManager.getInstance()
+									.loadAllConversations();
+						} catch (Exception e) {
+							e.printStackTrace();
+							// 取好友或者群聊失败，不让进入主页面，也可以不管这个exception继续进到主页面
+							runOnUiThread(new Runnable() {
+								public void run() {
+									pd.dismiss();
+									DemoApplication.getInstance()
+											.logout(null);
+									Toast.makeText(
+											getApplicationContext(),
+											R.string.is_contact_customer_failure,
+											1).show();
+								}
+							});
+							return;
+						}
+						
+						LoginActivity.this.runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								if(pd!=null&&pd.isShowing()){
+									pd.dismiss();
+								}
+								startActivity(new Intent(LoginActivity.this,
+										ChatActivity.class).putExtra("userId",
+										"customers").putExtra("image", image).putExtra("price", price));
+								finish();
+							}
+						});
+						
+					}
+				}).start();
+				
+			}else{
+				Intent intent = new Intent(LoginActivity.this,
+						com.easemob.helpdeskdemo.activity.AlertDialog.class);
+				startActivityForResult(intent, REQUEST_CODE_SETNICK);
+			}
+			
 		}
 	}
 
@@ -125,6 +188,13 @@ public class LoginActivity extends BaseActivity {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
+			if(progressDialog!=null&&progressDialog.isShowing())
+			{
+				progressDialog.dismiss();
+				progressDialog = null;
+			}
+			
+			
 			Intent intent = new Intent(LoginActivity.this,
 					com.easemob.helpdeskdemo.activity.AlertDialog.class);
 			startActivityForResult(intent, REQUEST_CODE_SETNICK);
@@ -153,9 +223,8 @@ public class LoginActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_SETNICK) {
-				DemoApplication.currentUserNick = data
-						.getStringExtra("edittext");
-
+//				DemoApplication.currentUserNick = data
+//						.getStringExtra("edittext");
 				progressShow = true;
 				final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
 				pd.setCanceledOnTouchOutside(false);
@@ -186,18 +255,6 @@ public class LoginActivity extends BaseActivity {
 								try {
 									EMChatManager.getInstance()
 											.loadAllConversations();
-
-									List<String> usernames = EMContactManager
-											.getInstance()
-											.getContactUserNames();
-									EMLog.d("roster", "contacts size: "
-											+ usernames.size());
-									Map<String, User> userlist = new HashMap<String, User>();
-									for (String username : usernames) {
-										User user = new User();
-										user.setUsername(username);
-										userlist.put(username, user);
-									}
 								} catch (Exception e) {
 									e.printStackTrace();
 									// 取好友或者群聊失败，不让进入主页面，也可以不管这个exception继续进到主页面
@@ -213,15 +270,6 @@ public class LoginActivity extends BaseActivity {
 										}
 									});
 									return;
-								}
-								// 更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
-								boolean updatenick = EMChatManager
-										.getInstance().updateCurrentUserNick(
-												DemoApplication.currentUserNick
-														.trim());
-								if (!updatenick) {
-									Log.e("LoginActivity",
-											"update current user nick fail");
 								}
 								if (!LoginActivity.this.isFinishing())
 									pd.dismiss();

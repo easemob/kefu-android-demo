@@ -547,9 +547,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			Toast.makeText(getApplicationContext(), R.string.sd_not_find, 0).show();
 			return;
 		}
-
-		cameraFile = new File(PathUtil.getInstance().getImagePath(), DemoApplication.getInstance().getUserName()
-				+ System.currentTimeMillis() + ".jpg");
+		cameraFile = new File(PathUtil.getInstance().getImagePath(), System.currentTimeMillis() + ".jpg");
 		cameraFile.getParentFile().mkdirs();
 		startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
 				REQUEST_CODE_CAMERA);
@@ -717,39 +715,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			message.setAttribute("price", stPrice);
 		}
 		listView.setAdapter(adapter);
+		stImage=null;
+		stPrice=null;
 		adapter.refresh();
 		listView.setSelection(listView.getCount() - 1);
 		setResult(RESULT_OK);
 		// more(more);
 	}
 	
-	/**
-	 * 发送图片
-	 * 
-	 * @param filePath
-	 */
-	private void sendNewPicture(final String filePath) {
-		String to = toChatUsername;
-		// create and add image message in view
-		final EMMessage message = EMMessage.createSendMessage(EMMessage.Type.IMAGE);
-		// 如果是群聊，设置chattype,默认是单聊
-		if (chatType == CHATTYPE_GROUP)
-			message.setChatType(ChatType.GroupChat);
-
-		message.setReceipt(to);
-		ImageMessageBody body = new ImageMessageBody(new File(filePath));
-		// 默认超过100k的图片会压缩后发给对方，可以设置成发送原图
-		// body.setSendOriginalImage(true);
-		message.addBody(body);
-		conversation.addMessage(message);
-		message.setAttribute("name", stImage);
-		message.setAttribute("price", stPrice);
-		listView.setAdapter(adapter);
-		adapter.refresh();
-		listView.setSelection(listView.getCount() - 1);
-		setResult(RESULT_OK);
-		// more(more);
-	}
 
 	/**
 	 * 发送视频消息

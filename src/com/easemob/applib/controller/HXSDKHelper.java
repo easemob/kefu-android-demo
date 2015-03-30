@@ -135,24 +135,22 @@ public abstract class HXSDKHelper {
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
         if (processAppName == null || !processAppName.equalsIgnoreCase(hxModel.getAppProcessName())) {
             Log.e(TAG, "enter the service process!");
-            
             // 则此application::onCreate 是被service 调用的，直接返回
             return false;
         }
-
-        // 初始化环信SDK,一定要先调用init()
-        EMChat.getInstance().init(context);
-        
         SharedPreferences sharedPreFerencesAppKey = context.getSharedPreferences("customerappkey", Context.MODE_PRIVATE);
         String stAppKey = sharedPreFerencesAppKey.getString("customerappkey", "sipsoft#sandbox");
         EMChatConfig.getInstance().setAppKey(stAppKey);
+        // 初始化环信SDK,一定要先调用init()
+        EMChat.getInstance().init(context);
+        
 //        Toast.makeText(context, stAppKey, 0).show();
         
         // 设置sandbox测试环境
         // 建议开发者开发时设置此模式
-        if(hxModel.isSandboxMode()){
-            EMChat.getInstance().setEnv(EMEnvMode.EMSandboxMode);
-        }
+//        if(hxModel.isSandboxMode()){
+//            EMChat.getInstance().setEnv(EMEnvMode.EMSandboxMode);
+//        }
         
         if(hxModel.isDebugMode()){
             // set debug mode in development process

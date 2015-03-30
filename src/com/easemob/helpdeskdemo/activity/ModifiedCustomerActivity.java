@@ -1,5 +1,8 @@
 package com.easemob.helpdeskdemo.activity;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.R.layout;
 import com.easemob.helpdeskdemo.R.menu;
@@ -10,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,6 +33,7 @@ public class ModifiedCustomerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modified_customer);
+		showSoftkeyboard();
 		ib = (ImageButton) findViewById(R.id.ib_modified_zhanghao_back);
 		edittext = (EditText) findViewById(R.id.et_zhanghao);
 		clearSearch = (ImageButton) findViewById(R.id.ib_search_clear);
@@ -87,5 +92,34 @@ public class ModifiedCustomerActivity extends Activity {
 						InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 	}
+	
+	void showSoftkeyboard(){
+		Timer timer = new Timer();
+	     timer.schedule(new TimerTask()
+	     {
+	         public void run() 
+	         {
+	             InputMethodManager inputManager =
+	                 (InputMethodManager)edittext.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+	             inputManager.showSoftInput(edittext, 0);
+	         }
+	     },  
+	         100);
+	}
+	
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		// TODO Auto-generated method stub
+//		if (event.getAction() == KeyEvent.KEYCODE_BACK) {
+//			hideSoftKeyboard();
+//			String stAppkey = edittext.getText().toString();
+//			Intent intent = new Intent();
+//			intent.putExtra("forzhanghao", stAppkey);
+//			ModifiedCustomerActivity.this.setResult(RESULT_TWO, intent);
+//			ModifiedCustomerActivity.this.finish();
+//			return true;
+//		}
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 }

@@ -51,5 +51,6 @@
         android:padding="10dp"
         android:text="@string/forward"
         android:textColor="@android:color/black"
+        android:visibility="gone"
         android:textSize="20sp" />
 </LinearLayout>

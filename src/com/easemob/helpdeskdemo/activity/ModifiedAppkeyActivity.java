@@ -1,5 +1,8 @@
 package com.easemob.helpdeskdemo.activity;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.R.layout;
 import com.easemob.helpdeskdemo.R.menu;
@@ -10,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -60,6 +65,11 @@ public class ModifiedAppkeyActivity extends Activity {
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				if (s.length() > 0) {
+					clearSearch.setVisibility(View.VISIBLE);
+				}else if(count>0){
+					clearSearch.setVisibility(View.VISIBLE);
+				}
 			}
 
 			public void afterTextChanged(Editable s) {
@@ -90,8 +100,32 @@ public class ModifiedAppkeyActivity extends Activity {
 	}
 	
 	void showSoftkeyboard(){
-//		inputMethodManager.showSoftInput(submitBt,InputMethodManager.SHOW_FORCED);
-		inputMethodManager.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+		Timer timer = new Timer();
+	     timer.schedule(new TimerTask()
+	     {
+	         public void run() 
+	         {
+	             InputMethodManager inputManager =
+	                 (InputMethodManager)edittext.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+	             inputManager.showSoftInput(edittext, 0);
+	         }
+	     },  
+	         100);
 	}
+	
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		// TODO Auto-generated method stub
+//		if (event.getAction() == KeyEvent.KEYCODE_BACK) {
+//			String stAppkey = edittext.getText().toString();
+//			Intent intent = new Intent();
+//			intent.putExtra("forappkey", stAppkey);
+//			ModifiedAppkeyActivity.this.setResult(RESULT_ONE, intent);
+//			ModifiedAppkeyActivity.this.finish();
+//			return true;
+//		}
+//
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 }

@@ -91,7 +91,6 @@
                 android:onClick="more_new"
                 android:visibility="visible" />
                 
-
             <Button
                 android:id="@+id/btn_set_mode_keyboard"
                 android:layout_width="32dp"

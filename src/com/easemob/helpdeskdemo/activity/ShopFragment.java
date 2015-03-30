@@ -1,10 +1,14 @@
 package com.easemob.helpdeskdemo.activity;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -30,8 +34,9 @@ public class ShopFragment extends Fragment implements OnClickListener{
 	private String URL;
 	private TextView mTextView;
 	private ImageView mImageView1,mImageView2,mImageView3,mImageView4;
-	
 
+	static Map<String,SoftReference<Bitmap>> imageCache = new HashMap<String,SoftReference<Bitmap>>();
+	
 	private Button btnHistory;
 	private List<HistoryModel> historyModels = new ArrayList<HistoryModel>();
 
@@ -61,6 +66,11 @@ public class ShopFragment extends Fragment implements OnClickListener{
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), LoginActivity.class);
+				//对图片进行回收
+//				bitmapDrawable1 = (BitmapDrawable) mImageView1.getDrawable();
+//				bitmapDrawable2 = (BitmapDrawable) mImageView2.getDrawable();
+//				bitmapDrawable3 = (BitmapDrawable) mImageView3.getDrawable();
+//				bitmapDrawable4 = (BitmapDrawable) mImageView4.getDrawable();
 				startActivity(intent);
 			}
 		});
@@ -74,24 +84,28 @@ public class ShopFragment extends Fragment implements OnClickListener{
 		case R.id.ib_shop_imageone:
 			intent.putExtra("image", "2015早春新款高腰复古牛仔裙");
 			intent.putExtra("price", "￥128");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setClass(getActivity(), ShopDetailsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ib_shop_imagetwo:
 			intent.putExtra("image", "露肩名媛范套装");
 			intent.putExtra("price", "￥518");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setClass(getActivity(), ShopDetailsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ib_shop_imagethree:
 			intent.putExtra("image", "假两件衬衣+V领毛衣上衣");
 			intent.putExtra("price", "￥235");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setClass(getActivity(), ShopDetailsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ib_shop_imagefour:
 			intent.putExtra("image", "插肩棒球衫外套");
 			intent.putExtra("price", "￥162");
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.setClass(getActivity(), ShopDetailsActivity.class);
 			startActivity(intent);
 			break;
@@ -207,5 +221,36 @@ public class ShopFragment extends Fragment implements OnClickListener{
 //			historyModels.add(historyModel);
 //		}
 //	};
+	
+//	@Override
+//	public void onDestroy() {
+//		super.onDestroy();
+//		if(bitmapDrawable1!=null&&!bitmapDrawable1.getBitmap().isRecycled()){
+//		    bitmapDrawable1.getBitmap().recycle();
+//		}
+//		if(bitmapDrawable2!=null&&!bitmapDrawable2.getBitmap().isRecycled()){
+//		    bitmapDrawable2.getBitmap().recycle();
+//		}
+//		if(bitmapDrawable3!=null&&!bitmapDrawable3.getBitmap().isRecycled()){
+//		    bitmapDrawable3.getBitmap().recycle();
+//		}
+//		if(bitmapDrawable4!=null&&!bitmapDrawable4.getBitmap().isRecycled()){
+//		    bitmapDrawable4.getBitmap().recycle();
+//		}
+//	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		for (SoftReference<Bitmap> item : imageCache.values()) {
+			item.get().recycle();
+			item = null;
+		}
+		imageCache.clear();
+		System.gc();
+		
+		
+		
+	}
 
 }

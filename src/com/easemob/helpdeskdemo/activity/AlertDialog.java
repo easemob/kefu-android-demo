@@ -59,7 +59,6 @@ public class AlertDialog extends BaseActivity {
 		isEditextShow = getIntent().getBooleanExtra("editTextShow",true);
 		//转发复制的图片的path
 		String path = getIntent().getStringExtra("forwardImage");
-		//
 		String edit_text = getIntent().getStringExtra("edit_text");
 		
 		if(msg != null)

@@ -41,7 +41,6 @@ public class ContextMenu extends BaseActivity {
 		} else if (type == EMMessage.Type.VIDEO.ordinal()) {
 			setContentView(R.layout.context_menu_for_video);
 		}
-		    
 		position = getIntent().getIntExtra("position", -1);
 	}
 

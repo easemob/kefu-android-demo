@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:layout_centerVertical="true"
-            android:maxLength="20"
+            android:maxLength="30"
             android:singleLine="true"
             android:textColor="#9B9B9B"
             android:text="aaa" />
