@@ -1,5 +1,6 @@
 package com.easemob.helpdeskdemo.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,13 +47,15 @@ public class FirstActivity extends FragmentActivity {
 		init();
 	}
 
+	@SuppressLint("NewApi")
 	private void init() {
 		ll_shop = (LinearLayout) findViewById(R.id.ll_shop);
 		ll_setting = (LinearLayout) findViewById(R.id.ll_setting);
 		imageButton_shop = (ImageButton) findViewById(R.id.imageButton_shop);
 		imageButton_setting = (ImageButton) findViewById(R.id.imageButton_setting);
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl_buttom_bg);
-		rl.getBackground().setAlpha(100); 
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.main_btn_group);
+		linearLayout.setAlpha(0.5f);
 		shopFragment = new ShopFragment();
 		settingFragment = new SettingFragment();
 		fragments = new Fragment[] { shopFragment, settingFragment };
