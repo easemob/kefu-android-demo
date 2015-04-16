@@ -68,7 +68,9 @@ public class LoadImageTask extends AsyncTask<Object, Void, Bitmap> {
 
 	protected void onPostExecute(Bitmap image) {
 		if (image != null) {
-			iv.setImageBitmap(image);
+			iv.setImageBitmap(CommonUtils.convertBitmap(image,
+					CommonUtils.convertDip2Px(activity, 90),
+					CommonUtils.convertDip2Px(activity, 90)));
 			ImageCache.getInstance().put(thumbnailPath, image);
 			iv.setClickable(true);
 			iv.setTag(thumbnailPath);

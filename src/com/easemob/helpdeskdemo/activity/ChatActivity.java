@@ -703,7 +703,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		// 如果是群聊，设置chattype,默认是单聊
 		if (chatType == CHATTYPE_GROUP)
 			message.setChatType(ChatType.GroupChat);
-
 		message.setReceipt(to);
 		ImageMessageBody body = new ImageMessageBody(new File(filePath));
 		// 默认超过100k的图片会压缩后发给对方，可以设置成发送原图
@@ -722,7 +721,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		setResult(RESULT_OK);
 		// more(more);
 	}
-	
 
 	/**
 	 * 发送视频消息
@@ -749,7 +747,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -766,7 +763,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
 			cursor = null;
-
 			if (picturePath == null || picturePath.equals("null")) {
 				Toast toast = Toast.makeText(this, R.string.not_find_image, Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.CENTER, 0, 0);
@@ -784,7 +780,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			}
 			sendPicture(file.getAbsolutePath());
 		}
-
 	}
 
 	/**
@@ -808,7 +803,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		adapter.notifyDataSetChanged();
 		listView.setSelection(listView.getCount() - 1);
 		setResult(RESULT_OK);
-
 	}
 
 

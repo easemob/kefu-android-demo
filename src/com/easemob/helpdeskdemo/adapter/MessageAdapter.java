@@ -13,6 +13,7 @@
  */
 package com.easemob.helpdeskdemo.adapter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +27,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.text.Spannable;
 import android.util.Log;
@@ -39,6 +42,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -64,9 +68,11 @@ import com.easemob.helpdeskdemo.activity.ChatActivity;
 import com.easemob.helpdeskdemo.activity.ContextMenu;
 import com.easemob.helpdeskdemo.activity.ShowBigImage;
 import com.easemob.helpdeskdemo.task.LoadImageTask;
+import com.easemob.helpdeskdemo.utils.CommonUtils;
 import com.easemob.helpdeskdemo.utils.ImageCache;
 import com.easemob.helpdeskdemo.utils.ImageUtils;
 import com.easemob.helpdeskdemo.utils.SmileUtils;
+import com.easemob.helpdeskdemo.widget.BubbleImageView;
 import com.easemob.util.DateUtils;
 import com.easemob.util.EMLog;
 import com.easemob.util.LatLng;
@@ -211,21 +217,19 @@ public class MessageAdapter extends BaseAdapter{
 			convertView = createViewByMessage(message, position);
 			if (message.getType() == EMMessage.Type.IMAGE) {
 				try {
+					holder.ivAdd = (ImageView) convertView.findViewById(R.id.iv_sendPicture_add);
 					holder.title = (TextView) convertView.findViewById(R.id.shop_details_title);
 					holder.name = (TextView) convertView.findViewById(R.id.tv_send_name);
 					holder.price = (TextView) convertView.findViewById(R.id.tv_send_price);
-					holder.iv = ((ImageView) convertView.findViewById(R.id.iv_sendPicture));
+					holder.iv = (BubbleImageView) convertView.findViewById(R.id.iv_sendPicture);
 					holder.head_iv = (ImageView) convertView.findViewById(R.id.iv_userhead);
 					holder.tv = (TextView) convertView.findViewById(R.id.percentage);
 					holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
 					holder.staus_iv = (ImageView) convertView.findViewById(R.id.msg_status);
 					holder.tv_userId = (TextView) convertView.findViewById(R.id.tv_userid);
-					
 				} catch (Exception e) {
 				}
-
 			} else if (message.getType() == EMMessage.Type.TXT) {
-
 				try {
 					holder.pb = (ProgressBar) convertView.findViewById(R.id.pb_sending);
 					holder.staus_iv = (ImageView) convertView.findViewById(R.id.msg_status);
@@ -238,13 +242,13 @@ public class MessageAdapter extends BaseAdapter{
 
 				// 语音通话
 				if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)) {
-					holder.iv = (ImageView) convertView.findViewById(R.id.iv_call_icon);
+					holder.iv = (BubbleImageView) convertView.findViewById(R.id.iv_call_icon);
 					holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 				}
 
 			} else if (message.getType() == EMMessage.Type.VOICE) {
 				try {
-					holder.iv = ((ImageView) convertView.findViewById(R.id.iv_voice));
+					holder.iv = (BubbleImageView) ((ImageView) convertView.findViewById(R.id.iv_voice));
 					holder.head_iv = (ImageView) convertView.findViewById(R.id.iv_userhead);
 					holder.tv = (TextView) convertView.findViewById(R.id.tv_length);
 					holder.pb = (ProgressBar) convertView.findViewById(R.id.pb_sending);
@@ -264,7 +268,7 @@ public class MessageAdapter extends BaseAdapter{
 				}
 			} else if (message.getType() == EMMessage.Type.VIDEO) {
 				try {
-					holder.iv = ((ImageView) convertView.findViewById(R.id.chatting_content_iv));
+					holder.iv = (BubbleImageView) ((ImageView) convertView.findViewById(R.id.chatting_content_iv));
 					holder.head_iv = (ImageView) convertView.findViewById(R.id.iv_userhead);
 					holder.tv = (TextView) convertView.findViewById(R.id.percentage);
 					holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
@@ -490,7 +494,6 @@ public class MessageAdapter extends BaseAdapter{
 	private void handleVoiceCallMessage(EMMessage message, ViewHolder holder, final int position) {
 		TextMessageBody txtBody = (TextMessageBody) message.getBody();
 		holder.tv.setText(txtBody.getMessage());
-
 	}
 
 	/**
@@ -504,18 +507,17 @@ public class MessageAdapter extends BaseAdapter{
 	private void handleImageMessage(final EMMessage message, final ViewHolder holder, final int position, View convertView) {
 		holder.pb.setTag(position);
 		String stname = null,stprice = null;
-		try {
-			stname = message.getStringAttribute("name");
-			stprice = message.getStringAttribute("price");
-		} catch (EaseMobException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		stname = message.getStringAttribute("name",null);
+		stprice = message.getStringAttribute("price",null);
 		if(stname!=null){
+			View view = LayoutInflater.from(context).inflate(R.layout.row_sent_picture, null);
+			RelativeLayout rlAdd = (RelativeLayout) view.findViewById(R.id.rl_picture_add);
+			rlAdd.setVisibility(View.VISIBLE);
+			RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_picture);
+			rl.setVisibility(View.GONE);
 			holder.title.setVisibility(View.VISIBLE);
 			holder.name.setVisibility(View.VISIBLE);
 			holder.price.setVisibility(View.VISIBLE);
-			
 			holder.title.setText("我正在看：");
 			holder.name.setText(stname);
 			holder.price.setText(stprice);
@@ -1125,9 +1127,13 @@ public class MessageAdapter extends BaseAdapter{
 		EMLog.d("###", "local = " + localFullSizePath + " remote: " + remote);
 		// first check if the thumbnail image already loaded into cache
 		Bitmap bitmap = ImageCache.getInstance().get(thumbernailPath);
+//		Bitmap bitmap = imageZoom(bitmapnew);
 		if (bitmap != null) {
 			// thumbnail image is already loaded, reuse the drawable
-			iv.setImageBitmap(bitmap);
+//			iv.setImageBitmap(bitmap);
+			iv.setImageBitmap(CommonUtils.convertBitmap(bitmap,
+					CommonUtils.convertDip2Px(context, 90),
+					CommonUtils.convertDip2Px(context, 90)));
 			iv.setClickable(true);
 			iv.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -1168,10 +1174,11 @@ public class MessageAdapter extends BaseAdapter{
 		}
 
 	}
-
+	
 
 	public static class ViewHolder {
-		ImageView iv;
+		ImageView ivAdd;
+		BubbleImageView iv;
 		TextView title,name,price;
 		TextView tv;
 		ProgressBar pb;
@@ -1217,7 +1224,6 @@ public class MessageAdapter extends BaseAdapter{
 			intent.putExtra("address", address);
 			activity.startActivity(intent);
 		}
-
 	}
 
 	/**

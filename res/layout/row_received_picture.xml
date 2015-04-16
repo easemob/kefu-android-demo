@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp" xmlns:app="http://schemas.android.com/apk/res/com.easemob.helpdeskdemo">
 
     <TextView
         android:id="@+id/timestamp"
@@ -33,14 +33,20 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:layout_toRightOf="@id/iv_userhead"
-             >
+             >  
 
-            <ImageView
-                android:background="@drawable/chatfrom_bg"
+            <com.easemob.helpdeskdemo.widget.BubbleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/iv_sendPicture"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:scaleType="fitCenter" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:bubble_angle="5dp"
+	            app:bubble_arrowHeight="10dp"
+	            app:bubble_arrowLocation="left"
+	            app:bubble_arrowOffset="-5dp"
+	            app:bubble_arrowTop="15dp"
+	            app:bubble_arrowWidth="5dp"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:id="@+id/ll_loading"
@@ -49,7 +55,6 @@
                 android:layout_centerInParent="true"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
-
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="28dp"
