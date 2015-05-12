@@ -17,11 +17,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,7 +32,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -80,7 +81,6 @@ import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VideoMessageBody;
 import com.easemob.chat.VoiceMessageBody;
-import com.easemob.helpdeskdemo.DemoApplication;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
 import com.easemob.helpdeskdemo.adapter.ExpressionPagerAdapter;
@@ -186,25 +186,27 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		if(stImage == null){
 		}else{
 			String stfirst = stImage.substring(0, 1);
-			if(stfirst.equals("2")){
-				//保存图片
-				String pathOne = "/sdcard/appname/" + "one" + ".png";
-				saveImage(R.drawable.one,pathOne);
-				//发送image+扩展属性
-				sendPicture(pathOne);
-			}else if(stfirst.equals("露")){
-				String pathTwo = "/sdcard/appname/" + "two" + ".png";
-				saveImage(R.drawable.two,pathTwo);
-				sendPicture(pathTwo);
-			}else if(stfirst.equals("假")){
-				String pathThree = "/sdcard/appname/" + "three" + ".png";
-				saveImage(R.drawable.three,pathThree);
-				sendPicture(pathThree);
-			}else if(stfirst.equals("插")){
-				String pathFour = "/sdcard/appname/" + "four" + ".png";
-				saveImage(R.drawable.four,pathFour);
-				sendPicture(pathFour);
-			}
+			sendPictureNew(stfirst);
+//			if(stfirst.equals("2")){
+//				//保存图片
+//				String pathOne = "/sdcard/appname/" + "one" + ".png";
+//				saveImage(R.drawable.one,pathOne);
+//				//发送image+扩展属性
+//				sendPicture(pathOne);
+//				
+//			}else if(stfirst.equals("露")){
+//				String pathTwo = "/sdcard/appname/" + "two" + ".png";
+//				saveImage(R.drawable.two,pathTwo);
+//				sendPicture(pathTwo);
+//			}else if(stfirst.equals("假")){
+//				String pathThree = "/sdcard/appname/" + "three" + ".png";
+//				saveImage(R.drawable.three,pathThree);
+//				sendPicture(pathThree);
+//			}else if(stfirst.equals("插")){
+//				String pathFour = "/sdcard/appname/" + "four" + ".png";
+//				saveImage(R.drawable.four,pathFour);
+//				sendPicture(pathFour);
+//			}
 		}
 	}
 
@@ -692,7 +694,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	}
 
 	/**
-	 * 发送图片
+	 * 发送图文混排
 	 * 
 	 * @param filePath
 	 */
@@ -721,6 +723,125 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		setResult(RESULT_OK);
 		// more(more);
 	}
+	
+	private void sendPictureNew(String stfirst) {
+		String item_url = "";
+		String order_title = "";
+		String title = "";
+		String price = "";
+		String desc = "";
+		String img_url = "";
+		
+		
+		String item_url_new = "";
+		String title_new = "测试track1";
+		String price_new = "";
+		String desc_new = "";
+		String img_url_new = "";
+		
+		if(stfirst.equals("2")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥128";
+			desc = "2015早春新款高腰复古牛仔裙";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥128";
+			desc_new = "2015早春新款高腰复古牛仔裙";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("露")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥518";
+			desc = "露肩名媛范套装";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥518";
+			desc_new = "露肩名媛范套装";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("假")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥235";
+			desc = "假两件衬衣+V领毛衣上衣";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥235";
+			desc_new = "假两件衬衣+V领毛衣上衣";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("插")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890"; 
+			title = "测试order2";
+			price = "￥162";
+			desc = "插肩棒球衫外套";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥162";
+			desc_new = "插肩棒球衫外套";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}
+		
+		
+		
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+		// 如果是群聊，设置chattype,默认是单聊
+		if (chatType == CHATTYPE_GROUP)
+			message.setChatType(ChatType.GroupChat);
+		TextMessageBody txtBody = new TextMessageBody("客服图文混排消息");
+		// 设置消息body
+		message.addBody(txtBody);
+		JSONObject jsonMsgType = new JSONObject();
+		JSONObject jsonOrder = new JSONObject();
+		JSONObject jsonTrack = new JSONObject();
+		try {
+			jsonOrder.put("item_url", item_url);
+			jsonOrder.put("order_title", order_title);
+			jsonOrder.put("title", title);
+			jsonOrder.put("price", price);
+			jsonOrder.put("desc", desc);
+			jsonOrder.put("img_url", img_url);
+			jsonMsgType.put("order",jsonOrder);
+			
+			
+			jsonTrack.put("title", title_new);
+			jsonTrack.put("price", price_new);
+			jsonTrack.put("desc", desc_new);
+			jsonTrack.put("img_url", img_url_new);
+			jsonTrack.put("item_url", item_url_new);
+			jsonMsgType.put("track",jsonTrack);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		message.setAttribute("msgtype", jsonMsgType);
+		message.setAttribute("type", "custom");
+		message.setAttribute("imageName", "mallImage3.png");
+		
+		// 设置要发给谁,用户username或者群聊groupid
+		message.setReceipt(toChatUsername);
+		// 把messgage加到conversation中
+		conversation.addMessage(message);
+		// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
+		adapter.refresh();
+		listView.setSelection(listView.getCount() - 1);
+		mEditTextContent.setText("");
+		setResult(RESULT_OK);
+	}
+	
+	
 
 	/**
 	 * 发送视频消息

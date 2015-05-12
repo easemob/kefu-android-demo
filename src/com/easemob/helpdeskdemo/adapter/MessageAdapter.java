@@ -13,7 +13,6 @@
  */
 package com.easemob.helpdeskdemo.adapter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,12 +21,14 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -97,7 +98,11 @@ public class MessageAdapter extends BaseAdapter{
 	private static final int MESSAGE_TYPE_RECV_FILE = 11;
 	private static final int MESSAGE_TYPE_SENT_VOICE_CALL = 12;
 	private static final int MESSAGE_TYPE_RECV_VOICE_CALL = 13;
-
+	
+	private static final int MESSAGE_TYPE_SENT_PICTURE_TXT = 14;
+	private static final int MESSAGE_TYPE_RECV_PICTURE_TXT = 15;
+	
+	
 	public static final String IMAGE_DIR = "chat/image/";
 	public static final String VOICE_DIR = "chat/audio/";
 	public static final String VIDEO_DIR = "chat/video";
@@ -153,9 +158,15 @@ public class MessageAdapter extends BaseAdapter{
 	public int getItemViewType(int position) {
 		EMMessage message = conversation.getMessage(position);
 		if (message.getType() == EMMessage.Type.TXT) {
-			if (!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false))
+			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
+				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE_CALL : MESSAGE_TYPE_SENT_VOICE_CALL;
+			}else if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
+				//TODO textAndPicture message layout
+				return message.direct == EMMessage.Direct.RECEIVE? MESSAGE_TYPE_RECV_PICTURE_TXT:MESSAGE_TYPE_SENT_PICTURE_TXT;
+			}else{
 				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
-			return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE_CALL : MESSAGE_TYPE_SENT_VOICE_CALL;
+				
+			}
 		}
 		if (message.getType() == EMMessage.Type.IMAGE) {
 			return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_IMAGE : MESSAGE_TYPE_SENT_IMAGE;
@@ -177,7 +188,7 @@ public class MessageAdapter extends BaseAdapter{
 	}
 
 	public int getViewTypeCount() {
-		return 14;
+		return 16;
 	}
 
 	private View createViewByMessage(EMMessage message, int position) {
@@ -198,12 +209,20 @@ public class MessageAdapter extends BaseAdapter{
 			return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_file, null) : inflater.inflate(
 					R.layout.row_sent_file, null);
 		default:
-			// 语音电话
-			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false))
-				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_voice_call, null) : inflater
-						.inflate(R.layout.row_sent_voice_call, null);
-			return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
-					R.layout.row_sent_message, null);
+//				if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
+//				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_voice_call, null) : inflater
+//						.inflate(R.layout.row_sent_voice_call, null);
+//				
+//			}// 语音电话
+//		else
+			if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
+				//TODO textAndPicture message layout
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_picture_new, null) : inflater.inflate(
+						R.layout.row_sent_picture_new, null);
+			}else{
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
+						R.layout.row_sent_message, null);
+			}
 		}
 	}
 
@@ -237,7 +256,14 @@ public class MessageAdapter extends BaseAdapter{
 					// 这里是文字内容
 					holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 					holder.tv_userId = (TextView) convertView.findViewById(R.id.tv_userid);
+					
+					
+					//aaa
+					holder.mTextViewDes = (TextView) convertView.findViewById(R.id.tv_send_desc);
+					holder.mTextViewprice = (TextView) convertView.findViewById(R.id.tv_send_price_new);
+					holder.mImageView = (ImageView) convertView.findViewById(R.id.iv_sendPicture_add);
 				} catch (Exception e) {
+					
 				}
 
 				// 语音通话
@@ -338,14 +364,12 @@ public class MessageAdapter extends BaseAdapter{
 			// 如果是文本或者地图消息并且不是group messgae，显示的时候给对方发送已读回执
 			if ((message.getType() == Type.TXT || message.getType() == Type.LOCATION) && !message.isAcked && chatType != ChatType.GroupChat) {
 				// 不是语音通话记录
-				if (!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)) {
-					try {
-						EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
-						// 发送已读回执
-						message.isAcked = true;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				try {
+					EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+					// 发送已读回执
+					message.isAcked = true;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -356,11 +380,18 @@ public class MessageAdapter extends BaseAdapter{
 			handleImageMessage(message, holder, position, convertView);
 			break;
 		case TXT: // 文本
-			if (!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false))
+//			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
+//				// 语音电话
+//				handleVoiceCallMessage(message, holder, position);
+//				
+//			}else 
+				if(message.getStringAttribute(Constant.PICTURE_MSG, null)!=null){
+				handlePictureTxtMessage(message, holder, position);
+			}
+			else{
 				handleTextMessage(message, holder, position);
-			else
-				// 语音电话
-				handleVoiceCallMessage(message, holder, position);
+			}
+				
 			break;
 		case LOCATION: // 位置
 			handleLocationMessage(message, holder, position, convertView);
@@ -440,6 +471,83 @@ public class MessageAdapter extends BaseAdapter{
 		return convertView;
 	}
 
+	private void handlePictureTxtMessage(EMMessage message, ViewHolder holder,
+			int position) {
+		TextMessageBody txtBody = (TextMessageBody) message.getBody();
+		Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
+		// 设置内容
+//		holder.tv.setText(span, BufferType.SPANNABLE);
+//		// 设置长按事件监听
+//		holder.tv.setOnLongClickListener(new OnLongClickListener() {
+//			@Override
+//			public boolean onLongClick(View v) {
+//				return true;
+//			}
+//		});
+		
+		
+
+		String imageName = message.getStringAttribute("imageName", null);
+		try {
+			JSONObject jsonOrder = message.getJSONObjectAttribute("msgtype").getJSONObject("order");
+			String item_url = jsonOrder.getString("item_url");
+			String order_title = jsonOrder.getString("order_title");
+			String title = jsonOrder.getString("title");
+			String price = jsonOrder.getString("price");
+			String desc = jsonOrder.getString("desc");
+			String img_url = jsonOrder.getString("img_url");
+			int resId = 0;
+			if(desc.substring(0, 1).equals("2")){
+				resId = R.drawable.one;
+				holder.mTextViewDes.setText("2015早春新款高腰复古牛仔裙");
+				holder.mTextViewprice.setText("￥128");
+			}else if(desc.substring(0, 1).equals("露")){
+				resId = R.drawable.two;
+				holder.mTextViewDes.setText("露肩名媛范套装");
+				holder.mTextViewprice.setText("￥518");
+			}else if(desc.substring(0, 1).equals("假")){
+				resId = R.drawable.three;
+				holder.mTextViewDes.setText("假两件衬衣+V领毛衣上衣");
+				holder.mTextViewprice.setText("￥235");
+			}else if(desc.substring(0, 1).equals("插")){
+				resId = R.drawable.four;
+				holder.mTextViewDes.setText("插肩棒球衫外套");
+				holder.mTextViewprice.setText("￥162");
+			}
+			Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(resId)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+			holder.mImageView.setImageBitmap(newBitmap);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EaseMobException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		if (message.direct == EMMessage.Direct.SEND) {
+			switch (message.status) {
+			case SUCCESS: // 发送成功
+				holder.pb.setVisibility(View.GONE);
+				holder.staus_iv.setVisibility(View.GONE);
+				break;
+			case FAIL: // 发送失败
+				holder.pb.setVisibility(View.GONE);
+				holder.staus_iv.setVisibility(View.VISIBLE);
+				break;
+			case INPROGRESS: // 发送中
+				holder.pb.setVisibility(View.VISIBLE);
+				holder.staus_iv.setVisibility(View.GONE);
+				break;
+			default:
+				// 发送消息
+				sendMsgInBackground(message, holder);
+			}
+		}
+		
+	}
+
 	/**
 	 * 文本消息
 	 * 
@@ -506,24 +614,24 @@ public class MessageAdapter extends BaseAdapter{
 	 */
 	private void handleImageMessage(final EMMessage message, final ViewHolder holder, final int position, View convertView) {
 		holder.pb.setTag(position);
-		String stname = null,stprice = null;
-		stname = message.getStringAttribute("name",null);
-		stprice = message.getStringAttribute("price",null);
-		if(stname!=null){
-			View view = LayoutInflater.from(context).inflate(R.layout.row_sent_picture, null);
-			RelativeLayout rlAdd = (RelativeLayout) view.findViewById(R.id.rl_picture_add);
-			rlAdd.setVisibility(View.VISIBLE);
-			RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_picture);
-			rl.setVisibility(View.GONE);
-			holder.title.setVisibility(View.VISIBLE);
-			holder.name.setVisibility(View.VISIBLE);
-			holder.price.setVisibility(View.VISIBLE);
-			holder.title.setText("我正在看：");
-			holder.name.setText(stname);
-			holder.price.setText(stprice);
-		}
-		stname=null;
-		stprice=null;
+//		String stname = null,stprice = null;
+//		stname = message.getStringAttribute("name",null);
+//		stprice = message.getStringAttribute("price",null);
+//		if(stname!=null){
+//			View view = LayoutInflater.from(context).inflate(R.layout.row_sent_picture, null);
+//			RelativeLayout rlAdd = (RelativeLayout) view.findViewById(R.id.rl_picture_add);
+//			rlAdd.setVisibility(View.VISIBLE);
+//			RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_picture);
+//			rl.setVisibility(View.GONE);
+//			holder.title.setVisibility(View.VISIBLE);
+//			holder.name.setVisibility(View.VISIBLE);
+//			holder.price.setVisibility(View.VISIBLE);
+//			holder.title.setText("我正在看：");
+//			holder.name.setText(stname);
+//			holder.price.setText(stprice);
+//		}
+//		stname=null;
+//		stprice=null;
 		holder.iv.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -1172,9 +1280,7 @@ public class MessageAdapter extends BaseAdapter{
 			new LoadImageTask().execute(thumbernailPath, localFullSizePath, remote, message.getChatType(), iv, activity, message);
 			return true;
 		}
-
 	}
-	
 
 	public static class ViewHolder {
 		ImageView ivAdd;
@@ -1199,6 +1305,11 @@ public class MessageAdapter extends BaseAdapter{
 		TextView tv_file_name;
 		TextView tv_file_size;
 		TextView tv_file_download_state;
+		
+		ImageView mImageView;
+		TextView mTextViewDes;
+		TextView mTextViewprice;
+		
 	}
 
 	/*
