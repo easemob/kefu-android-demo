@@ -37,20 +37,26 @@
             android:layout_toLeftOf="@id/iv_userhead" >
             <TextView 
                 android:layout_marginBottom="5dp"
-                android:id="@+id/shop_details_title"
+                android:id="@+id/shop_details_title_new"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="我正在看:"/>
+            
+            <TextView 
+                android:id="@+id/tv_order"
+                android:layout_below="@id/shop_details_title_new"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
 
             <ImageView
-                android:layout_below="@id/shop_details_title"
+                android:layout_below="@id/tv_order"
                 android:id="@+id/iv_sendPicture_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
             <TextView 
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:id="@+id/tv_send_desc"
                 android:layout_toRightOf="@id/iv_sendPicture_add"
                 android:layout_height="wrap_content"

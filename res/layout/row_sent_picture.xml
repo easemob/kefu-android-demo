@@ -36,13 +36,11 @@
             <TextView 
                 android:visibility="gone"
                 android:layout_marginBottom="5dp"
-                android:id="@+id/shop_details_title"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
             <com.easemob.helpdeskdemo.widget.BubbleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_below="@id/shop_details_title"
                 android:id="@+id/iv_sendPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

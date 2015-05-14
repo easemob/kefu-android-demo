@@ -805,6 +805,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		JSONObject jsonMsgType = new JSONObject();
 		JSONObject jsonOrder = new JSONObject();
 		JSONObject jsonTrack = new JSONObject();
+		
+		
 		try {
 			jsonOrder.put("item_url", item_url);
 			jsonOrder.put("order_title", order_title);
@@ -812,7 +814,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			jsonOrder.put("price", price);
 			jsonOrder.put("desc", desc);
 			jsonOrder.put("img_url", img_url);
-			jsonMsgType.put("order",jsonOrder);
+//			jsonMsgType.put("order",jsonOrder);
 			
 			
 			jsonTrack.put("title", title_new);
@@ -820,12 +822,43 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			jsonTrack.put("desc", desc_new);
 			jsonTrack.put("img_url", img_url_new);
 			jsonTrack.put("item_url", item_url_new);
-			jsonMsgType.put("track",jsonTrack);
+//			jsonMsgType.put("track",jsonTrack);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if(stfirst.equals("2")){
+			try {
+				jsonMsgType.put("order",jsonOrder);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("露")){
+			try {
+				jsonMsgType.put("order",jsonOrder);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("假")){
+			try {
+				jsonMsgType.put("order",jsonTrack);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("插")){
+			try {
+				jsonMsgType.put("order",jsonTrack);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		message.setAttribute("msgtype", jsonMsgType);
 		message.setAttribute("type", "custom");
 		message.setAttribute("imageName", "mallImage3.png");

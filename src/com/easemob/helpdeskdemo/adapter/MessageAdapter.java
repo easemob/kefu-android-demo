@@ -257,10 +257,11 @@ public class MessageAdapter extends BaseAdapter{
 					holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 					holder.tv_userId = (TextView) convertView.findViewById(R.id.tv_userid);
 					
-					
 					//aaa
+//					holder.title = (TextView) convertView.findViewById(R.id.shop_details_title);
 					holder.mTextViewDes = (TextView) convertView.findViewById(R.id.tv_send_desc);
 					holder.mTextViewprice = (TextView) convertView.findViewById(R.id.tv_send_price_new);
+					holder.mtv = (TextView) convertView.findViewById(R.id.tv_order);
 					holder.mImageView = (ImageView) convertView.findViewById(R.id.iv_sendPicture_add);
 				} catch (Exception e) {
 					
@@ -491,7 +492,7 @@ public class MessageAdapter extends BaseAdapter{
 		try {
 			JSONObject jsonOrder = message.getJSONObjectAttribute("msgtype").getJSONObject("order");
 			String item_url = jsonOrder.getString("item_url");
-			String order_title = jsonOrder.getString("order_title");
+//			String order_title = jsonOrder.getString("order_title");
 			String title = jsonOrder.getString("title");
 			String price = jsonOrder.getString("price");
 			String desc = jsonOrder.getString("desc");
@@ -501,10 +502,14 @@ public class MessageAdapter extends BaseAdapter{
 				resId = R.drawable.one;
 				holder.mTextViewDes.setText("2015早春新款高腰复古牛仔裙");
 				holder.mTextViewprice.setText("￥128");
+				holder.mtv.setVisibility(View.VISIBLE);
+				holder.mtv.setText("订单号:123456");
 			}else if(desc.substring(0, 1).equals("露")){
 				resId = R.drawable.two;
 				holder.mTextViewDes.setText("露肩名媛范套装");
 				holder.mTextViewprice.setText("￥518");
+				holder.mtv.setVisibility(View.VISIBLE);
+				holder.mtv.setText("订单号:7890");
 			}else if(desc.substring(0, 1).equals("假")){
 				resId = R.drawable.three;
 				holder.mTextViewDes.setText("假两件衬衣+V领毛衣上衣");
@@ -513,7 +518,7 @@ public class MessageAdapter extends BaseAdapter{
 				resId = R.drawable.four;
 				holder.mTextViewDes.setText("插肩棒球衫外套");
 				holder.mTextViewprice.setText("￥162");
-			}
+ 			}
 			Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(resId)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
 			holder.mImageView.setImageBitmap(newBitmap);
 		} catch (JSONException e) {
@@ -523,6 +528,7 @@ public class MessageAdapter extends BaseAdapter{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 		
 		
@@ -1309,7 +1315,7 @@ public class MessageAdapter extends BaseAdapter{
 		ImageView mImageView;
 		TextView mTextViewDes;
 		TextView mTextViewprice;
-		
+		TextView mtv;
 	}
 
 	/*
