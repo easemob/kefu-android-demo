@@ -275,7 +275,7 @@ public class MessageAdapter extends BaseAdapter{
 
 			} else if (message.getType() == EMMessage.Type.VOICE) {
 				try {
-					holder.iv = (BubbleImageView) ((ImageView) convertView.findViewById(R.id.iv_voice));
+					holder.voiceView = (ImageView) convertView.findViewById(R.id.iv_voice);
 					holder.head_iv = (ImageView) convertView.findViewById(R.id.iv_userhead);
 					holder.tv = (TextView) convertView.findViewById(R.id.tv_length);
 					holder.pb = (ProgressBar) convertView.findViewById(R.id.pb_sending);
@@ -882,9 +882,15 @@ public class MessageAdapter extends BaseAdapter{
 	 */
 	private void handleVoiceMessage(final EMMessage message, final ViewHolder holder, final int position, View convertView) {
 		VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
-		holder.tv.setText(voiceBody.getLength() + "\"");
-//		holder.iv.setOnClickListener(new VoicePlayClickListener(message, holder.iv, holder.iv_read_status, this, activity, username));
-		holder.iv.setOnLongClickListener(new OnLongClickListener() {
+		int voiceLen = voiceBody.getLength();
+		if(voiceLen==0){
+			holder.tv.setVisibility(View.INVISIBLE);
+		}else{
+			holder.tv.setText(voiceLen + "\"");
+			holder.tv.setVisibility(View.VISIBLE);
+		}
+		holder.voiceView.setOnClickListener(new VoicePlayClickListener(message, holder.voiceView, holder.iv_read_status, this, activity, username));
+		holder.voiceView.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				activity.startActivityForResult(
@@ -894,24 +900,21 @@ public class MessageAdapter extends BaseAdapter{
 			}
 		});
 		if (((ChatActivity)activity).playMsgId != null
-				&& ((ChatActivity)activity).playMsgId.equals(message
-						.getMsgId())) {
-//		if (((ChatActivity)activity).playMsgId != null
-//					&& ((ChatActivity)activity).playMsgId.equals(message
-//						.getMsgId())&&VoicePlayClickListener.isPlaying) {
+					&& ((ChatActivity)activity).playMsgId.equals(message
+						.getMsgId())&&VoicePlayClickListener.isPlaying) {
 			AnimationDrawable voiceAnimation;
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-				holder.iv.setImageResource(R.anim.voice_from_icon);
+				holder.voiceView.setImageResource(R.anim.voice_from_icon);
 			} else {
-				holder.iv.setImageResource(R.anim.voice_to_icon);
+				holder.voiceView.setImageResource(R.anim.voice_to_icon);
 			}
 			voiceAnimation = (AnimationDrawable) holder.iv.getDrawable();
 			voiceAnimation.start();
 		} else {
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-				holder.iv.setImageResource(R.drawable.chatfrom_voice_playing);
+				holder.voiceView.setImageResource(R.drawable.chatfrom_voice_playing);
 			} else {
-				holder.iv.setImageResource(R.drawable.chatto_voice_playing);
+				holder.voiceView.setImageResource(R.drawable.chatto_voice_playing);
 			}
 		}
 		
@@ -1291,6 +1294,7 @@ public class MessageAdapter extends BaseAdapter{
 	public static class ViewHolder {
 		ImageView ivAdd;
 		BubbleImageView iv;
+		ImageView voiceView;
 		TextView title,name,price;
 		TextView tv;
 		ProgressBar pb;

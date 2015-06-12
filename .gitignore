@@ -12,12 +12,13 @@
 bin/
 gen/
 #assets/
+*/libs/easemobchat_2.0.0.jar
 
 # Local configuration file (sdk path, etc)
 local.properties
 
 # Eclipse project files
-.classpath
-.project
-.settings
+*/.classpath
+*/.project
+*/.settings
 

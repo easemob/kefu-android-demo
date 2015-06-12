@@ -34,12 +34,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -70,6 +73,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
+import com.easemob.EMError;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
@@ -85,6 +89,7 @@ import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
 import com.easemob.helpdeskdemo.adapter.ExpressionPagerAdapter;
 import com.easemob.helpdeskdemo.adapter.MessageAdapter;
+import com.easemob.helpdeskdemo.adapter.VoicePlayClickListener;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
 import com.easemob.helpdeskdemo.utils.ImageUtils;
 import com.easemob.helpdeskdemo.utils.SmileUtils;
@@ -92,6 +97,7 @@ import com.easemob.helpdeskdemo.widget.ExpandGridView;
 import com.easemob.helpdeskdemo.widget.PasteEditText;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
+import com.easemob.util.VoiceRecorder;
 
 /**
  * 聊天页面
@@ -136,6 +142,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 	public static final String COPY_IMAGE = "EASEMOBIMG";
 	private ListView listView;
+	private ImageView micImage;
+	private View recordingContainer;
+	private TextView recordingHint;
 	private PasteEditText mEditTextContent;
 	private View buttonSetModeKeyboard;
 	private View buttonSetModeVoice;
@@ -153,6 +162,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
 	public static ChatActivity activityInstance = null;
+	private Drawable[] micImages;
+	private VoiceRecorder voiceRecorder;
 	// 给谁发送消息
 	private String toChatUsername;
 	private MessageAdapter adapter;
@@ -172,6 +183,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 	private EMGroup group;
 	private static boolean tag=true;
+	
+	
+	private Handler micImageHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			// 切换msg切换图片
+			micImage.setImageDrawable(micImages[msg.what]);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +264,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		});
 		
 		listView = (ListView) findViewById(R.id.list);
+		micImage = (ImageView) findViewById(R.id.mic_image);
+		recordingContainer = findViewById(R.id.recording_container);
+		recordingHint = (TextView) findViewById(R.id.recording_hint);
 		mEditTextContent = (PasteEditText) findViewById(R.id.et_sendmessage);
+		buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
 		buttonSetModeKeyboard = findViewById(R.id.btn_set_mode_keyboard);
 		edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
 		buttonSend = findViewById(R.id.btn_send);
@@ -261,6 +285,22 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		more = findViewById(R.id.more);
 		more_new = findViewById(R.id.more_new);
 		edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_normal);
+		
+		// 动画资源文件,用于录制语音时
+				micImages = new Drawable[] { getResources().getDrawable(R.drawable.record_animate_01),
+						getResources().getDrawable(R.drawable.record_animate_02),
+						getResources().getDrawable(R.drawable.record_animate_03),
+						getResources().getDrawable(R.drawable.record_animate_04),
+						getResources().getDrawable(R.drawable.record_animate_05),
+						getResources().getDrawable(R.drawable.record_animate_06),
+						getResources().getDrawable(R.drawable.record_animate_07),
+						getResources().getDrawable(R.drawable.record_animate_08),
+						getResources().getDrawable(R.drawable.record_animate_09),
+						getResources().getDrawable(R.drawable.record_animate_10),
+						getResources().getDrawable(R.drawable.record_animate_11),
+						getResources().getDrawable(R.drawable.record_animate_12),
+						getResources().getDrawable(R.drawable.record_animate_13),
+						getResources().getDrawable(R.drawable.record_animate_14), };
 
 		// 表情list
 		reslist = getExpressionRes(35);
@@ -271,6 +311,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		views.add(gv1);
 		views.add(gv2);
 		expressionViewpager.setAdapter(new ExpressionPagerAdapter(views));
+		
+		voiceRecorder = new VoiceRecorder(micImageHandler);
+		buttonPressToSpeak.setOnTouchListener(new PressToSpeakListen());
 		edittext_layout.requestFocus();
 		mEditTextContent.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -971,6 +1014,92 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 		adapter.refresh();
 		listView.setSelection(resendPos);
+	}
+	
+	/**
+	 * 按住说话listener
+	 * 
+	 */
+	class PressToSpeakListen implements View.OnTouchListener {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				if (!CommonUtils.isExitsSdcard()) {
+					String st4 = getResources().getString(R.string.Send_voice_need_sdcard_support);
+					Toast.makeText(ChatActivity.this, st4, Toast.LENGTH_SHORT).show();
+					return false;
+				}
+				try {
+					v.setPressed(true);
+					wakeLock.acquire();
+					if (VoicePlayClickListener.isPlaying)
+						VoicePlayClickListener.currentPlayListener.stopPlayVoice();
+					recordingContainer.setVisibility(View.VISIBLE);
+					recordingHint.setText(getString(R.string.move_up_to_cancel));
+					recordingHint.setBackgroundColor(Color.TRANSPARENT);
+					voiceRecorder.startRecording(null, toChatUsername, getApplicationContext());
+				} catch (Exception e) {
+					e.printStackTrace();
+					v.setPressed(false);
+					if (wakeLock.isHeld())
+						wakeLock.release();
+					if (voiceRecorder != null)
+						voiceRecorder.discardRecording();
+					recordingContainer.setVisibility(View.INVISIBLE);
+					Toast.makeText(ChatActivity.this, R.string.recoding_fail, Toast.LENGTH_SHORT).show();
+					return false;
+				}
+
+				return true;
+			case MotionEvent.ACTION_MOVE: {
+				if (event.getY() < 0) {
+					recordingHint.setText(getString(R.string.release_to_cancel));
+					recordingHint.setBackgroundResource(R.drawable.recording_text_hint_bg);
+				} else {
+					recordingHint.setText(getString(R.string.move_up_to_cancel));
+					recordingHint.setBackgroundColor(Color.TRANSPARENT);
+				}
+				return true;
+			}
+			case MotionEvent.ACTION_UP:
+				v.setPressed(false);
+				recordingContainer.setVisibility(View.INVISIBLE);
+				if (wakeLock.isHeld())
+					wakeLock.release();
+				if (event.getY() < 0) {
+					// discard the recorded audio.
+					voiceRecorder.discardRecording();
+
+				} else {
+					// stop recording and send voice file
+					String st1 = getResources().getString(R.string.Recording_without_permission);
+					String st2 = getResources().getString(R.string.The_recording_time_is_too_short);
+					String st3 = getResources().getString(R.string.send_failure_please);
+					try {
+						int length = voiceRecorder.stopRecoding();
+						if (length > 0) {
+							sendVoice(voiceRecorder.getVoiceFilePath(), voiceRecorder.getVoiceFileName(toChatUsername),
+									Integer.toString(length), false);
+						} else if (length == EMError.INVALID_FILE) {
+							Toast.makeText(getApplicationContext(), st1, Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getApplicationContext(), st2, Toast.LENGTH_SHORT).show();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						Toast.makeText(ChatActivity.this, st3, Toast.LENGTH_SHORT).show();
+					}
+
+				}
+				return true;
+			default:
+				recordingContainer.setVisibility(View.INVISIBLE);
+				if (voiceRecorder != null)
+					voiceRecorder.discardRecording();
+				return false;
+			}
+		}
 	}
 
 	/**
