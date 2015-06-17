@@ -498,27 +498,28 @@ public class MessageAdapter extends BaseAdapter{
 			String desc = jsonOrder.getString("desc");
 			String img_url = jsonOrder.getString("img_url");
 			int resId = 0;
-			if(desc.substring(0, 1).equals("2")){
-				resId = R.drawable.one;
-				holder.mTextViewDes.setText("2015早春新款高腰复古牛仔裙");
+			if(desc.substring(desc.length()-1, desc.length()).equals("一")){
+				resId = R.drawable.lefttop;
+				holder.mTextViewDes.setText("端午节粽子一");
 				holder.mTextViewprice.setText("￥128");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:123456");
-			}else if(desc.substring(0, 1).equals("露")){
-				resId = R.drawable.two;
-				holder.mTextViewDes.setText("露肩名媛范套装");
+			}else if(desc.substring(desc.length()-1, desc.length()).equals("二")){
+				resId = R.drawable.righttop;
+				holder.mTextViewDes.setText("端午节粽子二");
 				holder.mTextViewprice.setText("￥518");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:7890");
-			}else if(desc.substring(0, 1).equals("假")){
-				resId = R.drawable.three;
-				holder.mTextViewDes.setText("假两件衬衣+V领毛衣上衣");
+			}else if(desc.substring(desc.length()-1, desc.length()).equals("三")){
+				resId = R.drawable.leftbottom;
+				holder.mTextViewDes.setText("端午节粽子三");
 				holder.mTextViewprice.setText("￥235");
-			}else if(desc.substring(0, 1).equals("插")){
-				resId = R.drawable.four;
-				holder.mTextViewDes.setText("插肩棒球衫外套");
+			}else if(desc.substring(desc.length()-1, desc.length()).equals("四")){
+				resId = R.drawable.rightbottom;
+				holder.mTextViewDes.setText("端午节粽子四");
 				holder.mTextViewprice.setText("￥162");
  			}
+			holder.mTextViewprice.setVisibility(View.GONE);
 			Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(resId)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
 			holder.mImageView.setImageBitmap(newBitmap);
 		} catch (JSONException e) {
@@ -582,6 +583,11 @@ public class MessageAdapter extends BaseAdapter{
 			case SUCCESS: // 发送成功
 				holder.pb.setVisibility(View.GONE);
 				holder.staus_iv.setVisibility(View.GONE);
+				
+				if(ChatActivity.activityInstance.autoReply){
+				listener.autoReply();
+				ChatActivity.activityInstance.autoReply = false;
+				}
 				break;
 			case FAIL: // 发送失败
 				holder.pb.setVisibility(View.GONE);
@@ -596,6 +602,16 @@ public class MessageAdapter extends BaseAdapter{
 				sendMsgInBackground(message, holder);
 			}
 		}
+	}
+	
+	AutoReplyListener listener;
+	
+	public void setListener(AutoReplyListener listener){
+		this.listener = listener;
+	}
+	
+	public interface AutoReplyListener{
+		public void autoReply();
 	}
 
 	/**

@@ -40,7 +40,7 @@ public class ShopDetailsActivity extends Activity {
 		if(mBitmap==null){
 			Options opts= new Options();
 			opts.inSampleSize =2;
-			mBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.shop_image_details);
+			mBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.shopping_details);
 			ImageCache.getInstance().put("shop_image_details", mBitmap);
 		}
 		if(mBitmap!=null)

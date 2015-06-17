@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatConfig;
 import com.easemob.helpdeskdemo.R;
 
@@ -155,7 +156,7 @@ public class SettingFragment extends Fragment {
 						Editor edi = share.edit();// 获取编辑器
 						edi.clear();
 						edi.commit();
-						EMChatConfig.getInstance().setAppKey(stForAppkey);
+						EMChat.getInstance().setAppkey(stForAppkey);
 						// 退出登录
 						HXSDKHelper.getInstance().logout(
 								new EMCallBack() {

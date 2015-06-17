@@ -44,19 +44,19 @@ public class ShopFragment extends Fragment implements OnClickListener{
 		intent.setClass(getActivity(), ShopDetailsActivity.class);
 		switch (v.getId()) {
 		case R.id.ib_shop_imageone:
-			intent.putExtra("image", "2015早春新款高腰复古牛仔裙");
+			intent.putExtra("image", "端午节粽子一");
 			intent.putExtra("price", "￥128");
 			break;
 		case R.id.ib_shop_imagetwo:
-			intent.putExtra("image", "露肩名媛范套装");
+			intent.putExtra("image", "端午节粽子二");
 			intent.putExtra("price", "￥518");
 			break;
 		case R.id.ib_shop_imagethree:
-			intent.putExtra("image", "假两件衬衣+V领毛衣上衣");
+			intent.putExtra("image", "端午节粽子三");
 			intent.putExtra("price", "￥235");
 			break;
 		case R.id.ib_shop_imagefour:
-			intent.putExtra("image", "插肩棒球衫外套");
+			intent.putExtra("image", "端午节粽子四");
 			intent.putExtra("price", "￥162");
 			break;
 		}

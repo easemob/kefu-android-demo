@@ -7,7 +7,7 @@
         android:id="@+id/rl_shop_detail_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#ED5485"
+        android:background="#00AFF0"
         >
         <ImageButton 
             android:id="@+id/ib_shop_back"
@@ -23,7 +23,7 @@
             android:layout_centerInParent="true"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:text="商品详情"/>
+            android:text="环信移动客服"/>
     </RelativeLayout>
 	<ScrollView 
 	    android:layout_below="@id/rl_shop_detail_title"

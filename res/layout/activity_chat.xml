@@ -273,7 +273,8 @@
                         android:gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:orientation="vertical" >
+                        android:orientation="vertical" 
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textview_question3"
@@ -283,18 +284,12 @@
                             android:text="@string/text_color"
                             android:textColor="#FFFFFF"
                             android:textSize="15sp"
-                            android:background="@drawable/background_guhua"/>
+                            android:background="@drawable/background_guhua"
+                            />
                     </LinearLayout>
                     
-                </LinearLayout>
-            
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="6dp"
-                    android:weightSum="3" >
-                <LinearLayout
+                    
+                    <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -312,6 +307,35 @@
                         android:textColor="#FFFFFF"
                         android:textSize="15sp"
                         android:background="@drawable/background_guhua"/>
+                </LinearLayout>
+                    
+                </LinearLayout>
+            
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="6dp"
+                    android:weightSum="3"
+                    android:visibility="gone" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="vertical" >
+
+                    <!-- <TextView
+                        android:id="@+id/textview_question4"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:gravity="center"
+                        android:text="@string/text_kuaidi"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:background="@drawable/background_guhua"/> -->
                 </LinearLayout>
                 
                 <LinearLayout

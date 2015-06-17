@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +90,7 @@ import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
 import com.easemob.helpdeskdemo.adapter.ExpressionPagerAdapter;
 import com.easemob.helpdeskdemo.adapter.MessageAdapter;
+import com.easemob.helpdeskdemo.adapter.MessageAdapter.AutoReplyListener;
 import com.easemob.helpdeskdemo.adapter.VoicePlayClickListener;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
 import com.easemob.helpdeskdemo.utils.ImageUtils;
@@ -192,6 +194,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			micImage.setImageDrawable(micImages[msg.what]);
 		}
 	};
+	public boolean autoReply = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -205,7 +208,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		setUpView();
 		if(stImage == null){
 		}else{
-			String stfirst = stImage.substring(0, 1);
+			String stfirst = stImage.substring(stImage.length()-1, stImage.length());
 			sendPictureNew(stfirst);
 //			if(stfirst.equals("2")){
 //				//保存图片
@@ -624,6 +627,33 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private void sendText(String content) {
 
 		if (content.length() > 0) {
+			if(content.equals(getResources().getString(R.string.text_weight))){
+				autoReply = true;
+				listener = new SubAutoReplyListener();
+				adapter.setListener(listener);
+				
+				if (more_new.getVisibility() == View.GONE) {
+					System.out.println("more gone");
+					hideKeyboard();
+					more.setVisibility(View.GONE);
+					more_new.setVisibility(View.VISIBLE);
+					btnContainer.setVisibility(View.VISIBLE);
+					emojiIconContainer.setVisibility(View.GONE);
+				} 
+				else {
+					iv_emoticons_normal.setVisibility(View.VISIBLE);
+					iv_emoticons_checked.setVisibility(View.INVISIBLE);
+					more.setVisibility(View.GONE);
+					if (emojiIconContainer.getVisibility() == View.VISIBLE) {
+						emojiIconContainer.setVisibility(View.GONE);
+						btnContainer.setVisibility(View.VISIBLE);
+						iv_emoticons_normal.setVisibility(View.VISIBLE);
+						iv_emoticons_checked.setVisibility(View.INVISIBLE);
+					} else {
+						more_new.setVisibility(View.GONE);
+					}
+				}
+			}
 			EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
 			// 如果是群聊，设置chattype,默认是单聊
 			if (chatType == CHATTYPE_GROUP)
@@ -642,6 +672,35 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 			setResult(RESULT_OK);
 		}
+	}
+	
+	SubAutoReplyListener listener;
+	
+	private class SubAutoReplyListener implements AutoReplyListener{
+
+		@Override
+		public void autoReply() {
+			// TODO Auto-generated method stub
+			EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+			if (chatType == CHATTYPE_GROUP)
+				message.setChatType(ChatType.GroupChat);
+			TextMessageBody txtBody = new TextMessageBody("欢迎参加环信端午节体验移动客服送粽子活动，请留下您的姓名与电话号码，公司与职位，将有工作人员与您联络");
+			// 设置消息body
+			message.addBody(txtBody);
+			// 设置要发给谁,用户username或者群聊groupid
+			message.setFrom(EMChatManager.getInstance().getCurrentUser());
+			message.setTo(toChatUsername);
+			// 把messgage加到conversation中
+			conversation.addMessage(message);
+			message.setMsgId(UUID.randomUUID().toString());
+			// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
+			adapter.refresh();
+			listView.setSelection(listView.getCount() - 1);
+			mEditTextContent.setText("");
+			setResult(RESULT_OK);
+			EMChatManager.getInstance().saveMessage(message);
+		}
+		
 	}
 	
 	/**
@@ -782,57 +841,57 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		String desc_new = "";
 		String img_url_new = "";
 		
-		if(stfirst.equals("2")){
+		if(stfirst.equals("一")){
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
 			price = "￥128";
-			desc = "2015早春新款高腰复古牛仔裙";
+			desc = "端午节粽子一";
 			img_url = "https://www.baidu.com/img/bdlogo.png";
 			
 			item_url_new = "http://www.baidu.com";
 			title_new = "测试track1";
 			price_new = "￥128";
-			desc_new = "2015早春新款高腰复古牛仔裙";
+			desc_new = "端午节粽子一";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("露")){
+		}else if(stfirst.equals("二")){
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
 			price = "￥518";
-			desc = "露肩名媛范套装";
+			desc = "端午节粽子二";
 			img_url = "https://www.baidu.com/img/bdlogo.png";
 			
 			item_url_new = "http://www.baidu.com";
 			title_new = "测试track1";
 			price_new = "￥518";
-			desc_new = "露肩名媛范套装";
+			desc_new = "端午节粽子二";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("假")){
+		}else if(stfirst.equals("三")){
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
 			price = "￥235";
-			desc = "假两件衬衣+V领毛衣上衣";
+			desc = "端午节粽子三";
 			img_url = "https://www.baidu.com/img/bdlogo.png";
 			
 			item_url_new = "http://www.baidu.com";
 			title_new = "测试track1";
 			price_new = "￥235";
-			desc_new = "假两件衬衣+V领毛衣上衣";
+			desc_new = "端午节粽子三";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("插")){
+		}else if(stfirst.equals("四")){
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890"; 
 			title = "测试order2";
 			price = "￥162";
-			desc = "插肩棒球衫外套";
+			desc = "端午节粽子四";
 			img_url = "https://www.baidu.com/img/bdlogo.png";
 			
 			item_url_new = "http://www.baidu.com";
 			title_new = "测试track1";
 			price_new = "￥162";
-			desc_new = "插肩棒球衫外套";
+			desc_new = "端午节粽子四";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
 		}
 		
@@ -872,28 +931,28 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			e.printStackTrace();
 		}
 		
-		if(stfirst.equals("2")){
+		if(stfirst.equals("一")){
 			try {
 				jsonMsgType.put("order",jsonOrder);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(stfirst.equals("露")){
+		}else if(stfirst.equals("二")){
 			try {
 				jsonMsgType.put("order",jsonOrder);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(stfirst.equals("假")){
+		}else if(stfirst.equals("三")){
 			try {
 				jsonMsgType.put("order",jsonTrack);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(stfirst.equals("插")){
+		}else if(stfirst.equals("四")){
 			try {
 				jsonMsgType.put("order",jsonTrack);
 			} catch (JSONException e) {
