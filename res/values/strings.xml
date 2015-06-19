@@ -103,7 +103,7 @@
     <string name="password">密码</string>
     <string name="user_name">用户名</string>
     <string name="not_connect_server">不能连接到服务器</string>
-    <string name="customernumber"> 客服账号</string>
+    <string name="customernumber"> IM服务号</string>
     <string name="connect_customer"> 联系客服</string>
     <string name="feedback"> 意见反馈</string>
     <string name="save_setting">保存配置</string>

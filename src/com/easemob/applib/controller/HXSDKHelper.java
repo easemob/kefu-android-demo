@@ -139,7 +139,7 @@ public abstract class HXSDKHelper {
         SharedPreferences sharedPreFerencesAppKey = context.getSharedPreferences("customerappkey", Context.MODE_PRIVATE);
         String stAppKey = sharedPreFerencesAppKey.getString("customerappkey", "sipsoft#sandbox");
 //        EMChatConfig.getInstance().setAppKey("culiukeji#99baoyou");
-        EMChatConfig.getInstance().setAppKey(stAppKey);
+        EMChat.getInstance().setAppkey(stAppKey);
         // 初始化环信SDK,一定要先调用init()
         EMChat.getInstance().init(context);
         
