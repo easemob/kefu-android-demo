@@ -103,7 +103,7 @@
     <string name="password">password</string>
     <string name="user_name">The user name</string>
     <string name="not_connect_server">Unable to connect to the server</string>
-    <string name="customernumber"> The account of the service</string>
+    <string name="customernumber"> The account of the IM service</string>
     <string name="connect_customer">Contact customer service</string>
     <string name="feedback">feedback</string>
     <string name="save_setting">Save the configuration</string>
