@@ -17,11 +17,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,15 +32,17 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -69,6 +73,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
+import com.easemob.EMError;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
@@ -80,11 +85,11 @@ import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VideoMessageBody;
 import com.easemob.chat.VoiceMessageBody;
-import com.easemob.helpdeskdemo.DemoApplication;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
 import com.easemob.helpdeskdemo.adapter.ExpressionPagerAdapter;
 import com.easemob.helpdeskdemo.adapter.MessageAdapter;
+import com.easemob.helpdeskdemo.adapter.VoicePlayClickListener;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
 import com.easemob.helpdeskdemo.utils.ImageUtils;
 import com.easemob.helpdeskdemo.utils.SmileUtils;
@@ -92,6 +97,7 @@ import com.easemob.helpdeskdemo.widget.ExpandGridView;
 import com.easemob.helpdeskdemo.widget.PasteEditText;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
+import com.easemob.util.VoiceRecorder;
 
 /**
  * 聊天页面
@@ -136,6 +142,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 	public static final String COPY_IMAGE = "EASEMOBIMG";
 	private ListView listView;
+	private ImageView micImage;
+	private View recordingContainer;
+	private TextView recordingHint;
 	private PasteEditText mEditTextContent;
 	private View buttonSetModeKeyboard;
 	private View buttonSetModeVoice;
@@ -153,6 +162,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
 	public static ChatActivity activityInstance = null;
+	private Drawable[] micImages;
+	private VoiceRecorder voiceRecorder;
 	// 给谁发送消息
 	private String toChatUsername;
 	private MessageAdapter adapter;
@@ -172,6 +183,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 	private EMGroup group;
 	private static boolean tag=true;
+	
+	
+	private Handler micImageHandler = new Handler() {
+		@Override
+		public void handleMessage(android.os.Message msg) {
+			// 切换msg切换图片
+			micImage.setImageDrawable(micImages[msg.what]);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,25 +206,27 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		if(stImage == null){
 		}else{
 			String stfirst = stImage.substring(0, 1);
-			if(stfirst.equals("2")){
-				//保存图片
-				String pathOne = "/sdcard/appname/" + "one" + ".png";
-				saveImage(R.drawable.one,pathOne);
-				//发送image+扩展属性
-				sendPicture(pathOne);
-			}else if(stfirst.equals("露")){
-				String pathTwo = "/sdcard/appname/" + "two" + ".png";
-				saveImage(R.drawable.two,pathTwo);
-				sendPicture(pathTwo);
-			}else if(stfirst.equals("假")){
-				String pathThree = "/sdcard/appname/" + "three" + ".png";
-				saveImage(R.drawable.three,pathThree);
-				sendPicture(pathThree);
-			}else if(stfirst.equals("插")){
-				String pathFour = "/sdcard/appname/" + "four" + ".png";
-				saveImage(R.drawable.four,pathFour);
-				sendPicture(pathFour);
-			}
+			sendPictureNew(stfirst);
+//			if(stfirst.equals("2")){
+//				//保存图片
+//				String pathOne = "/sdcard/appname/" + "one" + ".png";
+//				saveImage(R.drawable.one,pathOne);
+//				//发送image+扩展属性
+//				sendPicture(pathOne);
+//				
+//			}else if(stfirst.equals("露")){
+//				String pathTwo = "/sdcard/appname/" + "two" + ".png";
+//				saveImage(R.drawable.two,pathTwo);
+//				sendPicture(pathTwo);
+//			}else if(stfirst.equals("假")){
+//				String pathThree = "/sdcard/appname/" + "three" + ".png";
+//				saveImage(R.drawable.three,pathThree);
+//				sendPicture(pathThree);
+//			}else if(stfirst.equals("插")){
+//				String pathFour = "/sdcard/appname/" + "four" + ".png";
+//				saveImage(R.drawable.four,pathFour);
+//				sendPicture(pathFour);
+//			}
 		}
 	}
 
@@ -242,7 +264,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		});
 		
 		listView = (ListView) findViewById(R.id.list);
+		micImage = (ImageView) findViewById(R.id.mic_image);
+		recordingContainer = findViewById(R.id.recording_container);
+		recordingHint = (TextView) findViewById(R.id.recording_hint);
 		mEditTextContent = (PasteEditText) findViewById(R.id.et_sendmessage);
+		buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
 		buttonSetModeKeyboard = findViewById(R.id.btn_set_mode_keyboard);
 		edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
 		buttonSend = findViewById(R.id.btn_send);
@@ -259,6 +285,22 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		more = findViewById(R.id.more);
 		more_new = findViewById(R.id.more_new);
 		edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_normal);
+		
+		// 动画资源文件,用于录制语音时
+				micImages = new Drawable[] { getResources().getDrawable(R.drawable.record_animate_01),
+						getResources().getDrawable(R.drawable.record_animate_02),
+						getResources().getDrawable(R.drawable.record_animate_03),
+						getResources().getDrawable(R.drawable.record_animate_04),
+						getResources().getDrawable(R.drawable.record_animate_05),
+						getResources().getDrawable(R.drawable.record_animate_06),
+						getResources().getDrawable(R.drawable.record_animate_07),
+						getResources().getDrawable(R.drawable.record_animate_08),
+						getResources().getDrawable(R.drawable.record_animate_09),
+						getResources().getDrawable(R.drawable.record_animate_10),
+						getResources().getDrawable(R.drawable.record_animate_11),
+						getResources().getDrawable(R.drawable.record_animate_12),
+						getResources().getDrawable(R.drawable.record_animate_13),
+						getResources().getDrawable(R.drawable.record_animate_14), };
 
 		// 表情list
 		reslist = getExpressionRes(35);
@@ -269,6 +311,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		views.add(gv1);
 		views.add(gv2);
 		expressionViewpager.setAdapter(new ExpressionPagerAdapter(views));
+		
+		voiceRecorder = new VoiceRecorder(micImageHandler);
+		buttonPressToSpeak.setOnTouchListener(new PressToSpeakListen());
 		edittext_layout.requestFocus();
 		mEditTextContent.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -692,7 +737,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	}
 
 	/**
-	 * 发送图片
+	 * 发送图文混排
 	 * 
 	 * @param filePath
 	 */
@@ -721,6 +766,158 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		setResult(RESULT_OK);
 		// more(more);
 	}
+	
+	private void sendPictureNew(String stfirst) {
+		String item_url = "";
+		String order_title = "";
+		String title = "";
+		String price = "";
+		String desc = "";
+		String img_url = "";
+		
+		
+		String item_url_new = "";
+		String title_new = "测试track1";
+		String price_new = "";
+		String desc_new = "";
+		String img_url_new = "";
+		
+		if(stfirst.equals("2")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥128";
+			desc = "2015早春新款高腰复古牛仔裙";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥128";
+			desc_new = "2015早春新款高腰复古牛仔裙";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("露")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥518";
+			desc = "露肩名媛范套装";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥518";
+			desc_new = "露肩名媛范套装";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("假")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890";
+			title = "测试order2";
+			price = "￥235";
+			desc = "假两件衬衣+V领毛衣上衣";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥235";
+			desc_new = "假两件衬衣+V领毛衣上衣";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}else if(stfirst.equals("插")){
+			item_url = "http://www.baidu.com";
+			order_title = "订单号：7890"; 
+			title = "测试order2";
+			price = "￥162";
+			desc = "插肩棒球衫外套";
+			img_url = "https://www.baidu.com/img/bdlogo.png";
+			
+			item_url_new = "http://www.baidu.com";
+			title_new = "测试track1";
+			price_new = "￥162";
+			desc_new = "插肩棒球衫外套";
+			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+		}
+		
+		
+		
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+		// 如果是群聊，设置chattype,默认是单聊
+		if (chatType == CHATTYPE_GROUP)
+			message.setChatType(ChatType.GroupChat);
+		TextMessageBody txtBody = new TextMessageBody("客服图文混排消息");
+		// 设置消息body
+		message.addBody(txtBody);
+		JSONObject jsonMsgType = new JSONObject();
+		JSONObject jsonOrder = new JSONObject();
+		JSONObject jsonTrack = new JSONObject();
+		
+		
+		try {
+			jsonOrder.put("item_url", item_url);
+			jsonOrder.put("order_title", order_title);
+			jsonOrder.put("title", title);
+			jsonOrder.put("price", price);
+			jsonOrder.put("desc", desc);
+			jsonOrder.put("img_url", img_url);
+//			jsonMsgType.put("order",jsonOrder);
+			
+			
+			jsonTrack.put("title", title_new);
+			jsonTrack.put("price", price_new);
+			jsonTrack.put("desc", desc_new);
+			jsonTrack.put("img_url", img_url_new);
+			jsonTrack.put("item_url", item_url_new);
+//			jsonMsgType.put("track",jsonTrack);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(stfirst.equals("2")){
+			try {
+				jsonMsgType.put("order",jsonOrder);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("露")){
+			try {
+				jsonMsgType.put("order",jsonOrder);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("假")){
+			try {
+				jsonMsgType.put("order",jsonTrack);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(stfirst.equals("插")){
+			try {
+				jsonMsgType.put("order",jsonTrack);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		message.setAttribute("msgtype", jsonMsgType);
+		message.setAttribute("type", "custom");
+		message.setAttribute("imageName", "mallImage3.png");
+		
+		// 设置要发给谁,用户username或者群聊groupid
+		message.setReceipt(toChatUsername);
+		// 把messgage加到conversation中
+		conversation.addMessage(message);
+		// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
+		adapter.refresh();
+		listView.setSelection(listView.getCount() - 1);
+		mEditTextContent.setText("");
+		setResult(RESULT_OK);
+	}
+	
+	
 
 	/**
 	 * 发送视频消息
@@ -817,6 +1014,92 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 		adapter.refresh();
 		listView.setSelection(resendPos);
+	}
+	
+	/**
+	 * 按住说话listener
+	 * 
+	 */
+	class PressToSpeakListen implements View.OnTouchListener {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				if (!CommonUtils.isExitsSdcard()) {
+					String st4 = getResources().getString(R.string.Send_voice_need_sdcard_support);
+					Toast.makeText(ChatActivity.this, st4, Toast.LENGTH_SHORT).show();
+					return false;
+				}
+				try {
+					v.setPressed(true);
+					wakeLock.acquire();
+					if (VoicePlayClickListener.isPlaying)
+						VoicePlayClickListener.currentPlayListener.stopPlayVoice();
+					recordingContainer.setVisibility(View.VISIBLE);
+					recordingHint.setText(getString(R.string.move_up_to_cancel));
+					recordingHint.setBackgroundColor(Color.TRANSPARENT);
+					voiceRecorder.startRecording(null, toChatUsername, getApplicationContext());
+				} catch (Exception e) {
+					e.printStackTrace();
+					v.setPressed(false);
+					if (wakeLock.isHeld())
+						wakeLock.release();
+					if (voiceRecorder != null)
+						voiceRecorder.discardRecording();
+					recordingContainer.setVisibility(View.INVISIBLE);
+					Toast.makeText(ChatActivity.this, R.string.recoding_fail, Toast.LENGTH_SHORT).show();
+					return false;
+				}
+
+				return true;
+			case MotionEvent.ACTION_MOVE: {
+				if (event.getY() < 0) {
+					recordingHint.setText(getString(R.string.release_to_cancel));
+					recordingHint.setBackgroundResource(R.drawable.recording_text_hint_bg);
+				} else {
+					recordingHint.setText(getString(R.string.move_up_to_cancel));
+					recordingHint.setBackgroundColor(Color.TRANSPARENT);
+				}
+				return true;
+			}
+			case MotionEvent.ACTION_UP:
+				v.setPressed(false);
+				recordingContainer.setVisibility(View.INVISIBLE);
+				if (wakeLock.isHeld())
+					wakeLock.release();
+				if (event.getY() < 0) {
+					// discard the recorded audio.
+					voiceRecorder.discardRecording();
+
+				} else {
+					// stop recording and send voice file
+					String st1 = getResources().getString(R.string.Recording_without_permission);
+					String st2 = getResources().getString(R.string.The_recording_time_is_too_short);
+					String st3 = getResources().getString(R.string.send_failure_please);
+					try {
+						int length = voiceRecorder.stopRecoding();
+						if (length > 0) {
+							sendVoice(voiceRecorder.getVoiceFilePath(), voiceRecorder.getVoiceFileName(toChatUsername),
+									Integer.toString(length), false);
+						} else if (length == EMError.INVALID_FILE) {
+							Toast.makeText(getApplicationContext(), st1, Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getApplicationContext(), st2, Toast.LENGTH_SHORT).show();
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						Toast.makeText(ChatActivity.this, st3, Toast.LENGTH_SHORT).show();
+					}
+
+				}
+				return true;
+			default:
+				recordingContainer.setVisibility(View.INVISIBLE);
+				if (voiceRecorder != null)
+					voiceRecorder.discardRecording();
+				return false;
+			}
+		}
 	}
 
 	/**

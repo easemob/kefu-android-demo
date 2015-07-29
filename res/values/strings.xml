@@ -103,7 +103,7 @@
     <string name="password">密码</string>
     <string name="user_name">用户名</string>
     <string name="not_connect_server">不能连接到服务器</string>
-    <string name="customernumber"> 客服账号</string>
+    <string name="customernumber"> IM服务号</string>
     <string name="connect_customer"> 联系客服</string>
     <string name="feedback"> 意见反馈</string>
     <string name="save_setting">保存配置</string>
@@ -111,5 +111,9 @@
     <string name="title_activity_modified_appkey">ModifiedAppkeyActivity</string>
     <string name="title_activity_modified_customer">ModifiedCustomerActivity</string>
     <string name="title_activity_shop_details">ShopDetailsActivity</string>
+     <string name="Send_voice_need_sdcard_support">发送语音需要sdcard支持</string>
+    <string name="Recording_without_permission">无录音权限</string>
+    <string name="The_recording_time_is_too_short">录音时间太短</string>
+     <string name="Is_download_voice_click_later">正在下载语音，稍后点击</string>
 
 </resources>

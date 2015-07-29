@@ -16,6 +16,13 @@ package com.easemob.applib.controller;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.util.Log;
+import android.widget.Toast;
+
 import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
@@ -23,19 +30,10 @@ import com.easemob.applib.model.DefaultHXSDKModel;
 import com.easemob.applib.model.HXSDKModel;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatConfig;
-import com.easemob.chat.EMChatConfig.EMEnvMode;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.OnMessageNotifyListener;
 import com.easemob.chat.OnNotificationClickListener;
-import com.easemob.util.EMLog.ELogMode;
-
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * The developer can derive from this class to talk with HuanXin SDK
@@ -140,7 +138,8 @@ public abstract class HXSDKHelper {
         }
         SharedPreferences sharedPreFerencesAppKey = context.getSharedPreferences("customerappkey", Context.MODE_PRIVATE);
         String stAppKey = sharedPreFerencesAppKey.getString("customerappkey", "sipsoft#sandbox");
-        EMChatConfig.getInstance().setAppKey(stAppKey);
+//        EMChatConfig.getInstance().setAppKey("culiukeji#99baoyou");
+        EMChat.getInstance().setAppkey(stAppKey);
         // 初始化环信SDK,一定要先调用init()
         EMChat.getInstance().init(context);
         

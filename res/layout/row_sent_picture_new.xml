@@ -27,56 +27,8 @@
             android:background="@drawable/image_people"
             android:scaleType="fitXY" />
 
-        <RelativeLayout
-            android:id="@+id/rl_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_chat_activity"
-            android:layout_toLeftOf="@id/iv_userhead" >
-            <TextView 
-                android:visibility="gone"
-                android:layout_marginBottom="5dp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-            <com.easemob.helpdeskdemo.widget.BubbleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/iv_sendPicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-	            app:bubble_angle="5dp"
-	            app:bubble_arrowHeight="10dp"
-	            app:bubble_arrowLocation="right"
-	            app:bubble_arrowOffset="-5dp"
-	            app:bubble_arrowTop="15dp"
-	            app:bubble_arrowWidth="5dp"
-                />
-            <TextView 
-                android:visibility="gone"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
-                android:id="@+id/tv_send_name"
-                android:layout_toRightOf="@id/iv_sendPicture"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxEms="6"
-                android:text=""
-                />
-            <TextView 
-                android:visibility="gone"
-                android:layout_marginLeft="5dp"
-                android:id="@+id/tv_send_price"
-                android:layout_below="@id/tv_send_name"
-                android:layout_toRightOf="@id/iv_sendPicture"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:textColor="#C1021B"
-                android:text=""
-                />
-        </RelativeLayout>	
         
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/rl_picture_add"
             android:background="@drawable/chatto_bg_normal"
             android:layout_width="wrap_content"
@@ -84,41 +36,39 @@
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead" >
             <TextView 
-                android:visibility="gone"
                 android:layout_marginBottom="5dp"
-                android:id="@+id/shop_details_title"
+                android:id="@+id/shop_details_title_new"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="我正在看:"/>
+            
+            <TextView 
+                android:id="@+id/tv_order"
+                android:layout_below="@id/shop_details_title_new"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
-            <com.easemob.helpdeskdemo.widget.BubbleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_below="@id/shop_details_title"
+            <ImageView
+                android:layout_below="@id/tv_order"
                 android:id="@+id/iv_sendPicture_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-	            app:bubble_angle="5dp"
-	            app:bubble_arrowHeight="10dp"
-	            app:bubble_arrowOffset="-5dp"
-	            app:bubble_arrowTop="15dp"
-	            app:bubble_arrowWidth="5dp"
                 />
             <TextView 
-                android:visibility="gone"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
-                android:id="@+id/tv_send_name"
-                android:layout_toRightOf="@id/iv_sendPicture"
+                android:layout_marginTop="40dp"
+                android:id="@+id/tv_send_desc"
+                android:layout_toRightOf="@id/iv_sendPicture_add"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxEms="6"
                 android:text=""
                 />
             <TextView 
-                android:visibility="gone"
                 android:layout_marginLeft="5dp"
-                android:id="@+id/tv_send_price"
-                android:layout_below="@id/tv_send_name"
-                android:layout_toRightOf="@id/iv_sendPicture"
+                android:id="@+id/tv_send_price_new"
+                android:layout_below="@id/tv_send_desc"
+                android:layout_toRightOf="@id/iv_sendPicture_add"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:textColor="#C1021B"
@@ -126,6 +76,7 @@
                 />
         </RelativeLayout>
         <LinearLayout
+            android:visibility="invisible"
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,7 +86,7 @@
             android:orientation="vertical" >
 
             <ProgressBar
-                android:id="@+id/progressBar"
+                android:id="@+id/pb_sending"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="28dp"
                 android:layout_height="28dp"

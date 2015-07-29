@@ -83,12 +83,20 @@
             android:paddingTop="4dp" >
 
               <Button
-                android:id="@+id/btn_set_mode_voice"
+                android:id="@+id/btn_set_prompt_txt"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginLeft="6dp"
                 android:background="@drawable/image_guhua"
                 android:onClick="more_new"
+                android:visibility="visible" />
+              <Button
+                android:id="@+id/btn_set_mode_voice"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/chatting_setmode_voice_btn"
+                android:onClick="setModeVoice"
                 android:visibility="visible" />
                 
             <Button

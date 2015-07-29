@@ -35,17 +35,10 @@
             android:layout_toRightOf="@id/iv_userhead"
              >  
 
-            <com.easemob.helpdeskdemo.widget.BubbleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <ImageView
                 android:id="@+id/iv_sendPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:bubble_angle="5dp"
-	            app:bubble_arrowHeight="10dp"
-	            app:bubble_arrowLocation="left"
-	            app:bubble_arrowOffset="-5dp"
-	            app:bubble_arrowTop="15dp"
-	            app:bubble_arrowWidth="5dp"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
