@@ -70,13 +70,6 @@ public class DemoHXSDKHelper extends HXSDKHelper{
     	}
     }
     
-//    public void finishActivity(){
-//    	for (Activity item : activityList) {
-//			item.finish();
-//		}
-//    }
-    
-    
     @Override
     protected void initHXOptions(){
         super.initHXOptions();
@@ -117,29 +110,6 @@ public class DemoHXSDKHelper extends HXSDKHelper{
           }
       };
     }
-    
-//    @Override
-//    protected OnNotificationClickListener getNotificationClickListener(){
-//        return new OnNotificationClickListener() {
-//
-//            @Override
-//            public Intent onNotificationClick(EMMessage message) {
-//                Intent intent = new Intent(appContext, ChatActivity.class);
-//                ChatType chatType = message.getChatType();
-//                if (chatType == ChatType.Chat) { // 单聊信息
-//                    intent.putExtra("userId", message.getFrom());
-//                    intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
-//                } else { // 群聊信息
-//                            // message.getTo()为群聊id
-//                    intent.putExtra("groupId", message.getTo());
-//                    intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
-//                }
-//                return intent;
-//            }
-//        };
-//    }
-//    
-    
     
     @Override
     protected void initListener(){
