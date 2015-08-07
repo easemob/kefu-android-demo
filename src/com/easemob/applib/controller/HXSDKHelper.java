@@ -91,8 +91,6 @@ public abstract class HXSDKHelper {
      */
     protected HXNotifier notifier = null;
     
-    private boolean alreadyNotified = false;
-    
     public HXSDKHelper(){
         me = this;
     }
@@ -256,7 +254,6 @@ public abstract class HXSDKHelper {
     public void logout(final EMCallBack callback){
     	setPassword(null);
         setHXId(null);
-        reset();
         EMChatManager.getInstance().logout(new EMCallBack(){
 
             @Override
@@ -390,21 +387,6 @@ public abstract class HXSDKHelper {
             }
         }
         return processName;
-    }
-    
-    public synchronized void notifyForRecevingEvents(){
-    	if(alreadyNotified){
-    		return;
-    	}
-    	
-    	//通知sdk,UI已经初始化完毕，注册了相应的receiver和listener，可以接受broadcast了
-    	EMChat.getInstance().setAppInited();
-    	alreadyNotified = true;
-    	
-    }
-    
-    synchronized void reset(){
-    	alreadyNotified = false;
     }
     
 }

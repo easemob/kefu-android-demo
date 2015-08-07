@@ -92,9 +92,6 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		//注册一个监听连接状态的listener
 		connectionListener = new MyConnectionListener();
 		EMChatManager.getInstance().addConnectionListener(connectionListener);
-		if(EMChat.getInstance().isLoggedIn()){
-			EMChat.getInstance().setAppInited();
-		}
 		
 		//内部测试方法，请忽略
 		registerInternalDebugReceiver();
