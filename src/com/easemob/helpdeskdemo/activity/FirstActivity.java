@@ -16,7 +16,10 @@ package com.easemob.helpdeskdemo.activity;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -30,12 +33,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
@@ -86,7 +92,12 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		//注册一个监听连接状态的listener
 		connectionListener = new MyConnectionListener();
 		EMChatManager.getInstance().addConnectionListener(connectionListener);
+		if(EMChat.getInstance().isLoggedIn()){
+			EMChat.getInstance().setAppInited();
+		}
 		
+		//内部测试方法，请忽略
+		registerInternalDebugReceiver();
 	}
 	
 	
@@ -222,6 +233,10 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		if(connectionListener != null){
 			EMChatManager.getInstance().removeConnectionListener(connectionListener);
 		}
+		try {
+            unregisterReceiver(internalDebugReceiver);
+        } catch (Exception e) {
+        }
 	}
 
 	@Override
@@ -244,5 +259,27 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		
 	}
 	
-
+	 private BroadcastReceiver internalDebugReceiver;
+	 
+	/**
+	 * 内部测试代码，开发者请忽略
+	 */
+	private void registerInternalDebugReceiver() {
+	    internalDebugReceiver = new BroadcastReceiver() {
+            
+            @Override
+            public void onReceive(Context context, Intent intent) {
+            	HXSDKHelper.getInstance().logout(null);
+				if(ChatActivity.activityInstance != null){
+					ChatActivity.activityInstance.finish();
+				}
+            }
+        };
+        IntentFilter filter = new IntentFilter(getPackageName() + ".em_internal_debug");
+        registerReceiver(internalDebugReceiver, filter);
+    }
+	
+	
+	
+	
 }

@@ -158,7 +158,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	private List<String> reslist;
 	private int chatType;
 	private EMConversation conversation;
-//	private NewMessageBroadcastReceiver receiver;
 	public static ChatActivity activityInstance = null;
 	private Drawable[] micImages;
 	private VoiceRecorder voiceRecorder;
@@ -302,7 +301,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		
 		voiceRecorder = new VoiceRecorder(micImageHandler);
 		buttonPressToSpeak.setOnTouchListener(new PressToSpeakListen());
-		edittext_layout.requestFocus();
+		mEditTextContent.requestFocus();
 		mEditTextContent.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -311,7 +310,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				} else {
 					edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_normal);
 				}
-
 			}
 		});
 		mEditTextContent.setOnClickListener(new OnClickListener() {
@@ -319,8 +317,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			@Override
 			public void onClick(View v) {
 				edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_active);
-				more.setVisibility(View.GONE);
 				more_new.setVisibility(View.GONE);
+				more.setVisibility(View.GONE);
 				iv_emoticons_normal.setVisibility(View.VISIBLE);
 				iv_emoticons_checked.setVisibility(View.INVISIBLE);
 				emojiIconContainer.setVisibility(View.GONE);
@@ -391,23 +389,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				return false;
 			}
 		});
-		// 注册接收消息广播
-//		receiver = new NewMessageBroadcastReceiver();
-//		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
-//		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-//		intentFilter.setPriority(5);
-//		registerReceiver(receiver, intentFilter);
-//
-//		// 注册一个ack回执消息的BroadcastReceiver
-//		IntentFilter ackMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getAckMessageBroadcastAction());
-//		ackMessageIntentFilter.setPriority(5);
-//		registerReceiver(ackMessageReceiver, ackMessageIntentFilter);
-//
-//		// 注册一个消息送达的BroadcastReceiver
-//		IntentFilter deliveryAckMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getDeliveryAckMessageBroadcastAction());
-//		deliveryAckMessageIntentFilter.setPriority(5);
-//		registerReceiver(deliveryAckMessageReceiver, deliveryAckMessageIntentFilter);
-
 	}
 
 	

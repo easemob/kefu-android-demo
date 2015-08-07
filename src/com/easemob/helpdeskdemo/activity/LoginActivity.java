@@ -203,6 +203,7 @@ public class LoginActivity extends BaseActivity {
 	}
 	
 	private void toChatActivity(){
+		HXSDKHelper.getInstance().notifyForRecevingEvents();
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
