@@ -21,4 +21,10 @@ public class Constant {
 	
 	
 	public static final String PICTURE_MSG = "type";
+	
+	public static final String DEFAULT_COSTOMER_APPKEY = "sipsoft#sandbox";
+	public static final String DEFAULT_COSTOMER_ACCOUNT = "yuanhui";
+	public static final String DEFAULT_ACCOUNT_PWD = "123456";
+	
+	
 }

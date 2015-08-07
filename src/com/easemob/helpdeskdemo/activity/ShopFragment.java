@@ -12,6 +12,14 @@ import com.easemob.helpdeskdemo.R;
 
 public class ShopFragment extends Fragment implements OnClickListener{
 	
+	public static final int INTENT_CODE_IMG_SELECTED_1 = 1;
+	public static final int INTENT_CODE_IMG_SELECTED_2 = 2;
+	public static final int INTENT_CODE_IMG_SELECTED_3 = 3;
+	public static final int INTENT_CODE_IMG_SELECTED_4 = 4;
+	
+	public static final String INTENT_CODE_IMG_SELECTED_KEY = "img_selected";
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -44,20 +52,16 @@ public class ShopFragment extends Fragment implements OnClickListener{
 		intent.setClass(getActivity(), ShopDetailsActivity.class);
 		switch (v.getId()) {
 		case R.id.ib_shop_imageone:
-			intent.putExtra("image", "2015早春新款高腰复古牛仔裙");
-			intent.putExtra("price", "￥128");
+			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_1);
 			break;
 		case R.id.ib_shop_imagetwo:
-			intent.putExtra("image", "露肩名媛范套装");
-			intent.putExtra("price", "￥518");
+			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_2);
 			break;
 		case R.id.ib_shop_imagethree:
-			intent.putExtra("image", "假两件衬衣+V领毛衣上衣");
-			intent.putExtra("price", "￥235");
+			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_3);
 			break;
 		case R.id.ib_shop_imagefour:
-			intent.putExtra("image", "插肩棒球衫外套");
-			intent.putExtra("price", "￥162");
+			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_4);
 			break;
 		}
 		startActivity(intent);

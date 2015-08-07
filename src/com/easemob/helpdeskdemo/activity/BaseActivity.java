@@ -61,27 +61,27 @@ public class BaseActivity extends FragmentActivity {
      * 如果不需要，注释掉即可
      * @param message
      */
-    protected void notifyNewMessage(EMMessage message) {
-        //如果是设置了不提醒只显示数目的群组(这个是app里保存这个数据的，demo里不做判断)
-        //以及设置了setShowNotificationInbackgroup:false(设为false后，后台时sdk也发送广播)
-        if(!EasyUtils.isAppRunningForeground(this)){
-            return;
-        }
-        
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(getApplicationInfo().icon)
-                .setWhen(System.currentTimeMillis()).setAutoCancel(true);
-        
-        String ticker = CommonUtils.getMessageDigest(message, this);
-        if(message.getType() == Type.TXT)
-            ticker = ticker.replaceAll("\\[.{2,3}\\]", "["+getResources().getString(R.string.attach_smile)+"]");
-        //设置状态栏提示
-        mBuilder.setTicker(message.getFrom()+": " + ticker);
-        
-        Notification notification = mBuilder.build();
-        notificationManager.notify(notifiId, notification);
-        notificationManager.cancel(notifiId);
-    }
+//    protected void notifyNewMessage(EMMessage message) {
+//        //如果是设置了不提醒只显示数目的群组(这个是app里保存这个数据的，demo里不做判断)
+//        //以及设置了setShowNotificationInbackgroup:false(设为false后，后台时sdk也发送广播)
+//        if(!EasyUtils.isAppRunningForeground(this)){
+//            return;
+//        }
+//        
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+//                .setSmallIcon(getApplicationInfo().icon)
+//                .setWhen(System.currentTimeMillis()).setAutoCancel(true);
+//        
+//        String ticker = CommonUtils.getMessageDigest(message, this);
+//        if(message.getType() == Type.TXT)
+//            ticker = ticker.replaceAll("\\[.{2,3}\\]", "["+getResources().getString(R.string.attach_smile)+"]");
+//        //设置状态栏提示
+//        mBuilder.setTicker(message.getFrom()+": " + ticker);
+//        
+//        Notification notification = mBuilder.build();
+//        notificationManager.notify(notifiId, notification);
+//        notificationManager.cancel(notifiId);
+//    }
 
     /**
      * 返回

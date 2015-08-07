@@ -115,5 +115,7 @@
     <string name="Recording_without_permission">无录音权限</string>
     <string name="The_recording_time_is_too_short">录音时间太短</string>
      <string name="Is_download_voice_click_later">正在下载语音，稍后点击</string>
-
+	<string name="Download_the_pictures">下载图片: 0%</string>
+    <string name="Download_the_pictures_new">下载图片:</string>
+    <string name="Failed_to_download_file">下载文件失败:</string>
 </resources>

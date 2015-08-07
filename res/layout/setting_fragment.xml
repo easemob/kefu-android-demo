@@ -69,7 +69,7 @@
     
     <RelativeLayout 
         android:layout_marginTop="20dp"
-        android:id="@+id/ll_setting_list_zhanghao"
+        android:id="@+id/ll_setting_list_account"
         android:background="#FFFFFF"
         android:layout_height="44dp"
         android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:textColor="#000000"
             android:textSize="17sp"/>
         <TextView
-            android:id="@+id/tv_setting_zhanghao"
+            android:id="@+id/tv_setting_account"
             android:layout_toRightOf="@id/textview_accountnumber"
             android:layout_width="wrap_content"
             android:layout_marginLeft="20dp"
@@ -92,7 +92,6 @@
             android:textSize="17sp"
             android:gravity="center_vertical"
             android:textColor="#9B9B9B"
-            android:text="yuanhui"
 			/>
         <ImageView
             android:layout_centerVertical="true"

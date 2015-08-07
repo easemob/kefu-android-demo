@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,15 +28,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.Drawable;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -50,7 +46,6 @@ import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -72,9 +67,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
 import com.easemob.EMError;
-import com.easemob.chat.CmdMessageBody;
+import com.easemob.EMEventListener;
+import com.easemob.EMNotifierEvent;
+import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.applib.utils.HelpDeskPreferenceUtils;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMGroup;
@@ -83,8 +80,8 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.chat.VideoMessageBody;
 import com.easemob.chat.VoiceMessageBody;
+import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
 import com.easemob.helpdeskdemo.adapter.ExpressionPagerAdapter;
@@ -103,7 +100,7 @@ import com.easemob.util.VoiceRecorder;
  * 聊天页面
  * 
  */
-public class ChatActivity extends BaseActivity implements OnClickListener {
+public class ChatActivity extends BaseActivity implements OnClickListener, EMEventListener {
 
 	private static final int REQUEST_CODE_EMPTY_HISTORY = 2;
 	public static final int REQUEST_CODE_CONTEXT_MENU = 3;
@@ -148,6 +145,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private PasteEditText mEditTextContent;
 	private View buttonSetModeKeyboard;
 	private View buttonSetModeVoice;
+	private View buttonSetPromptTxt;
 	private View buttonSend;
 	private View buttonPressToSpeak;
 	private LinearLayout emojiIconContainer;
@@ -160,7 +158,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private List<String> reslist;
 	private int chatType;
 	private EMConversation conversation;
-	private NewMessageBroadcastReceiver receiver;
+//	private NewMessageBroadcastReceiver receiver;
 	public static ChatActivity activityInstance = null;
 	private Drawable[] micImages;
 	private VoiceRecorder voiceRecorder;
@@ -179,10 +177,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private final int pagesize = 20;
 	private boolean haveMoreData = true;
 	private Button btnMore;
-	public String playMsgId,stImage,stPrice;
+	public String playMsgId;
+	private int imgSelectedIndex = 0;
 
 	private EMGroup group;
-	private static boolean tag=true;
 	
 	
 	private Handler micImageHandler = new Handler() {
@@ -197,39 +195,24 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-		
-		Intent intent = getIntent();
-		stImage = intent.getStringExtra("image");
-		stPrice = intent.getStringExtra("price");
+		imgSelectedIndex = getIntent().getIntExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, 0);
 		initView();
 		setUpView();
-		if(stImage == null){
-		}else{
-			String stfirst = stImage.substring(0, 1);
-			sendPictureNew(stfirst);
-//			if(stfirst.equals("2")){
-//				//保存图片
-//				String pathOne = "/sdcard/appname/" + "one" + ".png";
-//				saveImage(R.drawable.one,pathOne);
-//				//发送image+扩展属性
-//				sendPicture(pathOne);
-//				
-//			}else if(stfirst.equals("露")){
-//				String pathTwo = "/sdcard/appname/" + "two" + ".png";
-//				saveImage(R.drawable.two,pathTwo);
-//				sendPicture(pathTwo);
-//			}else if(stfirst.equals("假")){
-//				String pathThree = "/sdcard/appname/" + "three" + ".png";
-//				saveImage(R.drawable.three,pathThree);
-//				sendPicture(pathThree);
-//			}else if(stfirst.equals("插")){
-//				String pathFour = "/sdcard/appname/" + "four" + ".png";
-//				saveImage(R.drawable.four,pathFour);
-//				sendPicture(pathFour);
-//			}
-		}
+		sendPictureNew(imgSelectedIndex);
 	}
 
+	public void resetKeyboadMode(){
+		if(buttonSetModeKeyboard.getVisibility()==View.VISIBLE){
+			buttonSetModeVoice.setVisibility(View.VISIBLE);
+			edittext_layout.setVisibility(View.VISIBLE);
+			buttonSetModeKeyboard.setVisibility(View.GONE);
+			buttonPressToSpeak.setVisibility(View.GONE);
+			buttonSend.setVisibility(View.VISIBLE);
+			btnMore.setVisibility(View.GONE);
+		}
+	}
+	
+	
 	/**
 	 * initView
 	 */
@@ -242,24 +225,28 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				mEditTextContent.setText(getResources().getString(R.string.text_fahuo));
+				resetKeyboadMode();
 			}
 		});
 		mTextView2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mEditTextContent.setText(R.string.text_weight);
+				resetKeyboadMode();
 			}
 		});
 		mTextView3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mEditTextContent.setText(R.string.text_color);
+				resetKeyboadMode();
 			}
 		});
 		mTextView4.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mEditTextContent.setText(R.string.text_kuaidi);
+				resetKeyboadMode();
 			}
 		});
 		
@@ -269,6 +256,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		recordingHint = (TextView) findViewById(R.id.recording_hint);
 		mEditTextContent = (PasteEditText) findViewById(R.id.et_sendmessage);
 		buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
+		buttonSetPromptTxt = findViewById(R.id.btn_set_prompt_txt);
 		buttonSetModeKeyboard = findViewById(R.id.btn_set_mode_keyboard);
 		edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
 		buttonSend = findViewById(R.id.btn_send);
@@ -374,9 +362,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
 //			toChatUsername = getIntent().getStringExtra("userId");
-		SharedPreferences sharedPreFerences =  getSharedPreferences("customernumber", Context.MODE_PRIVATE);
-		toChatUsername = sharedPreFerences.getString("customerkey", "yuanhui");
-		
+		toChatUsername = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
 			((TextView) findViewById(R.id.name)).setText(toChatUsername);
 		conversation = EMChatManager.getInstance().getConversation(toChatUsername);
 		// 把此会话的未读数置为0
@@ -397,6 +383,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			public boolean onTouch(View v, MotionEvent event) {
 				hideKeyboard();
 				more.setVisibility(View.GONE);
+				more_new.setVisibility(View.GONE);
 				iv_emoticons_normal.setVisibility(View.VISIBLE);
 				iv_emoticons_checked.setVisibility(View.INVISIBLE);
 				emojiIconContainer.setVisibility(View.GONE);
@@ -405,21 +392,21 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 		// 注册接收消息广播
-		receiver = new NewMessageBroadcastReceiver();
-		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
-		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-		intentFilter.setPriority(5);
-		registerReceiver(receiver, intentFilter);
-
-		// 注册一个ack回执消息的BroadcastReceiver
-		IntentFilter ackMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getAckMessageBroadcastAction());
-		ackMessageIntentFilter.setPriority(5);
-		registerReceiver(ackMessageReceiver, ackMessageIntentFilter);
-
-		// 注册一个消息送达的BroadcastReceiver
-		IntentFilter deliveryAckMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getDeliveryAckMessageBroadcastAction());
-		deliveryAckMessageIntentFilter.setPriority(5);
-		registerReceiver(deliveryAckMessageReceiver, deliveryAckMessageIntentFilter);
+//		receiver = new NewMessageBroadcastReceiver();
+//		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
+//		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
+//		intentFilter.setPriority(5);
+//		registerReceiver(receiver, intentFilter);
+//
+//		// 注册一个ack回执消息的BroadcastReceiver
+//		IntentFilter ackMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getAckMessageBroadcastAction());
+//		ackMessageIntentFilter.setPriority(5);
+//		registerReceiver(ackMessageReceiver, ackMessageIntentFilter);
+//
+//		// 注册一个消息送达的BroadcastReceiver
+//		IntentFilter deliveryAckMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getDeliveryAckMessageBroadcastAction());
+//		deliveryAckMessageIntentFilter.setPriority(5);
+//		registerReceiver(deliveryAckMessageReceiver, deliveryAckMessageIntentFilter);
 
 	}
 
@@ -548,10 +535,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 
-		if(tag==true){
-			tag = false;
-			sendCmdText();
-		}
 		int id = view.getId();
 		if (id == R.id.btn_send) {// 点击发送按钮(发文字和表情)
 			String s = mEditTextContent.getText().toString();
@@ -644,64 +627,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 	
-	/**
-	 * 发送cmd消息
-	 * 
-	 * @param content
-	 *            message content
-	 * @param isResend
-	 *            boolean resend
-	 */
-	private void sendCmdText() {
-			EMMessage cmdMsg = EMMessage.createSendMessage(EMMessage.Type.CMD);
-			String action="action1";//action可以自定义，在广播接收时可以收到
-//			String action=getPhoneInfo();
-			CmdMessageBody cmdBody=new CmdMessageBody(action);
-			String toUsername="customers";//发送给某个人
-			cmdMsg.setReceipt(toUsername);
-			cmdMsg.setAttribute("deviceDetails", getPhoneInfo());//支持自定义扩展
-			cmdMsg.addBody(cmdBody); 
-			Log.i("log", "进入发送方法");
-			EMChatManager.getInstance().sendMessage(cmdMsg, new EMCallBack() {
-				@Override
-				public void onSuccess() {
-					Log.i("log", "发送成功");
-				}
-				@Override
-				public void onProgress(int arg0, String arg1) {
-				}
-				@Override
-				public void onError(int arg0, String arg1) {
-					Log.i("log", "发送失败");
-				}
-			});
-	}
-	
-	private String getPhoneInfo(){
-		String  language = Locale.getDefault().getLanguage();
-		String phoneVersion= android.os.Build.VERSION.RELEASE;
-		String xinghao = android.os.Build.MODEL;
-		String firm = android.os.Build.MANUFACTURER;
-		String versionName = null;
-		try {
-			versionName = getVersionName();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String st = "{'clientLanguage':'"+language+"','clientVersion':'"+versionName+"','manufacturer':'"+firm+"','model':'"+xinghao+"','systemVersion':'"+phoneVersion+"'}";
-		return st;
-	}
-	
-	private String getVersionName() throws Exception {
-		// 获取packagemanager的实例
-		PackageManager packageManager = getPackageManager();
-		// getPackageName()是你当前类的包名，0代表是获取版本信息
-		PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),
-				0);
-		String version = packInfo.versionName;
-		return version;
-	}
 
 	/**
 	 * 发送语音
@@ -754,20 +679,17 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		// body.setSendOriginalImage(true);
 		message.addBody(body);
 		conversation.addMessage(message);
-		if(stImage!=null){
-			message.setAttribute("name", stImage);
-			message.setAttribute("price", stPrice);
-		}
 		listView.setAdapter(adapter);
-		stImage=null;
-		stPrice=null;
 		adapter.refresh();
 		listView.setSelection(listView.getCount() - 1);
 		setResult(RESULT_OK);
 		// more(more);
 	}
 	
-	private void sendPictureNew(String stfirst) {
+	private void sendPictureNew(int selectedImgIndex) {
+		if(selectedImgIndex == 0){
+			return;
+		}
 		String item_url = "";
 		String order_title = "";
 		String title = "";
@@ -782,7 +704,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		String desc_new = "";
 		String img_url_new = "";
 		
-		if(stfirst.equals("2")){
+		switch (selectedImgIndex) {
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_1:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -795,7 +718,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			price_new = "￥128";
 			desc_new = "2015早春新款高腰复古牛仔裙";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("露")){
+			break;
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_2:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -808,7 +732,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			price_new = "￥518";
 			desc_new = "露肩名媛范套装";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("假")){
+			break;
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_3:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -821,7 +746,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			price_new = "￥235";
 			desc_new = "假两件衬衣+V领毛衣上衣";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
-		}else if(stfirst.equals("插")){
+			break;
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_4:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890"; 
 			title = "测试order2";
@@ -834,8 +760,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			price_new = "￥162";
 			desc_new = "插肩棒球衫外套";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
+			break;
+		default:
+			break;
 		}
-		
 		
 		
 		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
@@ -846,62 +774,40 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		// 设置消息body
 		message.addBody(txtBody);
 		JSONObject jsonMsgType = new JSONObject();
-		JSONObject jsonOrder = new JSONObject();
-		JSONObject jsonTrack = new JSONObject();
-		
-		
-		try {
-			jsonOrder.put("item_url", item_url);
-			jsonOrder.put("order_title", order_title);
-			jsonOrder.put("title", title);
-			jsonOrder.put("price", price);
-			jsonOrder.put("desc", desc);
-			jsonOrder.put("img_url", img_url);
-//			jsonMsgType.put("order",jsonOrder);
-			
-			
-			jsonTrack.put("title", title_new);
-			jsonTrack.put("price", price_new);
-			jsonTrack.put("desc", desc_new);
-			jsonTrack.put("img_url", img_url_new);
-			jsonTrack.put("item_url", item_url_new);
-//			jsonMsgType.put("track",jsonTrack);
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(stfirst.equals("2")){
+		switch (selectedImgIndex) {
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_1:
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_2:
 			try {
+				JSONObject jsonOrder = new JSONObject();
+				jsonOrder.put("title", title);
+				jsonOrder.put("order_title", order_title);
+				jsonOrder.put("price", price);
+				jsonOrder.put("desc", desc);
+				jsonOrder.put("img_url", img_url);
+				jsonOrder.put("item_url", item_url);
 				jsonMsgType.put("order",jsonOrder);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(stfirst.equals("露")){
+			break;
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_3:
+		case ShopFragment.INTENT_CODE_IMG_SELECTED_4:
 			try {
-				jsonMsgType.put("order",jsonOrder);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else if(stfirst.equals("假")){
-			try {
+				JSONObject jsonTrack = new JSONObject();
+				jsonTrack.put("title", title_new);
+				jsonTrack.put("price", price_new);
+				jsonTrack.put("desc", desc_new);
+				jsonTrack.put("img_url", img_url_new);
+				jsonTrack.put("item_url", item_url_new);
 				jsonMsgType.put("order",jsonTrack);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(stfirst.equals("插")){
-			try {
-				jsonMsgType.put("order",jsonTrack);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			break;
+		default:
+			break;
 		}
-		
+		imgSelectedIndex = 0;
 		message.setAttribute("msgtype", jsonMsgType);
 		message.setAttribute("type", "custom");
 		message.setAttribute("imageName", "mallImage3.png");
@@ -919,32 +825,32 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	
 	
 
-	/**
-	 * 发送视频消息
-	 */
-	private void sendVideo(final String filePath, final String thumbPath, final int length) {
-		final File videoFile = new File(filePath);
-		if (!videoFile.exists()) {
-			return;
-		}
-		try {
-			EMMessage message = EMMessage.createSendMessage(EMMessage.Type.VIDEO);
-			// 如果是群聊，设置chattype,默认是单聊
-			if (chatType == CHATTYPE_GROUP)
-				message.setChatType(ChatType.GroupChat);
-			String to = toChatUsername;
-			message.setReceipt(to);
-			VideoMessageBody body = new VideoMessageBody(videoFile, thumbPath, length, videoFile.length());
-			message.addBody(body);
-			conversation.addMessage(message);
-			listView.setAdapter(adapter);
-			adapter.refresh();
-			listView.setSelection(listView.getCount() - 1);
-			setResult(RESULT_OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	/**
+//	 * 发送视频消息
+//	 */
+//	private void sendVideo(final String filePath, final String thumbPath, final int length) {
+//		final File videoFile = new File(filePath);
+//		if (!videoFile.exists()) {
+//			return;
+//		}
+//		try {
+//			EMMessage message = EMMessage.createSendMessage(EMMessage.Type.VIDEO);
+//			// 如果是群聊，设置chattype,默认是单聊
+//			if (chatType == CHATTYPE_GROUP)
+//				message.setChatType(ChatType.GroupChat);
+//			String to = toChatUsername;
+//			message.setReceipt(to);
+//			VideoMessageBody body = new VideoMessageBody(videoFile, thumbPath, length, videoFile.length());
+//			message.addBody(body);
+//			conversation.addMessage(message);
+//			listView.setAdapter(adapter);
+//			adapter.refresh();
+//			listView.setSelection(listView.getCount() - 1);
+//			setResult(RESULT_OK);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * 根据图库图片uri发送图片
@@ -1232,56 +1138,56 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	 * 消息广播接收者
 	 * 
 	 */
-	private class NewMessageBroadcastReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// 记得把广播给终结掉
-			abortBroadcast();
+//	private class NewMessageBroadcastReceiver extends BroadcastReceiver {
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			// 记得把广播给终结掉
+//			abortBroadcast();
+//
+//			String username = intent.getStringExtra("from");
+//			String msgid = intent.getStringExtra("msgid");
+//			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
+//			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
+//			// 如果是群聊消息，获取到group id
+//			if (message.getChatType() == ChatType.GroupChat) {
+//				username = message.getTo();
+//			}
+//			if (!username.equals(toChatUsername)) {
+//				// 消息不是发给当前会话，return
+//			    notifyNewMessage(message);
+//				return;
+//			}
+//			// conversation =
+//			// EMChatManager.getInstance().getConversation(toChatUsername);
+//			// 通知adapter有新消息，更新ui
+//			adapter.refresh();
+//			listView.setSelection(listView.getCount() - 1);
+//
+//		}
+//	}
 
-			String username = intent.getStringExtra("from");
-			String msgid = intent.getStringExtra("msgid");
-			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
-			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
-			// 如果是群聊消息，获取到group id
-			if (message.getChatType() == ChatType.GroupChat) {
-				username = message.getTo();
-			}
-			if (!username.equals(toChatUsername)) {
-				// 消息不是发给当前会话，return
-			    notifyNewMessage(message);
-				return;
-			}
-			// conversation =
-			// EMChatManager.getInstance().getConversation(toChatUsername);
-			// 通知adapter有新消息，更新ui
-			adapter.refresh();
-			listView.setSelection(listView.getCount() - 1);
-
-		}
-	}
-
-	/**
-	 * 消息回执BroadcastReceiver
-	 */
-	private BroadcastReceiver ackMessageReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			abortBroadcast();
-
-			String msgid = intent.getStringExtra("msgid");
-			String from = intent.getStringExtra("from");
-			EMConversation conversation = EMChatManager.getInstance().getConversation(from);
-			if (conversation != null) {
-				// 把message设为已读
-				EMMessage msg = conversation.getMessage(msgid);
-				if (msg != null) {
-					msg.isAcked = true;
-				}
-			}
-			adapter.notifyDataSetChanged();
-
-		}
-	};
+//	/**
+//	 * 消息回执BroadcastReceiver
+//	 */
+//	private BroadcastReceiver ackMessageReceiver = new BroadcastReceiver() {
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			abortBroadcast();
+//
+//			String msgid = intent.getStringExtra("msgid");
+//			String from = intent.getStringExtra("from");
+//			EMConversation conversation = EMChatManager.getInstance().getConversation(from);
+//			if (conversation != null) {
+//				// 把message设为已读
+//				EMMessage msg = conversation.getMessage(msgid);
+//				if (msg != null) {
+//					msg.isAcked = true;
+//				}
+//			}
+//			adapter.notifyDataSetChanged();
+//
+//		}
+//	};
 
 	/**
 	 * 消息送达BroadcastReceiver
@@ -1383,6 +1289,17 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		return reslist;
 
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		DemoHXSDKHelper sdkHelper = (DemoHXSDKHelper) DemoHXSDKHelper.getInstance();
+		sdkHelper.popActivity(this);
+		//unregister this event listener when this activity enters the 
+		// background
+		EMChatManager.getInstance().unregisterEventListener(this);
+		
+	}
 
 
 	@Override
@@ -1390,18 +1307,19 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		super.onDestroy();
 		activityInstance = null;
 		// 注销广播
-		try {
-			unregisterReceiver(receiver);
-			receiver = null;
-		} catch (Exception e) {
-		}
-		try {
-			unregisterReceiver(ackMessageReceiver);
-			ackMessageReceiver = null;
-			unregisterReceiver(deliveryAckMessageReceiver);
-			deliveryAckMessageReceiver = null;
-		} catch (Exception e) {
-		}
+//		try {
+//			unregisterReceiver(receiver);
+//			receiver = null;
+//		} catch (Exception e) {
+//		}
+//		try {
+//			unregisterReceiver(ackMessageReceiver);
+//			ackMessageReceiver = null;
+//			unregisterReceiver(deliveryAckMessageReceiver);
+//			deliveryAckMessageReceiver = null;
+//		} catch (Exception e) {
+//		}
+		
 	}
 
 	@Override
@@ -1410,27 +1328,15 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		if(group != null)
 			((TextView) findViewById(R.id.name)).setText(group.getGroupName());
 		adapter.refresh();
+		DemoHXSDKHelper sdkHelper = (DemoHXSDKHelper) DemoHXSDKHelper.getInstance();
+		sdkHelper.pushActivity(this);
+		//register the event listener when enter the foreground
+		EMChatManager.getInstance().registerEventListener(
+				this,
+				new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,EMNotifierEvent.Event.EventOfflineMessage,
+						EMNotifierEvent.Event.EventDeliveryAck, EMNotifierEvent.Event.EventReadAck });
 	}
 
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		HXSDKHelper.getInstance().logout(new EMCallBack() {
-//			@Override
-//			public void onSuccess() {
-//				// TODO Auto-generated method stub
-//			}
-//			@Override
-//			public void onProgress(int progress, String status) {
-//				// TODO Auto-generated method stub
-//			}
-//			@Override
-//			public void onError(int code, String message) {
-//				// TODO Auto-generated method stub
-//			}
-//		});
-//		this.finish();
-//		return true;
-//	}
 
 	/**
 	 * 隐藏软键盘
@@ -1450,21 +1356,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	 */
 	public void back(View view) {
 		hideKeyboard();
-//		HXSDKHelper.getInstance().logout(new EMCallBack() {
-//			@Override
-//			public void onSuccess() {
-//				// TODO Auto-generated method stub
-//			}
-//			@Override
-//			public void onProgress(int progress, String status) {
-//				// TODO Auto-generated method stub
-//			}
-//			@Override
-//			public void onError(int code, String message) {
-//				// TODO Auto-generated method stub
-//			}
-//		});
-		this.finish();
+		finish();
 	}
 
 
@@ -1525,8 +1417,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	protected void onNewIntent(Intent intent) {
 		// 点击notification bar进入聊天页面，保证只有一个聊天页面
 		//String username = intent.getStringExtra("userId");
-		SharedPreferences sharedPreFerences =  getSharedPreferences("customernumber", Context.MODE_PRIVATE);
-		String username =sharedPreFerences.getString("customerkey", "customers");
+		setIntent(intent);
+		String username = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
 		if (toChatUsername.equals(username))
 			super.onNewIntent(intent);
 		else {
@@ -1617,4 +1509,87 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	@Override
+	public void onEvent(EMNotifierEvent event) {
+		switch (event.getEvent()) {
+		case EventNewMessage:
+		{
+			//获取到message
+            EMMessage message = (EMMessage) event.getData();
+            
+            String username = null;
+            //群组消息
+            if(message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom){
+                username = message.getTo();
+            }
+            else{
+                //单聊消息
+                username = message.getFrom();
+            }
+
+            //如果是当前会话的消息，刷新聊天页面
+            if(username.equals(getToChatUsername())){
+                refreshUIWithNewMessage();
+                //声音和震动提示有新消息
+                HXSDKHelper.getInstance().getNotifier().viberateAndPlayTone(message);
+            }else{
+                //如果消息不是和当前聊天ID的消息
+                HXSDKHelper.getInstance().getNotifier().onNewMsg(message);
+            }
+		}
+			break;
+		case EventDeliveryAck:
+		{
+			 //获取到message
+            EMMessage message = (EMMessage) event.getData();
+            refreshUI();
+		}
+			break;
+		case EventReadAck:
+		{
+			 //获取到message
+            EMMessage message = (EMMessage) event.getData();
+            refreshUI();
+		}
+			break;
+		case EventOfflineMessage:
+		{
+			refreshUI();
+		}
+			break;
+		default:
+			break;
+		}
+		
+	}
+
+	private void refreshUIWithNewMessage(){
+	    if(adapter == null){
+	        return;
+	    }
+	    
+	    runOnUiThread(new Runnable() {
+            public void run() {
+//                adapter.refreshSelectLast();
+            	adapter.refresh();
+            	listView.setSelection(listView.getCount() - 1);
+            }
+        });
+	}
+
+	private void refreshUI() {
+	    if(adapter == null){
+            return;
+        }
+	    
+		runOnUiThread(new Runnable() {
+			public void run() {
+				adapter.refresh();
+			}
+		});
+	}
+	
+	
+	
+	
 }

@@ -3,58 +3,50 @@ package com.easemob.helpdeskdemo.activity;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.R.layout;
-import com.easemob.helpdeskdemo.R.menu;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
+import com.easemob.helpdeskdemo.R;
 
 public class ModifiedAppkeyActivity extends Activity {
 	private ImageButton clearSearch;
-	private int RESULT_ONE = 1;
-	private ImageButton ib;
 	private EditText edittext;
+	private ImageButton ibModifyAppkey;
 	private InputMethodManager inputMethodManager;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modified_appkey);
-		clearSearch = (ImageButton) findViewById(R.id.ib_search_clear);
-		ib = (ImageButton) findViewById(R.id.ib_modified_appkey_back);
-		edittext = (EditText) findViewById(R.id.et_appkey);
-		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		initView();
+		initListener();
+
+	}
+
+	private void initListener() {
 		showSoftkeyboard();
-		
-		String ap = getIntent().getStringExtra("ap");
-		edittext.setText(ap);
-		
-		ib.setOnClickListener(new OnClickListener() {
+		String oldAppkey = getIntent().getStringExtra(SettingFragment.INTENT_KEY_MODIFY_APPKEY);
+		edittext.setText(oldAppkey);
+		ibModifyAppkey.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String stAppkey = edittext.getText().toString();
-				Intent intent = new Intent();
-				intent.putExtra("forappkey", stAppkey);
-				ModifiedAppkeyActivity.this.setResult(RESULT_ONE, intent);
-				ModifiedAppkeyActivity.this.finish();
+				setResult(RESULT_OK, new Intent().putExtra(SettingFragment.INTENT_KEY_MODIFY_APPKEY, stAppkey));
+				finish();
 			}
 		});
-		
+
 		edittext.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (s.length() > 0) {
@@ -67,7 +59,7 @@ public class ModifiedAppkeyActivity extends Activity {
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				if (s.length() > 0) {
 					clearSearch.setVisibility(View.VISIBLE);
-				}else if(count>0){
+				} else if (count > 0) {
 					clearSearch.setVisibility(View.VISIBLE);
 				}
 			}
@@ -82,15 +74,16 @@ public class ModifiedAppkeyActivity extends Activity {
 				hideSoftKeyboard();
 			}
 		});
+
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_modified_appkey, menu);
-		return true;
+	private void initView() {
+		clearSearch = (ImageButton) findViewById(R.id.ib_search_clear);
+		ibModifyAppkey = (ImageButton) findViewById(R.id.ib_modified_appkey_back);
+		edittext = (EditText) findViewById(R.id.et_appkey);
+		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
-	
+
 	void hideSoftKeyboard() {
 		if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
 			if (getCurrentFocus() != null)
@@ -98,34 +91,16 @@ public class ModifiedAppkeyActivity extends Activity {
 						InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 	}
-	
-	void showSoftkeyboard(){
+
+	void showSoftkeyboard() {
 		Timer timer = new Timer();
-	     timer.schedule(new TimerTask()
-	     {
-	         public void run() 
-	         {
-	             InputMethodManager inputManager =
-	                 (InputMethodManager)edittext.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-	             inputManager.showSoftInput(edittext, 0);
-	         }
-	     },  
-	         100);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				InputMethodManager inputManager = (InputMethodManager) edittext.getContext().getSystemService(
+						Context.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(edittext, 0);
+			}
+		}, 100);
 	}
-	
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		// TODO Auto-generated method stub
-//		if (event.getAction() == KeyEvent.KEYCODE_BACK) {
-//			String stAppkey = edittext.getText().toString();
-//			Intent intent = new Intent();
-//			intent.putExtra("forappkey", stAppkey);
-//			ModifiedAppkeyActivity.this.setResult(RESULT_ONE, intent);
-//			ModifiedAppkeyActivity.this.finish();
-//			return true;
-//		}
-//
-//		return super.onKeyDown(keyCode, event);
-//	}
 
 }
