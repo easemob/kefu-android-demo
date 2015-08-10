@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.View;
@@ -46,6 +47,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.util.EMLog;
 
 public class FirstActivity extends BaseActivity implements EMEventListener{
 
@@ -62,6 +64,12 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if(savedInstanceState != null){
+			FragmentManager fManager = getSupportFragmentManager();
+			if(fManager.getFragments().size()>0){
+				fManager.getFragments().clear();
+			};
+		}
 		setContentView(R.layout.activity_first);
 		init();
 	}
@@ -82,9 +90,8 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		mRadioButtons[0] = (Button) findViewById(R.id.main_btn_home_page);
 		mRadioButtons[1] = (Button) findViewById(R.id.main_btn_setting_page);
 		// 把shopFragment设为选中状态
-		FragmentTransaction trx = getSupportFragmentManager()
-				.beginTransaction();
-		trx.add(R.id.fragment_container, shopFragment);
+		FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+		trx.add(R.id.fragment_container, shopFragment).add(R.id.fragment_container, settingFragment).hide(settingFragment).show(shopFragment);
 		trx.commit();
 		mRadioButtons[0].setSelected(true);
 		imageButton_shop.setImageResource(R.drawable.image_shop_click);
@@ -276,7 +283,12 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
         registerReceiver(internalDebugReceiver, filter);
     }
 	
-	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		EMLog.d("FirstActivity", "onNewIntent intent:"+((intent==null)?"is null":"not null"));
+	}
 	
 	
 }

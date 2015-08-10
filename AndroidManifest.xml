@@ -126,6 +126,8 @@
 
         <activity
             android:name="com.easemob.helpdeskdemo.activity.FirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_first" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -134,14 +136,17 @@
         </activity>
         <activity
             android:name="com.easemob.helpdeskdemo.activity.ModifiedAppkeyActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_modified_appkey" >
         </activity>
         <activity
             android:name="com.easemob.helpdeskdemo.activity.ModifiedCustomerActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_modified_customer" >
         </activity>
         <activity
             android:name="com.easemob.helpdeskdemo.activity.ShopDetailsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_shop_details" >
         </activity>
     </application>
