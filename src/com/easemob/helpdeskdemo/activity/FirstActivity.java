@@ -64,14 +64,10 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(savedInstanceState != null){
-			FragmentManager fManager = getSupportFragmentManager();
-			if(fManager.getFragments().size()>0){
-				fManager.getFragments().clear();
-			};
-		}
 		setContentView(R.layout.activity_first);
-		init();
+		if(savedInstanceState == null){
+			init();
+		}
 	}
 
 	@SuppressLint("NewApi")

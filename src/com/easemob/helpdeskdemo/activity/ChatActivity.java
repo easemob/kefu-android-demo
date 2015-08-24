@@ -596,6 +596,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			message.addBody(txtBody);
 			// 设置要发给谁,用户username或者群聊groupid
 			message.setReceipt(toChatUsername);
+//			setUserInfoAttribute(message);
 			// 把messgage加到conversation中
 			conversation.addMessage(message);
 			// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
@@ -605,6 +606,36 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			setResult(RESULT_OK);
 		}
 	}
+	
+//	public void setUserInfoAttribute(EMMessage message){
+//		message.setAttribute("weichat", setWeChatUserInfo("小明", "10000", "13512345678", "环信", "小明", "", "abc@123.com"));
+//	}	 
+ 
+//	private JSONObject setWeChatUserInfo(String trueName, String qq, String phone, String companyName,
+//			String userNickname, String description, String email) {
+//		JSONObject weiJson = new JSONObject();
+//		try {
+//			JSONObject visitorJson = new JSONObject();
+//			if (trueName != null)
+//				visitorJson.put("trueName", trueName);
+//			if (qq != null)
+//				visitorJson.put("qq", qq);
+//			if (phone != null)
+//				visitorJson.put("phone", phone);
+//			if (companyName != null)
+//				visitorJson.put("companyName", companyName);
+//			if (userNickname != null)
+//				visitorJson.put("userNickname", userNickname);
+//			if (description != null)
+//				visitorJson.put("description", description);
+//			if (email != null)
+//				visitorJson.put("email", email);
+//			weiJson.put("visitor", visitorJson);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		return weiJson;
+//	}
 	
 
 	/**
@@ -628,7 +659,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			int len = Integer.parseInt(length);
 			VoiceMessageBody body = new VoiceMessageBody(new File(filePath), len);
 			message.addBody(body);
-
+//			setUserInfoAttribute(message);
 			conversation.addMessage(message);
 			adapter.refreshSelectLast();
 			setResult(RESULT_OK);
@@ -654,6 +685,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		// 默认超过100k的图片会压缩后发给对方，可以设置成发送原图
 		// body.setSendOriginalImage(true);
 		message.addBody(body);
+//		setUserInfoAttribute(message);
 		conversation.addMessage(message);
 		listView.setAdapter(adapter);
 		adapter.refreshSelectLast();
@@ -789,6 +821,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		
 		// 设置要发给谁,用户username或者群聊groupid
 		message.setReceipt(toChatUsername);
+//		setUserInfoAttribute(message);
 		// 把messgage加到conversation中
 		conversation.addMessage(message);
 		// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
@@ -874,6 +907,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		LocationMessageBody locBody = new LocationMessageBody(locationAddress, latitude, longitude);
 		message.addBody(locBody);
 		message.setReceipt(toChatUsername);
+//		setUserInfoAttribute(message);
 		conversation.addMessage(message);
 		listView.setAdapter(adapter);
 		adapter.refreshSelectLast();
