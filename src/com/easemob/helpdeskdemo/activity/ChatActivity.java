@@ -1370,7 +1370,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		super.onNewIntent(intent);
 		setIntent(intent);
 		String username = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
-		Toast.makeText(this, "onNewIntent", Toast.LENGTH_SHORT).show();		
 		if (toChatUsername.equals(username))
 			super.onNewIntent(intent);
 		else {
