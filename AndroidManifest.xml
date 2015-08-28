@@ -135,19 +135,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.easemob.helpdeskdemo.activity.ModifiedAppkeyActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_modified_appkey" >
-        </activity>
-        <activity
-            android:name="com.easemob.helpdeskdemo.activity.ModifiedCustomerActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_modified_customer" >
-        </activity>
-        <activity
             android:name="com.easemob.helpdeskdemo.activity.ShopDetailsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_shop_details" >
+        </activity>
+        <activity android:name="com.easemob.helpdeskdemo.activity.ModifyActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
     </application>
 

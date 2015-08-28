@@ -24,10 +24,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -81,6 +79,7 @@ import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VoiceMessageBody;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.adapter.ExpressionAdapter;
@@ -145,7 +144,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	private PasteEditText mEditTextContent;
 	private View buttonSetModeKeyboard;
 	private View buttonSetModeVoice;
-	private View buttonSetPromptTxt;
+//	private View buttonSetPromptTxt;
 	private View buttonSend;
 	private View buttonPressToSpeak;
 	private LinearLayout emojiIconContainer;
@@ -177,9 +176,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	private boolean haveMoreData = true;
 	private Button btnMore;
 	public String playMsgId;
-	private int imgSelectedIndex = 0;
+	private int imgSelectedIndex = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
 
 	private EMGroup group;
+	private int messageToIndex = Constant.MESSAGE_TO_DEFAULT;
+	private String currentUserNick;
 	
 	
 	private Handler micImageHandler = new Handler() {
@@ -194,9 +195,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-		imgSelectedIndex = getIntent().getIntExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, 0);
+		imgSelectedIndex = getIntent().getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
+		messageToIndex = getIntent().getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		initView();
 		setUpView();
+		if(imgSelectedIndex != Constant.INTENT_CODE_IMG_SELECTED_DEFAULT){
+			messageToIndex = Constant.MESSAGE_TO_AFTER_SALES;
+		}
 		sendPictureNew(imgSelectedIndex);
 	}
 
@@ -255,7 +260,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		recordingHint = (TextView) findViewById(R.id.recording_hint);
 		mEditTextContent = (PasteEditText) findViewById(R.id.et_sendmessage);
 		buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
-		buttonSetPromptTxt = findViewById(R.id.btn_set_prompt_txt);
+//		buttonSetPromptTxt = findViewById(R.id.btn_set_prompt_txt);
 		buttonSetModeKeyboard = findViewById(R.id.btn_set_mode_keyboard);
 		edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
 		buttonSend = findViewById(R.id.btn_send);
@@ -347,7 +352,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 			}
 		});
-
+		currentUserNick = HelpDeskPreferenceUtils.getInstance(this).getSettingCurrentNick();
 	}
 
 	private void setUpView() {
@@ -596,7 +601,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			message.addBody(txtBody);
 			// 设置要发给谁,用户username或者群聊groupid
 			message.setReceipt(toChatUsername);
-//			setUserInfoAttribute(message);
+			setMessageAttribute(message);
 			// 把messgage加到conversation中
 			conversation.addMessage(message);
 			// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
@@ -607,36 +612,71 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		}
 	}
 	
-//	public void setUserInfoAttribute(EMMessage message){
-//		message.setAttribute("weichat", setWeChatUserInfo("小明", "10000", "13512345678", "环信", "小明", "", "abc@123.com"));
-//	}	 
- 
-//	private JSONObject setWeChatUserInfo(String trueName, String qq, String phone, String companyName,
-//			String userNickname, String description, String email) {
-//		JSONObject weiJson = new JSONObject();
-//		try {
-//			JSONObject visitorJson = new JSONObject();
-//			if (trueName != null)
-//				visitorJson.put("trueName", trueName);
-//			if (qq != null)
-//				visitorJson.put("qq", qq);
-//			if (phone != null)
-//				visitorJson.put("phone", phone);
-//			if (companyName != null)
-//				visitorJson.put("companyName", companyName);
-//			if (userNickname != null)
-//				visitorJson.put("userNickname", userNickname);
-//			if (description != null)
-//				visitorJson.put("description", description);
-//			if (email != null)
-//				visitorJson.put("email", email);
-//			weiJson.put("visitor", visitorJson);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		return weiJson;
-//	}
+	public void setMessageAttribute(EMMessage message){
+		setUserInfoAttribute(message);
+		setVisitorInfoSrc(message);
+	}	 
 	
+	private void setVisitorInfoSrc(EMMessage message){
+		String strName = "name-test from hxid:" + EMChatManager.getInstance().getCurrentUser();
+		message.setAttribute("cmd", updateVisitorInfoSrc(strName));
+	}
+	
+	private void setUserInfoAttribute(EMMessage message){
+		message.setAttribute("weichat", setWeChatUserInfo(currentUserNick, "10000", "13512345678", "环信", currentUserNick, "", "abc@123.com"));
+	}
+ 
+	private JSONObject setWeChatUserInfo(String trueName, String qq, String phone, String companyName,
+			String userNickname, String description, String email) {
+		JSONObject weiJson = new JSONObject();
+		try {
+			JSONObject visitorJson = new JSONObject();
+			if (trueName != null)
+				visitorJson.put("trueName", trueName);
+			if (qq != null)
+				visitorJson.put("qq", qq);
+			if (phone != null)
+				visitorJson.put("phone", phone);
+			if (companyName != null)
+				visitorJson.put("companyName", companyName);
+			if (userNickname != null)
+				visitorJson.put("userNickname", userNickname);
+			if (description != null)
+				visitorJson.put("description", description);
+			if (email != null)
+				visitorJson.put("email", email);
+			weiJson.put("visitor", visitorJson);
+			switch (messageToIndex) {
+			case Constant.MESSAGE_TO_PRE_SALES:
+				weiJson.put("queueName", "shouqian");
+				break;
+			case Constant.MESSAGE_TO_AFTER_SALES:
+				weiJson.put("queueName", "shouhou");
+				break;
+			default:
+				break;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return weiJson;
+	}
+	
+	private JSONObject updateVisitorInfoSrc(String name){
+		JSONObject cmdJson = new JSONObject();
+		try {
+			JSONObject updateVisitorInfosrcJson = new JSONObject();
+			JSONObject paramsJson = new JSONObject();
+			if(name != null){
+				paramsJson.put("name", name);
+			}
+			updateVisitorInfosrcJson.put("params", paramsJson);
+			cmdJson.put("updateVisitorInfoSrc", updateVisitorInfosrcJson);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return cmdJson;
+	}
 
 	/**
 	 * 发送语音
@@ -659,7 +699,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			int len = Integer.parseInt(length);
 			VoiceMessageBody body = new VoiceMessageBody(new File(filePath), len);
 			message.addBody(body);
-//			setUserInfoAttribute(message);
+			setMessageAttribute(message);
 			conversation.addMessage(message);
 			adapter.refreshSelectLast();
 			setResult(RESULT_OK);
@@ -685,7 +725,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		// 默认超过100k的图片会压缩后发给对方，可以设置成发送原图
 		// body.setSendOriginalImage(true);
 		message.addBody(body);
-//		setUserInfoAttribute(message);
+		setMessageAttribute(message);
 		conversation.addMessage(message);
 		listView.setAdapter(adapter);
 		adapter.refreshSelectLast();
@@ -712,7 +752,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		String img_url_new = "";
 		
 		switch (selectedImgIndex) {
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_1:
+		case Constant.INTENT_CODE_IMG_SELECTED_1:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -726,7 +766,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			desc_new = "2015早春新款高腰复古牛仔裙";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
 			break;
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_2:
+		case Constant.INTENT_CODE_IMG_SELECTED_2:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -740,7 +780,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			desc_new = "露肩名媛范套装";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
 			break;
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_3:
+		case Constant.INTENT_CODE_IMG_SELECTED_3:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890";
 			title = "测试order2";
@@ -754,7 +794,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			desc_new = "假两件衬衣+V领毛衣上衣";
 			img_url_new = "http://www.lagou.com/upload/indexPromotionImage/ff8080814cffb587014d09b2d7810206.png";
 			break;
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_4:
+		case Constant.INTENT_CODE_IMG_SELECTED_4:
 			item_url = "http://www.baidu.com";
 			order_title = "订单号：7890"; 
 			title = "测试order2";
@@ -782,8 +822,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		message.addBody(txtBody);
 		JSONObject jsonMsgType = new JSONObject();
 		switch (selectedImgIndex) {
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_1:
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_2:
+		case Constant.INTENT_CODE_IMG_SELECTED_1:
+		case Constant.INTENT_CODE_IMG_SELECTED_2:
 			try {
 				JSONObject jsonOrder = new JSONObject();
 				jsonOrder.put("title", title);
@@ -797,8 +837,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				e.printStackTrace();
 			}
 			break;
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_3:
-		case ShopFragment.INTENT_CODE_IMG_SELECTED_4:
+		case Constant.INTENT_CODE_IMG_SELECTED_3:
+		case Constant.INTENT_CODE_IMG_SELECTED_4:
 			try {
 				JSONObject jsonTrack = new JSONObject();
 				jsonTrack.put("title", title_new);
@@ -814,14 +854,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		default:
 			break;
 		}
-		imgSelectedIndex = 0;
+		imgSelectedIndex = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
 		message.setAttribute("msgtype", jsonMsgType);
 		message.setAttribute("type", "custom");
 		message.setAttribute("imageName", "mallImage3.png");
 		
 		// 设置要发给谁,用户username或者群聊groupid
 		message.setReceipt(toChatUsername);
-//		setUserInfoAttribute(message);
+		setMessageAttribute(message);
 		// 把messgage加到conversation中
 		conversation.addMessage(message);
 		// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
@@ -907,7 +947,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		LocationMessageBody locBody = new LocationMessageBody(locationAddress, latitude, longitude);
 		message.addBody(locBody);
 		message.setReceipt(toChatUsername);
-//		setUserInfoAttribute(message);
+		setMessageAttribute(message);
 		conversation.addMessage(message);
 		listView.setAdapter(adapter);
 		adapter.refreshSelectLast();
@@ -1327,9 +1367,10 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	@Override
 	protected void onNewIntent(Intent intent) {
 		// 点击notification bar进入聊天页面，保证只有一个聊天页面
-		//String username = intent.getStringExtra("userId");
+		super.onNewIntent(intent);
 		setIntent(intent);
 		String username = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
+		Toast.makeText(this, "onNewIntent", Toast.LENGTH_SHORT).show();		
 		if (toChatUsername.equals(username))
 			super.onNewIntent(intent);
 		else {

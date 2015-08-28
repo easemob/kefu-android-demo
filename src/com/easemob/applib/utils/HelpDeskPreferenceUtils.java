@@ -31,6 +31,8 @@ public class HelpDeskPreferenceUtils {
 
 	private String SHARED_KEY_SETTING_CUSTOMER_APPKEY = "shared_key_setting_customer_appkey";
 	private String SHARED_KEY_SETTING_CUSTOMER_ACCOUNT = "shared_key_setting_customer_account";
+	
+	private String SHARED_KEY_SETTING_CURRENT_NICK = "shared_key_setting_current_nick";
 
 	private HelpDeskPreferenceUtils(Context cxt) {
 		mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -62,4 +64,14 @@ public class HelpDeskPreferenceUtils {
 		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, Constant.DEFAULT_COSTOMER_ACCOUNT);
 	}
 
+	public void setSettingCurrentNick(String nick){
+		editor.putString(SHARED_KEY_SETTING_CURRENT_NICK, nick);
+		editor.commit();
+	}
+	
+	public String getSettingCurrentNick(){
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CURRENT_NICK, "");
+	}
+	
+	
 }

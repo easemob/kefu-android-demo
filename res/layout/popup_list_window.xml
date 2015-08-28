@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_popup"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btn_pre_sales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:background="@drawable/bg_button_red_2"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:text="@string/pop_pre_sales"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/btn_after_sales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:background="@drawable/bg_button_red_2"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:text="@string/pop_after_sales"
+        android:textColor="#fff" />
+
+</LinearLayout>

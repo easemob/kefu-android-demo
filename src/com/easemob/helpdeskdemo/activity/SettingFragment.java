@@ -29,18 +29,20 @@ import android.widget.TextView;
 import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.applib.utils.HelpDeskPreferenceUtils;
 import com.easemob.chat.EMChat;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 
 public class SettingFragment extends Fragment implements OnClickListener {
 	
 	private RelativeLayout rlAppkey;
 	private RelativeLayout rlAccount;
+	private RelativeLayout rlNick;
 	private TextView tvAppkey;
 	private TextView tvAccount;
+	private TextView tvNick;
 	private static final int REQUEST_CODE_APPKEY = 1;
 	private static final int REQUEST_CODE_ACCOUNT = 2;
-	public static final String INTENT_KEY_MODIFY_APPKEY = "modify_appkey";
-	public static final String INTENT_KEY_MODIFY_ACCOUNT = "modify_account";
+	private static final int REQUEST_CODE_NICK = 3;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,15 +59,19 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private void initView() {
 		tvAppkey = (TextView) getView().findViewById(R.id.tv_setting_appkey);
 		tvAccount = (TextView) getView().findViewById(R.id.tv_setting_account);
+		tvNick = (TextView) getView().findViewById(R.id.tv_setting_nick);
 		rlAppkey = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_appkey);
 		rlAccount = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_account);
+		rlNick = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_nick);
 	}
 
 	private void initListener() {
 		tvAppkey.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAppkey());
 		tvAccount.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAccount());
+		tvNick.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCurrentNick());
 		rlAppkey.setOnClickListener(this);
 		rlAccount.setOnClickListener(this);
+		rlNick.setOnClickListener(this);
 	}
 
 	
@@ -77,7 +83,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			switch (requestCode) {
 			case REQUEST_CODE_APPKEY:
 				String oldAppkey = tvAppkey.getText().toString();
-				String newAppkey = data.getStringExtra(INTENT_KEY_MODIFY_APPKEY);
+				String newAppkey = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
 				if(oldAppkey.equals(newAppkey)){
 					return;
 				}
@@ -86,12 +92,21 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				break;
 			case REQUEST_CODE_ACCOUNT:
 				String oldAccount = tvAccount.getText().toString();
-				String newAccount = data.getStringExtra(INTENT_KEY_MODIFY_ACCOUNT);
+				String newAccount = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
 				if(oldAccount.equals(newAccount)){
 					return;
 				}
 				tvAccount.setText(newAccount);
 				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCustomerAccount(newAccount);
+				break;
+			case REQUEST_CODE_NICK:
+				String oldNick = tvNick.getText().toString();
+				String newNick = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+				if(oldNick.equals(newNick)){
+					return;
+				}
+				tvNick.setText(newNick);
+				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCurrentNick(newNick);
 				break;
 			default:
 				break;
@@ -131,15 +146,24 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.ll_setting_list_appkey:
 			String strAppkey = tvAppkey.getText().toString();
-			intent.setClass(getActivity(), ModifiedAppkeyActivity.class);
-			intent.putExtra(INTENT_KEY_MODIFY_APPKEY, strAppkey);
+			intent.setClass(getActivity(), ModifyActivity.class);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_APPKEY);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strAppkey);
 			startActivityForResult(intent, REQUEST_CODE_APPKEY);
 			break;
 		case R.id.ll_setting_list_account:
 			String strAccount = tvAccount.getText().toString();
-			intent.setClass(getActivity(), ModifiedCustomerActivity.class);
-			intent.putExtra(INTENT_KEY_MODIFY_ACCOUNT, strAccount);
+			intent.setClass(getActivity(), ModifyActivity.class);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_ACCOUNT);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strAccount);
 			startActivityForResult(intent, REQUEST_CODE_ACCOUNT);
+			break;
+		case R.id.ll_setting_list_nick:
+			String strNick = tvNick.getText().toString();
+			intent.setClass(getActivity(), ModifyActivity.class);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_NICK);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strNick);
+			startActivityForResult(intent, REQUEST_CODE_NICK);
 			break;
 		default:
 			break;

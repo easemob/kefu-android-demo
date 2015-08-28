@@ -20,17 +20,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.helpdeskdemo.widget.PopupListWindow;
 
 public class ShopFragment extends Fragment implements OnClickListener{
 	
-	public static final int INTENT_CODE_IMG_SELECTED_1 = 1;
-	public static final int INTENT_CODE_IMG_SELECTED_2 = 2;
-	public static final int INTENT_CODE_IMG_SELECTED_3 = 3;
-	public static final int INTENT_CODE_IMG_SELECTED_4 = 4;
-	
-	public static final String INTENT_CODE_IMG_SELECTED_KEY = "img_selected";
+	private PopupListWindow mPopupListWindow;
+	private TextView tvCustomer;
 	
 	
 	@Override
@@ -46,14 +45,14 @@ public class ShopFragment extends Fragment implements OnClickListener{
 		getActivity().findViewById(R.id.ib_shop_imagetwo).setOnClickListener(this);
 		getActivity().findViewById(R.id.ib_shop_imagethree).setOnClickListener(this);
 		getActivity().findViewById(R.id.ib_shop_imagefour).setOnClickListener(this);
-		
-		getActivity().findViewById(
-				R.id.textview_customer).setOnClickListener(new OnClickListener() {
+		tvCustomer = (TextView) getView().findViewById(R.id.textview_customer);
+		tvCustomer.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), LoginActivity.class);
-				startActivity(intent);
+				if(mPopupListWindow == null){
+					mPopupListWindow = new PopupListWindow(getActivity());
+				}
+				mPopupListWindow.showAsDropDown(tvCustomer);
 			}
 		});
 	}
@@ -65,19 +64,27 @@ public class ShopFragment extends Fragment implements OnClickListener{
 		intent.setClass(getActivity(), ShopDetailsActivity.class);
 		switch (v.getId()) {
 		case R.id.ib_shop_imageone:
-			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_1);
+			intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_1);
 			break;
 		case R.id.ib_shop_imagetwo:
-			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_2);
+			intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_2);
 			break;
 		case R.id.ib_shop_imagethree:
-			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_3);
+			intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_3);
 			break;
 		case R.id.ib_shop_imagefour:
-			intent.putExtra(INTENT_CODE_IMG_SELECTED_KEY, INTENT_CODE_IMG_SELECTED_4);
+			intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_4);
 			break;
 		}
 		startActivity(intent);
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mPopupListWindow != null && mPopupListWindow.isShowing()) {
+			mPopupListWindow.dismiss();
+		}
+	}
+	
 }

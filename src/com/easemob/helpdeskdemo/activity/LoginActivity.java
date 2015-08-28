@@ -36,12 +36,15 @@ import com.easemob.helpdeskdemo.utils.CommonUtils;
 public class LoginActivity extends BaseActivity {
 	private boolean progressShow;
 	private ProgressDialog progressDialog;
-	private int selectedIndex = 0;
+	private int selectedIndex = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
+	private int messageToIndex = Constant.MESSAGE_TO_DEFAULT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		selectedIndex = getIntent().getIntExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, 0);
+		Intent intent = getIntent();
+		selectedIndex = intent.getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
+		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		if(EMChat.getInstance().isLoggedIn()){
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(
@@ -210,7 +213,7 @@ public class LoginActivity extends BaseActivity {
 					progressDialog.dismiss();
 				// 进入主页面
 				startActivity(new Intent(LoginActivity.this, ChatActivity.class)
-						.putExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex));
+						.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex));
 				finish();
 			}
 		});

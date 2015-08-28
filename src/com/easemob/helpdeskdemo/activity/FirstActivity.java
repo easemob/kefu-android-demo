@@ -45,6 +45,7 @@ import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.util.EMLog;
@@ -200,6 +201,7 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		case R.id.ll_setting_list_customer:
 			Intent intent = new Intent();
 			intent.setClass(FirstActivity.this, LoginActivity.class);
+			intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 			startActivity(intent);
 			break;
 		default:

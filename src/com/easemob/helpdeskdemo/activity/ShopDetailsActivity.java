@@ -33,6 +33,7 @@ import com.easemob.EMNotifierEvent;
 import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.ImageCache;
@@ -42,14 +43,14 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 	private RelativeLayout rl;
 	private ImageButton mImageButton;
 	private Bitmap mBitmap = null;
-	private int index = 0;
+	private int index = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shop_details);
-		index = getIntent().getIntExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, 1);
+		index = getIntent().getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		
 		rl = (RelativeLayout) findViewById(R.id.rl_tochat);
 		mImageButton = (ImageButton) findViewById(R.id.ib_shop_back);
@@ -75,7 +76,8 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.putExtra(ShopFragment.INTENT_CODE_IMG_SELECTED_KEY, index);
+				intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, index);
+				intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_AFTER_SALES);
 				intent.setClass(ShopDetailsActivity.this, LoginActivity.class);
 				startActivity(intent);
 			}
