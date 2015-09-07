@@ -282,7 +282,7 @@ public class MessageAdapter extends BaseAdapter{
 		default:
 			if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
 				//TODO textAndPicture message layout
-				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_picture_new, null) : inflater.inflate(
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
 						R.layout.row_sent_picture_new, null);
 			}else{
 				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
@@ -531,22 +531,26 @@ public class MessageAdapter extends BaseAdapter{
 		return convertView;
 	}
 
-	private void handlePictureTxtMessage(EMMessage message, ViewHolder holder,
+	private void handlePictureTxtMessage(EMMessage message, ViewHolder holder,final 
 			int position) {
 		TextMessageBody txtBody = (TextMessageBody) message.getBody();
 		Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
-		// 设置内容
-//		holder.tv.setText(span, BufferType.SPANNABLE);
-//		// 设置长按事件监听
-//		holder.tv.setOnLongClickListener(new OnLongClickListener() {
-//			@Override
-//			public boolean onLongClick(View v) {
-//				return true;
-//			}
-//		});
+		if(message.direct == EMMessage.Direct.RECEIVE){
+			// 设置内容
+			holder.tv.setText(span, BufferType.SPANNABLE);
+			// 设置长按事件监听
+			holder.tv.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					activity.startActivityForResult(
+							(new Intent(activity, ContextMenu.class)).putExtra("position", position).putExtra("type",
+									EMMessage.Type.TXT.ordinal()), ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+					return true;
+				}
+			});
+			return;
+		}
 		
-		
-
 		String imageName = message.getStringAttribute("imageName", null);
 		try {
 			JSONObject jsonOrder = message.getJSONObjectAttribute("msgtype").getJSONObject("order");
@@ -556,40 +560,39 @@ public class MessageAdapter extends BaseAdapter{
 			String price = jsonOrder.getString("price");
 			String desc = jsonOrder.getString("desc");
 			String img_url = jsonOrder.getString("img_url");
-			int resId = 0;
-			if(desc.substring(0, 1).equals("2")){
-				resId = R.drawable.one;
+			if(desc == null){
+				
+			}else if(desc.equals("2015早春新款高腰复古牛仔裙")){
 				holder.mTextViewDes.setText("2015早春新款高腰复古牛仔裙");
 				holder.mTextViewprice.setText("￥128");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:123456");
-			}else if(desc.substring(0, 1).equals("露")){
-				resId = R.drawable.two;
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.one)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}else if(desc.equals("露肩名媛范套装")){
 				holder.mTextViewDes.setText("露肩名媛范套装");
 				holder.mTextViewprice.setText("￥518");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:7890");
-			}else if(desc.substring(0, 1).equals("假")){
-				resId = R.drawable.three;
-				holder.mTextViewDes.setText("假两件衬衣+V领毛衣上衣");
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.two)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+				
+			}else if(desc.equals("假两件衬衣+V领毛衣上衣")){
+				holder.mTextViewDes.setText("");
 				holder.mTextViewprice.setText("￥235");
-			}else if(desc.substring(0, 1).equals("插")){
-				resId = R.drawable.four;
-				holder.mTextViewDes.setText("插肩棒球衫外套");
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.three)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}else if(desc.equals("插肩棒球衫外套")){
+				holder.mTextViewDes.setText("");
 				holder.mTextViewprice.setText("￥162");
- 			}
-			Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(resId)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
-			holder.mImageView.setImageBitmap(newBitmap);
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.four)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (EaseMobException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 		
 		if (message.direct == EMMessage.Direct.SEND) {
 			switch (message.status) {

@@ -623,6 +623,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	}
 	
 	private void setUserInfoAttribute(EMMessage message){
+		if(TextUtils.isEmpty(currentUserNick)){
+			currentUserNick = EMChatManager.getInstance().getCurrentUser();
+		}
 		message.setAttribute("weichat", setWeChatUserInfo(currentUserNick, "10000", "13512345678", "环信", currentUserNick, "", "abc@123.com"));
 	}
  
