@@ -16,7 +16,6 @@ package com.easemob.helpdeskdemo.utils;
 import com.easemob.applib.utils.HXPreferenceUtils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 /**
  * 

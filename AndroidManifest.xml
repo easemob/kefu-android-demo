@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.easemob.helpdeskdemo"
-    android:versionCode="12"
-    android:versionName="2.1.4" >
+    android:versionCode="20"
+    android:versionName="2.2.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -126,6 +126,7 @@
 
         <activity
             android:name="com.easemob.helpdeskdemo.activity.FirstActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_first" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -133,16 +134,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.easemob.helpdeskdemo.activity.ModifiedAppkeyActivity"
-            android:label="@string/title_activity_modified_appkey" >
-        </activity>
-        <activity
-            android:name="com.easemob.helpdeskdemo.activity.ModifiedCustomerActivity"
-            android:label="@string/title_activity_modified_customer" >
-        </activity>
-        <activity
             android:name="com.easemob.helpdeskdemo.activity.ShopDetailsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_shop_details" >
+        </activity>
+        <activity android:name="com.easemob.helpdeskdemo.activity.ModifyActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
     </application>
 

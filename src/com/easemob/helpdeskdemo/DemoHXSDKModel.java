@@ -60,7 +60,7 @@ public class DemoHXSDKModel extends DefaultHXSDKModel{
     
     @Override
     public String getAppProcessName() {
-        // TODO Auto-generated method stub
+        // TODO replace your package name
         return "com.easemob.helpdeskdemo";
     }
 }

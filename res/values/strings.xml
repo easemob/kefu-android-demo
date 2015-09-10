@@ -108,12 +108,18 @@
     <string name="feedback"> 意见反馈</string>
     <string name="save_setting">保存配置</string>
     <string name="history_record">历史记录</string>
-    <string name="title_activity_modified_appkey">ModifiedAppkeyActivity</string>
-    <string name="title_activity_modified_customer">ModifiedCustomerActivity</string>
     <string name="title_activity_shop_details">ShopDetailsActivity</string>
      <string name="Send_voice_need_sdcard_support">发送语音需要sdcard支持</string>
     <string name="Recording_without_permission">无录音权限</string>
     <string name="The_recording_time_is_too_short">录音时间太短</string>
      <string name="Is_download_voice_click_later">正在下载语音，稍后点击</string>
-
+	<string name="Download_the_pictures">下载图片: 0%</string>
+    <string name="Download_the_pictures_new">下载图片:</string>
+    <string name="Failed_to_download_file">下载文件失败:</string>
+    <string name="set_nick">设置昵称</string>
+    <string name="login_user_nick">登录用户昵称</string>
+    <string name="customer_account">客服账号</string>
+    <string name="appkey">AppKey</string>
+    <string name="pop_pre_sales">售前客服</string>
+    <string name="pop_after_sales">售后客服</string>
 </resources>
