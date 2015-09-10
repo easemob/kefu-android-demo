@@ -1,6 +1,20 @@
+/**
+ * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.easemob.helpdeskdemo.activity;
 
-import android.app.Activity;
+import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,23 +28,29 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
+import com.easemob.EMEventListener;
+import com.easemob.EMNotifierEvent;
+import com.easemob.applib.controller.HXSDKHelper;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.ImageCache;
 
-public class ShopDetailsActivity extends Activity {
+public class ShopDetailsActivity extends BaseActivity implements EMEventListener {
 	private ImageView mImageView;
 	private RelativeLayout rl;
-	private String stnumber,stprice;
 	private ImageButton mImageButton;
 	private Bitmap mBitmap = null;
+	private int index = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shop_details);
-		stnumber = getIntent().getStringExtra("image");
-		stprice = getIntent().getStringExtra("price");
+		index = getIntent().getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		
 		rl = (RelativeLayout) findViewById(R.id.rl_tochat);
 		mImageButton = (ImageButton) findViewById(R.id.ib_shop_back);
@@ -56,19 +76,51 @@ public class ShopDetailsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.putExtra("image", stnumber);
-				intent.putExtra("price", stprice);
+				intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, index);
+				intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_AFTER_SALES);
 				intent.setClass(ShopDetailsActivity.this, LoginActivity.class);
 				startActivity(intent);
 			}
 		});
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_shop_details, menu);
-		return true;
+	protected void onResume() {
+		super.onResume();
+		DemoHXSDKHelper sdkHelper = (DemoHXSDKHelper) DemoHXSDKHelper.getInstance();
+		sdkHelper.pushActivity(this);
+		//register the event listener when enter the foreground
+		EMChatManager.getInstance().registerEventListener(this,
+						new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
+								EMNotifierEvent.Event.EventOfflineMessage });
 	}
 	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		DemoHXSDKHelper sdkHelper = (DemoHXSDKHelper) DemoHXSDKHelper.getInstance();
+		sdkHelper.popActivity(this);
+		EMChatManager.getInstance().unregisterEventListener(this);
+	}
+
+	@Override
+	public void onEvent(EMNotifierEvent event) {
+		switch (event.getEvent()) {
+		case EventNewMessage:
+			EMMessage message = (EMMessage) event.getData();
+			//提示新消息
+			HXSDKHelper.getInstance().getNotifier().onNewMsg(message);
+			break;
+		case EventOfflineMessage:
+			//处理离线消息
+			List<EMMessage> messages = (List<EMMessage>) event.getData();
+			//消息提醒或只刷新UI
+			HXSDKHelper.getInstance().getNotifier().onNewMesg(messages);
+			break;
+		default:
+			break;
+		}
+		
+	}
+
 }

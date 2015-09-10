@@ -30,13 +30,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 
+import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatConfig;
+import com.easemob.chat.EMChatManager;
 import com.easemob.cloud.CloudOperationCallback;
 import com.easemob.cloud.HttpFileManager;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.task.LoadLocalBigImgTask;
 import com.easemob.helpdeskdemo.utils.ImageCache;
 import com.easemob.helpdeskdemo.widget.photoview.PhotoView;
+import com.easemob.util.EMLog;
 import com.easemob.util.ImageUtils;
 import com.easemob.util.PathUtil;
 
@@ -128,15 +131,15 @@ public class ShowBigImage extends BaseActivity {
 	 * @param remoteFilePath
 	 */
 	private void downloadImage(final String remoteFilePath, final Map<String, String> headers) {
+		String str1 = getResources().getString(R.string.Download_the_pictures);
 		pd = new ProgressDialog(this);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		pd.setCanceledOnTouchOutside(false);
-		pd.setMessage(getResources().getString(R.string.download_image));
+		pd.setMessage(str1);
 		pd.show();
 		localFilePath = getLocalFilePath(remoteFilePath);
-		final HttpFileManager httpFileMgr = new HttpFileManager(this, EMChatConfig.getInstance().getStorageUrl());
-		final CloudOperationCallback callback = new CloudOperationCallback() {
-			public void onSuccess(String resultMsg) {
+		final EMCallBack callback = new EMCallBack() {
+			public void onSuccess() {
 
 				runOnUiThread(new Runnable() {
 					@Override
@@ -161,8 +164,7 @@ public class ShowBigImage extends BaseActivity {
 				});
 			}
 
-			public void onError(String msg) {
-				Log.e("###", "offline file transfer error:" + msg);
+			public void onError(int error, String msg) {
 				File file = new File(localFilePath);
 				if (file.exists()&&file.isFile()) {
 					file.delete();
@@ -176,23 +178,20 @@ public class ShowBigImage extends BaseActivity {
 				});
 			}
 
-			public void onProgress(final int progress) {
-				Log.d("ease", "Progress: " + progress);
+			public void onProgress(final int progress, String status) {
+				final String str2 = getResources().getString(R.string.Download_the_pictures_new);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						pd.setMessage(getResources().getString(R.string.download_image_second) + progress + "%");
+						
+						pd.setMessage(str2 + progress + "%");
 					}
 				});
 			}
 		};
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				httpFileMgr.downloadFile(remoteFilePath, localFilePath, headers, callback);
-			}
-		}).start();
+	    EMChatManager.getInstance().downloadFile(remoteFilePath, localFilePath, headers, callback);
+
 	}
 
 	@Override

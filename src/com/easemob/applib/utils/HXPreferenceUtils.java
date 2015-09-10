@@ -13,6 +13,8 @@
  */
 package com.easemob.applib.utils;
 
+import com.easemob.helpdeskdemo.Constant;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -29,6 +31,9 @@ public class HXPreferenceUtils {
 	private String SHARED_KEY_SETTING_SOUND = "shared_key_setting_sound";
 	private String SHARED_KEY_SETTING_VIBRATE = "shared_key_setting_vibrate";
 	private String SHARED_KEY_SETTING_SPEAKER = "shared_key_setting_speaker";
+	
+	private String SHARED_KEY_SETTING_CUSTOMER_APPKEY = "shared_key_setting_customer_appkey";
+	private String SHARED_KEY_SETTING_CUSTOMER_ACCOUNT = "shared_key_setting_customer_account";
 
 	private HXPreferenceUtils(Context cxt) {
 		mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -90,6 +95,24 @@ public class HXPreferenceUtils {
 
 	public boolean getSettingMsgSpeaker() {
 		return mSharedPreferences.getBoolean(SHARED_KEY_SETTING_SPEAKER, true);
+	}
+	
+	public void setSettingCustomerAppkey(String appkey){
+		editor.putString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, appkey);
+		editor.commit();
+	}
+	
+	public String getSettingCustomerAppkey(){
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, Constant.DEFAULT_COSTOMER_APPKEY);
+	}
+	
+	public void setSettingCustomerAccount(String account){
+		editor.putString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, account);
+		editor.commit();
+	}
+	
+	public String getSettingCustomerAccount(){
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, Constant.DEFAULT_COSTOMER_ACCOUNT);
 	}
 
 }

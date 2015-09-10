@@ -21,19 +21,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.applib.model.DefaultHXSDKModel;
+import com.easemob.applib.model.HXNotifier;
+import com.easemob.applib.model.HXNotifier.HXNotificationInfoProvider;
 import com.easemob.applib.model.HXSDKModel;
+import com.easemob.applib.utils.HelpDeskPreferenceUtils;
 import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatConfig;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.OnMessageNotifyListener;
 import com.easemob.chat.OnNotificationClickListener;
+import com.easemob.util.EMLog;
 
 /**
  * The developer can derive from this class to talk with HuanXin SDK
@@ -85,6 +87,10 @@ public abstract class HXSDKHelper {
      */
     private static HXSDKHelper me = null;
     
+    /**
+     * the notifier
+     */
+    protected HXNotifier notifier = null;
     
     public HXSDKHelper(){
         me = this;
@@ -126,30 +132,20 @@ public abstract class HXSDKHelper {
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
         
-        Log.d(TAG, "process app name : " + processAppName);
+        EMLog.d(TAG, "process app name : " + processAppName);
         
         // 如果app启用了远程的service，此application:onCreate会被调用2次
         // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
         if (processAppName == null || !processAppName.equalsIgnoreCase(hxModel.getAppProcessName())) {
-            Log.e(TAG, "enter the service process!");
+            EMLog.e(TAG, "enter the service process!");
             // 则此application::onCreate 是被service 调用的，直接返回
             return false;
         }
-        SharedPreferences sharedPreFerencesAppKey = context.getSharedPreferences("customerappkey", Context.MODE_PRIVATE);
-        String stAppKey = sharedPreFerencesAppKey.getString("customerappkey", "sipsoft#sandbox");
-//        EMChatConfig.getInstance().setAppKey("culiukeji#99baoyou");
-        EMChat.getInstance().setAppkey(stAppKey);
+        String appkey = HelpDeskPreferenceUtils.getInstance(context).getSettingCustomerAppkey();
+        EMChat.getInstance().setAppkey(appkey);
         // 初始化环信SDK,一定要先调用init()
         EMChat.getInstance().init(context);
-        
-//        Toast.makeText(context, stAppKey, 0).show();
-        
-        // 设置sandbox测试环境
-        // 建议开发者开发时设置此模式
-//        if(hxModel.isSandboxMode()){
-//            EMChat.getInstance().setEnv(EMEnvMode.EMSandboxMode);
-//        }
         
         if(hxModel.isDebugMode()){
             // set debug mode in development process
@@ -177,31 +173,20 @@ public abstract class HXSDKHelper {
     }
     
     public String getHXId(){
-//        if(hxId == null){
-//            hxId = hxModel.getHXId();
-//        }
-//        return hxId;
     	SharedPreferences sharedPreferences = appContext.getSharedPreferences("shared", Context.MODE_PRIVATE);
     	String stname = sharedPreferences.getString("name", "zp");
-    	Toast.makeText(appContext, stname, 0).show();
     	return stname;
     }
     
     public String getPassword(){
-//        if(password == null){
-//            password = hxModel.getPwd();
-//        }
-//        return password;  
     	SharedPreferences sharedPreferences = appContext.getSharedPreferences("shared", Context.MODE_PRIVATE);
     	String stpwd = sharedPreferences.getString("pwd", "123456");
     	return stpwd;
     }
     
     public void setHXId(String hxId){
-        if (hxId != null) {
-            if(hxModel.saveHXId(hxId)){
-                this.hxId = hxId;
-            }
+    	if(hxModel.saveHXId(hxId)){
+            this.hxId = hxId;
         }
     }
     
@@ -230,33 +215,50 @@ public abstract class HXSDKHelper {
         options.setAcceptInvitationAlways(hxModel.getAcceptInvitationAlways());
         // 默认环信是不维护好友关系列表的，如果app依赖环信的好友关系，把这个属性设置为true
         options.setUseRoster(hxModel.getUseHXRoster());
-        // 设置收到消息是否有新消息通知(声音和震动提示)，默认为true
-        options.setNotifyBySoundAndVibrate(hxModel.getSettingMsgNotification());
-        // 设置收到消息是否有声音提示，默认为true
-        options.setNoticeBySound(hxModel.getSettingMsgSound());
-        // 设置收到消息是否震动 默认为true
-        options.setNoticedByVibrate(hxModel.getSettingMsgVibrate());
-        // 设置语音消息播放是否设置为扬声器播放 默认为true
-        options.setUseSpeaker(hxModel.getSettingMsgSpeaker());
+//        // 设置收到消息是否有新消息通知(声音和震动提示)，默认为true
+//        options.setNotifyBySoundAndVibrate(hxModel.getSettingMsgNotification());
+//        // 设置收到消息是否有声音提示，默认为true
+//        options.setNoticeBySound(hxModel.getSettingMsgSound());
+//        // 设置收到消息是否震动 默认为true
+//        options.setNoticedByVibrate(hxModel.getSettingMsgVibrate());
+//        // 设置语音消息播放是否设置为扬声器播放 默认为true
+//        options.setUseSpeaker(hxModel.getSettingMsgSpeaker());
         // 设置是否需要已读回执
         options.setRequireAck(hxModel.getRequireReadAck());
         // 设置是否需要已送达回执
         options.setRequireDeliveryAck(hxModel.getRequireDeliveryAck());
-        // 设置notification消息点击时，跳转的intent为自定义的intent
-        options.setOnNotificationClickListener(getNotificationClickListener());
-        options.setNotifyText(getMessageNotifyListener());
+//        // 设置notification消息点击时，跳转的intent为自定义的intent
+//        options.setOnNotificationClickListener(getNotificationClickListener());
+        notifier = createNotifier();
+        notifier.init(appContext);
+        notifier.setNotificationInfoProvider(getNotificationListener());
+//        options.setNotifyText(getMessageNotifyListener());
     }
+    
+    /**
+     * subclass can override this api to return the customer notifier
+     * @return
+     */
+    protected HXNotifier createNotifier(){
+    	return new HXNotifier();
+    }
+    
+    public HXNotifier getNotifier(){
+    	return notifier;
+    }
+    
+    
     
     /**
      * logout HuanXin SDK
      */
     public void logout(final EMCallBack callback){
+    	setPassword(null);
+        setHXId(null);
         EMChatManager.getInstance().logout(new EMCallBack(){
 
             @Override
             public void onSuccess() {
-                // TODO Auto-generated method stub
-                setPassword(null);
                 if(callback != null){
                     callback.onSuccess();
                 }
@@ -264,13 +266,11 @@ public abstract class HXSDKHelper {
 
             @Override
             public void onError(int code, String message) {
-                // TODO Auto-generated method stub
                 
             }
 
             @Override
             public void onProgress(int progress, String status) {
-                // TODO Auto-generated method stub
                 if(callback != null){
                     callback.onProgress(progress, status);
                 }
@@ -302,10 +302,15 @@ public abstract class HXSDKHelper {
     /**
      *get notification click listener
      */
-    protected OnNotificationClickListener getNotificationClickListener(){
-        return null;
-    }
+//    protected OnNotificationClickListener getNotificationClickListener(){
+//        return null;
+//    }
 
+    protected HXNotificationInfoProvider getNotificationListener(){
+    	return null;
+    }
+    
+    
     /**
      * init HuanXin listeners
      */
@@ -384,4 +389,5 @@ public abstract class HXSDKHelper {
         }
         return processName;
     }
+    
 }

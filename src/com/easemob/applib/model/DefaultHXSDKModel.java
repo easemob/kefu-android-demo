@@ -17,13 +17,13 @@ package com.easemob.applib.model;
  * UI Demo HX Model implementation
  */
 
-import com.easemob.applib.utils.HXPreferenceUtils;
-import com.easemob.helpdeskdemo.db.UserDao;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
+
+import com.easemob.applib.utils.HXPreferenceUtils;
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.db.UserDao;
 
 /**
  * HuanXin default SDK Model implementation
@@ -43,91 +43,71 @@ public class DefaultHXSDKModel extends HXSDKModel{
     
     @Override
     public void setSettingMsgNotification(boolean paramBoolean) {
-        // TODO Auto-generated method stub
         HXPreferenceUtils.getInstance().setSettingMsgNotification(paramBoolean);
     }
 
     @Override
     public boolean getSettingMsgNotification() {
-        // TODO Auto-generated method stub
         return HXPreferenceUtils.getInstance().getSettingMsgNotification();
     }
 
     @Override
     public void setSettingMsgSound(boolean paramBoolean) {
-        // TODO Auto-generated method stub
         HXPreferenceUtils.getInstance().setSettingMsgSound(paramBoolean);
     }
 
     @Override
     public boolean getSettingMsgSound() {
-        // TODO Auto-generated method stub
         return HXPreferenceUtils.getInstance().getSettingMsgSound();
     }
 
     @Override
     public void setSettingMsgVibrate(boolean paramBoolean) {
-        // TODO Auto-generated method stub
         HXPreferenceUtils.getInstance().setSettingMsgVibrate(paramBoolean);
     }
 
     @Override
     public boolean getSettingMsgVibrate() {
-        // TODO Auto-generated method stub
         return HXPreferenceUtils.getInstance().getSettingMsgVibrate();
     }
 
     @Override
     public void setSettingMsgSpeaker(boolean paramBoolean) {
-        // TODO Auto-generated method stub
         HXPreferenceUtils.getInstance().setSettingMsgSpeaker(paramBoolean);
     }
 
     @Override
     public boolean getSettingMsgSpeaker() {
-        // TODO Auto-generated method stub
         return HXPreferenceUtils.getInstance().getSettingMsgSpeaker();
     }
 
     @Override
     public boolean getUseHXRoster() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean saveHXId(String hxId) {
-        // TODO Auto-generated method stub
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.edit().putString(PREF_USERNAME, hxId).commit();
     }
 
     @Override
-    public String getHXId() {
-        // TODO Auto-generated method stub
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        return preferences.getString(PREF_USERNAME, null);
-    	SharedPreferences sharedPreferences = context.getSharedPreferences("shared", Context.MODE_PRIVATE);
-    	String stname = sharedPreferences.getString("name", "zp");
-    	Toast.makeText(context, stname, 0).show();
-    	return stname;
-    }
+	public String getHXId() {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return preferences.getString(PREF_USERNAME, "");
+	}
 
 	@Override
     public boolean savePassword(String pwd) {
-        // TODO Auto-generated method stub
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return true;
+        return preferences.edit().putString(PREF_PWD, pwd).commit();
     }
 
     @Override
     public String getPwd() {
-        // TODO Auto-generated method stub
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//        return preferences.getString(PREF_PWD, null);
-    	SharedPreferences sharedPreferences = context.getSharedPreferences("shared", Context.MODE_PRIVATE);
-    	String stpwd = sharedPreferences.getString("pwd", "123456");
-    	return stpwd;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(PREF_PWD, Constant.DEFAULT_ACCOUNT_PWD);
     }
 
     @Override

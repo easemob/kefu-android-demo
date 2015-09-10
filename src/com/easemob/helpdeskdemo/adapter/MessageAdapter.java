@@ -32,18 +32,19 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -53,7 +54,6 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
-import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.FileMessageBody;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
@@ -111,8 +111,13 @@ public class MessageAdapter extends BaseAdapter{
 	private LayoutInflater inflater;
 	private Activity activity;
 
+	private static final int HANDLER_MESSAGE_REFRESH_LIST = 0;
+	private static final int HANDLER_MESSAGE_SELECT_LAST = 1;
+	private static final int HANDLER_MESSAGE_SEEK_TO = 2;
+	
 	// reference to conversation object in chatsdk
 	private EMConversation conversation;
+	EMMessage[] messages = null;
 
 	private Context context;
 
@@ -126,26 +131,90 @@ public class MessageAdapter extends BaseAdapter{
 		this.conversation = EMChatManager.getInstance().getConversation(username);
 	}
 
-	// public void setUser(String user) {
-	// this.user = user;
-	// }
+	Handler handler = new Handler() {
+
+		private void refreshList() {
+			// UI线程不能直接使用conversation.getAllMessage()
+			// 否则在UI刷新过程中，如果收到新消息，会导致并发问题
+			messages = (EMMessage[]) conversation.getAllMessages().toArray(
+					new EMMessage[conversation.getAllMessages().size()]);
+			for (int i = 0; i < messages.length; i++) {
+				// getMessage will set message as read status
+				conversation.getMessage(i);
+			}
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case HANDLER_MESSAGE_REFRESH_LIST:
+				refreshList();
+				break;
+			case HANDLER_MESSAGE_SELECT_LAST:
+				if (activity instanceof ChatActivity) {
+					ListView listView = ((ChatActivity) activity).getListView();
+					if (messages.length > 0) {
+//						listView.setSelection(messages.length - 1);
+						listView.setSelection(ListView.FOCUS_DOWN);
+					}
+				}
+				break;
+			case HANDLER_MESSAGE_SEEK_TO:
+				int position = msg.arg1;
+				if (activity instanceof ChatActivity) {
+					ListView listView = ((ChatActivity) activity).getListView();
+					listView.setSelection(position);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+	};
 
 	/**
 	 * 获取item数
 	 */
 	public int getCount() {
-		return conversation.getMsgCount();
+		return messages == null ? 0 : messages.length;
 	}
 
 	/**
 	 * 刷新页面
 	 */
 	public void refresh() {
-		notifyDataSetChanged();
+		if (handler.hasMessages(HANDLER_MESSAGE_REFRESH_LIST)) {
+			return;
+		}
+		Message msg = handler.obtainMessage(HANDLER_MESSAGE_REFRESH_LIST);
+		handler.sendMessage(msg);
+	}
+	
+	/**
+	 * 刷新页面，选择最后一个
+	 */
+	public void refreshSelectLast() {
+		handler.sendMessage(handler.obtainMessage(HANDLER_MESSAGE_REFRESH_LIST));
+		handler.sendMessage(handler.obtainMessage(HANDLER_MESSAGE_SELECT_LAST));
+	}
+	
+	/**
+	 * 刷新页面，选择Position
+	 */
+	public void refreshSeekTo(int position) {
+		handler.sendMessage(handler.obtainMessage(HANDLER_MESSAGE_REFRESH_LIST));
+		Message msg = handler.obtainMessage(HANDLER_MESSAGE_SEEK_TO);
+		msg.arg1 = position;
+		handler.sendMessage(msg);
 	}
 
 	public EMMessage getItem(int position) {
-		return conversation.getMessage(position);
+		if (messages != null && position < messages.length) {
+			return messages[position];
+		}
+		return null;
 	}
 
 	public long getItemId(int position) {
@@ -156,7 +225,10 @@ public class MessageAdapter extends BaseAdapter{
 	 * 获取item类型
 	 */
 	public int getItemViewType(int position) {
-		EMMessage message = conversation.getMessage(position);
+		EMMessage message = getItem(position);
+		if(message == null){
+			return -1;
+		}
 		if (message.getType() == EMMessage.Type.TXT) {
 			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
 				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE_CALL : MESSAGE_TYPE_SENT_VOICE_CALL;
@@ -209,15 +281,9 @@ public class MessageAdapter extends BaseAdapter{
 			return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_file, null) : inflater.inflate(
 					R.layout.row_sent_file, null);
 		default:
-//				if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
-//				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_voice_call, null) : inflater
-//						.inflate(R.layout.row_sent_voice_call, null);
-//				
-//			}// 语音电话
-//		else
 			if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
 				//TODO textAndPicture message layout
-				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_picture_new, null) : inflater.inflate(
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
 						R.layout.row_sent_picture_new, null);
 			}else{
 				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
@@ -363,7 +429,7 @@ public class MessageAdapter extends BaseAdapter{
 			}
 		} else {
 			// 如果是文本或者地图消息并且不是group messgae，显示的时候给对方发送已读回执
-			if ((message.getType() == Type.TXT || message.getType() == Type.LOCATION) && !message.isAcked && chatType != ChatType.GroupChat) {
+			if ((message.getType() == EMMessage.Type.TXT || message.getType() == EMMessage.Type.LOCATION) && !message.isAcked && chatType != ChatType.GroupChat) {
 				// 不是语音通话记录
 				try {
 					EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
@@ -381,15 +447,9 @@ public class MessageAdapter extends BaseAdapter{
 			handleImageMessage(message, holder, position, convertView);
 			break;
 		case TXT: // 文本
-//			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
-//				// 语音电话
-//				handleVoiceCallMessage(message, holder, position);
-//				
-//			}else 
-				if(message.getStringAttribute(Constant.PICTURE_MSG, null)!=null){
+			if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
 				handlePictureTxtMessage(message, holder, position);
-			}
-			else{
+			} else {
 				handleTextMessage(message, holder, position);
 			}
 				
@@ -413,7 +473,7 @@ public class MessageAdapter extends BaseAdapter{
 		if (message.direct == EMMessage.Direct.SEND) {
 			View statusView = convertView.findViewById(R.id.msg_status);
 			// 重发按钮点击事件
-			statusView.setOnClickListener(new OnClickListener() {
+			statusView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 
@@ -472,22 +532,26 @@ public class MessageAdapter extends BaseAdapter{
 		return convertView;
 	}
 
-	private void handlePictureTxtMessage(EMMessage message, ViewHolder holder,
+	private void handlePictureTxtMessage(EMMessage message, ViewHolder holder,final 
 			int position) {
 		TextMessageBody txtBody = (TextMessageBody) message.getBody();
 		Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
-		// 设置内容
-//		holder.tv.setText(span, BufferType.SPANNABLE);
-//		// 设置长按事件监听
-//		holder.tv.setOnLongClickListener(new OnLongClickListener() {
-//			@Override
-//			public boolean onLongClick(View v) {
-//				return true;
-//			}
-//		});
+		if(message.direct == EMMessage.Direct.RECEIVE){
+			// 设置内容
+			holder.tv.setText(span, BufferType.SPANNABLE);
+			// 设置长按事件监听
+			holder.tv.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					activity.startActivityForResult(
+							(new Intent(activity, ContextMenu.class)).putExtra("position", position).putExtra("type",
+									EMMessage.Type.TXT.ordinal()), ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+					return true;
+				}
+			});
+			return;
+		}
 		
-		
-
 		String imageName = message.getStringAttribute("imageName", null);
 		try {
 			JSONObject jsonOrder = message.getJSONObjectAttribute("msgtype").getJSONObject("order");
@@ -497,40 +561,39 @@ public class MessageAdapter extends BaseAdapter{
 			String price = jsonOrder.getString("price");
 			String desc = jsonOrder.getString("desc");
 			String img_url = jsonOrder.getString("img_url");
-			int resId = 0;
-			if(desc.substring(0, 1).equals("2")){
-				resId = R.drawable.one;
+			if(desc == null){
+				
+			}else if(desc.equals("2015早春新款高腰复古牛仔裙")){
 				holder.mTextViewDes.setText("2015早春新款高腰复古牛仔裙");
 				holder.mTextViewprice.setText("￥128");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:123456");
-			}else if(desc.substring(0, 1).equals("露")){
-				resId = R.drawable.two;
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.one)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}else if(desc.equals("露肩名媛范套装")){
 				holder.mTextViewDes.setText("露肩名媛范套装");
 				holder.mTextViewprice.setText("￥518");
 				holder.mtv.setVisibility(View.VISIBLE);
 				holder.mtv.setText("订单号:7890");
-			}else if(desc.substring(0, 1).equals("假")){
-				resId = R.drawable.three;
-				holder.mTextViewDes.setText("假两件衬衣+V领毛衣上衣");
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.two)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+				
+			}else if(desc.equals("假两件衬衣+V领毛衣上衣")){
+				holder.mTextViewDes.setText("");
 				holder.mTextViewprice.setText("￥235");
-			}else if(desc.substring(0, 1).equals("插")){
-				resId = R.drawable.four;
-				holder.mTextViewDes.setText("插肩棒球衫外套");
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.three)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}else if(desc.equals("插肩棒球衫外套")){
+				holder.mTextViewDes.setText("");
 				holder.mTextViewprice.setText("￥162");
- 			}
-			Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(resId)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
-			holder.mImageView.setImageBitmap(newBitmap);
+				Bitmap newBitmap = CommonUtils.convertBitmap(((BitmapDrawable)context.getResources().getDrawable(R.drawable.four)).getBitmap(), CommonUtils.convertDip2Px(context, 100), CommonUtils.convertDip2Px(context, 120));
+				holder.mImageView.setImageBitmap(newBitmap);
+			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (EaseMobException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 		
 		if (message.direct == EMMessage.Direct.SEND) {
 			switch (message.status) {
@@ -883,11 +946,11 @@ public class MessageAdapter extends BaseAdapter{
 	private void handleVoiceMessage(final EMMessage message, final ViewHolder holder, final int position, View convertView) {
 		VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
 		int voiceLen = voiceBody.getLength();
-		if(voiceLen==0){
-			holder.tv.setVisibility(View.INVISIBLE);
-		}else{
+		if(voiceLen>0){
 			holder.tv.setText(voiceLen + "\"");
 			holder.tv.setVisibility(View.VISIBLE);
+		}else{
+			holder.tv.setVisibility(View.INVISIBLE);
 		}
 		holder.voiceView.setOnClickListener(new VoicePlayClickListener(message, holder.voiceView, holder.iv_read_status, this, activity, username));
 		holder.voiceView.setOnLongClickListener(new OnLongClickListener() {

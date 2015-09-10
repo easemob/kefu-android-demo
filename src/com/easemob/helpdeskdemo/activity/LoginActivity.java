@@ -13,76 +13,136 @@
  */
 package com.easemob.helpdeskdemo.activity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import com.easemob.EMCallBack;
+import com.easemob.EMError;
 import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMContactManager;
-import com.easemob.chat.EMGroupManager;
-import com.easemob.helpdeskdemo.DemoApplication;
-import com.easemob.helpdeskdemo.DemoHXSDKHelper;
+import com.easemob.exceptions.EaseMobException;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.domain.User;
-import com.easemob.util.EMLog;
+import com.easemob.helpdeskdemo.utils.CommonUtils;
 
 /**
  * 登陆页面
  * 
  */
 public class LoginActivity extends BaseActivity {
-	public static final int REQUEST_CODE_SETNICK = 1;
-
 	private boolean progressShow;
-
-	private String currentUsername;
-	private String currentPassword;
-	private static final int sleepTime = 2000;
-
-	private EditText account;
-	private EditText pwd;
-	SharedPreferences sharedPreferences;
-	private String image,price;
-
-	private ProgressDialog progressDialog = null;
+	private ProgressDialog progressDialog;
+	private int selectedIndex = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
+	private int messageToIndex = Constant.MESSAGE_TO_DEFAULT;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		Intent newintent = getIntent();
-		image = newintent.getStringExtra("image");
-		price = newintent.getStringExtra("price");
-		
-		sharedPreferences = getSharedPreferences("shared", Context.MODE_PRIVATE);
-		Editor editor = sharedPreferences.edit();// 获取编辑器
-		if (sharedPreferences.getBoolean("flag", true)) {
-			editor.putBoolean("flag", false);
-			editor.commit();
-			// 自动生成账号
-			currentUsername = getAccount();
-			currentPassword = "123456";
+		Intent intent = getIntent();
+		selectedIndex = intent.getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
+		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
+		if(EMChat.getInstance().isLoggedIn()){
+			progressDialog = getProgressDialog();
+			progressDialog.setMessage(getResources().getString(
+					R.string.is_contact_customer));
+			progressDialog.show();
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						EMChatManager.getInstance()
+								.loadAllConversations();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					toChatActivity();
+				}
+			}).start();
+		}else{
+			createRandomAccountAndLoginChatServer();
+		}
+	}
+	
+	
+	public void createRandomAccountAndLoginChatServer() {
+		// 自动生成账号
+		final String randomAccount = CommonUtils.getRandomAccount();
+		final String userPwd = Constant.DEFAULT_ACCOUNT_PWD;
+		progressDialog = getProgressDialog();
+		progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
+		progressDialog.show();
+		createAccountToServer(randomAccount, userPwd, new EMCallBack() {
 
-			editor.putString("name", currentUsername);
-			editor.putString("pwd", currentPassword);
-			editor.commit();
+			@Override
+			public void onSuccess() {
+				runOnUiThread(new Runnable() {
 
+					@Override
+					public void run() {
+						loginHuanxinServer(randomAccount, userPwd);
+					}
+				});
+			}
+
+			@Override
+			public void onProgress(int progress, String status) {
+			}
+
+			@Override
+			public void onError(final int errorCode, final String message) {
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (!LoginActivity.this.isFinishing()) {
+							progressDialog.dismiss();
+						}
+						if (errorCode == EMError.NONETWORK_ERROR) {
+							Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+						} else if (errorCode == EMError.USER_ALREADY_EXISTS) {
+							Toast.makeText(getApplicationContext(), "用户已存在", Toast.LENGTH_SHORT).show();
+						} else if (errorCode == EMError.UNAUTHORIZED) {
+							Toast.makeText(getApplicationContext(), "无开放注册权限", Toast.LENGTH_SHORT).show();
+						} else if (errorCode == EMError.ILLEGAL_USER_NAME) {
+							Toast.makeText(getApplicationContext(), "用户名非法", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getApplicationContext(), "注册失败：" + message, Toast.LENGTH_SHORT).show();
+						}
+						finish();
+					}
+				});
+			}
+		});
+	}
+	
+	
+	private void createAccountToServer(final String uname, final String pwd, final EMCallBack callback) {
+		Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					EMChatManager.getInstance().createAccountOnServer(uname, pwd);
+					if (callback != null) {
+						callback.onSuccess();
+					}
+				} catch (EaseMobException e) {
+					if (callback != null) {
+						callback.onError(e.getErrorCode(), e.getMessage());
+					}
+				}
+			}
+		});
+		thread.start();
+	}
+	
+	private ProgressDialog  getProgressDialog(){
+		if(progressDialog == null){
 			progressDialog = new ProgressDialog(LoginActivity.this);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setOnCancelListener(new OnCancelListener() {
@@ -91,226 +151,72 @@ public class LoginActivity extends BaseActivity {
 					progressShow = false;
 				}
 			});
-			progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
-//			if(pd.isShowing()){
-//			}else{
+		}
+		return progressDialog;
+	}
+	
+	
+	 
+	public void loginHuanxinServer(final String uname,final String upwd){
+		progressShow = true;
+		progressDialog = getProgressDialog();
+		progressDialog.setMessage(getResources().getString(
+				R.string.is_contact_customer));
+		if(!progressDialog.isShowing()){
 			progressDialog.show();
-//			}
-			CreateAccountTask task = new CreateAccountTask();
-			task.execute(currentUsername, currentPassword);
-		} else {
-			currentUsername = sharedPreferences.getString("name", "");
-			currentPassword = sharedPreferences.getString("pwd", "");
-			// Intent intent = new Intent(LoginActivity.this,
-			// com.easemob.helpdeskdemo.activity.AlertDialog.class);
-			// startActivityForResult(intent, REQUEST_CODE_SETNICK);
-			// startActivity(new Intent(LoginActivity.this,
-			// ChatActivity.class));
-			// finish();
-			
-			if(EMChat.getInstance().isLoggedIn()){
-//				EMChatManager.getInstance().logout(null);
-				final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-				pd.setCanceledOnTouchOutside(false);
-				pd.setOnCancelListener(new OnCancelListener() {
+		}
+		// login huanxin server
+		EMChatManager.getInstance().login(uname, upwd, new EMCallBack() {
+			@Override
+			public void onSuccess() {
+				if (!progressShow) {
+					return;
+				}
+				HXSDKHelper.getInstance().setHXId(uname);
+				HXSDKHelper.getInstance().setPassword(upwd);
+				try {
+					EMChatManager.getInstance().loadAllConversations();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+				toChatActivity();
+			}
 
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						progressShow = false;
-					}
-				});
-				pd.setMessage(getResources().getString(
-						R.string.is_contact_customer));
-				pd.show();
-				new Thread(new Runnable() {
-					
-					@Override
+			@Override
+			public void onProgress(int progress, String status) {
+			}
+
+			@Override
+			public void onError(final int code, final String message) {
+				if (!progressShow) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
 					public void run() {
-						try {
-							EMChatManager.getInstance()
-									.loadAllConversations();
-						} catch (Exception e) {
-							e.printStackTrace();
-							// 取好友或者群聊失败，不让进入主页面，也可以不管这个exception继续进到主页面
-							runOnUiThread(new Runnable() {
-								public void run() {
-									pd.dismiss();
-									DemoApplication.getInstance()
-											.logout(null);
-									Toast.makeText(
-											getApplicationContext(),
-											R.string.is_contact_customer_failure,
-											1).show();
-								}
-							});
-							return;
-						}
-						
-						LoginActivity.this.runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								if(pd!=null&&pd.isShowing()){
-									pd.dismiss();
-								}
-								startActivity(new Intent(LoginActivity.this,
-										ChatActivity.class).putExtra("userId",
-										"customers").putExtra("image", image).putExtra("price", price));
-								finish();
-							}
-						});
-						
-					}
-				}).start();
-				
-			}else{
-				Intent intent = new Intent(LoginActivity.this,
-						com.easemob.helpdeskdemo.activity.AlertDialog.class);
-				startActivityForResult(intent, REQUEST_CODE_SETNICK);
-			}
-			
-		}
-	}
-
-	private class CreateAccountTask extends AsyncTask<String, Void, String> {
-		protected String doInBackground(String... args) {
-			String userid = args[0];
-			String pwd = args[1];
-			try {
-				EMChatManager.getInstance().createAccountOnServer(userid, pwd);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return userid;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			if(progressDialog!=null&&progressDialog.isShowing())
-			{
-				progressDialog.dismiss();
-				progressDialog = null;
-			}
-			
-			
-			Intent intent = new Intent(LoginActivity.this,
-					com.easemob.helpdeskdemo.activity.AlertDialog.class);
-			startActivityForResult(intent, REQUEST_CODE_SETNICK);
-		}
-	}
-
-	public String getAccount() {
-		String val = "";
-		Random random = new Random();
-		for (int i = 0; i < 10; i++) {
-			String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num"; // 输出字母还是数字
-			if ("char".equalsIgnoreCase(charOrNum)) // 字符串
-			{
-				int choice = random.nextInt(2) % 2 == 0 ? 65 : 97; // 取得大写字母还是小写字母
-				val += (char) (choice + random.nextInt(26));
-			} else if ("num".equalsIgnoreCase(charOrNum)) // 数字
-			{
-				val += String.valueOf(random.nextInt(10));
-			}
-		}
-		return val.toLowerCase();
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == REQUEST_CODE_SETNICK) {
-//				DemoApplication.currentUserNick = data
-//						.getStringExtra("edittext");
-				progressShow = true;
-				final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-				pd.setCanceledOnTouchOutside(false);
-				pd.setOnCancelListener(new OnCancelListener() {
-
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						progressShow = false;
+						progressDialog.dismiss();
+						Toast.makeText(LoginActivity.this,
+								getResources().getString(R.string.is_contact_customer_failure_seconed) + message,
+								Toast.LENGTH_SHORT).show();
+						finish();
 					}
 				});
-				pd.setMessage(getResources().getString(
-						R.string.is_contact_customer));
-				pd.show();
-
-				final long start = System.currentTimeMillis();
-				// 调用sdk登陆方法登陆聊天服务器
-				EMChatManager.getInstance().login(currentUsername,
-						currentPassword, new EMCallBack() {
-							@Override
-							public void onSuccess() {
-								if (!progressShow) {
-									return;
-								}
-								DemoApplication.getInstance().setUserName(
-										currentUsername);
-								DemoApplication.getInstance().setPassword(
-										currentPassword);
-								try {
-									EMChatManager.getInstance()
-											.loadAllConversations();
-								} catch (Exception e) {
-									e.printStackTrace();
-									// 取好友或者群聊失败，不让进入主页面，也可以不管这个exception继续进到主页面
-									runOnUiThread(new Runnable() {
-										public void run() {
-											pd.dismiss();
-											DemoApplication.getInstance()
-													.logout(null);
-											Toast.makeText(
-													getApplicationContext(),
-													R.string.is_contact_customer_failure,
-													1).show();
-										}
-									});
-									return;
-								}
-								if (!LoginActivity.this.isFinishing())
-									pd.dismiss();
-								// 进入主页面
-								
-								startActivity(new Intent(LoginActivity.this,
-										ChatActivity.class).putExtra("userId",
-										"customers").putExtra("image", image).putExtra("price", price));
-								finish();
-							}
-
-							@Override
-							public void onProgress(int progress, String status) {
-							}
-
-							@Override
-							public void onError(final int code,
-									final String message) {
-								if (!progressShow) {
-									return;
-								}
-								runOnUiThread(new Runnable() {
-									public void run() {
-										pd.dismiss();
-										Intent intent = new Intent();
-										intent.setClass(getApplication(),
-												FirstActivity.class);
-										startActivity(intent);
-										Toast.makeText(
-												getApplicationContext(),
-												getResources()
-														.getString(
-																R.string.is_contact_customer_failure_seconed)
-														+ message,
-												Toast.LENGTH_SHORT).show();
-									}
-								});
-							}
-						});
 			}
-		}
+		});
+	}
+	
+	private void toChatActivity(){
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (!LoginActivity.this.isFinishing())
+					progressDialog.dismiss();
+				// 进入主页面
+				startActivity(new Intent(LoginActivity.this, ChatActivity.class)
+						.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex));
+				finish();
+			}
+		});
 	}
 
 }
