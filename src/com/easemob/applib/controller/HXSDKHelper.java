@@ -35,6 +35,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.OnMessageNotifyListener;
 import com.easemob.chat.OnNotificationClickListener;
+import com.easemob.util.EMLog;
 
 /**
  * The developer can derive from this class to talk with HuanXin SDK
@@ -131,13 +132,13 @@ public abstract class HXSDKHelper {
         int pid = android.os.Process.myPid();
         String processAppName = getAppName(pid);
         
-        Log.d(TAG, "process app name : " + processAppName);
+        EMLog.d(TAG, "process app name : " + processAppName);
         
         // 如果app启用了远程的service，此application:onCreate会被调用2次
         // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
         if (processAppName == null || !processAppName.equalsIgnoreCase(hxModel.getAppProcessName())) {
-            Log.e(TAG, "enter the service process!");
+            EMLog.e(TAG, "enter the service process!");
             // 则此application::onCreate 是被service 调用的，直接返回
             return false;
         }

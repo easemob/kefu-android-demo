@@ -25,30 +25,23 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.applib.controller.HXSDKHelper;
-import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.util.EMLog;
 
 public class FirstActivity extends BaseActivity implements EMEventListener{
 
@@ -66,9 +59,7 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_first);
-		if(savedInstanceState == null){
-			init();
-		}
+		init();
 	}
 
 	@SuppressLint("NewApi")
@@ -139,6 +130,11 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
 		
 	}
 	
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+	}
 	
 	
 	
@@ -280,13 +276,6 @@ public class FirstActivity extends BaseActivity implements EMEventListener{
         IntentFilter filter = new IntentFilter(getPackageName() + ".em_internal_debug");
         registerReceiver(internalDebugReceiver, filter);
     }
-	
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		setIntent(intent);
-		EMLog.d("FirstActivity", "onNewIntent intent:"+((intent==null)?"is null":"not null"));
-	}
 	
 	
 }

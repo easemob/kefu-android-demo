@@ -126,7 +126,6 @@
 
         <activity
             android:name="com.easemob.helpdeskdemo.activity.FirstActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_first" >
             <intent-filter>

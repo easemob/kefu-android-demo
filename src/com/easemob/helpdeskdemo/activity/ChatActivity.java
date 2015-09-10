@@ -202,7 +202,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		if(imgSelectedIndex != Constant.INTENT_CODE_IMG_SELECTED_DEFAULT){
 			messageToIndex = Constant.MESSAGE_TO_AFTER_SALES;
 		}
-		sendPictureNew(imgSelectedIndex);
+		if(savedInstanceState == null){
+			sendPictureNew(imgSelectedIndex);
+		}
 	}
 
 	public void resetKeyboadMode(){
@@ -215,7 +217,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			btnMore.setVisibility(View.GONE);
 		}
 	}
-	
 	
 	/**
 	 * initView
@@ -373,12 +374,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		adapter = new MessageAdapter(this, toChatUsername, chatType);
 		// 显示消息
 		listView.setAdapter(adapter);
-		adapter.refresh();
 		listView.setOnScrollListener(new ListScrollListener());
-		int count = listView.getCount();
-		if (count > 0) {
-			adapter.refreshSelectLast();
-		}
+		adapter.refreshSelectLast();
 
 		listView.setOnTouchListener(new OnTouchListener() {
 
@@ -526,9 +523,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			sendText(s);
 		} 
 		else if (id == R.id.btn_take_picture) {
+			more(view);
 			selectPicFromCamera();// 点击照相图标
 		} 
 		else if (id == R.id.btn_picture) {
+			more(view);
 			selectPicFromLocal(); // 点击图片图标
 		} 
 		else if (id == R.id.btn_location) { // 位置
@@ -614,7 +613,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	
 	public void setMessageAttribute(EMMessage message){
 		setUserInfoAttribute(message);
-		setVisitorInfoSrc(message);
+//		setVisitorInfoSrc(message);
 	}	 
 	
 	private void setVisitorInfoSrc(EMMessage message){
@@ -717,6 +716,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * @param filePath
 	 */
 	private void sendPicture(final String filePath) {
+		EMLog.e("ChatActivity", "sendPicture:"+filePath);
 		String to = toChatUsername;
 		// create and add image message in view
 		final EMMessage message = EMMessage.createSendMessage(EMMessage.Type.IMAGE);
@@ -737,6 +737,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	}
 	
 	private void sendPictureNew(int selectedImgIndex) {
+		EMLog.e("ChatActivity", "sendPictureNew:select:"+selectedImgIndex);
 		if(selectedImgIndex == 0){
 			return;
 		}
@@ -907,9 +908,11 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * @param selectedImage
 	 */
 	private void sendPicByUri(Uri selectedImage) {
+		EMLog.e("ChatActivity", "uri:"+selectedImage.getPath());
 		// String[] filePathColumn = { MediaStore.Images.Media.DATA };
 		Cursor cursor = getContentResolver().query(selectedImage, null, null, null, null);
 		if (cursor != null) {
+			EMLog.e("ChatActivity", "uri1:");
 			cursor.moveToFirst();
 			int columnIndex = cursor.getColumnIndex("_data");
 			String picturePath = cursor.getString(columnIndex);
@@ -923,6 +926,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			}
 			sendPicture(picturePath);
 		} else {
+			EMLog.e("ChatActivity", "uri2:");
 			File file = new File(selectedImage.getPath());
 			if (!file.exists()) {
 				Toast toast = Toast.makeText(this, R.string.not_find_image, Toast.LENGTH_SHORT);
@@ -1106,7 +1110,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 */
 	public void emptyHistory(View view) {
 		startActivityForResult(
-				new Intent(this, AlertDialog.class).putExtra("titleIsCancel", true).putExtra("msg", R.string.is_clear_mes).putExtra("cancel", true),
+				new Intent(this, AlertDialog.class).putExtra("titleIsCancel", true).putExtra("msg", getString(R.string.is_clear_mes)).putExtra("cancel", true),
 				REQUEST_CODE_EMPTY_HISTORY);
 	}
 
@@ -1173,7 +1177,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * @param v
 	 */
 	public void editClick(View v) {
-		listView.setSelection(listView.getCount() - 1);
+		adapter.refreshSelectLast();
 		if (more.getVisibility() == View.VISIBLE) {
 			more.setVisibility(View.GONE);
 			iv_emoticons_normal.setVisibility(View.VISIBLE);

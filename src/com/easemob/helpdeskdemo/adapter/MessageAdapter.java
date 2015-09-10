@@ -155,7 +155,8 @@ public class MessageAdapter extends BaseAdapter{
 				if (activity instanceof ChatActivity) {
 					ListView listView = ((ChatActivity) activity).getListView();
 					if (messages.length > 0) {
-						listView.setSelection(messages.length - 1);
+//						listView.setSelection(messages.length - 1);
+						listView.setSelection(ListView.FOCUS_DOWN);
 					}
 				}
 				break;
