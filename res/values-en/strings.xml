@@ -103,12 +103,20 @@
     <string name="password">password</string>
     <string name="user_name">The user name</string>
     <string name="not_connect_server">Unable to connect to the server</string>
-    <string name="customernumber"> The account of the service</string>
+    <string name="customernumber"> The account of the IM service</string>
     <string name="connect_customer">Contact customer service</string>
     <string name="feedback">feedback</string>
     <string name="save_setting">Save the configuration</string>
     <string name="history_record">The historical record</string>
-    
+    <string name="Download_the_pictures">Download the pictures: 0%</string>
+    <string name="Download_the_pictures_new">Download the pictures:</string>
+    <string name="Failed_to_download_file">Failed to download file:</string>
+    <string name="set_nick">Set Nick</string>
+    <string name="login_user_nick">User Nick</string>
+    <string name="customer_account">Customer Service Account</string>
+    <string name="appkey">AppKey</string>
+    <string name="pop_pre_sales">Pre_Sales</string>
+    <string name="pop_after_sales">After_Sales</string>
     
 	
 </resources>

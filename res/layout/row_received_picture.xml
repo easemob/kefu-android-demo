@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" xmlns:app="http://schemas.android.com/apk/res/com.easemob.helpdeskdemo">
+    android:paddingTop="13dp" >
 
     <TextView
         android:id="@+id/timestamp"
