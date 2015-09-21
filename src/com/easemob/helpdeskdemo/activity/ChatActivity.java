@@ -370,7 +370,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			((TextView) findViewById(R.id.name)).setText(toChatUsername);
 		conversation = EMChatManager.getInstance().getConversation(toChatUsername);
 		// 把此会话的未读数置为0
-		conversation.resetUnreadMsgCount();
+		conversation.markAllMessagesAsRead();
 		adapter = new MessageAdapter(this, toChatUsername, chatType);
 		// 显示消息
 		listView.setAdapter(adapter);
