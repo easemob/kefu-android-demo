@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 
+import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.Type;
@@ -44,7 +45,7 @@ public class BaseActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         // onresume时，取消notification显示
-        EMChatManager.getInstance().activityResumed();
+        HXSDKHelper.getInstance().getNotifier().reset();
         // umeng
         MobclickAgent.onResume(this);
     }
