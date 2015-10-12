@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -319,4 +321,29 @@ public class DemoHXSDKHelper extends HXSDKHelper{
             
         });
     }
+    
+    public boolean isRobotMenuMessage(EMMessage message) {
+
+		try {
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			if (jsonObj.has("choice")) {
+				return true;
+			}
+		} catch (Exception e) {
+		}
+		return false;
+	}
+	
+	public String getRobotMenuMessageDigest(EMMessage message) {
+		String title = "";
+		try {
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			if (jsonObj.has("choice")) {
+				JSONObject jsonChoice = jsonObj.getJSONObject("choice");
+				title = jsonChoice.getString("title");
+			}
+		} catch (Exception e) {
+		}
+		return title;
+	}
 }
