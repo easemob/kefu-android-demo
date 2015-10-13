@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMEventListener;
@@ -35,6 +37,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.OnMessageNotifyListener;
+import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.activity.ChatActivity;
 import com.easemob.helpdeskdemo.domain.User;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
@@ -345,5 +348,24 @@ public class DemoHXSDKHelper extends HXSDKHelper{
 		} catch (Exception e) {
 		}
 		return title;
+	}
+	
+	//it is evaluation message
+	public boolean isEvalMessage(EMMessage message){
+		try {
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.WEICHAT_MSG);
+			if(jsonObj.has("ctrlType")){
+				try {
+					String type = jsonObj.getString("ctrlType");
+					if(!TextUtils.isEmpty(type)&&(type.equalsIgnoreCase("inviteEnquiry")||type.equalsIgnoreCase("enquiry"))){
+						return true;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (EaseMobException e) {
+		}
+		return false;
 	}
 }

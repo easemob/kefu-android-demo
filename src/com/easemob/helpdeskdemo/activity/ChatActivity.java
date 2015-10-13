@@ -124,6 +124,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public static final int REQUEST_CODE_SELECT_VIDEO = 23;
 	public static final int REQUEST_CODE_SELECT_FILE = 24;
 	public static final int REQUEST_CODE_ADD_TO_BLACKLIST = 25;
+	//EVALUATION
+	public static final int REQUEST_CODE_EVAL = 26;
 
 	public static final int RESULT_CODE_COPY = 1;
 	public static final int RESULT_CODE_DELETE = 2;
@@ -504,6 +506,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				adapter.refresh();
 				setResult(RESULT_OK);
 			} else if (requestCode == REQUEST_CODE_GROUP_DETAIL) {
+				adapter.refresh();
+			} else if(requestCode == REQUEST_CODE_EVAL){
 				adapter.refresh();
 			}
 		}
