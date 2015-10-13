@@ -21,13 +21,16 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
@@ -50,6 +53,7 @@ import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
+import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -62,6 +66,7 @@ import com.easemob.chat.VideoMessageBody;
 import com.easemob.chat.VoiceMessageBody;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.DemoHXSDKHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.activity.AlertDialog;
 import com.easemob.helpdeskdemo.activity.BaiduMapActivity;
@@ -75,6 +80,7 @@ import com.easemob.helpdeskdemo.utils.ImageUtils;
 import com.easemob.helpdeskdemo.utils.SmileUtils;
 import com.easemob.helpdeskdemo.widget.BubbleImageView;
 import com.easemob.util.DateUtils;
+import com.easemob.util.DensityUtil;
 import com.easemob.util.EMLog;
 import com.easemob.util.LatLng;
 import com.easemob.util.TextFormater;
@@ -102,6 +108,8 @@ public class MessageAdapter extends BaseAdapter{
 	private static final int MESSAGE_TYPE_SENT_PICTURE_TXT = 14;
 	private static final int MESSAGE_TYPE_RECV_PICTURE_TXT = 15;
 	
+	private static final int MESSAGE_TYPE_SENT_ROBOT_MENU = 16;
+	private static final int MESSAGE_TYPE_RECV_ROBOT_MENU = 17;
 	
 	public static final String IMAGE_DIR = "chat/image/";
 	public static final String VOICE_DIR = "chat/audio/";
@@ -230,7 +238,9 @@ public class MessageAdapter extends BaseAdapter{
 			return -1;
 		}
 		if (message.getType() == EMMessage.Type.TXT) {
-			if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
+			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
+				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ROBOT_MENU : MESSAGE_TYPE_SENT_ROBOT_MENU;
+			}else if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
 				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE_CALL : MESSAGE_TYPE_SENT_VOICE_CALL;
 			}else if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
 				//TODO textAndPicture message layout
@@ -260,7 +270,7 @@ public class MessageAdapter extends BaseAdapter{
 	}
 
 	public int getViewTypeCount() {
-		return 16;
+		return 18;
 	}
 
 	private View createViewByMessage(EMMessage message, int position) {
@@ -281,7 +291,10 @@ public class MessageAdapter extends BaseAdapter{
 			return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_file, null) : inflater.inflate(
 					R.layout.row_sent_file, null);
 		default:
-			if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
+			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_menu, null)
+						: inflater.inflate(R.layout.row_sent_message, null);
+			}else if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
 				//TODO textAndPicture message layout
 				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
 						R.layout.row_sent_picture_new, null);
@@ -329,6 +342,9 @@ public class MessageAdapter extends BaseAdapter{
 					holder.mTextViewprice = (TextView) convertView.findViewById(R.id.tv_send_price_new);
 					holder.mtv = (TextView) convertView.findViewById(R.id.tv_order);
 					holder.mImageView = (ImageView) convertView.findViewById(R.id.iv_sendPicture_add);
+					
+					holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+					holder.tvList = (LinearLayout) convertView.findViewById(R.id.ll_layout);
 				} catch (Exception e) {
 					
 				}
@@ -447,7 +463,10 @@ public class MessageAdapter extends BaseAdapter{
 			handleImageMessage(message, holder, position, convertView);
 			break;
 		case TXT: // 文本
-			if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
+			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
+				//含有列表的消息
+				handleRobotMenuMessage(message, holder, position);
+			}else if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
 				handlePictureTxtMessage(message, holder, position);
 			} else {
 				handleTextMessage(message, holder, position);
@@ -661,6 +680,70 @@ public class MessageAdapter extends BaseAdapter{
 		}
 	}
 
+	private void setRobotMenuMessageLayout(LinearLayout parentView, JSONArray jsonArr){
+		try {
+			parentView.removeAllViews();
+			for (int i = 0; i < jsonArr.length(); i++) {
+				final String itemStr = jsonArr.getString(i);
+				final TextView textView = new TextView(context);
+				textView.setText(itemStr);
+				textView.setTextSize(15);
+				try {
+					XmlPullParser xrp = context.getResources().getXml(R.drawable.menu_msg_text_color);
+					textView.setTextColor(ColorStateList.createFromXml(context.getResources(), xrp));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				textView.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						((ChatActivity)context).sendText(itemStr);
+					}
+				});
+				LinearLayout.LayoutParams llLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+				llLp.bottomMargin = DensityUtil.dip2px(context, 3);
+				llLp.topMargin = DensityUtil.dip2px(context, 3);
+				parentView.addView(textView, llLp);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleRobotMenuMessage(EMMessage message, ViewHolder holder, final int position){
+		try {
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			if(jsonObj.has("choice")){
+				JSONObject jsonChoice = jsonObj.getJSONObject("choice");
+				String title = jsonChoice.getString("title");
+				holder.tvTitle.setText(title);
+				setRobotMenuMessageLayout(holder.tvList, jsonChoice.getJSONArray("list"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (message.direct == EMMessage.Direct.SEND) {
+			switch (message.status) {
+			case SUCCESS: // 发送成功
+				holder.pb.setVisibility(View.GONE);
+				holder.staus_iv.setVisibility(View.GONE);
+				break;
+			case FAIL: // 发送失败
+				holder.pb.setVisibility(View.GONE);
+				holder.staus_iv.setVisibility(View.VISIBLE);
+				break;
+			case INPROGRESS: // 发送中
+				holder.pb.setVisibility(View.VISIBLE);
+				holder.staus_iv.setVisibility(View.GONE);
+				break;
+			default:
+				// 发送消息
+				sendMsgInBackground(message, holder);
+			}
+		}
+	}
+	
 	/**
 	 * 语音通话记录
 	 * 
@@ -1383,6 +1466,9 @@ public class MessageAdapter extends BaseAdapter{
 		TextView mTextViewDes;
 		TextView mTextViewprice;
 		TextView mtv;
+		
+		TextView tvTitle;
+		LinearLayout tvList;
 	}
 
 	/*
