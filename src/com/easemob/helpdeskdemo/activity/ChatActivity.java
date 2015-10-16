@@ -588,7 +588,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	 * @param isResend
 	 *            boolean resend
 	 */
-	private void sendText(String content) {
+	public void sendText(String content) {
 
 		if (content.length() > 0) {
 			EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
