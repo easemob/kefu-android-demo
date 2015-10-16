@@ -69,7 +69,10 @@ public class SatisfactionActivity extends BaseActivity {
 				String ratingBarValue = String.valueOf(ratingBar.getSecondaryProgress());
 				jsonArgs.put("summary", ratingBarValue);
 				jsonArgs.put("detail", etContent.getText().toString());
-				sendMessage.setAttribute(Constant.WEICHAT_MSG, jsonObj);
+				
+				JSONObject jsonSend = jsonObj;
+				jsonSend.put("ctrlType", "enquiry");
+				sendMessage.setAttribute(Constant.WEICHAT_MSG, jsonSend);
 				sendMessage.setReceipt(message.getFrom());
 				sendMessage.addBody(new TextMessageBody(""));
 				pd = new ProgressDialog(SatisfactionActivity.this);
