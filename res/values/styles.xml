@@ -177,4 +177,13 @@
         <item name="android:windowNoTitle">true</item><!--无标题-->
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
+    
+ 	<style name="myRatingBar" parent="@android:style/Widget.RatingBar">
+ 	    <item name="android:progressDrawable">@drawable/ratingbar_drawable</item>
+ 	    <item name="android:minHeight">52dip</item>
+ 	    <item name="android:maxHeight">52dip</item>
+ 	</style>
+ 
+ 
+ 
 </resources>

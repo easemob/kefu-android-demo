@@ -35,6 +35,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
@@ -44,6 +45,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -72,6 +74,7 @@ import com.easemob.helpdeskdemo.activity.AlertDialog;
 import com.easemob.helpdeskdemo.activity.BaiduMapActivity;
 import com.easemob.helpdeskdemo.activity.ChatActivity;
 import com.easemob.helpdeskdemo.activity.ContextMenu;
+import com.easemob.helpdeskdemo.activity.SatisfactionActivity;
 import com.easemob.helpdeskdemo.activity.ShowBigImage;
 import com.easemob.helpdeskdemo.task.LoadImageTask;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
@@ -110,6 +113,10 @@ public class MessageAdapter extends BaseAdapter{
 	
 	private static final int MESSAGE_TYPE_SENT_ROBOT_MENU = 16;
 	private static final int MESSAGE_TYPE_RECV_ROBOT_MENU = 17;
+	
+	//evaluation
+	private static final int MESSAGE_TYPE_SENT_EVAL = 18;
+	private static final int MESSAGE_TYPE_RECV_EVAL = 19;
 	
 	public static final String IMAGE_DIR = "chat/image/";
 	public static final String VOICE_DIR = "chat/audio/";
@@ -240,6 +247,8 @@ public class MessageAdapter extends BaseAdapter{
 		if (message.getType() == EMMessage.Type.TXT) {
 			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
 				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ROBOT_MENU : MESSAGE_TYPE_SENT_ROBOT_MENU;
+			}else if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isEvalMessage(message)){
+				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EVAL : MESSAGE_TYPE_SENT_EVAL;
 			}else if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)){
 				return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE_CALL : MESSAGE_TYPE_SENT_VOICE_CALL;
 			}else if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
@@ -270,7 +279,7 @@ public class MessageAdapter extends BaseAdapter{
 	}
 
 	public int getViewTypeCount() {
-		return 18;
+		return 20;
 	}
 
 	private View createViewByMessage(EMMessage message, int position) {
@@ -294,6 +303,9 @@ public class MessageAdapter extends BaseAdapter{
 			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
 				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_menu, null)
 						: inflater.inflate(R.layout.row_sent_message, null);
+			}else if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isEvalMessage(message)){
+				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_satisfaction, null)
+						: inflater.inflate(R.layout.row_sent_satisfaction, null);
 			}else if(message.getStringAttribute(Constant.PICTURE_MSG,null)!=null){
 				//TODO textAndPicture message layout
 				return message.direct == EMMessage.Direct.RECEIVE ? inflater.inflate(R.layout.row_received_message, null) : inflater.inflate(
@@ -345,6 +357,7 @@ public class MessageAdapter extends BaseAdapter{
 					
 					holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 					holder.tvList = (LinearLayout) convertView.findViewById(R.id.ll_layout);
+					holder.btnEval = (Button) convertView.findViewById(R.id.btn_eval);
 				} catch (Exception e) {
 					
 				}
@@ -466,6 +479,8 @@ public class MessageAdapter extends BaseAdapter{
 			if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isRobotMenuMessage(message)){
 				//含有列表的消息
 				handleRobotMenuMessage(message, holder, position);
+			}else if(((DemoHXSDKHelper)HXSDKHelper.getInstance()).isEvalMessage(message)){
+				handleEvalMessage(message, holder, position);
 			}else if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
 				handlePictureTxtMessage(message, holder, position);
 			} else {
@@ -711,6 +726,37 @@ public class MessageAdapter extends BaseAdapter{
 		}
 	}
 	
+	private void handleEvalMessage(final EMMessage message, ViewHolder holder, final int position){
+		try {
+			final JSONObject jsonObj = message.getJSONObjectAttribute(Constant.WEICHAT_MSG);
+			if(jsonObj.has("ctrlType")&&!jsonObj.isNull("ctrlType")){
+				boolean isEvaluated = false;
+				if(jsonObj.has("enable")){
+					isEvaluated = true;
+				}
+				if(isEvaluated){
+					holder.btnEval.setEnabled(false);
+					holder.btnEval.setText("已评价");
+				}else{
+					holder.btnEval.setEnabled(true);
+					holder.btnEval.setText("评价");
+				}
+				holder.btnEval.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						((Activity)context).startActivityForResult(new Intent(context, SatisfactionActivity.class)
+								.putExtra("msgId", message.getMsgId()), ChatActivity.REQUEST_CODE_EVAL);
+					}
+				});
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	private void handleRobotMenuMessage(EMMessage message, ViewHolder holder, final int position){
 		try {
 			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
@@ -766,24 +812,6 @@ public class MessageAdapter extends BaseAdapter{
 	 */
 	private void handleImageMessage(final EMMessage message, final ViewHolder holder, final int position, View convertView) {
 		holder.pb.setTag(position);
-//		String stname = null,stprice = null;
-//		stname = message.getStringAttribute("name",null);
-//		stprice = message.getStringAttribute("price",null);
-//		if(stname!=null){
-//			View view = LayoutInflater.from(context).inflate(R.layout.row_sent_picture, null);
-//			RelativeLayout rlAdd = (RelativeLayout) view.findViewById(R.id.rl_picture_add);
-//			rlAdd.setVisibility(View.VISIBLE);
-//			RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_picture);
-//			rl.setVisibility(View.GONE);
-//			holder.title.setVisibility(View.VISIBLE);
-//			holder.name.setVisibility(View.VISIBLE);
-//			holder.price.setVisibility(View.VISIBLE);
-//			holder.title.setText("我正在看：");
-//			holder.name.setText(stname);
-//			holder.price.setText(stprice);
-//		}
-//		stname=null;
-//		stprice=null;
 		holder.iv.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -1469,6 +1497,7 @@ public class MessageAdapter extends BaseAdapter{
 		
 		TextView tvTitle;
 		LinearLayout tvList;
+		Button btnEval;
 	}
 
 	/*
@@ -1514,19 +1543,15 @@ public class MessageAdapter extends BaseAdapter{
 				case TXT:
 				case LOCATION:
 					MobclickAgent.onEventValue(activity, "text_msg", params, (int) costTime);
-					MobclickAgent.onEventDuration(activity, "text_msg", (int) costTime);
 					break;
 				case IMAGE:
 					MobclickAgent.onEventValue(activity, "img_msg", params, (int) costTime);
-					MobclickAgent.onEventDuration(activity, "img_msg", (int) costTime);
 					break;
 				case VOICE:
 					MobclickAgent.onEventValue(activity, "voice_msg", params, (int) costTime);
-					MobclickAgent.onEventDuration(activity, "voice_msg", (int) costTime);
 					break;
 				case VIDEO:
 					MobclickAgent.onEventValue(activity, "video_msg", params, (int) costTime);
-					MobclickAgent.onEventDuration(activity, "video_msg", (int) costTime);
 					break;
 				default:
 					break;
