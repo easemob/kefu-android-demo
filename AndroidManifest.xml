@@ -142,6 +142,8 @@
             android:screenOrientation="portrait"
             >
         </activity>
+        <activity android:name="com.easemob.helpdeskdemo.activity.SatisfactionActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
