@@ -122,4 +122,11 @@
     <string name="appkey">AppKey</string>
     <string name="pop_pre_sales">售前客服</string>
     <string name="pop_after_sales">售后客服</string>
+    <string name="tip_wating">请稍等...</string>
+    <string name="tip_request_fail">请求失败</string>
+    <string name="title_satifisfaction_eval">满意度评价</string>
+    <string name="nick_service">客服昵称</string>
+    <string name="tip_eval">请对我的服务做出评价</string>
+    <string name="hint_leave_message">留言</string>
+    <string name="tip_btn_sumbit">提交</string>
 </resources>
