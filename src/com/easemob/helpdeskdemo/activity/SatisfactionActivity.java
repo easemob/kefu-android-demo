@@ -101,13 +101,7 @@ public class SatisfactionActivity extends BaseActivity {
 								}
 								EMChatManager.getInstance().getConversation(message.getFrom())
 										.removeMessage(sendMessage.getMsgId());
-								try {
-									jsonObj.put("enable", true);
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								message.setAttribute(Constant.WEICHAT_MSG, jsonObj);
-								EMChatManager.getInstance().updateMessageBody(message);
+								Toast.makeText(getApplicationContext(), "评价成功", Toast.LENGTH_SHORT).show();
 								setResult(RESULT_OK);
 								finish();
 							}

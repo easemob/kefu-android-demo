@@ -124,4 +124,6 @@
 	<string name="tip_eval">Please make evaluation to my service</string>
 	<string name="hint_leave_message">Leave message</string>
 	<string name="tip_btn_sumbit">Submit</string>
+	<string name="tip_btn_evaluation">Evaluation</string>
+	    
 </resources>

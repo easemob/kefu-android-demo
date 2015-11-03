@@ -1555,29 +1555,29 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		return listView;
 	}
 
-	private void createEvalMessage(){
-		EMMessage message = EMMessage.createReceiveMessage(Type.TXT);
-		message.setFrom(toChatUsername);
-		message.setTo(EMChatManager.getInstance().getCurrentUser());
-		message.setMsgId(UUID.randomUUID().toString());
-		message.addBody(new TextMessageBody(""));
-		addEvalExt(message);
-		// 保存邀请消息
-		EMChatManager.getInstance().saveMessage(message);
-		adapter.refreshSelectLast();
-	}
+//	private void createEvalMessage(){
+//		EMMessage message = EMMessage.createReceiveMessage(Type.TXT);
+//		message.setFrom(toChatUsername);
+//		message.setTo(EMChatManager.getInstance().getCurrentUser());
+//		message.setMsgId(UUID.randomUUID().toString());
+//		message.addBody(new TextMessageBody(""));
+//		addEvalExt(message);
+//		// 保存邀请消息
+//		EMChatManager.getInstance().saveMessage(message);
+//		adapter.refreshSelectLast();
+//	}
 	
-	private void addEvalExt(EMMessage message){
-		try {
-			JSONObject jsonExt = new JSONObject();
-			jsonExt.put("ctrlType", "enquiry");
-			JSONObject argsJson = new JSONObject();
-			argsJson.put("inviteId", "").put("serviceSessionId", "").put("detail", "").put("summary", "");
-			jsonExt.put("ctrlArgs", argsJson);
-			message.setAttribute("weichat", jsonExt);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void addEvalExt(EMMessage message){
+//		try {
+//			JSONObject jsonExt = new JSONObject();
+//			jsonExt.put("ctrlType", "enquiry");
+//			JSONObject argsJson = new JSONObject();
+//			argsJson.put("inviteId", "").put("serviceSessionId", "").put("detail", "").put("summary", "");
+//			jsonExt.put("ctrlArgs", argsJson);
+//			message.setAttribute("weichat", jsonExt);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 }
