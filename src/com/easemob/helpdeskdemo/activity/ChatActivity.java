@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,6 +76,7 @@ import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
+import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.TextMessageBody;
@@ -1553,6 +1555,29 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		return listView;
 	}
 
+//	private void createEvalMessage(){
+//		EMMessage message = EMMessage.createReceiveMessage(Type.TXT);
+//		message.setFrom(toChatUsername);
+//		message.setTo(EMChatManager.getInstance().getCurrentUser());
+//		message.setMsgId(UUID.randomUUID().toString());
+//		message.addBody(new TextMessageBody(""));
+//		addEvalExt(message);
+//		// 保存邀请消息
+//		EMChatManager.getInstance().saveMessage(message);
+//		adapter.refreshSelectLast();
+//	}
 	
+//	private void addEvalExt(EMMessage message){
+//		try {
+//			JSONObject jsonExt = new JSONObject();
+//			jsonExt.put("ctrlType", "enquiry");
+//			JSONObject argsJson = new JSONObject();
+//			argsJson.put("inviteId", "").put("serviceSessionId", "").put("detail", "").put("summary", "");
+//			jsonExt.put("ctrlArgs", argsJson);
+//			message.setAttribute("weichat", jsonExt);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 }

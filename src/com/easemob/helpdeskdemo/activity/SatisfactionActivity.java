@@ -22,11 +22,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.EMMessage.Type;
@@ -55,6 +55,15 @@ public class SatisfactionActivity extends BaseActivity {
 		btnSubmit = (Button) findViewById(R.id.submit);
 		etContent = (EditText) findViewById(R.id.edittext);
 		btnSubmit.setOnClickListener(new MyClickListener());
+		ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+			
+			@Override
+			public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+				if(rating < 1.0f){
+					ratingBar.setRating(1.0f);
+				}
+			}
+		});
 	}
 
 	class MyClickListener implements View.OnClickListener {
@@ -76,7 +85,7 @@ public class SatisfactionActivity extends BaseActivity {
 				sendMessage.setReceipt(message.getFrom());
 				sendMessage.addBody(new TextMessageBody(""));
 				pd = new ProgressDialog(SatisfactionActivity.this);
-				pd.setMessage("请稍等...");
+				pd.setMessage(getResources().getString(R.string.tip_wating));
 				pd.show();
 
 				EMChatManager.getInstance().sendMessage(sendMessage, new EMCallBack() {
@@ -92,13 +101,7 @@ public class SatisfactionActivity extends BaseActivity {
 								}
 								EMChatManager.getInstance().getConversation(message.getFrom())
 										.removeMessage(sendMessage.getMsgId());
-								try {
-									jsonObj.put("enable", true);
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								message.setAttribute(Constant.WEICHAT_MSG, jsonObj);
-								EMChatManager.getInstance().updateMessageBody(message);
+								Toast.makeText(getApplicationContext(), "评价成功", Toast.LENGTH_SHORT).show();
 								setResult(RESULT_OK);
 								finish();
 							}
@@ -120,7 +123,7 @@ public class SatisfactionActivity extends BaseActivity {
 								if (pd != null && pd.isShowing()) {
 									pd.dismiss();
 								}
-								Toast.makeText(getApplicationContext(), "提交失败", Toast.LENGTH_SHORT).show();
+								Toast.makeText(getApplicationContext(), R.string.tip_request_fail, Toast.LENGTH_SHORT).show();
 							}
 						});
 					}
