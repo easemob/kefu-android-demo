@@ -117,6 +117,13 @@
     <string name="appkey">AppKey</string>
     <string name="pop_pre_sales">Pre_Sales</string>
     <string name="pop_after_sales">After_Sales</string>
-    
-	
+    <string name="tip_wating">Waiting...</string>
+    <string name="tip_request_fail">request fail!</string>
+    <string name="title_satifisfaction_eval">Satisfaction evaluation</string>
+    <string name="nick_service">Service Nick</string>
+	<string name="tip_eval">Please make evaluation to my service</string>
+	<string name="hint_leave_message">Leave message</string>
+	<string name="tip_btn_sumbit">Submit</string>
+	<string name="tip_btn_evaluation">Evaluation</string>
+	    
 </resources>
