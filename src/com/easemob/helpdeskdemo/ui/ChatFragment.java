@@ -104,7 +104,7 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 //		setVisitorInfoSrc(message);
 		
 		//指向某个客服 , 当会话同时指定了客服和技能组时，以指定客服为准，指定技能组失效。
-		pointToAgentUser(message, "ceshia@qq.com");
+//		pointToAgentUser(message, "ceshia@qq.com");
 	}
 
 	@Override
