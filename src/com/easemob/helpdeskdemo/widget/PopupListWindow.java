@@ -24,7 +24,7 @@ import android.widget.PopupWindow;
 
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.activity.LoginActivity;
+import com.easemob.helpdeskdemo.ui.LoginActivity;
 
 public class PopupListWindow extends PopupWindow implements OnClickListener {
 
@@ -33,7 +33,7 @@ public class PopupListWindow extends PopupWindow implements OnClickListener {
 
 	public PopupListWindow(Context context) {
 		this.mContext = context;
-		contentView = LayoutInflater.from(context).inflate(R.layout.popup_list_window, null);
+		contentView = LayoutInflater.from(context).inflate(R.layout.em_popup_list_window, null);
 		this.setContentView(contentView);
 		this.setWidth(LayoutParams.WRAP_CONTENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
