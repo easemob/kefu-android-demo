@@ -35,7 +35,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
@@ -730,17 +729,8 @@ public class MessageAdapter extends BaseAdapter{
 		try {
 			final JSONObject jsonObj = message.getJSONObjectAttribute(Constant.WEICHAT_MSG);
 			if(jsonObj.has("ctrlType")&&!jsonObj.isNull("ctrlType")){
-				boolean isEvaluated = false;
-				if(jsonObj.has("enable")){
-					isEvaluated = true;
-				}
-				if(isEvaluated){
-					holder.btnEval.setEnabled(false);
-					holder.btnEval.setText("已评价");
-				}else{
-					holder.btnEval.setEnabled(true);
-					holder.btnEval.setText("评价");
-				}
+				holder.btnEval.setEnabled(true);
+				holder.btnEval.setText("立即评价");
 				holder.btnEval.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
