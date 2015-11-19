@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 		trx.add(R.id.fragment_container, shopFragment).add(R.id.fragment_container, settingFragment).hide(settingFragment).show(shopFragment);
 		trx.commit();
 		mRadioButtons[0].setSelected(true);
-		imageButton_shop.setImageResource(R.drawable.image_shop_click);
+		imageButton_shop.setImageResource(R.drawable.em_icon_shop_select);
 		
 		//注册一个监听连接状态的listener
 		connectionListener = new MyConnectionListener();
@@ -146,30 +146,30 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 			mRadioButtons[0].setTextColor(csl);
 			mRadioButtons[1].setTextColor(Color.GRAY);
 			imageButton_setting
-					.setImageResource(R.drawable.image_setting_unclick);
-			imageButton_shop.setImageResource(R.drawable.image_shop_click);
+					.setImageResource(R.drawable.em_icon_setting_normal);
+			imageButton_shop.setImageResource(R.drawable.em_icon_shop_select);
 			index = 0;
 			break;
 		case R.id.imageButton_shop:
 			mRadioButtons[0].setTextColor(csl);
 			mRadioButtons[1].setTextColor(Color.GRAY);
 			imageButton_setting
-					.setImageResource(R.drawable.image_setting_unclick);
-			imageButton_shop.setImageResource(R.drawable.image_shop_click);
+					.setImageResource(R.drawable.em_icon_setting_normal);
+			imageButton_shop.setImageResource(R.drawable.em_icon_shop_select);
 			index = 0;
 			break;
 		case R.id.main_btn_setting_page:
-			imageButton_shop.setImageResource(R.drawable.image_shop_unclick);
+			imageButton_shop.setImageResource(R.drawable.em_icon_shop_normal);
 			imageButton_setting
-					.setImageResource(R.drawable.image_setting_click);
+					.setImageResource(R.drawable.em_icon_setting_select);
 			mRadioButtons[0].setTextColor(Color.GRAY);
 			mRadioButtons[1].setTextColor(csl);
 			index = 1;
 			break;
 		case R.id.imageButton_setting:
-			imageButton_shop.setImageResource(R.drawable.image_shop_unclick);
+			imageButton_shop.setImageResource(R.drawable.em_icon_shop_normal);
 			imageButton_setting
-					.setImageResource(R.drawable.image_setting_click);
+					.setImageResource(R.drawable.em_icon_setting_select);
 			mRadioButtons[0].setTextColor(Color.GRAY);
 			mRadioButtons[1].setTextColor(csl);
 			index = 1;

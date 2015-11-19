@@ -16,7 +16,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@drawable/mm_title_back"/>
+            android:background="@drawable/em_icon_title_back"/>
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"

@@ -85,7 +85,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="center"
-                        android:src="@drawable/left_top_new" />
+                        android:src="@drawable/em_example_image_1" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="center"
-                        android:src="@drawable/right_top_new" />
+                        android:src="@drawable/em_example_image_2" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="center"
-                        android:src="@drawable/left_buttom_new" />
+                        android:src="@drawable/em_example_image_3" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -190,7 +190,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:scaleType="center"
-                        android:src="@drawable/right_buttom_new" />
+                        android:src="@drawable/em_example_image_4" />
 
                     <TextView
                         android:layout_width="wrap_content"

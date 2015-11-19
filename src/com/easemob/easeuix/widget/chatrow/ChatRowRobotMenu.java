@@ -60,7 +60,7 @@ public class ChatRowRobotMenu extends EaseChatRow{
 	@Override
 	protected void onSetUpView() {
 		try {
-			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_MSGTYPE);
 			if(jsonObj.has("choice")){
 				JSONObject jsonChoice = jsonObj.getJSONObject("choice");
 				String title = jsonChoice.getString("title");

@@ -15,7 +15,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@drawable/mm_title_back"/>
+            android:background="@drawable/em_icon_title_back"/>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
 	            android:id="@+id/iv_connect_customer"
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
-	            android:background="@drawable/connect_customer_bg"/>
+	            android:background="@drawable/em_icon_chat"/>
 	        <TextView 
 	            android:layout_toRightOf="@id/iv_connect_customer"
 	            android:layout_height="wrap_content"
