@@ -16,7 +16,6 @@ package com.easemob.helpdeskdemo.ui;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 
 import com.easemob.chat.EMMessage;
 import com.easemob.helpdeskdemo.R;

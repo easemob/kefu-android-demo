@@ -24,7 +24,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:background="@drawable/image_people"
+            android:background="@drawable/ease_default_avatar"
             android:scaleType="fitXY" />
 
         
@@ -36,8 +36,8 @@
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead" >
             <TextView 
-                android:layout_marginBottom="5dp"
                 android:id="@+id/shop_details_title_new"
+                android:layout_marginBottom="5dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="我正在看:"/>

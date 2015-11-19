@@ -164,7 +164,7 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 				} else if (DemoHelper.getInstance().isEvalMessage(message)) {
 					// 满意度评价
 					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EVAL : MESSAGE_TYPE_SENT_EVAL;
-				} else if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
+				} else if (DemoHelper.getInstance().isPictureTxtMessage(message)) {
 					// 订单图文组合
 					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PICTURE_TXT
 							: MESSAGE_TYPE_SENT_PICTURE_TXT;
@@ -180,7 +180,7 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 					return new ChatRowRobotMenu(getActivity(), message, position, adapter);
 				} else if (DemoHelper.getInstance().isEvalMessage(message)) {
 					return new ChatRowEvaluation(getActivity(), message, position, adapter);
-				} else if (message.getStringAttribute(Constant.PICTURE_MSG, null) != null) {
+				} else if (DemoHelper.getInstance().isPictureTxtMessage(message)) {
 					return new ChatRowPictureText(getActivity(), message, position, adapter);
 				}
 			}

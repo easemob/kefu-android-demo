@@ -13,6 +13,13 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
 import com.easemob.chat.EMChat;
@@ -23,15 +30,7 @@ import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.CommonUtils;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnCancelListener;
-import android.os.Bundle;
-import android.widget.Toast;
-
 public class LoginActivity extends BaseActivity {
-	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	private boolean progressShow;
 	private ProgressDialog progressDialog;
@@ -45,6 +44,8 @@ public class LoginActivity extends BaseActivity {
 		selectedIndex = intent.getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY,
 				Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
+		
+		//EMChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
 		if (EMChat.getInstance().isLoggedIn()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
@@ -54,6 +55,7 @@ public class LoginActivity extends BaseActivity {
 				@Override
 				public void run() {
 					try {
+						//加载本地数据库中的消息到内存中
 						EMChatManager.getInstance().loadAllConversations();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -62,6 +64,7 @@ public class LoginActivity extends BaseActivity {
 				}
 			}).start();
 		} else {
+			//随机创建一个用户并登录环信服务器
 			createRandomAccountAndLoginChatServer();
 		}
 
@@ -82,6 +85,7 @@ public class LoginActivity extends BaseActivity {
 
 					@Override
 					public void run() {
+						//登录环信服务器
 						loginHuanxinServer(randomAccount, userPwd);
 					}
 				});
@@ -118,6 +122,7 @@ public class LoginActivity extends BaseActivity {
 		});
 	}
 
+	//注册用户
 	private void createAccountToServer(final String uname, final String pwd, final EMCallBack callback) {
 		Thread thread = new Thread(new Runnable() {
 
