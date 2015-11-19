@@ -32,10 +32,12 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <permission android:name="com.easemob.chatuidemo.permission.C2D_MESSAGE"
+	<!-- 需要修改的地方，请注意，需要修改为你自己的包名 -->
+    <!-- 这里需要修改 android:name="包名+.permission.C2D_MESSAGE" -->
+    <permission android:name="com.easemob.helpdeskdemo.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.easemob.chatuidemo.permission.C2D_MESSAGE" />
+    <!-- 这里需要修改 android:name="包名+.permission.C2D_MESSAGE" -->
+    <uses-permission android:name="com.easemob.helpdeskdemo.permission.C2D_MESSAGE" />
     <application
         android:name=".DemoApplication"
         android:allowBackup="true"
@@ -137,20 +139,22 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.easemob.chatuidemo" />
+                <!-- 这里需要修改category 的android:name="你的包名" -->
+                <category android:name="com.easemob.helpdeskdemo" />
             </intent-filter>
         </receiver>
 
         <service android:name="com.easemob.chat.EMGCMListenerService"
             android:exported="false" >
         </service>
-        
+        <!-- 这里需要android:name="你的包名.receiver.GCMPushBroadCast" -->
         <receiver 
-            android:name="com.easemob.chatuidemo.receiver.GCMPushBroadCast"
+            android:name="com.easemob.helpdeskdemo.receiver.GCMPushBroadCast"
             android:exported="false">
             <intent-filter >
                 <action android:name="com.easemob.sdk.push"/>
-                <category android:name="com.easemob.chatuidemo"/>
+                <!-- 这里需要修改category 的android:name="你的包名" -->
+                <category android:name="com.easemob.helpdeskdemo"/>
             </intent-filter>
         </receiver>
         <!-- gcm end -->
