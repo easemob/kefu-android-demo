@@ -23,9 +23,8 @@ public class Constant extends EaseConstant{
 	public static final String ACCOUNT_REMOVED = "account_removed";
 	public static final String ACCOUNT_CONFLICT = "conflict";
 	public static final String CHAT_ROBOT = "item_robots";
-	public static final String MESSAGE_ATTR_ROBOT_MSGTYPE = "msgtype";
+	public static final String MESSAGE_ATTR_MSGTYPE = "msgtype";
 	
-	public static final String PICTURE_MSG = "type";
 	public static final String WEICHAT_MSG = "weichat";
 
 	public static final String DEFAULT_COSTOMER_APPKEY = "sipsoft#sandbox";

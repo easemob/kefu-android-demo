@@ -3,15 +3,15 @@
 
     <item
         android:id="@android:id/background"
-        android:drawable="@drawable/icon_star">
+        android:drawable="@drawable/em_icon_star_normal">
     </item>
     <item
         android:id="@android:id/secondaryProgress"
-        android:drawable="@drawable/icon_star">
+        android:drawable="@drawable/em_icon_star_normal">
     </item>
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/icon_star_select">
+        android:drawable="@drawable/em_icon_star_select">
     </item>
 
 </layer-list>

@@ -12,6 +12,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="11dp"
         android:scaleType="centerInside"
-        android:src="@drawable/mm_title_back" />
+        android:src="@drawable/em_icon_title_back" />
 
 </LinearLayout>
