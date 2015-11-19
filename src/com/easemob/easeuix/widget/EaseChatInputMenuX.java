@@ -19,7 +19,6 @@ import com.easemob.easeui.model.EaseDefaultEmojiconDatas;
 import com.easemob.easeui.utils.EaseSmileUtils;
 import com.easemob.easeui.widget.EaseChatExtendMenu;
 import com.easemob.easeui.widget.EaseChatExtendMenu.EaseChatExtendMenuItemClickListener;
-import com.easemob.easeui.widget.EaseChatPrimaryMenuBase;
 import com.easemob.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.easemob.easeui.widget.emojicon.EaseEmojiconMenuBase;
 import com.easemob.easeui.widget.emojicon.EaseEmojiconMenuBase.EaseEmojiconMenuListener;

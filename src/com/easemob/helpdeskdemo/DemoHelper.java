@@ -1,10 +1,7 @@
 package com.easemob.helpdeskdemo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,34 +11,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
-import com.easemob.EMGroupChangeListener;
 import com.easemob.EMNotifierEvent;
-import com.easemob.EMValueCallBack;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMChatOptions;
-import com.easemob.chat.EMContactListener;
-import com.easemob.chat.EMContactManager;
-import com.easemob.chat.EMGroup;
-import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
-import com.easemob.chat.TextMessageBody;
 import com.easemob.easeui.R;
 import com.easemob.easeui.controller.EaseUI;
-import com.easemob.easeui.controller.EaseUI.EaseSettingsProvider;
-import com.easemob.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.easemob.easeui.domain.EaseUser;
 import com.easemob.easeui.model.EaseNotifier;
 import com.easemob.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -396,7 +381,7 @@ public class DemoHelper {
     
     public boolean isRobotMenuMessage(EMMessage message){
     	try {
-			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_MSGTYPE);
 			if (jsonObj.has("choice")) {
 				return true;
 			}
@@ -408,7 +393,7 @@ public class DemoHelper {
     public String getRobotMenuMessageDigest(EMMessage message) {
 		String title = "";
 		try {
-			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_ROBOT_MSGTYPE);
+			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_MSGTYPE);
 			if (jsonObj.has("choice")) {
 				JSONObject jsonChoice = jsonObj.getJSONObject("choice");
 				title = jsonChoice.getString("title");
@@ -437,6 +422,24 @@ public class DemoHelper {
 		return false;
 	}
     
-    
+    /**
+     * 检测是否为订单消息或者为轨迹消息
+     * @param message
+     * @return
+     */
+    public boolean isPictureTxtMessage(EMMessage message){
+    	JSONObject jsonObj = null;
+    	try {
+			jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_MSGTYPE);
+		} catch (EaseMobException e) {
+		}
+    	if(jsonObj == null){
+			return false;
+		}
+		if(jsonObj.has("order") || jsonObj.has("track")){
+			return true;
+		}
+		return false;
+    }
     
 }
