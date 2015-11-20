@@ -102,6 +102,18 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 		
 		//设置VisitorInfo 传递的信息将在iframe中显示
 //		setVisitorInfoSrc(message);
+		//指向某个技能组，技能组（客服分组）内将自动分配客服
+//		pointToSkillGroup(message, groupName);
+		switch (messageToIndex) {
+		case Constant.MESSAGE_TO_PRE_SALES:
+			pointToSkillGroup(message, "shouqian");
+			break;
+		case Constant.MESSAGE_TO_AFTER_SALES:
+			pointToSkillGroup(message, "shouhou");
+			break;
+		default:
+			break;
+		}
 		
 		//指向某个客服 , 当会话同时指定了客服和技能组时，以指定客服为准，指定技能组失效。
 //		pointToAgentUser(message, "ceshia@qq.com");
@@ -193,74 +205,54 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 		return false;
 	}
 
+	/**
+	 * 设置用户的属性，
+	 * 通过消息的扩展，传递客服系统用户的属性信息
+	 * @param message
+	 */
 	private void setUserInfoAttribute(EMMessage message) {
-		if(TextUtils.isEmpty(currentUserNick)){
+		if (TextUtils.isEmpty(currentUserNick)) {
 			currentUserNick = EMChatManager.getInstance().getCurrentUser();
 		}
-		message.setAttribute("weichat", setWeChatUserInfo(currentUserNick, "10000", "13512345678", "环信", currentUserNick, "", "abc@123.com"));
-	}
-	
-	private void setVisitorInfoSrc(EMMessage message){
-		String strName = "name-test from hxid:" + EMChatManager.getInstance().getCurrentUser();
-		message.setAttribute("cmd", updateVisitorInfoSrc(strName));
-	}
-	private JSONObject setWeChatUserInfo(String trueName, String qq, String phone, String companyName,
-			String userNickname, String description, String email) {
-		JSONObject weiJson = new JSONObject();
+		JSONObject weichatJson = getWeichatJSONObject(message);
 		try {
 			JSONObject visitorJson = new JSONObject();
-			if (trueName != null)
-				visitorJson.put("trueName", trueName);
-			if (qq != null)
-				visitorJson.put("qq", qq);
-			if (phone != null)
-				visitorJson.put("phone", phone);
-			if (companyName != null)
-				visitorJson.put("companyName", companyName);
-			if (userNickname != null)
-				visitorJson.put("userNickname", userNickname);
-			if (description != null)
-				visitorJson.put("description", description);
-			if (email != null)
-				visitorJson.put("email", email);
-			weiJson.put("visitor", visitorJson);
-			
-			//=============Set SkillGroup start=================
-			switch (messageToIndex) {
-			case Constant.MESSAGE_TO_PRE_SALES:
-				weiJson.put("queueName", "shouqian");
-				break;
-			case Constant.MESSAGE_TO_AFTER_SALES:
-				weiJson.put("queueName", "shouhou");
-				break;
-			default:
-				break;
-			}
-			//=============Set SkillGroup end====================
+			visitorJson.put("userNickname", currentUserNick);
+			visitorJson.put("trueName", currentUserNick);
+			visitorJson.put("qq", "10000");
+			visitorJson.put("phone", "13512345678");
+			visitorJson.put("companyName", "环信");
+			visitorJson.put("description", "");
+			visitorJson.put("email", "abc@123.com");
+			weichatJson.put("visitor", visitorJson);
+
+			message.setAttribute("weichat", weichatJson);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return weiJson;
 	}
 	
-	private JSONObject updateVisitorInfoSrc(String name){
+	private void setVisitorInfoSrc(EMMessage message){
+		//传递用户的属性到自定义的iframe界面
+		String strName = "name-test from hxid:" + EMChatManager.getInstance().getCurrentUser();
 		JSONObject cmdJson = new JSONObject();
 		try {
 			JSONObject updateVisitorInfosrcJson = new JSONObject();
 			JSONObject paramsJson = new JSONObject();
-			if(name != null){
-				paramsJson.put("name", name);
-			}
+			paramsJson.put("name", strName);
 			updateVisitorInfosrcJson.put("params", paramsJson);
 			cmdJson.put("updateVisitorInfoSrc", updateVisitorInfosrcJson);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return cmdJson;
+		message.setAttribute("cmd", cmdJson);
 	}
 	
-	
-	
+	/**
+	 * 获取消息中的扩展 weichat是否存在并返回jsonObject
+	 * @param message
+	 * @return
+	 */
 	private JSONObject getWeichatJSONObject(EMMessage message){
 		JSONObject weichatJson = null;
 		try {
@@ -290,6 +282,21 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * 技能组（客服分组）发消息发到某个组
+	 * @param message 消息
+	 * @param groupName 分组名称
+	 */
+	private void pointToSkillGroup(EMMessage message,String groupName){
+		try {
+			JSONObject weichatJson = getWeichatJSONObject(message);
+			weichatJson.put("queueName", groupName);
+			message.setAttribute("weichat", weichatJson);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
