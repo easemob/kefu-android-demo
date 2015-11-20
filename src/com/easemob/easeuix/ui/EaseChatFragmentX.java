@@ -81,7 +81,7 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
      * 传入fragment的参数
      */
     protected Bundle fragmentArgs;
-    protected int chatType;
+    protected int chatType = EaseConstant.CHATTYPE_SINGLE;
     protected String toChatUsername;
     protected EaseChatMessageList messageList;
     protected EaseChatInputMenuX inputMenu;
@@ -134,7 +134,6 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-    	super.onActivityCreated(savedInstanceState);
         fragmentArgs = getArguments();
         // 判断单聊还是群聊
         chatType = fragmentArgs.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
@@ -144,7 +143,10 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
         imgSelectedIndex = fragmentArgs.getInt(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		//判断是默认，还是用技能组（售前、售后）
         messageToIndex = fragmentArgs.getInt(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
-		
+        //super.onActivityCreated这个方法，一定要获取了fragmentArg后，在发送消息等前执行。
+        //在父类中调用了initView和setUpView两个方法
+        super.onActivityCreated(savedInstanceState);
+        
 		currentUserNick = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCurrentNick();
         
 		//从商品详情进来都为售后，只为演示用。
@@ -154,6 +156,8 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
         if(savedInstanceState == null){
         	sendPictureTxtMessage(imgSelectedIndex);
         }
+        
+        
     }
     
     /**
@@ -601,12 +605,6 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
         if(chatFragmentListener != null){
             //设置扩展属性
             chatFragmentListener.onSetMessageAttributes(message);
-        }
-        // 如果是群聊，设置chattype,默认是单聊
-        if (chatType == EaseConstant.CHATTYPE_GROUP){
-            message.setChatType(ChatType.GroupChat);
-        }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
-            message.setChatType(ChatType.ChatRoom);
         }
         //发送消息
         EMChatManager.getInstance().sendMessage(message, null);
