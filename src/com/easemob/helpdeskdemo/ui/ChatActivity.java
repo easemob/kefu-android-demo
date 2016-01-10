@@ -68,4 +68,8 @@ public class ChatActivity extends BaseActivity {
 		chatFragment.sendTextMessage(txtContent);
 	}
 	
+	public void sendRobotMessage(String txtContent,String menuId){
+		chatFragment.sendRobotMessage(txtContent, menuId);
+	}
+	
 }

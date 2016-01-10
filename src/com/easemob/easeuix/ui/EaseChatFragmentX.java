@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -571,6 +572,20 @@ public class EaseChatFragmentX extends EaseBaseFragment implements EMEventListen
         sendMessage(message);
     }
 
+    public void sendRobotMessage(String content,String menuId){
+    	EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
+    	if(!TextUtils.isEmpty(menuId)){
+        	JSONObject msgTypeJson = new JSONObject();
+        	try {
+        		JSONObject choiceJson = new JSONObject();
+        		choiceJson.put("menuid", menuId);
+        		msgTypeJson.put("choice", choiceJson);
+    		} catch (Exception e) {
+    		}
+        	message.setAttribute("msgtype", msgTypeJson);
+    	}
+        sendMessage(message);
+    }
     protected void sendBigExpressionMessage(String name, String identityCode){
     	EMMessage message = EaseCommonUtils.createExpressionMessage(toChatUsername, name, identityCode);
     	sendMessage(message);
