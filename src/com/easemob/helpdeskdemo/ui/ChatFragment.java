@@ -23,6 +23,7 @@ import com.easemob.easeuix.ui.EaseChatFragmentX.EaseChatFragmentListener;
 import com.easemob.easeuix.widget.chatrow.ChatRowEvaluation;
 import com.easemob.easeuix.widget.chatrow.ChatRowPictureText;
 import com.easemob.easeuix.widget.chatrow.ChatRowRobotMenu;
+import com.easemob.easeuix.widget.chatrow.ChatRowTransferToKefu;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 
@@ -41,6 +42,10 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 	// evaluation
 	private static final int MESSAGE_TYPE_SENT_EVAL = 5;
 	private static final int MESSAGE_TYPE_RECV_EVAL = 6;
+	
+	// transfer to kefu message
+	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 7;
+	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 8;
 	
 	//EVALUATION
 	public static final int REQUEST_CODE_EVAL = 26;
@@ -163,7 +168,7 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 		@Override
 		public int getCustomChatRowTypeCount() {
 			//此处返回的数目为getCustomChatRowType 中的布局的个数
-			return 6;
+			return 8;
 		}
 
 		@Override
@@ -180,6 +185,10 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 					// 订单图文组合
 					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PICTURE_TXT
 							: MESSAGE_TYPE_SENT_PICTURE_TXT;
+				} else if(DemoHelper.getInstance().isTransferToKefuMsg(message)){
+					//转人工消息
+					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU
+							: MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU;
 				}
 			}
 			return 0;
@@ -194,6 +203,8 @@ public class ChatFragment extends EaseChatFragmentX implements EaseChatFragmentL
 					return new ChatRowEvaluation(getActivity(), message, position, adapter);
 				} else if (DemoHelper.getInstance().isPictureTxtMessage(message)) {
 					return new ChatRowPictureText(getActivity(), message, position, adapter);
+				} else if (DemoHelper.getInstance().isTransferToKefuMsg(message)){
+					return new ChatRowTransferToKefu(getActivity(), message, position, adapter);
 				}
 			}
 			return null;

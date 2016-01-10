@@ -14,7 +14,6 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
 import com.easemob.exceptions.EaseMobException;
-import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.OrderMessageEntity;
