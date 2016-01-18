@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4" >
+
+    <RelativeLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="#C4C4C4" />
+    </RelativeLayout>
+
+    <!-- #F2F1F1 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_buttom_bg"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true">
+        <!-- #05000000 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentTop="true"
+            android:background="#c4c4c4" />
+
+        <LinearLayout
+            android:id="@+id/main_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="#fff"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/ll_shop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onTabClick"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/imageButton_shop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/em_icon_shop_normal"
+                    android:gravity="center"
+                    android:onClick="onTabClick" />
+
+                <Button
+                    android:id="@+id/main_btn_home_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:onClick="onTabClick"
+                    android:text="@string/shopping"
+                    android:textColor="#ED5485"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_setting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onTabClick"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/imageButton_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/em_icon_setting_normal"
+                    android:gravity="center"
+                    android:onClick="onTabClick" />
+
+                <Button
+                    android:id="@+id/main_btn_setting_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:onClick="onTabClick"
+                    android:text="@string/setting"
+                    android:textColor="#929292"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
