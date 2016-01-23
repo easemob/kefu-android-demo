@@ -4,6 +4,12 @@ android {
     compileSdkVersion 22
     buildToolsVersion "23.0.2"
 
+    sourceSets{
+        main(){
+            jniLibs.srcDirs=['libs']
+        }
+    }
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22

@@ -13,8 +13,6 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,8 +22,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
@@ -35,6 +33,8 @@ import com.easemob.easeui.model.EaseImageCache;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
+
+import java.util.List;
 
 public class ShopDetailsActivity extends BaseActivity implements EMEventListener{
 	private ImageView mImageView;
@@ -75,7 +75,6 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, index);
-				intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_AFTER_SALES);
 				intent.setClass(ShopDetailsActivity.this, LoginActivity.class);
 				startActivity(intent);
 			}

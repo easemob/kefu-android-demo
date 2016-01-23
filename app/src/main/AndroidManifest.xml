@@ -84,13 +84,6 @@
             android:theme="@style/horizontal_slide" >
         </activity>
 
-        <!-- 自定义的contextmenu -->
-        <activity
-            android:name="com.easemob.chatuidemo.ui.ContextMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle" >
-        </activity>
-
         <!-- 显示下载大图页面 -->
         <activity
             android:name="com.easemob.easeui.ui.EaseShowBigImageActivity"

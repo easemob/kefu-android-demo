@@ -4,6 +4,11 @@ android {
     compileSdkVersion 22
     buildToolsVersion "23.0.2"
 
+    sourceSets{
+        main(){
+            jniLibs.srcDirs=['libs']
+        }
+    }
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 15

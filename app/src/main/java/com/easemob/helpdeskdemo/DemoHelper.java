@@ -546,5 +546,25 @@ public class DemoHelper {
         return null;
     }
 
+    /**
+     * 检测是否为转人工的消息，如果是则需要显示转人工的按钮
+     */
+    public boolean isTransferToKefuMsg(EMMessage message){
+        try {
+            JSONObject jsonObj = message.getJSONObjectAttribute(Constant.WEICHAT_MSG);
+            if(jsonObj.has("ctrlType")){
+                try {
+                    String type = jsonObj.getString("ctrlType");
+                    if(!TextUtils.isEmpty(type)&&type.equalsIgnoreCase("TransferToKfHint")){
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (EaseMobException e) {
+        }
+        return false;
+    }
 
 }
