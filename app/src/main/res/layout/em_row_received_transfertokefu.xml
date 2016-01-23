@@ -17,41 +17,51 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_activity" >
 
-        <com.easemob.easeui.widget.EaseImageView
+        <ImageView
             android:id="@+id/iv_userhead"
             android:layout_width="@dimen/size_avatar"
             android:layout_height="@dimen/size_avatar"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:src="@drawable/ease_default_avatar" />
+            android:background="@drawable/ease_default_avatar"
+            android:scaleType="fitXY" />
 
-        <LinearLayout
-            android:id="@+id/ll_chatcontent"
+        <TextView
+            android:id="@+id/tv_chatcontent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:layout_toRightOf="@id/iv_userhead"
             android:layout_below="@+id/tv_userid"
+            android:autoLink="web"
             android:background="@drawable/ease_chatfrom_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="left|center"
+            android:lineSpacingExtra="2dp"
             android:maxWidth="225.0dip"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:orientation="vertical" >
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                />
-            <LinearLayout 
-                android:id="@+id/ll_layout"
-                android:layout_marginTop="3dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                ></LinearLayout>
-        </LinearLayout>
+            android:minHeight="50dp"
+            android:textColor="#ff000000"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_chatcontent"
+            android:layout_centerHorizontal="true"
+            android:background="#fff" >
+        <Button
+            android:id="@+id/btn_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
+            android:textSize="16sp"
+            android:background="@drawable/em_bg_button_satisfaction"
+            android:textColor="@android:color/black"
+            android:text="转人工客服" /></RelativeLayout>
 
         <TextView
             android:id="@+id/tv_userid"
@@ -62,7 +72,6 @@
             android:textSize="@dimen/chat_nick_text_size"
             android:layout_toRightOf="@id/iv_userhead"
             android:visibility="gone" />
-
     </RelativeLayout>
 
 </LinearLayout>

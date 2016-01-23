@@ -3,6 +3,8 @@ package com.easemob.helpdeskdemo.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.easemob.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.easemob.easeuix.widget.chatrow.ChatRowEvaluation;
 import com.easemob.easeuix.widget.chatrow.ChatRowPictureText;
 import com.easemob.easeuix.widget.chatrow.ChatRowRobotMenu;
+import com.easemob.easeuix.widget.chatrow.ChatRowTransferToKefu;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
@@ -34,9 +37,7 @@ import org.json.JSONObject;
 public class ChatFragment extends EaseChatFragment implements EaseChatFragment.EaseChatFragmentListener {
 
 	// 避免和基类定义的常量可能发生的冲突，常量从11开始定义
-//	private static final int ITEM_VIDEO = 11;
-//	private static final int ITEM_FILE = 12;
-//	private static final int ITEM_VOICE_CALL = 13;
+	private static final int ITEM_FILE = 11;
 	private static final int ITEM_SHORT_CUT_MESSAGE = 12;
 	public static final int REQUEST_CODE_CONTEXT_MENU = 14;
 
@@ -48,7 +49,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	// evaluation
 	private static final int MESSAGE_TYPE_SENT_EVAL = 5;
 	private static final int MESSAGE_TYPE_RECV_EVAL = 6;
-	
+
+	// transfer to kefu message
+	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 7;
+	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 8;
+
+
+	private static final int REQUEST_CODE_SELECT_FILE = 11;
 	//EVALUATION
 	public static final int REQUEST_CODE_EVAL = 26;
 	//SHORT CUT MESSAGES
@@ -67,12 +74,6 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-//		fragmentArgs = getArguments();
-//		// 判断单聊还是群聊
-//		chatType = fragmentArgs.getInt(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
-//		// 会话人或群组id
-//		toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
-		//super.onActivityCreated这个方法，一定要获取了fragmentArg后，在发送消息等前执行。
 		//在父类中调用了initView和setUpView两个方法
 		super.onActivityCreated(savedInstanceState);
 		//检查是否是从某个商品详情进来
@@ -81,10 +82,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		messageToIndex = fragmentArgs.getInt(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		currentUserNick = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCurrentNick();
 
-		//从商品详情进来都为售后，只为演示用。
-		if (imgSelectedIndex != Constant.INTENT_CODE_IMG_SELECTED_DEFAULT) {
-			messageToIndex = Constant.MESSAGE_TO_AFTER_SALES;
-		}
+//		//从商品详情进来都为售后，只为演示用。
+//		if (imgSelectedIndex != Constant.INTENT_CODE_IMG_SELECTED_DEFAULT) {
+//			messageToIndex = Constant.MESSAGE_TO_AFTER_SALES;
+//		}
 		if (savedInstanceState == null) {
 			sendPictureTxtMessage(imgSelectedIndex);
 		}
@@ -103,6 +104,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	protected void registerExtendMenuItem() {
 		// demo这里不覆盖基类已经注册的item,item点击listener沿用基类的
 		super.registerExtendMenuItem();
+		//增加扩展item
+		inputMenu.registerExtendMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, ITEM_FILE, extendMenuItemClickListener);
 		// 增加扩展item
 		inputMenu.registerExtendMenuItem(R.string.attach_short_cut_message, R.drawable.em_icon_answer, ITEM_SHORT_CUT_MESSAGE, extendMenuItemClickListener);
 	}
@@ -131,6 +134,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 				String content = data.getStringExtra("content");
 				if(!TextUtils.isEmpty(content)){
 					inputMenu.setInputMessage(content);
+				}
+			}else if(requestCode == REQUEST_CODE_SELECT_FILE){
+				if (data != null) {
+					Uri uri = data.getData();
+					if (uri != null) {
+						sendFileByUri(uri);
+					}
 				}
 			}
 		}
@@ -194,15 +204,38 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	@Override
 	public boolean onExtendMenuItemClick(int itemId, View view) {
 		switch(itemId){
+			case ITEM_FILE:
+				//一般文件
+				//demo这里是通过系统api选择文件，实际app中最好是做成qq那种选择发送文件
+				selectFileFromLocal();
+				break;
 			case ITEM_SHORT_CUT_MESSAGE:
 				Intent intent = new Intent(getActivity(), ShortCutMsgActivity.class);
 				startActivityForResult(intent, REQUEST_CODE_SHORTCUT);
 				getActivity().overridePendingTransition(R.anim.activity_open, 0);
 				break;
+
 			default:break;
 		}
 		//不覆盖已有的点击事件
 		return false;
+	}
+
+	/**
+	 * 选择文件
+	 * @return
+	 */
+	protected void selectFileFromLocal(){
+		Intent intent = null;
+		if (Build.VERSION.SDK_INT < 19) { //19以后这个api不可用，demo这里简单处理成图库选择图片
+			intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setType("*/*");
+			intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+		} else {
+			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		}
+		startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
 	}
 
 	@Override
@@ -219,7 +252,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		@Override
 		public int getCustomChatRowTypeCount() {
 			//此处返回的数目为getCustomChatRowType 中的布局的个数
-			return 6;
+			return 8;
 		}
 
 		@Override
@@ -236,6 +269,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 					// 订单图文组合
 					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_PICTURE_TXT
 							: MESSAGE_TYPE_SENT_PICTURE_TXT;
+				} else if(DemoHelper.getInstance().isTransferToKefuMsg(message)){
+					//转人工消息
+					return message.direct == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU
+							: MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU;
 				}
 			}
 			return 0;
@@ -250,6 +287,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 					return new ChatRowEvaluation(getActivity(), message, position, adapter);
 				} else if (DemoHelper.getInstance().isPictureTxtMessage(message)) {
 					return new ChatRowPictureText(getActivity(), message, position, adapter);
+				}else if (DemoHelper.getInstance().isTransferToKefuMsg(message)){
+					return new ChatRowTransferToKefu(getActivity(), message, position, adapter);
 				}
 			}
 			return null;
