@@ -69,6 +69,8 @@ public class ChatRowRobotMenu extends EaseChatRow {
 					}
 					if (jsonChoice.has("items")) {
 						setRobotMenuListMessageLayout(tvList, jsonChoice.getJSONArray("items"));
+					}else if(jsonChoice.has("list")){
+						setRobotMenuMessagesLayout(tvList, jsonChoice.getJSONArray("list"));
 					}
 				}
 			} catch (Exception e) {
@@ -124,6 +126,32 @@ public class ChatRowRobotMenu extends EaseChatRow {
 
 	}
 
+	private void setRobotMenuMessagesLayout(LinearLayout parentView, JSONArray jsonArr){
+		try {
+			parentView.removeAllViews();
+			for (int i = 0; i < jsonArr.length(); i++) {
+				final String itemStr = jsonArr.getString(i);
+				final TextView textView = new TextView(context);
+				textView.setText(itemStr);
+				textView.setTextSize(15);
+				textView.setTextColor(getResources().getColorStateList(R.color.em_menu_msg_text_color));
+				textView.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						((ChatActivity) context).sendRobotMessage(itemStr, null);
+					}
+				});
+				LayoutParams llLp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT);
+				llLp.bottomMargin = DensityUtil.dip2px(context, 3);
+				llLp.topMargin = DensityUtil.dip2px(context, 3);
+				parentView.addView(textView, llLp);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void setRobotMenuListMessageLayout(LinearLayout parentView, JSONArray jsonArr) {
 		try {
