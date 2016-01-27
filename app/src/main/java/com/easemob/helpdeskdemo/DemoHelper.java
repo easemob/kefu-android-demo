@@ -463,8 +463,11 @@ public class DemoHelper {
     public boolean isRobotMenuMessage(EMMessage message){
     	try {
 			JSONObject jsonObj = message.getJSONObjectAttribute(Constant.MESSAGE_ATTR_MSGTYPE);
-			if (jsonObj.has("choice")) {
-				return true;
+			if (jsonObj.has("choice") && !jsonObj.isNull("choice")) {
+                JSONObject jsonChoice = jsonObj.getJSONObject("choice");
+                if(jsonChoice.has("items") || jsonChoice.has("list")){
+                    return true;
+                }
 			}
 		} catch (Exception e) {
 		}

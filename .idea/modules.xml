@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HelpDeskDemo.iml" filepath="$PROJECT_DIR$/HelpDeskDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/easeui/easeui.iml" filepath="$PROJECT_DIR$/easeui/easeui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/helpdeskdemo-android.iml" filepath="$PROJECT_DIR$/helpdeskdemo-android.iml" />
     </modules>
   </component>
 </project>
