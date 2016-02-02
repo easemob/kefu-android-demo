@@ -142,9 +142,6 @@ public class DemoHelper {
                         }
                         //设置客服头像
                         if (!TextUtils.isEmpty(strUrl)) {
-                            if(strUrl.contains("ossimages")){
-                                strUrl = strUrl.replaceFirst("ossimages","");
-                            }
                             if (!strUrl.startsWith("http")) {
                                 strUrl = "http:" + strUrl;
                             }

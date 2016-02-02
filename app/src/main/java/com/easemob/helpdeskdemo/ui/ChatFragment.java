@@ -18,7 +18,6 @@ import com.easemob.chat.TextMessageBody;
 import com.easemob.easeui.ui.EaseChatFragment;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
 import com.easemob.easeui.widget.chatrow.EaseCustomChatRowProvider;
-import com.easemob.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.easemob.easeuix.widget.chatrow.ChatRowEvaluation;
 import com.easemob.easeuix.widget.chatrow.ChatRowPictureText;
 import com.easemob.easeuix.widget.chatrow.ChatRowRobotMenu;
@@ -26,7 +25,6 @@ import com.easemob.easeuix.widget.chatrow.ChatRowTransferToKefu;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.domain.EmojiconExampleGroupData;
 import com.easemob.helpdeskdemo.domain.MessageHelper;
 import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
 
@@ -96,8 +94,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	protected void setUpView() {
 		setChatFragmentListener(this);
 		super.setUpView();
-		//注释这句，大表情消失，可自定义，为演示添加自己的表情
-		((EaseEmojiconMenu)inputMenu.getEmojiconMenu()).addEmojiconGroup(EmojiconExampleGroupData.getData());
+		//自定义大表情，后期客服平台可能会支持，可以通过此代码查看效果
+//		((EaseEmojiconMenu)inputMenu.getEmojiconMenu()).addEmojiconGroup(EmojiconExampleGroupData.getData());
 	}
 
 	@Override
