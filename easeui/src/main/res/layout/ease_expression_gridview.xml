@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
-        android:verticalSpacing="6dp"
+        android:verticalSpacing="3dp"
         android:gravity="center"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:fadingEdge="none"
         android:cacheColorHint="@android:color/transparent"
         />
