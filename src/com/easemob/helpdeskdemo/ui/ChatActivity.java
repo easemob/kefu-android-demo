@@ -3,20 +3,15 @@ package com.easemob.helpdeskdemo.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.easemob.easeuix.ui.EaseChatFragmentX;
 import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
+import com.hyphenate.helpdesk.ui.BaseChatActivity;
+import com.hyphenate.helpdesk.ui.ChatFragment;
 
-/**
- * 聊天页面，需要fragment的使用{@link #CEaseChatFragment}
- * 
- */
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseChatActivity {
 
 	public static ChatActivity activityInstance;
-	private EaseChatFragmentX chatFragment;
-	String toChatUsername;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -24,7 +19,7 @@ public class ChatActivity extends BaseActivity {
 		setContentView(R.layout.em_activity_chat);
 		activityInstance = this;
 		// 聊天人或群id
-		toChatUsername = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
+		toChatUsername = Preferences.getInstance().getCustomerAccount();
 		// 可以直接new EaseChatFratFragment使用
 		chatFragment = new ChatFragment();
 		Intent intent = getIntent();
@@ -54,18 +49,4 @@ public class ChatActivity extends BaseActivity {
 		}
 
 	}
-
-	@Override
-	public void onBackPressed() {
-		chatFragment.onBackPressed();
-	}
-
-	public String getToChatUsername() {
-		return toChatUsername;
-	}
-	
-	public void sendTextMessage(String txtContent){
-		chatFragment.sendTextMessage(txtContent);
-	}
-	
 }

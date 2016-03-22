@@ -1,6 +1,7 @@
-package com.easemob.helpdeskdemo.domain;
+package com.easemob.helpdeskdemo.ui;
 
 import org.json.JSONObject;
+
 
 /**
  * 对轨迹跟踪的消息操作 此类不是必须，只是为了演示和初始化一些数据
@@ -9,6 +10,10 @@ public class MessageHelper {
 
 	public static JSONObject getMessageExtFromPicture(int index) {
 		switch (index) {
+		case 1:
+			break;
+		}
+		/*
 		case 1:
 			OrderMessageEntity entity1 = new OrderMessageEntity(1, "test_order1", "订单号：7890", "￥128",
 					"2015早春新款高腰复古牛仔裙", "https://www.baidu.com/img/bdlogo.png", "http://www.baidu.com");
@@ -26,6 +31,7 @@ public class MessageHelper {
 					"https://www.baidu.com/img/bdlogo.png", "http://www.baidu.com");
 			return entity4.getJSONObject();
 		}
+		*/
 		return null;
 	}
 	

@@ -23,11 +23,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChat;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
+import com.hyphenate.helpdesk.ChatClient;
 
 public class SettingFragment extends Fragment implements View.OnClickListener{
 
@@ -63,9 +63,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	}
 
 	private void initListener() {
-		tvAppkey.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAppkey());
-		tvAccount.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAccount());
-		tvNick.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCurrentNick());
+		tvAppkey.setText(Preferences.getInstance().getAppKey());
+		tvAccount.setText(Preferences.getInstance().getCustomerAccount());
+		tvNick.setText(Preferences.getInstance().getNickName());
 		rlAppkey.setOnClickListener(this);
 		rlAccount.setOnClickListener(this);
 		rlNick.setOnClickListener(this);
@@ -94,7 +94,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					return;
 				}
 				tvAccount.setText(newAccount);
-				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCustomerAccount(newAccount);
+				
+				Preferences.getInstance().setCustomerAccount(newAccount);
 				break;
 			case REQUEST_CODE_NICK:
 				String oldNick = tvNick.getText().toString();
@@ -103,7 +104,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					return;
 				}
 				tvNick.setText(newNick);
-				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCurrentNick(newNick);
+				Preferences.getInstance().setNickName(newNick);
 				break;
 			default:
 				break;
@@ -112,10 +113,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	}
 
 	private void showCustomMessage(final String newAppkey) {
-		HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCustomerAppkey(newAppkey);
-		EMChat.getInstance().setAppkey(newAppkey);
+		Preferences.getInstance().setAppKey(newAppkey);
+		//EMChat.getInstance().setAppkey(newAppkey);
 		// 退出登录 (修改appkey需要退出重新登录)
-		DemoHelper.getInstance().logout(true, null);
+		ChatClient.getInstance().logout(null);
+		//DemoHelper.getInstance().logout(true, null);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.os.Bundle;
 
-import com.easemob.easeui.ui.EaseBaseActivity;
+import com.hyphenate.easeui.ui.EaseBaseActivity;
 import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends EaseBaseActivity{

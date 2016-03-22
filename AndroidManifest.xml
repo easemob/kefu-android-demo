@@ -160,9 +160,9 @@
         <!-- gcm end -->
         
         <!-- 设置环信应用的appkey 可以在Manifest设置也可以在代码中设置-->
-        <!-- <meta-data
+        <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="easemob-demo#chatdemoui" /> -->
+            android:value="xiaogang#kefutest" />
         
         <!-- 声明sdk所需的service -->
         <service android:name="com.easemob.chat.EMChatService"

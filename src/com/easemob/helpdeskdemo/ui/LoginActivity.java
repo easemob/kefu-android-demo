@@ -13,6 +13,7 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -20,17 +21,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
-import com.easemob.EMError;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
-import com.easemob.exceptions.EaseMobException;
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.DemoHelper;
-import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.utils.CommonUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.helpdesk.Constant;
+import com.hyphenate.helpdesk.R;
 
-public class LoginActivity extends BaseActivity {
+
+public class LoginActivity extends Activity {
 
 	private boolean progressShow;
 	private ProgressDialog progressDialog;
@@ -46,7 +45,7 @@ public class LoginActivity extends BaseActivity {
 		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		
 		//EMChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
-		if (EMChat.getInstance().isLoggedIn()) {
+		if (EMClient.getInstance().isLoggedInBefore()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
 			progressDialog.show();
@@ -56,7 +55,7 @@ public class LoginActivity extends BaseActivity {
 				public void run() {
 					try {
 						//加载本地数据库中的消息到内存中
-						EMChatManager.getInstance().loadAllConversations();
+						EMClient.getInstance().chatManager().loadAllConversations();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -72,7 +71,7 @@ public class LoginActivity extends BaseActivity {
 
 	private void createRandomAccountAndLoginChatServer() {
 		// 自动生成账号
-		final String randomAccount = CommonUtils.getRandomAccount();
+		final String randomAccount = "";//CommonUtils.getRandomAccount();
 		final String userPwd = Constant.DEFAULT_ACCOUNT_PWD;
 		progressDialog = getProgressDialog();
 		progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
@@ -104,13 +103,11 @@ public class LoginActivity extends BaseActivity {
 						if (!LoginActivity.this.isFinishing()) {
 							progressDialog.dismiss();
 						}
-						if (errorCode == EMError.NONETWORK_ERROR) {
+						if (errorCode == EMError.NETWORK_ERROR) {
 							Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-						} else if (errorCode == EMError.USER_ALREADY_EXISTS) {
+						} else if (errorCode == EMError.USER_ALREADY_EXIST) {
 							Toast.makeText(getApplicationContext(), "用户已存在", Toast.LENGTH_SHORT).show();
-						} else if (errorCode == EMError.UNAUTHORIZED) {
-							Toast.makeText(getApplicationContext(), "无开放注册权限", Toast.LENGTH_SHORT).show();
-						} else if (errorCode == EMError.ILLEGAL_USER_NAME) {
+						} else if (errorCode == EMError.INVALID_USER_NAME) {
 							Toast.makeText(getApplicationContext(), "用户名非法", Toast.LENGTH_SHORT).show();
 						} else {
 							Toast.makeText(getApplicationContext(), "注册失败：" + message, Toast.LENGTH_SHORT).show();
@@ -129,11 +126,11 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					EMChatManager.getInstance().createAccountOnServer(uname, pwd);
+					EMClient.getInstance().createAccount(uname, pwd);
 					if (callback != null) {
 						callback.onSuccess();
 					}
-				} catch (EaseMobException e) {
+				} catch (HyphenateException e) {
 					if (callback != null) {
 						callback.onError(e.getErrorCode(), e.getMessage());
 					}
@@ -165,16 +162,16 @@ public class LoginActivity extends BaseActivity {
 			progressDialog.show();
 		}
 		// login huanxin server
-		EMChatManager.getInstance().login(uname, upwd, new EMCallBack() {
+		EMClient.getInstance().login(uname, upwd, new EMCallBack() {
 			@Override
 			public void onSuccess() {
 				if (!progressShow) {
 					return;
 				}
-				DemoHelper.getInstance().setCurrentUserName(uname);
-				DemoHelper.getInstance().setCurrentPassword(upwd);
+				//DemoHelper.getInstance().setCurrentUserName(uname);
+				//DemoHelper.getInstance().setCurrentPassword(upwd);
 				try {
-					EMChatManager.getInstance().loadAllConversations();
+					EMClient.getInstance().chatManager().loadAllConversations();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;

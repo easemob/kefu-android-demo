@@ -13,34 +13,15 @@
  */
 package com.easemob.helpdeskdemo;
 
-import android.app.Application;
-import android.content.Context;
+import com.hyphenate.helpdesk.ChatClient;
 
-import com.easemob.chat.EMChat;
-import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
+import android.app.Application;
 
 public class DemoApplication extends Application {
 
-	public static Context applicationContext;
-	private static DemoApplication instance;
-	// login user name
-	public final String PREF_USERNAME = "username";
-
-	@Override
 	public void onCreate() {
 		super.onCreate();
-		applicationContext = this;
-		instance = this;
-
-		//代码中设置环信IM的Appkey
-		String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
-        EMChat.getInstance().setAppkey(appkey);
-		// init demo helper
-		DemoHelper.getInstance().init(applicationContext);
+		Preferences.init(this);
+		ChatClient.getInstance().init(this, Preferences.getInstance().getAppKey());
 	}
-
-	public static DemoApplication getInstance() {
-		return instance;
-	}
-
 }

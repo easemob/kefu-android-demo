@@ -13,6 +13,9 @@
  */
 package com.easemob.helpdeskdemo.widget;
 
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.R;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -22,9 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.ui.LoginActivity;
 
 public class PopupListWindow extends PopupWindow implements OnClickListener {
 
@@ -59,12 +59,16 @@ public class PopupListWindow extends PopupWindow implements OnClickListener {
 		this.dismiss();
 		switch (v.getId()) {
 		case R.id.btn_pre_sales:
+			/*
 			mContext.startActivity(new Intent(mContext, LoginActivity.class).putExtra(Constant.MESSAGE_TO_INTENT_EXTRA,
 					Constant.MESSAGE_TO_PRE_SALES));
+					*/
 			break;
 		case R.id.btn_after_sales:
+			/*
 			mContext.startActivity(new Intent(mContext, LoginActivity.class).putExtra(Constant.MESSAGE_TO_INTENT_EXTRA,
 					Constant.MESSAGE_TO_AFTER_SALES));
+					*/
 			break;
 		default:
 			break;

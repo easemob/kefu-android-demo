@@ -13,23 +13,15 @@
  */
 package com.easemob.helpdeskdemo;
 
-import com.easemob.easeui.EaseConstant;
+import com.hyphenate.easeui.EaseConstant;
 
 public class Constant extends EaseConstant{
 
-	public static final String NEW_FRIENDS_USERNAME = "item_new_friends";
-	public static final String GROUP_USERNAME = "item_groups";
-	public static final String CHAT_ROOM = "item_chatroom";
-	public static final String ACCOUNT_REMOVED = "account_removed";
-	public static final String ACCOUNT_CONFLICT = "conflict";
-	public static final String CHAT_ROBOT = "item_robots";
-	public static final String MESSAGE_ATTR_MSGTYPE = "msgtype";
-	
-	public static final String WEICHAT_MSG = "weichat";
-
-	public static final String DEFAULT_COSTOMER_APPKEY = "sipsoft#sandbox";
-	public static final String DEFAULT_COSTOMER_ACCOUNT = "yuanhui";
+	public static final String DEFAULT_CUSTOMER_APPKEY = "sipsoft#sandbox";
+	public static final String DEFAULT_CUSTOMER_ACCOUNT = "yuanhui";
+	public static final String DEFAULT_CUSTOMER_PREFIX = "test_helpdesk"; 
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
+	public static final String DEFAULT_NICK_NAME = "vistor";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
 	public static final int MESSAGE_TO_PRE_SALES = 1;

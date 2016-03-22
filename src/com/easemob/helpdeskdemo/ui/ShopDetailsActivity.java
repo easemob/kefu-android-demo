@@ -27,16 +27,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 
-import com.easemob.EMEventListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
-import com.easemob.easeui.model.EaseImageCache;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMChatManager;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.model.EaseImageCache;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 
-public class ShopDetailsActivity extends BaseActivity implements EMEventListener{
+public class ShopDetailsActivity extends BaseActivity {
 	private ImageView mImageView;
 	private RelativeLayout rl_tochat;
 	private ImageButton mImageButton;
@@ -73,11 +73,13 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 		rl_tochat.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				/*
 				Intent intent = new Intent();
 				intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, index);
 				intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_AFTER_SALES);
 				intent.setClass(ShopDetailsActivity.this, LoginActivity.class);
 				startActivity(intent);
+				*/
 			}
 		});
 	}
@@ -85,39 +87,15 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		DemoHelper.getInstance().pushActivity(this);
+		//DemoHelper.getInstance().pushActivity(this);
 		//register the event listener when enter the foreground
-		EMChatManager.getInstance().registerEventListener(this,
-						new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
-								EMNotifierEvent.Event.EventOfflineMessage });
+	    //EMClient.getInstance().chatManager().addMessageListener(this);	
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		DemoHelper.getInstance().popActivity(this);
-		EMChatManager.getInstance().unregisterEventListener(this);
+		//DemoHelper.getInstance().popActivity(this);
+		//EMClient.getInstance().chatManager().removeMessageListener(this);
 	}
-
-	@Override
-	public void onEvent(EMNotifierEvent event) {
-		switch (event.getEvent()) {
-		case EventNewMessage:
-			EMMessage message = (EMMessage) event.getData();
-			//提示新消息
-			DemoHelper.getInstance().getNotifier().onNewMsg(message);
-			break;
-		case EventOfflineMessage:
-			//处理离线消息
-			List<EMMessage> messages = (List<EMMessage>) event.getData();
-			//消息提醒或只刷新UI
-			DemoHelper.getInstance().getNotifier().onNewMesg(messages);
-			break;
-		default:
-			break;
-		}
-		
-	}
-
-
 }

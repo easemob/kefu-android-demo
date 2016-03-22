@@ -32,17 +32,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.easemob.EMConnectionListener;
-import com.easemob.EMError;
-import com.easemob.EMEventListener;
-import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
+import com.hyphenate.helpdesk.ChatClient;
+import com.hyphenate.helpdesk.Error;
 import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 
-public class MainActivity extends BaseActivity implements EMEventListener{
+public class MainActivity extends BaseActivity{
 
 	private ShopFragment shopFragment;
 	private SettingFragment settingFragment;
@@ -85,13 +80,10 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 		
 		//注册一个监听连接状态的listener
 		connectionListener = new MyConnectionListener();
-		EMChatManager.getInstance().addConnectionListener(connectionListener);
-		
-		//内部测试方法，请忽略
-		registerInternalDebugReceiver();
+		ChatClient.getInstance().addConnectionListener(connectionListener);
 	}
 	
-	public class MyConnectionListener implements EMConnectionListener {
+	public class MyConnectionListener implements ChatClient.ConnectionListener {
 
 		@Override
 		public void onConnected() {
@@ -104,24 +96,8 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 				
 				@Override
 				public void run() {
-					if(error == EMError.USER_REMOVED){
-						//账号被移除
-						DemoHelper.getInstance().logout(true, null);
-						if(ChatActivity.activityInstance != null){
-							ChatActivity.activityInstance.finish();
-						}
-					}else if(error == EMError.CONNECTION_CONFLICT){
-						//账号在其他地方登录
-						DemoHelper.getInstance().logout(true, null);
-						if(ChatActivity.activityInstance != null){
-							ChatActivity.activityInstance.finish();
-						}
-					}else{
-						//连接不到服务器
-						
-						
-					}
-					
+				    ChatClient.getInstance().logout(null);	
+				    
 				}
 			});
 		}
@@ -193,10 +169,12 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 	public void contactCustomer(View view) {
 		switch (view.getId()) {
 		case R.id.ll_setting_list_customer:
+			/*
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, LoginActivity.class);
 			intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 			startActivity(intent);
+			*/
 			break;
 		default:
 			break;
@@ -207,73 +185,20 @@ public class MainActivity extends BaseActivity implements EMEventListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		DemoHelper.getInstance().pushActivity(this);
-		//register the event listener when enter the foreground
-		EMChatManager.getInstance().registerEventListener(this,
-				new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
-						EMNotifierEvent.Event.EventOfflineMessage });
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
 		// 把此activity 从foreground activity 列表里移除
-		DemoHelper.getInstance().popActivity(this);
-		EMChatManager.getInstance().unregisterEventListener(this);
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		if(connectionListener != null){
-			EMChatManager.getInstance().removeConnectionListener(connectionListener);
+			ChatClient.getInstance().removeConnectionListener();
 		}
-		try {
-            unregisterReceiver(internalDebugReceiver);
-        } catch (Exception e) {
-        }
 	}
-
-	@Override
-	public void onEvent(EMNotifierEvent event) {
-		switch (event.getEvent()) {
-		case EventNewMessage:
-			EMMessage message = (EMMessage) event.getData();
-			//提示新消息
-			DemoHelper.getInstance().getNotifier().onNewMsg(message);
-			break;
-		case EventOfflineMessage:
-			//处理离线消息
-			List<EMMessage> messages = (List<EMMessage>) event.getData();
-			//消息提醒或只刷新UI
-			DemoHelper.getInstance().getNotifier().onNewMesg(messages);
-			break;
-		default:
-			break;
-		}
-		
-	}
-	
-	 private BroadcastReceiver internalDebugReceiver;
-	 
-	/**
-	 * 内部测试代码，开发者请忽略
-	 */
-	private void registerInternalDebugReceiver() {
-	    internalDebugReceiver = new BroadcastReceiver() {
-            
-            @Override
-            public void onReceive(Context context, Intent intent) {
-            	DemoHelper.getInstance().logout(true, null);
-				if(ChatActivity.activityInstance != null){
-					ChatActivity.activityInstance.finish();
-				}
-            }
-        };
-        IntentFilter filter = new IntentFilter(getPackageName() + ".em_internal_debug");
-        registerReceiver(internalDebugReceiver, filter);
-    }
-	
-	
-	
 }
+
