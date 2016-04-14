@@ -21,12 +21,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.Preferences;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.helpdesk.Constant;
+import com.hyphenate.helpdesk.Callback;
+import com.hyphenate.helpdesk.ChatClient;
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.ui.Arguments;
 
 
 public class LoginActivity extends Activity {
@@ -45,7 +49,7 @@ public class LoginActivity extends Activity {
 		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		
 		//EMChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
-		if (EMClient.getInstance().isLoggedInBefore()) {
+		if (ChatClient.getInstance().isLoggedin()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
 			progressDialog.show();
@@ -64,19 +68,19 @@ public class LoginActivity extends Activity {
 			}).start();
 		} else {
 			//随机创建一个用户并登录环信服务器
-			createRandomAccountAndLoginChatServer();
+			createAccountAndLoginChatServer();
 		}
 
 	}
 
-	private void createRandomAccountAndLoginChatServer() {
+	private void createAccountAndLoginChatServer() {
 		// 自动生成账号
-		final String randomAccount = "";//CommonUtils.getRandomAccount();
+		final String account = Preferences.getInstance().getUserName();
 		final String userPwd = Constant.DEFAULT_ACCOUNT_PWD;
 		progressDialog = getProgressDialog();
 		progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
 		progressDialog.show();
-		createAccountToServer(randomAccount, userPwd, new EMCallBack() {
+		createAccountToServer(account, userPwd, new EMCallBack() {
 
 			@Override
 			public void onSuccess() {
@@ -85,7 +89,7 @@ public class LoginActivity extends Activity {
 					@Override
 					public void run() {
 						//登录环信服务器
-						loginHuanxinServer(randomAccount, userPwd);
+						loginHuanxinServer(account, userPwd);
 					}
 				});
 			}
@@ -106,7 +110,15 @@ public class LoginActivity extends Activity {
 						if (errorCode == EMError.NETWORK_ERROR) {
 							Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
 						} else if (errorCode == EMError.USER_ALREADY_EXIST) {
-							Toast.makeText(getApplicationContext(), "用户已存在", Toast.LENGTH_SHORT).show();
+							//Toast.makeText(getApplicationContext(), "用户已存在", Toast.LENGTH_SHORT).show();
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									//登录环信服务器
+									loginHuanxinServer(account, userPwd);
+								}
+							});
 						} else if (errorCode == EMError.INVALID_USER_NAME) {
 							Toast.makeText(getApplicationContext(), "用户名非法", Toast.LENGTH_SHORT).show();
 						} else {
@@ -126,6 +138,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void run() {
 				try {
+					ChatClient.getInstance().createAccount(uname, pwd);
 					EMClient.getInstance().createAccount(uname, pwd);
 					if (callback != null) {
 						callback.onSuccess();
@@ -162,7 +175,7 @@ public class LoginActivity extends Activity {
 			progressDialog.show();
 		}
 		// login huanxin server
-		EMClient.getInstance().login(uname, upwd, new EMCallBack() {
+		ChatClient.getInstance().login(uname, upwd, new Callback() {
 			@Override
 			public void onSuccess() {
 				if (!progressShow) {
@@ -180,11 +193,7 @@ public class LoginActivity extends Activity {
 			}
 
 			@Override
-			public void onProgress(int progress, String status) {
-			}
-
-			@Override
-			public void onError(final int code, final String message) {
+			public void onError() {
 				if (!progressShow) {
 					return;
 				}
@@ -192,7 +201,7 @@ public class LoginActivity extends Activity {
 					public void run() {
 						progressDialog.dismiss();
 						Toast.makeText(LoginActivity.this,
-								getResources().getString(R.string.is_contact_customer_failure_seconed) + message,
+								getResources().getString(R.string.is_contact_customer_failure_seconed),
 								Toast.LENGTH_SHORT).show();
 						finish();
 					}
@@ -210,7 +219,8 @@ public class LoginActivity extends Activity {
 				// 进入主页面
 				startActivity(new Intent(LoginActivity.this, ChatActivity.class).putExtra(
 						Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(
-						Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex));
+						Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex).putExtra(
+						Arguments.EXTRA_USER_ID, Preferences.getInstance().getCustomerAccount()));
 				finish();
 			}
 		});

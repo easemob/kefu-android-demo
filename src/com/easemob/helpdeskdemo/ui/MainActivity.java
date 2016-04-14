@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity{
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
+		super.onSaveInstanceState(outState);
 	}
 	
 	
@@ -169,12 +169,10 @@ public class MainActivity extends BaseActivity{
 	public void contactCustomer(View view) {
 		switch (view.getId()) {
 		case R.id.ll_setting_list_customer:
-			/*
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, LoginActivity.class);
 			intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 			startActivity(intent);
-			*/
 			break;
 		default:
 			break;

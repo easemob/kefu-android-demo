@@ -14,14 +14,21 @@
 package com.easemob.helpdeskdemo;
 
 import com.hyphenate.helpdesk.ChatClient;
+import com.hyphenate.helpdesk.ChatClient.Options;
+import com.hyphenate.helpdesk.ui.UIManager;
 
 import android.app.Application;
+import android.content.Context;
 
 public class DemoApplication extends Application {
 
 	public void onCreate() {
 		super.onCreate();
 		Preferences.init(this);
-		ChatClient.getInstance().init(this, Preferences.getInstance().getAppKey());
+		ChatClient.Options options = ChatClient.getInstance().createOptions();
+		options.setAppkey(Preferences.getInstance().getAppKey());
+
+		ChatClient.getInstance().init((Context)this, options);
+		UIManager.getInstance().init((Context)this);
 	}
 }

@@ -73,13 +73,11 @@ public class ShopDetailsActivity extends BaseActivity {
 		rl_tochat.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*
 				Intent intent = new Intent();
 				intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, index);
 				intent.putExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_AFTER_SALES);
 				intent.setClass(ShopDetailsActivity.this, LoginActivity.class);
 				startActivity(intent);
-				*/
 			}
 		});
 	}
@@ -87,15 +85,11 @@ public class ShopDetailsActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//DemoHelper.getInstance().pushActivity(this);
-		//register the event listener when enter the foreground
-	    //EMClient.getInstance().chatManager().addMessageListener(this);	
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		//DemoHelper.getInstance().popActivity(this);
-		//EMClient.getInstance().chatManager().removeMessageListener(this);
+
 	}
 }
