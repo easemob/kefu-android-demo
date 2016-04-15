@@ -76,27 +76,20 @@
         
         <!-- 地图 -->
         <activity
-            android:name="com.easemob.easeui.ui.EaseBaiduMapActivity"
+            android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
         
-        <!-- 自定义的contextmenu -->
-        <activity
-            android:name="com.easemob.chatuidemo.ui.ContextMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle" >
-        </activity>
-        
         <!-- 显示下载大图页面 -->
         <activity
-            android:name="com.easemob.easeui.ui.EaseShowBigImageActivity"
+            android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
         <!-- 下载文件 -->
         <activity
-            android:name="com.easemob.easeui.ui.EaseShowNormalFileActivity"
+            android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
@@ -113,17 +106,17 @@
             android:theme="@style/horizontal_slide"
             >
         </activity>
-        <activity android:name="com.easemob.helpdeskdemo.ui.SatisfactionActivity"
+        <activity android:name="com.hyphenate.helpdesk.ui.SatisfactionActivity"
             android:screenOrientation="portrait"></activity>
         <!-- 自定义的contextmenu -->
-        <activity android:name="com.easemob.helpdeskdemo.ui.ContextMenuActivity"
+        <activity android:name="com.hyphenate.helpdesk.ui.ContextMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"
             ></activity>
         
         
         <!-- 开机自启动服务 -->
-        <receiver android:name="com.easemob.chat.StartServiceReceiver" >
+        <receiver android:name="com.hyphenate.chat.StartServiceReceiver" >
             <intent-filter android:priority="1000" >
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
@@ -134,7 +127,7 @@
         
         <!-- gcm start -->
         <receiver
-            android:name="com.easemob.chat.EMGCMBroadcastReceiver"
+            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
@@ -144,7 +137,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.easemob.chat.EMGCMListenerService"
+        <service android:name="com.hyphenate.chat.EMGCMListenerService"
             android:exported="false" >
         </service>
         <!-- 这里需要android:name="你的包名.receiver.GCMPushBroadCast" -->
@@ -159,17 +152,13 @@
         </receiver>
         <!-- gcm end -->
         
-        <!-- 设置环信应用的appkey 可以在Manifest设置也可以在代码中设置-->
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="xiaogang#kefutest" />
         
         <!-- 声明sdk所需的service -->
-        <service android:name="com.easemob.chat.EMChatService"
+        <service android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
             />
         <!-- 声明sdk所需的receiver -->
-        <receiver android:name="com.easemob.chat.EMMonitorReceiver">
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
                 <data android:scheme="package"/>

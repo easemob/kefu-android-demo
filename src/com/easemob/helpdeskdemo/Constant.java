@@ -17,8 +17,8 @@ import com.hyphenate.easeui.EaseConstant;
 
 public class Constant extends EaseConstant{
 
-	public static final String DEFAULT_CUSTOMER_APPKEY = "sipsoft#sandbox";
-	public static final String DEFAULT_CUSTOMER_ACCOUNT = "yuanhui";
+	public static final String DEFAULT_CUSTOMER_APPKEY = "xiaogang#kefutest";
+	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefutest";
 	public static final String DEFAULT_CUSTOMER_PREFIX = "test_helpdesk"; 
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
 	public static final String DEFAULT_NICK_NAME = "vistor";

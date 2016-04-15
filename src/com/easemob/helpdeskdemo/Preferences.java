@@ -83,6 +83,6 @@ public class Preferences {
     
     private String createUsername() {
         UUID uuid = UUID.randomUUID();
-        return Constant.DEFAULT_CUSTOMER_PREFIX + uuid.hashCode();
+        return Constant.DEFAULT_CUSTOMER_PREFIX + "001";// uuid.hashCode();
     }
 }

@@ -80,77 +80,19 @@ public class LoginActivity extends Activity {
 		progressDialog = getProgressDialog();
 		progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
 		progressDialog.show();
-		createAccountToServer(account, userPwd, new EMCallBack() {
-
-			@Override
-			public void onSuccess() {
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						//登录环信服务器
-						loginHuanxinServer(account, userPwd);
-					}
-				});
-			}
-
-			@Override
-			public void onProgress(int progress, String status) {
-			}
-
-			@Override
-			public void onError(final int errorCode, final String message) {
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						if (!LoginActivity.this.isFinishing()) {
-							progressDialog.dismiss();
-						}
-						if (errorCode == EMError.NETWORK_ERROR) {
-							Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
-						} else if (errorCode == EMError.USER_ALREADY_EXIST) {
-							//Toast.makeText(getApplicationContext(), "用户已存在", Toast.LENGTH_SHORT).show();
-							runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									//登录环信服务器
-									loginHuanxinServer(account, userPwd);
-								}
-							});
-						} else if (errorCode == EMError.INVALID_USER_NAME) {
-							Toast.makeText(getApplicationContext(), "用户名非法", Toast.LENGTH_SHORT).show();
-						} else {
-							Toast.makeText(getApplicationContext(), "注册失败：" + message, Toast.LENGTH_SHORT).show();
-						}
-						finish();
-					}
-				});
-			}
-		});
-	}
-
-	//注册用户
-	private void createAccountToServer(final String uname, final String pwd, final EMCallBack callback) {
-		Thread thread = new Thread(new Runnable() {
+		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				try {
-					ChatClient.getInstance().createAccount(uname, pwd);
-					EMClient.getInstance().createAccount(uname, pwd);
-					if (callback != null) {
-						callback.onSuccess();
-					}
-				} catch (HyphenateException e) {
-					if (callback != null) {
-						callback.onError(e.getErrorCode(), e.getMessage());
-					}
+				if(ChatClient.getInstance().createAccount(account, userPwd)) {
+					login(account, userPwd);
+				} else {
+					Toast.makeText(getApplicationContext(), "创建账户失败", Toast.LENGTH_SHORT).show();
+					login(account, userPwd);
 				}
 			}
 		});
-		thread.start();
+
 	}
 
 	private ProgressDialog getProgressDialog() {
@@ -167,7 +109,7 @@ public class LoginActivity extends Activity {
 		return progressDialog;
 	}
 
-	public void loginHuanxinServer(final String uname, final String upwd) {
+	private void login(final String uname, final String upwd) {
 		progressShow = true;
 		progressDialog = getProgressDialog();
 		progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
