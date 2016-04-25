@@ -27,16 +27,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMChatManager;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.easeui.model.EaseImageCache;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
+import com.hyphenate.helpdesk.ui.ImageCache;
 
-public class ShopDetailsActivity extends BaseActivity {
+public class ShopDetailsActivity extends DemoBaseActivity {
 	private ImageView mImageView;
 	private RelativeLayout rl_tochat;
 	private ImageButton mImageButton;
@@ -54,12 +50,12 @@ public class ShopDetailsActivity extends BaseActivity {
 		mImageButton = (ImageButton) findViewById(R.id.ib_shop_back);
 		mImageView = (ImageView) findViewById(R.id.iv_buy);
 		mImageView.setScaleType(ScaleType.CENTER_INSIDE);
-		mBitmap = EaseImageCache.getInstance().get("shop_image_details");
+		mBitmap = ImageCache.getInstance().get("shop_image_details");
 		if(mBitmap==null){
 			Options opts= new Options();
 			opts.inSampleSize =2;
 			mBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.em_shop_image_details);
-			EaseImageCache.getInstance().put("shop_image_details", mBitmap);
+			ImageCache.getInstance().put("shop_image_details", mBitmap);
 		}
 		if(mBitmap!=null)
 			mImageView.setImageBitmap(mBitmap);

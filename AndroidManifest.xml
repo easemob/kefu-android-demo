@@ -113,8 +113,31 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"
             ></activity>
-        
-        
+        <activity
+            android:name="com.hyphenate.helpdesk.ui.entities.ContextMenuActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>        
+         <activity
+            android:name="com.hyphenate.helpdesk.ui.entities.SatisfactionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>        
+         <activity
+            android:name="com.hyphenate.helpdesk.ui.entities.ShowBigImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>   
+        <activity
+            android:name="com.hyphenate.helpdesk.ui.entities.ShowNormalFileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>   
+        <activity
+            android:name="com.hyphenate.helpdesk.ui.entities.ShowVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" >
+        </activity>                         
         <!-- 开机自启动服务 -->
         <receiver android:name="com.hyphenate.chat.StartServiceReceiver" >
             <intent-filter android:priority="1000" >

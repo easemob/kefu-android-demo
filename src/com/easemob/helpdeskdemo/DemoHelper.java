@@ -3,47 +3,33 @@ package com.easemob.helpdeskdemo;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.helpdesk.ui.Notifier;
+import com.hyphenate.helpdesk.ui.UIProvider;
+import com.hyphenate.helpdesk.ui.User;
+import com.hyphenate.util.EMLog;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.hyphenate.EMCallBack;
-import com.hyphenate.EMConnectionListener;
-import com.hyphenate.EMError;
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMChatManager;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMCmdMessageBody;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessage.ChatType;
-import com.hyphenate.chat.EMMessage.Type;
-import com.hyphenate.chat.EMOptions;
-import com.hyphenate.easeui.controller.EaseUI;
-import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.model.EaseNotifier;
-import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.exceptions.HyphenateException;
-import com.easemob.helpdeskdemo.ui.MainActivity;
-import com.hyphenate.util.EMLog;
 
 public class DemoHelper {
 
     protected static final String TAG = DemoHelper.class.getSimpleName();
     
-	private EaseUI easeUI;
+	private UIProvider easeUI;
 	
     protected EMMessageListener messageListener = null;
 
-	private Map<String, EaseUser> contactList;
+	private Map<String, User> contactList;
 
 	private static DemoHelper instance = null;
 	
@@ -76,7 +62,7 @@ public class DemoHelper {
 				
                     EMLog.d(TAG, "receive the message : ");
                     if(!easeUI.hasForegroundActivies()){
-                        getNotifier().onNewMesg(messages);
+                       // getNotifier().onNewMesg(messages);
                     }
 			}
 
@@ -181,7 +167,7 @@ public class DemoHelper {
 	 * 获取消息通知类
 	 * @return
 	 */
-	public EaseNotifier getNotifier(){
+	public Notifier getNotifier(){
 	    return easeUI.getNotifier();
 	}
 	

@@ -13,15 +13,15 @@
  */
 package com.easemob.helpdeskdemo;
 
-import com.hyphenate.easeui.EaseConstant;
 
-public class Constant extends EaseConstant{
+public class Constant {
 
 	public static final String DEFAULT_CUSTOMER_APPKEY = "xiaogang#kefutest";
 	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefutest";
 	public static final String DEFAULT_CUSTOMER_PREFIX = "test_helpdesk"; 
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
 	public static final String DEFAULT_NICK_NAME = "vistor";
+	public static final String DEFAULT_TENANT_ID = "11703";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
 	public static final int MESSAGE_TO_PRE_SALES = 1;

@@ -1,18 +1,13 @@
 package com.easemob.helpdeskdemo.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
-
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.MessageHelper;
-import com.easemob.helpdeskdemo.Preferences;
-import com.easemob.helpdeskdemo.R;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.helpdesk.ChatClient;
 import com.hyphenate.helpdesk.message.Message;
-import com.hyphenate.helpdesk.ui.Arguments;
-import com.hyphenate.helpdesk.ui.BaseChatActivity;
-import com.hyphenate.helpdesk.ui.ChatFragment;
+import com.hyphenate.helpdesk.ui.entities.BaseChatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
 
 public class ChatActivity extends BaseChatActivity {
 
@@ -25,8 +20,6 @@ public class ChatActivity extends BaseChatActivity {
 	@Override
 	protected void onStart() {
 	    super.onStart();
-	    setupUserInfo();
-	    sendOrderOrTrack();
 	}
 	
 	@Override
@@ -34,7 +27,7 @@ public class ChatActivity extends BaseChatActivity {
 		super.onNewIntent(intent);
 		setIntent(intent);
 		// 点击notification bar进入聊天页面，保证只有一个聊天页面
-		String username = intent.getStringExtra(Arguments.EXTRA_USER_ID);
+		String username = intent.getStringExtra(com.hyphenate.helpdesk.ui.Constant.EXTRA_USER_ID);
 		if (toChatUsername.equals(username))
 			super.onNewIntent(intent);
 		else {
@@ -42,6 +35,11 @@ public class ChatActivity extends BaseChatActivity {
 			startActivity(intent);
 		}
 
+	}
+	
+	protected void onReady() {
+	    setupUserInfo();
+	    sendOrderOrTrack();		
 	}
 	
 	private void setupUserInfo() {

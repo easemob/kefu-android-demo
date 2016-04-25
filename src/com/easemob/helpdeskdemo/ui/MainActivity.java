@@ -37,7 +37,7 @@ import com.hyphenate.helpdesk.Error;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends DemoBaseActivity{
 
 	private ShopFragment shopFragment;
 	private SettingFragment settingFragment;

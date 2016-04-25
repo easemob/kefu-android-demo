@@ -13,7 +13,13 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import android.app.Activity;
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.Preferences;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.helpdesk.Callback;
+import com.hyphenate.helpdesk.ChatClient;
+import com.hyphenate.helpdesk.R;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -21,19 +27,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.Preferences;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.EMError;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.helpdesk.Callback;
-import com.hyphenate.helpdesk.ChatClient;
-import com.hyphenate.helpdesk.R;
-import com.hyphenate.helpdesk.ui.Arguments;
 
-
-public class LoginActivity extends Activity {
+public class LoginActivity extends DemoBaseActivity {
 
 	private boolean progressShow;
 	private ProgressDialog progressDialog;
@@ -162,7 +157,8 @@ public class LoginActivity extends Activity {
 				startActivity(new Intent(LoginActivity.this, ChatActivity.class).putExtra(
 						Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(
 						Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex).putExtra(
-						Arguments.EXTRA_USER_ID, Preferences.getInstance().getCustomerAccount()));
+						com.hyphenate.helpdesk.ui.Constant.EXTRA_USER_ID, Preferences.getInstance().getCustomerAccount()).putExtra(
+						com.hyphenate.helpdesk.ui.Constant.EXTRA_TENANT_ID, Preferences.getInstance().getTenantId()));
 				finish();
 			}
 		});

@@ -27,6 +27,6 @@ public class DemoApplication extends Application {
 		ChatClient.Options options = ChatClient.getInstance().createOptions();
 		options.setAppkey(Preferences.getInstance().getAppKey());
         ChatClient.getInstance().init((Context)this, options);
-		UIManager.getInstance().init((Context)this, options);
+		UIManager.getInstance().init((Context)this);
 	}
 }

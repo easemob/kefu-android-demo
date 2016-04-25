@@ -15,10 +15,10 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.os.Bundle;
 
-import com.hyphenate.easeui.ui.EaseBaseActivity;
 import com.umeng.analytics.MobclickAgent;
+import com.hyphenate.helpdesk.ui.entities.BaseActivity;
 
-public class BaseActivity extends EaseBaseActivity{
+public class DemoBaseActivity extends BaseActivity{
 	
 	@Override
 	protected void onCreate(Bundle arg0) {

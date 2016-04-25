@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class ModifyActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
+public class ModifyActivity extends DemoBaseActivity implements View.OnClickListener, TextWatcher {
 
 	private ImageButton btnClear;
 	private EditText edittext;

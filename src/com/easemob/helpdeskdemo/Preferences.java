@@ -13,6 +13,7 @@ public class Preferences {
 	static private String KEY_APPKEY = "appkey";
 	static private String KEY_CUSTOMER_ACCOUNT = "customer_account";
 	static private String KEY_NICKNAME = "nickname";
+	static private String KEY_TENANT_ID = "tenantId";
 	
 	private SharedPreferences pref = null;
 	private SharedPreferences.Editor editor = null;
@@ -60,6 +61,15 @@ public class Preferences {
     
     public String getAppKey(){
         return pref.getString(KEY_APPKEY, Constant.DEFAULT_CUSTOMER_APPKEY);	
+    }
+    
+    public String getTenantId() {
+    	return pref.getString(KEY_TENANT_ID, Constant.DEFAULT_TENANT_ID);
+    }
+    
+    public void setTenantId(String tenantId) {
+    	editor.putString(KEY_TENANT_ID, tenantId);
+    	editor.commit();
     }
     
     public void setCustomerAccount(String account){
