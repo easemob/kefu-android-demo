@@ -13,8 +13,6 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 
 import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.helpdesk.ui.ImageCache;
 

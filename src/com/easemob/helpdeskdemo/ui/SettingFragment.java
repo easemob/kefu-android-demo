@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.helpdesk.ChatClient;
