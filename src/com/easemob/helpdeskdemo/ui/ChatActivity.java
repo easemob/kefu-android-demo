@@ -3,6 +3,7 @@ package com.easemob.helpdeskdemo.ui;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.MessageHelper;
 import com.hyphenate.helpdesk.ChatClient;
+import com.hyphenate.helpdesk.ChatClient.ConnectionListener;
 import com.hyphenate.helpdesk.message.Message;
 import com.hyphenate.helpdesk.ui.entities.BaseChatActivity;
 
@@ -10,11 +11,35 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class ChatActivity extends BaseChatActivity {
-
+    private static boolean isActive = false;
+    
+    public static boolean isActive()  { 
+    	return isActive;
+    }
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
+		isActive = true;
+		ChatClient.getInstance().addConnectionListener(new ConnectionListener() {
 
+			@Override
+			public void onConnected() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onDisconnected(int errorcode) {
+				ChatActivity.this.finish();
+				
+			}
+			
+		});
+
+	}
+	
+	protected void onDestory() {
+		isActive = false;
 	}
 	
 	@Override

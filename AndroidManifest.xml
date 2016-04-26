@@ -76,20 +76,7 @@
         
         <!-- 地图 -->
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide" >
-        </activity>
-        
-        <!-- 显示下载大图页面 -->
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide" >
-        </activity>
-        <!-- 下载文件 -->
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
+            android:name="com.hyphenate.helpdesk.ui.entities.BaiduMapActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
@@ -106,17 +93,10 @@
             android:theme="@style/horizontal_slide"
             >
         </activity>
-        <activity android:name="com.hyphenate.helpdesk.ui.SatisfactionActivity"
-            android:screenOrientation="portrait"></activity>
-        <!-- 自定义的contextmenu -->
-        <activity android:name="com.hyphenate.helpdesk.ui.ContextMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"
-            ></activity>
         <activity
             android:name="com.hyphenate.helpdesk.ui.entities.ContextMenuActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide" >
+            android:theme="@style/MyDialogStyle" >
         </activity>        
          <activity
             android:name="com.hyphenate.helpdesk.ui.entities.SatisfactionActivity"
@@ -137,7 +117,7 @@
             android:name="com.hyphenate.helpdesk.ui.entities.ShowVideoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
-        </activity>                         
+        </activity>                                                
         <!-- 开机自启动服务 -->
         <receiver android:name="com.hyphenate.chat.StartServiceReceiver" >
             <intent-filter android:priority="1000" >

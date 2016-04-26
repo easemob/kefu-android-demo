@@ -13,13 +13,12 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import java.util.List;
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.R;
+import com.hyphenate.helpdesk.ChatClient;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -31,11 +30,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import com.hyphenate.helpdesk.ChatClient;
-import com.hyphenate.helpdesk.Error;
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.R;
 
 public class MainActivity extends DemoBaseActivity{
 
