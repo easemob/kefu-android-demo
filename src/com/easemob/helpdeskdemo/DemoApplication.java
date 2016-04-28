@@ -35,7 +35,8 @@ public class DemoApplication extends Application {
 		Preferences.init(this);
 		ChatClient.Options options = ChatClient.getInstance().createOptions();
 		options.setAppkey(Preferences.getInstance().getAppKey());
-		
+	    ChatClient.getInstance().init((Context)this, options);
+		UIProvider.getInstance().init((Context)this);		
 		ChatClient.getInstance().getChat().addMessageListener(new MessageListener() {
 
 			@Override
@@ -51,8 +52,6 @@ public class DemoApplication extends Application {
 			}
 			
 		});
-        ChatClient.getInstance().init((Context)this, options);
-		UIProvider.getInstance().init((Context)this);
 		UIProvider.getInstance().getNotifier().setNotificationInfoProvider(new NotificationInfoProvider() {
         @Override
         public String getTitle(Message message) {
