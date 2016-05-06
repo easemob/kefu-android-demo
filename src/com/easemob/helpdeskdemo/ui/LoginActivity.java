@@ -63,12 +63,12 @@ public class LoginActivity extends DemoBaseActivity {
 			}).start();
 		} else {
 			//随机创建一个用户并登录环信服务器
-			createAccountAndLoginChatServer();
+			LoginChatServer();
 		}
 
 	}
 
-	private void createAccountAndLoginChatServer() {
+	private void LoginChatServer() {
 		// 自动生成账号
 		final String account = Preferences.getInstance().getUserName();
 		final String userPwd = Constant.DEFAULT_ACCOUNT_PWD;
@@ -79,12 +79,7 @@ public class LoginActivity extends DemoBaseActivity {
 
 			@Override
 			public void run() {
-				if(ChatClient.getInstance().createAccount(account, userPwd)) {
 					login(account, userPwd);
-				} else {
-					Toast.makeText(getApplicationContext(), "创建账户失败", Toast.LENGTH_SHORT).show();
-					login(account, userPwd);
-				}
 			}
 		});
 
@@ -118,8 +113,6 @@ public class LoginActivity extends DemoBaseActivity {
 				if (!progressShow) {
 					return;
 				}
-				//DemoHelper.getInstance().setCurrentUserName(uname);
-				//DemoHelper.getInstance().setCurrentPassword(upwd);
 				try {
 					EMClient.getInstance().chatManager().loadAllConversations();
 				} catch (Exception e) {

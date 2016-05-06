@@ -50,6 +50,18 @@ public class DemoApplication extends Application {
 				// TODO Auto-generated method stub
 				
 			}
+
+			@Override
+			public void onMessageSent() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onMessageStatusUpdate() {
+				// TODO Auto-generated method stub
+				
+			}
 			
 		});
 		UIProvider.getInstance().getNotifier().setNotificationInfoProvider(new NotificationInfoProvider() {

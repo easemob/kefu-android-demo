@@ -63,8 +63,8 @@ public class ChatActivity extends BaseChatActivity {
 	}
 	
 	protected void onReady() {
-	    setupUserInfo();
-	    sendOrderOrTrack();		
+	    //setupUserInfo();
+	    //sendOrderOrTrack();		
 	}
 	
 	private void setupUserInfo() {

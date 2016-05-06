@@ -38,6 +38,8 @@ public class Preferences {
     	username = pref.getString(KEY_USERNAME, null);
     	if(username == null) {
     		username = createUsername();
+    		editor.putString(KEY_USERNAME, username);
+    		editor.commit();
     	}
     	return username;
     	
@@ -93,6 +95,6 @@ public class Preferences {
     
     private String createUsername() {
         UUID uuid = UUID.randomUUID();
-        return Constant.DEFAULT_CUSTOMER_PREFIX + "001";// uuid.hashCode();
+        return Constant.DEFAULT_CUSTOMER_PREFIX + "65";//uuid.hashCode() % 100;
     }
 }
