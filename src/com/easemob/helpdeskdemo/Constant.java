@@ -16,12 +16,12 @@ package com.easemob.helpdeskdemo;
 
 public class Constant {
 
-	public static final String DEFAULT_CUSTOMER_APPKEY = "xiaogang#kefutest";
-	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefutest";
+	public static final String DEFAULT_CUSTOMER_APPKEY = "zdxd#ksf";//sipsoft#sandbox
+	public static final String DEFAULT_CUSTOMER_ACCOUNT = "ceshia";//test111
 	public static final String DEFAULT_CUSTOMER_PREFIX = "test_helpdesk"; 
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
 	public static final String DEFAULT_NICK_NAME = "vistor";
-	public static final String DEFAULT_TENANT_ID = "11703";
+	public static final String DEFAULT_TENANT_ID = "35";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
 	public static final int MESSAGE_TO_PRE_SALES = 1;

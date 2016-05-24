@@ -14,9 +14,6 @@
     <string name="attach_location">Location</string>
     <string name="attach_video">Video</string>
     <string name="attach_file">File</string>
-    <string name="attach_voice_call">Voice call</string>
-    <string name="attach_video_call">Video call</string>
-    <string name="user_card">Business card</string>
     <string name="move_up_to_cancel">Finger up to cancel sending</string>
     <string name="release_to_cancel">Finger release to cancel sending</string>
     <string name="send_fail">Send failed</string>
@@ -34,7 +31,6 @@
     <string name="copy">Copy</string>
     <string name="forward">Forward</string>
     <string name="button_logout">Logout</string>
-    <string name="button_uploadlog">Upload the log</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="prompt">Prompt</string>
@@ -124,4 +120,6 @@
 	<string name="hint_leave_message">Leave message</string>
 	<string name="tip_btn_sumbit">Submit</string>
 	<string name="tip_btn_evaluation">Evaluation</string>
+	<!-- demo -->
+	<string name="register_user_fail">register user failed!</string>
 </resources>
