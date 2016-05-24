@@ -1,11 +1,13 @@
 package com.easemob.helpdeskdemo;
 
-import java.util.UUID;
+import java.util.Locale;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Preferences {
+	private static final String TAG = Preferences.class.getSimpleName();
 	static private Preferences instance = null;
 	static private String PREFERENCE_NAME = "info";
 	static private String KEY_USERNAME = "username";
@@ -37,7 +39,7 @@ public class Preferences {
     	
     	username = pref.getString(KEY_USERNAME, null);
     	if(username == null) {
-    		username = createUsername();
+    		username = getRandomUsername();
     		editor.putString(KEY_USERNAME, username);
     		editor.commit();
     	}
@@ -93,8 +95,25 @@ public class Preferences {
        return pref.getString(KEY_NICKNAME, Constant.DEFAULT_NICK_NAME);
     }
     
-    private String createUsername() {
-        UUID uuid = UUID.randomUUID();
-        return Constant.DEFAULT_CUSTOMER_PREFIX + "65";//uuid.hashCode() % 100;
+    
+    /**
+     * demo为了演示功能，此处随机生成账号。
+     * @return
+     */
+    private String getRandomUsername(){
+    	String val = "";
+    	Random random = new Random();
+    	for(int i = 0; i < 10; i++){
+    		String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num"; //输出字幕还是数字
+    		if("char".equalsIgnoreCase(charOrNum)){// 字符串
+    			int choice = random.nextInt(2) % 2 == 0 ? 65 : 97; //取得大写字母还是小写字母
+    			val += (char) (choice + random.nextInt(26));
+    		}else if("num".equalsIgnoreCase(charOrNum)){// 数字
+    			val += String.valueOf(random.nextInt(10));
+    		}
+    	}
+    	return val.toLowerCase(Locale.getDefault());
     }
+    
+    
 }

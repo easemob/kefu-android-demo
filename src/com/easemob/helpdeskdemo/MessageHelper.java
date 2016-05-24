@@ -1,7 +1,5 @@
 package com.easemob.helpdeskdemo;
 
-import org.json.JSONObject;
-
 import com.hyphenate.helpdesk.message.AgentIdentityInfo;
 import com.hyphenate.helpdesk.message.ContentFactory;
 import com.hyphenate.helpdesk.message.OrderInfo;

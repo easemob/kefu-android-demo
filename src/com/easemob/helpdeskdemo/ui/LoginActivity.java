@@ -15,11 +15,10 @@ package com.easemob.helpdeskdemo.ui;
 
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.Preferences;
+import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.helpdesk.Callback;
 import com.hyphenate.helpdesk.ChatClient;
-import com.hyphenate.helpdesk.R;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -73,13 +72,13 @@ public class LoginActivity extends DemoBaseActivity {
 		final String account = Preferences.getInstance().getUserName();
 		final String userPwd = Constant.DEFAULT_ACCOUNT_PWD;
 		progressDialog = getProgressDialog();
-		progressDialog.setMessage(getResources().getString(R.string.system_is_regist));
+		progressDialog.setMessage(getString(R.string.system_is_regist));
 		progressDialog.show();
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-					login(account, userPwd);
+				createAccount(account, userPwd);
 			}
 		});
 
@@ -99,6 +98,44 @@ public class LoginActivity extends DemoBaseActivity {
 		return progressDialog;
 	}
 
+	private void createAccount(final String uname, final String upwd){
+		progressShow = true;
+		progressDialog = getProgressDialog();
+		progressDialog.setMessage(getString(R.string.is_contact_customer));
+		if(!progressDialog.isShowing()){
+			progressDialog.show();
+		}
+		// createAccount to huanxin server
+		// if you have a account, this step will ignore
+		ChatClient.getInstance().createAccount(uname, upwd, new Callback() {
+			
+			@Override
+			public void onSuccess() {
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						login(uname, upwd);
+					}
+				});
+			}
+			
+			@Override
+			public void onError(int code, String error) {
+				if (!progressShow) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
+					public void run() {
+						progressDialog.dismiss();
+						Toast.makeText(getApplicationContext(), getString(R.string.register_user_fail), Toast.LENGTH_SHORT).show();
+						finish();
+					}
+				});
+			}
+		});
+		
+	}
 	private void login(final String uname, final String upwd) {
 		progressShow = true;
 		progressDialog = getProgressDialog();
@@ -123,7 +160,7 @@ public class LoginActivity extends DemoBaseActivity {
 			}
 
 			@Override
-			public void onError() {
+			public void onError(int code, String error) {
 				if (!progressShow) {
 					return;
 				}
