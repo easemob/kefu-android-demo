@@ -7,6 +7,7 @@ import com.easemob.easeui.ui.EaseChatFragment;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
+import com.easemob.helpdeskdemo.utils.WelcomeMessageHandler;
 
 /**
  * 聊天页面，需要fragment的使用{@link EaseChatFragment}
@@ -29,6 +30,8 @@ public class ChatActivity extends BaseActivity {
         Intent intent = getIntent();
         intent.putExtra(Constant.EXTRA_USER_ID, toChatUsername);
         intent.putExtra(Constant.EXTRA_SHOW_USERNICK, true);
+        WelcomeMessageHandler handler = WelcomeMessageHandler.getInstance(HelpDeskPreferenceUtils.getInstance(this).getSettingTenantId(),HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount());
+        intent.putExtra(Constant.INTENT_KEY_WELCOME, handler);
         // 传入参数
         chatFragment.setArguments(intent.getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();

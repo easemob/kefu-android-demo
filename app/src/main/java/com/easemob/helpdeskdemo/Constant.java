@@ -30,6 +30,7 @@ public class Constant extends EaseConstant{
 	public static final String DEFAULT_COSTOMER_APPKEY = "sipsoft#sandbox";
 	public static final String DEFAULT_COSTOMER_ACCOUNT = "yuanhui";
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
+	public static final String DEFAULT_TENANT_ID = "35";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
 	public static final int MESSAGE_TO_PRE_SALES = 1;
@@ -43,10 +44,13 @@ public class Constant extends EaseConstant{
 	public static final int INTENT_CODE_IMG_SELECTED_3 = 3;
 	public static final int INTENT_CODE_IMG_SELECTED_4 = 4;
 
+	public static final String INTENT_KEY_WELCOME = "welcome_message";
+
 	public static final String MODIFY_ACTIVITY_INTENT_INDEX = "index";
 	public static final String MODIFY_ACTIVITY_INTENT_CONTENT = "content";
 	public static final int MODIFY_INDEX_DEFAULT = 0;
 	public static final int MODIFY_INDEX_APPKEY = 1;
 	public static final int MODIFY_INDEX_ACCOUNT = 2;
 	public static final int MODIFY_INDEX_NICK = 3;
+	public static final int MODIFY_INDEX_TENANTID = 4;
 }

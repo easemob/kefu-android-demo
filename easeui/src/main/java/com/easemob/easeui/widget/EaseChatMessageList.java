@@ -170,4 +170,9 @@ public class EaseChatMessageList extends RelativeLayout{
 	public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider){
         messageAdapter.setCustomChatRowProvider(rowProvider);
     }
+
+    public EMMessage getLastMessage(){
+        return conversation.getLastMessage();
+    }
+
 }

@@ -182,7 +182,58 @@
                 android:layout_alignParentBottom="true"
                 android:background="#D6D5DB" />
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/ll_setting_list_tenantid"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal" >
 
+            <TextView
+                android:id="@+id/textview_tenantid"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="@string/set_tenantid"
+                android:textColor="#000000"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_setting_tenantid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/textview_tenantid"
+                android:layout_toLeftOf="@+id/iv_tenantid_right"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="#9B9B9B"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/iv_tenantid_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/em_btn_back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentTop="true"
+                android:background="#D6D5DB" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentBottom="true"
+                android:background="#D6D5DB" />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/ll_setting_list_customer"
             android:layout_width="match_parent"

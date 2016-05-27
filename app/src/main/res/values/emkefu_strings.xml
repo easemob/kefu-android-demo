@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_url">http://kefu.easemob.com/v1/tenantapi/welcome?tenantId=%1$s&amp;orgName=%2$s&amp;appName=%3$s&amp;userName=%4$s&amp;token=%5$s</string>
+</resources>

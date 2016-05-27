@@ -112,9 +112,11 @@
     <string name="Download_the_pictures_new">Download the pictures:</string>
     <string name="Failed_to_download_file">Failed to download file:</string>
     <string name="set_nick">Set Nick</string>
+    <string name="set_tenantid">Set TenantId</string>
     <string name="login_user_nick">User Nick</string>
     <string name="customer_account">Customer Service Account</string>
     <string name="appkey">AppKey</string>
+    <string name="tenantid">TenantId</string>
     <string name="pop_pre_sales">Pre_Sales</string>
     <string name="pop_after_sales">After_Sales</string>
     <string name="tip_wating">Waiting...</string>

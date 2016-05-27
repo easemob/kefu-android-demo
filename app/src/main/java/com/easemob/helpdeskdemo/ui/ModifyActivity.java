@@ -13,12 +13,6 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +25,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.R;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ModifyActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
@@ -60,6 +60,9 @@ public class ModifyActivity extends BaseActivity implements View.OnClickListener
 			break;
 		case Constant.MODIFY_INDEX_NICK:
 			txtTitle.setText(R.string.login_user_nick);
+			break;
+		case Constant.MODIFY_INDEX_TENANTID:
+			txtTitle.setText(R.string.tenantid);
 			break;
 		default:
 			break;

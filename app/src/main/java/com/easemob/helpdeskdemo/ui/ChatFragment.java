@@ -27,6 +27,7 @@ import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.MessageHelper;
 import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
+import com.easemob.helpdeskdemo.utils.WelcomeMessageHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +66,9 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 
 	protected String currentUserNick;
 
+	private WelcomeMessageHandler mWelHandler;
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return super.onCreateView(inflater, container, savedInstanceState);
@@ -88,6 +92,55 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 			sendPictureTxtMessage(imgSelectedIndex);
 		}
 		messageList.setShowUserNick(true);
+
+		try{
+			mWelHandler = fragmentArgs.getParcelable(Constant.INTENT_KEY_WELCOME);
+		}catch (Exception e){e.printStackTrace();}
+
+		if (mWelHandler != null){
+			EMMessage lastMessage = messageList.getLastMessage();
+			if (lastMessage == null || !lastMessage.getBooleanAttribute(WelcomeMessageHandler.EXTRA_WELCOME_MESSAGE, false) ){
+				asyncSendWelcomeMessage();
+			}
+		}
+
+	}
+
+
+	/**
+	 * 发送欢迎语
+	 */
+	private void asyncSendWelcomeMessage(){
+		mWelHandler.execute(new Runnable() {
+			@Override
+			public void run() {
+				EMMessage lastMessage = messageList.getLastMessage();
+				if (lastMessage != null && lastMessage.getBooleanAttribute(WelcomeMessageHandler.EXTRA_WELCOME_MESSAGE, false) ){
+					return;
+				}
+
+				boolean isExist = mWelHandler.getSessionIsExist();
+				if (!isExist){
+					String welcomeMsg = mWelHandler.getWelcomeMessage();
+					JSONObject robotWelcomeMsg = mWelHandler.getRobotWelcomeMessage();
+					if (!TextUtils.isEmpty(welcomeMsg)){
+						mWelHandler.importWelcomeMessage(welcomeMsg);
+					}
+					if (robotWelcomeMsg != null && robotWelcomeMsg.has("greetingTextType")){
+						mWelHandler.importRobotWelcomeMessage(robotWelcomeMsg);
+					}
+					if (getActivity() == null){
+						return;
+					}
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							messageList.refresh();
+						}
+					});
+				}
+			}
+		});
 	}
 
 	@Override

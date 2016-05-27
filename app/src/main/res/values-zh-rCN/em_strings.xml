@@ -102,9 +102,11 @@
     <string name="Download_the_pictures_new">下载图片:</string>
     <string name="Failed_to_download_file">下载文件失败:</string>
     <string name="set_nick">设置昵称</string>
+    <string name="set_tenantid">设置租户ID</string>
     <string name="login_user_nick">登录用户昵称</string>
     <string name="customer_account">客服账号</string>
     <string name="appkey">AppKey</string>
+    <string name="tenantid">租户ID(TenantId)</string>
     <string name="pop_pre_sales">售前客服</string>
     <string name="pop_after_sales">售后客服</string>
     <string name="tip_wating">请稍等...</string>

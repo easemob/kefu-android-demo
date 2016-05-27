@@ -539,9 +539,9 @@ public class DemoHelper {
                 return jsonWeichat.getJSONObject("agent");
             }
         } catch (EaseMobException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         } catch (JSONException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return null;
     }

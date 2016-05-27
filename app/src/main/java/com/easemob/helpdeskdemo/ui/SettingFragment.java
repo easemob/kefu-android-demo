@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private RelativeLayout rlAppkey;
 	private RelativeLayout rlAccount;
 	private RelativeLayout rlNick;
+	private RelativeLayout rlTenantId;
 	private TextView tvAppkey;
 	private TextView tvAccount;
 	private TextView tvNick;
+	private TextView tvTenantId;
 	private static final int REQUEST_CODE_APPKEY = 1;
 	private static final int REQUEST_CODE_ACCOUNT = 2;
 	private static final int REQUEST_CODE_NICK = 3;
+	private static final int REQUEST_CODE_TENANTID = 4;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,18 +61,22 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		tvAppkey = (TextView) getView().findViewById(R.id.tv_setting_appkey);
 		tvAccount = (TextView) getView().findViewById(R.id.tv_setting_account);
 		tvNick = (TextView) getView().findViewById(R.id.tv_setting_nick);
+		tvTenantId = (TextView) getView().findViewById(R.id.tv_setting_tenantid);
 		rlAppkey = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_appkey);
 		rlAccount = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_account);
 		rlNick = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_nick);
+		rlTenantId = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_tenantid);
 	}
 
 	private void initListener() {
 		tvAppkey.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAppkey());
 		tvAccount.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAccount());
 		tvNick.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCurrentNick());
+		tvTenantId.setText(HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingTenantId());
 		rlAppkey.setOnClickListener(this);
 		rlAccount.setOnClickListener(this);
 		rlNick.setOnClickListener(this);
+		rlTenantId.setOnClickListener(this);
 	}
 
 	
@@ -104,6 +112,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				}
 				tvNick.setText(newNick);
 				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCurrentNick(newNick);
+				break;
+			case REQUEST_CODE_TENANTID:
+				String oldTenantId = tvTenantId.getText().toString().trim();
+				String newTenantId = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT).trim();
+				if (oldTenantId.equals(newTenantId)){
+					return;
+				}
+				if (TextUtils.isEmpty(newTenantId)){
+					return;
+				}
+				tvTenantId.setText(newTenantId);
+				HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingTenantId(newTenantId);
 				break;
 			default:
 				break;
@@ -142,6 +162,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_NICK);
 			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strNick);
 			startActivityForResult(intent, REQUEST_CODE_NICK);
+			break;
+		case R.id.ll_setting_list_tenantid:
+			String strTenantId = tvTenantId.getText().toString();
+			intent.setClass(getActivity(), ModifyActivity.class);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_TENANTID);
+			intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strTenantId);
+			startActivityForResult(intent, REQUEST_CODE_TENANTID);
 			break;
 		default:
 			break;
