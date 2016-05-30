@@ -50,8 +50,9 @@
             <ImageView
                 android:layout_below="@id/tv_order"
                 android:id="@+id/iv_sendPicture_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"
                 />
             <TextView 
                 android:layout_marginLeft="5dp"

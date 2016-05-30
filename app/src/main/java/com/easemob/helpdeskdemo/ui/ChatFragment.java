@@ -68,6 +68,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 
 	private WelcomeMessageHandler mWelHandler;
 
+	private boolean isSendOrderOrTrackMsg = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,10 +90,12 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 //			messageToIndex = Constant.MESSAGE_TO_AFTER_SALES;
 //		}
 		if (savedInstanceState == null) {
-			sendPictureTxtMessage(imgSelectedIndex);
+            if (imgSelectedIndex != Constant.INTENT_CODE_IMG_SELECTED_DEFAULT) {
+                isSendOrderOrTrackMsg = true;
+            }
+
 		}
 		messageList.setShowUserNick(true);
-
 		try{
 			mWelHandler = fragmentArgs.getParcelable(Constant.INTENT_KEY_WELCOME);
 		}catch (Exception e){e.printStackTrace();}
@@ -209,20 +212,20 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		//设置VisitorInfo 传递的信息将在iframe中显示
 //		setVisitorInfoSrc(message);
 		//指向某个技能组，技能组（客服分组）内将自动分配客服
-//		pointToSkillGroup(message, groupName);
+//		scheduledGroup(message, groupName);
 		switch (messageToIndex) {
 		case Constant.MESSAGE_TO_PRE_SALES:
-			pointToSkillGroup(message, "shouqian");
+			scheduledGroup(message, "shouqian");
 			break;
 		case Constant.MESSAGE_TO_AFTER_SALES:
-			pointToSkillGroup(message, "shouhou");
+            scheduledGroup(message, "shouhou");
 			break;
 		default:
 			break;
 		}
 		
 		//指向某个客服 , 当会话同时指定了客服和技能组时，以指定客服为准，指定技能组失效。
-//		pointToAgentUser(message, "ceshia@qq.com");
+//		scheduledAgent(message, "ceshia@qq.com");
 	}
 
 	@Override
@@ -415,7 +418,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	 * @param message 消息
 	 * @param agentUsername 客服的登录账号
 	 */
-	private void pointToAgentUser(EMMessage message,String agentUsername){
+	private void scheduledAgent(EMMessage message,String agentUsername){
 		try {
 			JSONObject weichatJson = getWeichatJSONObject(message);
 			weichatJson.put("agentUsername", agentUsername);
@@ -431,7 +434,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	 * @param message 消息
 	 * @param groupName 分组名称
 	 */
-	private void pointToSkillGroup(EMMessage message,String groupName){
+	private void scheduledGroup(EMMessage message,String groupName){
 		try {
 			JSONObject weichatJson = getWeichatJSONObject(message);
 			weichatJson.put("queueName", groupName);
@@ -453,6 +456,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		if (selectedImgIndex == Constant.INTENT_CODE_IMG_SELECTED_DEFAULT) {
 			return;
 		}
+        isSendOrderOrTrackMsg = false;
 		EMMessage message = EMMessage.createTxtSendMessage("客服图文混排消息", toChatUsername);
 		JSONObject jsonMsgType = MessageHelper.getMessageExtFromPicture(selectedImgIndex);
 		imgSelectedIndex = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
@@ -476,4 +480,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		}
 		sendMessage(message);
 	}
+
+    @Override
+    public void afterOfSendMessage(){
+        sendPictureTxtMessage(imgSelectedIndex);
+    }
+
 }

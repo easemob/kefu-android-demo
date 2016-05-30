@@ -685,8 +685,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         EMChatManager.getInstance().sendMessage(message, null);
         //刷新ui
         messageList.refreshSelectLast();
+
+        afterOfSendMessage();
     }
-    
+
+    protected void afterOfSendMessage(){
+    }
     
     public void resendMessage(EMMessage message){
         message.status = EMMessage.Status.CREATE;
