@@ -761,12 +761,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         }
         File file = new File(filePath);
         if (file == null || !file.exists()) {
-            Toast.makeText(getActivity(), R.string.File_does_not_exist, 0).show();
+            Toast.makeText(getActivity(), R.string.File_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
         //大于10M不让发送
         if (file.length() > 10 * 1024 * 1024) {
-            Toast.makeText(getActivity(), R.string.The_file_is_not_greater_than_10_m, 0).show();
+            Toast.makeText(getActivity(), R.string.The_file_is_not_greater_than_10_m, Toast.LENGTH_SHORT).show();
             return;
         }
         sendFileMessage(filePath);
@@ -777,7 +777,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
      */
     protected void selectPicFromCamera() {
         if (!EaseCommonUtils.isExitsSdcard()) {
-            Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, 0).show();
+            Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
 

@@ -6,3 +6,6 @@
 /build
 /captures
 .iml
+app/.iml
+/.idea/vcs.xml
+
