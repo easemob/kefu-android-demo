@@ -255,7 +255,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                         String result = response.body().string().trim();
                         JSONObject jsonObject = new JSONObject(result);
                         String uuid = jsonObject.getJSONArray("entities").getJSONObject(0).getString("uuid");
-                        String remoteUrl = String.format("%1$s/%2$s/%3$s/chatfiles/%4$s", FileUploadManager.SERVER_URL, orgName, appName, uuid);
+                        String remoteUrl = String.format("%1$s%2$s/%3$s/chatfiles/%4$s", FileUploadManager.SERVER_URL, orgName, appName, uuid);
                         FileEntity fileEntity = getFileEntityByFilePath(file);
                         fileEntity.remoteUrl = remoteUrl;
                         setTagView(fileEntity);

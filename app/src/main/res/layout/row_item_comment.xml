@@ -57,12 +57,11 @@
             android:layout_margin="3dp"
             android:text="本条文案是聊天内容,本条文案是聊天内容,哈哈哈的就是这样,恩没错哦!"
             />
-        <com.easemob.tagview.TagView
-            android:id="@+id/tagView"
+        <com.wefika.flowlayout.FlowLayout
+            android:id="@+id/flowLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-        </com.easemob.tagview.TagView>
+            android:layout_gravity="start|top"></com.wefika.flowlayout.FlowLayout>
     </LinearLayout>
 
 </RelativeLayout>

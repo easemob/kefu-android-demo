@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:background="@drawable/em_bg_blue_comment_file"
+    android:textColor="@android:color/white"
+    android:singleLine="true"
+    android:gravity="center_vertical"
+    android:ellipsize="end"
+    android:drawableLeft="@drawable/em_icon_comment_attachment"
+    android:drawablePadding="5dp"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    >
+</TextView>

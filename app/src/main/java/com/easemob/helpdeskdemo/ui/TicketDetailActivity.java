@@ -2,7 +2,6 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -30,12 +29,11 @@ import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
 import com.easemob.helpdeskdemo.utils.ISO8601DateFormat;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.easemob.helpdeskdemo.utils.RetrofitAPIManager;
-import com.easemob.tagview.OnTagClickListener;
-import com.easemob.tagview.Tag;
-import com.easemob.tagview.TagView;
 import com.easemob.util.DateUtils;
+import com.easemob.util.DensityUtil;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
+import com.wefika.flowlayout.FlowLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -289,9 +287,11 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
     class CommentAdapter extends BaseAdapter {
         private List<CommentEntity> mList;
         private ISO8601DateFormat dateFormat = new ISO8601DateFormat();
+        private LayoutInflater inflater;
 
         public CommentAdapter(List<CommentEntity> commentEntities) {
             this.mList = commentEntities;
+            inflater = LayoutInflater.from(getBaseContext());
         }
 
 
@@ -319,7 +319,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                 viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
                 viewHolder.tvTime = (TextView) convertView.findViewById(R.id.timestamp);
                 viewHolder.tvContent = (TextView) convertView.findViewById(R.id.content);
-                viewHolder.tagView = (TagView) convertView.findViewById(R.id.tagView);
+                viewHolder.flowLayout = (FlowLayout) convertView.findViewById(R.id.flowLayout);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -332,29 +332,35 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                 viewHolder.tvContent.setText(entity.getContent());
                 final List<CommentEntity.AttachmentsBean> attachments = entity.getAttachments();
                 if (attachments != null && attachments.size() > 0){
-                    viewHolder.tagView.setVisibility(View.VISIBLE);
-                    setTagViews(viewHolder.tagView, attachments);
+                    viewHolder.flowLayout.setVisibility(View.VISIBLE);
+                    viewHolder.flowLayout.removeAllViews();
+                    for (final CommentEntity.AttachmentsBean bean :
+                            attachments) {
+                        TextView textView = (TextView) inflater.inflate(R.layout.comment_file_textview, null);
+                        textView.setText(bean.getName());
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String remoteUrl = bean.getUrl();
+                                String localName = CommonUtils.stringToMD5(bean.getUrl()) + "-" + bean.getName();
+                                String localPath = PathUtil.getInstance().getFilePath() + File.separator + localName;
+                                File file = new File(localPath);
+                                if (file.exists()) {
+                                    openLocalFile(file);
+                                } else {
+                                    downloadFile(remoteUrl, localName);
+                                }
 
-                    viewHolder.tagView.setOnTagClickListener(new OnTagClickListener() {
-                        @Override
-                        public void onTagClick(Tag tag, int position) {
-                            if (position > attachments.size()) {
-                                return;
                             }
-                            CommentEntity.AttachmentsBean bean = attachments.get(position);
-                            String remoteUrl = bean.getUrl();
-                            String localName = CommonUtils.stringToMD5(bean.getUrl()) + "-" + bean.getName();
-                            String localPath = PathUtil.getInstance().getFilePath() + File.separator + localName;
-                            File file = new File(localPath);
-                            if (file.exists()) {
-                                openLocalFile(file);
-                            } else {
-                                downloadFile(remoteUrl, localName);
-                            }
-                        }
-                    });
+                        });
+                        FlowLayout.LayoutParams lp = new FlowLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(getBaseContext(), 30));
+                        lp.topMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                        lp.bottomMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                        viewHolder.flowLayout.addView(textView, lp);
+                    }
+
                 }else{
-                    viewHolder.tagView.setVisibility(View.GONE);
+                    viewHolder.flowLayout.setVisibility(View.GONE);
                 }
 
 
@@ -368,23 +374,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             TextView tvName;
             TextView tvTime;
             TextView tvContent;
-            TagView tagView;
-        }
-
-        private void setTagViews(TagView tagView, List<CommentEntity.AttachmentsBean> beans) {
-            Tag tag;
-            ArrayList<Tag> tags = new ArrayList<>();
-            for (int i = 0; i < beans.size(); i++) {
-                CommentEntity.AttachmentsBean bean = beans.get(i);
-                tag = new Tag(bean.getName() + "");
-                tag.radius = 10f;
-                int color = Color.parseColor("#4eb1f4");
-                tag.layoutColor = color;
-                tag.isDeletable = false;
-                tags.add(tag);
-            }
-            tagView.addTags(tags);
-            tagView.reDraw();
+            FlowLayout flowLayout;
         }
 
         private void downloadFile(String remoteUrl,String localName){

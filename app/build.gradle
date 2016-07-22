@@ -41,5 +41,5 @@ dependencies {
     compile 'io.reactivex:rxjava:latest.release'
     compile 'io.reactivex:rxandroid:latest.release'
 
-
+    compile "com.wefika:flowlayout:0.4.0"
 }
