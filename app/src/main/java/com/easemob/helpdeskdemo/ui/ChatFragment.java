@@ -94,8 +94,24 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	protected void setUpView() {
 		setChatFragmentListener(this);
 		super.setUpView();
+		titleBar.setRightImageResource(R.drawable.em_icon_comment2);
+		titleBar.setRightLayoutClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				intoLeaveMessage();
+			}
+		});
+
 		//自定义大表情，后期客服平台可能会支持，可以通过此代码查看效果
 //		((EaseEmojiconMenu)inputMenu.getEmojiconMenu()).addEmojiconGroup(EmojiconExampleGroupData.getData());
+	}
+
+	/**
+	 * 进入留言界面
+	 */
+	protected void intoLeaveMessage(){
+		Intent intent = new Intent(getActivity(), NewLeaveMessageActivity.class);
+		startActivity(intent);
 	}
 
 	@Override

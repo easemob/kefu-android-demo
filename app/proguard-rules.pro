@@ -15,3 +15,22 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+# retrofit2
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+# okhttp
+-dontwarn okhttp3.**
+-keep class okhttp3.**{*;}
+
+
+# okio
+-dontwarn okio.**
+-keep class okio.**{*;}
+
+# SuperRecyclerView
+-dontwarn com.malinskiy.superrecyclerview.SwipeDismissRecyclerViewTouchListener*

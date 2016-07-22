@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_modified_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ED5485">
+
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/em_icon_title_back" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#FFFFFF"
+            android:text="留言详情"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+<!--
+        <include
+            android:id="@+id/layout_editview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            layout="@layout/layout_editview"
+            />-->
+        <Button
+            android:id="@+id/button_reply"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ED5485"
+            android:layout_alignParentBottom="true"
+            android:text="回复"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:gravity="center"
+            />
+
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            android:cacheColorHint="@android:color/transparent">
+        </ListView>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

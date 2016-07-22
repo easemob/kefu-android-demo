@@ -14,6 +14,8 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.view.View;
 
 import com.easemob.easeui.ui.EaseBaseActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -39,5 +41,13 @@ public class BaseActivity extends EaseBaseActivity{
 		MobclickAgent.onPause(this);
 	}
 
-
+	/**
+	 * 通过xml查找相应的ID，通用方法
+	 * @param id
+	 * @param <T>
+	 * @return
+	 */
+	protected <T extends View> T $(@IdRes int id) {
+		return (T) findViewById(id);
+	}
 }

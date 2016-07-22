@@ -13,10 +13,10 @@
  */
 package com.easemob.helpdeskdemo.utils;
 
-import com.easemob.helpdeskdemo.Constant;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.easemob.helpdeskdemo.Constant;
 
 public class HelpDeskPreferenceUtils {
 
@@ -33,6 +33,9 @@ public class HelpDeskPreferenceUtils {
 	private String SHARED_KEY_SETTING_CUSTOMER_ACCOUNT = "shared_key_setting_customer_account";
 	
 	private String SHARED_KEY_SETTING_CURRENT_NICK = "shared_key_setting_current_nick";
+	private String SHARED_KEY_SETTING_TENANT_ID = "shared_key_setting_tenant_id";
+	private String SHARED_KEY_SETTING_PROJECT_ID = "shared_key_setting_project_id";
+
 
 	private HelpDeskPreferenceUtils(Context cxt) {
 		mSharedPreferences = cxt.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -73,5 +76,22 @@ public class HelpDeskPreferenceUtils {
 		return mSharedPreferences.getString(SHARED_KEY_SETTING_CURRENT_NICK, "");
 	}
 	
-	
+	public void setSettingProjectId(long projectId){
+		editor.putLong(SHARED_KEY_SETTING_PROJECT_ID, projectId);
+		editor.commit();
+	}
+
+	public void setSettingTenantId(long tenantId){
+		editor.putLong(SHARED_KEY_SETTING_TENANT_ID, tenantId);
+		editor.commit();
+	}
+
+	public long getSettingTenantId(){
+		return mSharedPreferences.getLong(SHARED_KEY_SETTING_TENANT_ID, Constant.DEFAULT_TENANT_ID);
+	}
+
+	public long getSettingProjectId(){
+		return mSharedPreferences.getLong(SHARED_KEY_SETTING_PROJECT_ID, Constant.DEFAULT_PROJECT_ID);
+	}
+
 }

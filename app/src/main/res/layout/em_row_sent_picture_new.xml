@@ -39,7 +39,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="我正在看:"/>
+                android:text="@string/txt_I_was_watching"/>
             
             <TextView 
                 android:id="@+id/tv_order"
@@ -50,8 +50,9 @@
             <ImageView
                 android:layout_below="@id/tv_order"
                 android:id="@+id/iv_sendPicture_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:scaleType="fitCenter"
                 />
             <TextView 
                 android:layout_marginLeft="5dp"

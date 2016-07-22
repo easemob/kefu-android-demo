@@ -60,14 +60,6 @@ public class ChatActivity extends BaseActivity {
         chatFragment.onBackPressed();
     }
 
-//    public String getToChatUsername() {
-//        return toChatUsername;
-//    }
-
-//	public void sendTextMessage(String txtContent){
-//		chatFragment.sendTextMessage(txtContent);
-//	}
-
     public void sendRobotMessage(String txtContent, String menuId) {
         chatFragment.sendRobotMessage(txtContent, menuId);
     }

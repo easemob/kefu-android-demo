@@ -11,7 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/bottomnavigation" />
             <option value="$PROJECT_DIR$/easeui" />
+            <option value="$PROJECT_DIR$/tagview" />
           </set>
         </option>
       </GradleProjectSettings>

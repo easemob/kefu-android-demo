@@ -13,16 +13,12 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -31,6 +27,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.easemob.helpdeskdemo.Constant;
+import com.easemob.helpdeskdemo.R;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ModifyActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
@@ -52,17 +54,43 @@ public class ModifyActivity extends BaseActivity implements View.OnClickListener
 		initView();
 		initListener();
 		switch (index) {
-		case Constant.MODIFY_INDEX_APPKEY:
-			txtTitle.setText(R.string.appkey);
-			break;
-		case Constant.MODIFY_INDEX_ACCOUNT:
-			txtTitle.setText(R.string.customer_account);
-			break;
-		case Constant.MODIFY_INDEX_NICK:
-			txtTitle.setText(R.string.login_user_nick);
-			break;
-		default:
-			break;
+			case Constant.MODIFY_INDEX_APPKEY:
+				txtTitle.setText(R.string.appkey);
+				break;
+			case Constant.MODIFY_INDEX_ACCOUNT:
+				txtTitle.setText(R.string.customer_account);
+				break;
+			case Constant.MODIFY_INDEX_NICK:
+				txtTitle.setText(R.string.login_user_nick);
+				break;
+			case Constant.MODIFY_INDEX_TENANT_ID:
+				txtTitle.setText(R.string.set_tenantId);
+				edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+				break;
+			case Constant.MODIFY_INDEX_PROJECT_ID:
+				txtTitle.setText(R.string.set_leave_messageid);
+				edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+				break;
+			case Constant.MODIFY_INDEX_LEAVE_NAME:
+				txtTitle.setText(R.string.leave_name);
+				break;
+			case Constant.MODIFY_INDEX_LEAVE_PHONE:
+				txtTitle.setText(R.string.leave_phone);
+				edittext.setInputType(InputType.TYPE_CLASS_PHONE);
+				break;
+			case Constant.MODIFY_INDEX_LEAVE_EMAIL:
+				txtTitle.setText(R.string.leave_email);
+				edittext.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+				break;
+			case Constant.MODIFY_INDEX_LEAVE_CONTENT:
+				txtTitle.setText(R.string.leave_content);
+				edittext.setFilters(new InputFilter[]{new InputFilter.LengthFilter(500)});
+				edittext.setLines(5);
+				edittext.setSingleLine(false);
+				edittext.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+				break;
+			default:
+				break;
 		}
 		if (!TextUtils.isEmpty(txtContent)) {
 			edittext.setText(txtContent);

@@ -102,7 +102,7 @@
     <string name="user_name">Username</string>
     <string name="not_connect_server">Unable to connect to the server</string>
     <string name="customernumber">IM service No.</string>
-    <string name="connect_customer">Contact customer service</string>
+    <string name="connect_customer">Contact Us</string>
     <string name="feedback">Feedback</string>
     <string name="save_setting">Save the configuration</string>
     <string name="history_record">History record</string>
@@ -112,6 +112,8 @@
     <string name="Download_the_pictures_new">Download the pictures:</string>
     <string name="Failed_to_download_file">Failed to download file:</string>
     <string name="set_nick">Set Nick</string>
+    <string name="set_tenantId">TenantId</string>
+    <string name="set_leave_messageid">Leave Message ID</string>
     <string name="login_user_nick">User Nick</string>
     <string name="customer_account">Customer Service Account</string>
     <string name="appkey">AppKey</string>
@@ -125,4 +127,16 @@
 	<string name="hint_leave_message">Leave message</string>
 	<string name="tip_btn_sumbit">Submit</string>
 	<string name="tip_btn_evaluation">Evaluation</string>
+
+    <string name="title_goods_detail">Goods Detail</string>
+    <string name="txt_contact_customer_service">Contact Us</string>
+    <string name="txt_I_was_watching">I was watching:</string>
+
+    <string name="leave_title">Leave Message</string>
+    <string name="leave_name">Name</string>
+    <string name="leave_phone">Phone</string>
+    <string name="leave_email">Email</string>
+    <string name="leave_content">Content</string>
+    <string name="leave_sending">Sending...</string>
+
 </resources>

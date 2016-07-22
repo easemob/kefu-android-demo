@@ -47,8 +47,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <!-- 主界面 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.MainActivity"
+        <activity android:name=".ui.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
@@ -58,6 +57,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
 
         <!-- 登陆 -->
@@ -117,7 +117,13 @@
             android:theme="@style/MyDialogStyle"
             />
         <activity android:name=".ui.ShortCutMsgActivity" android:screenOrientation="portrait" android:theme="@style/AnimBottomIn"/>
-
+        <!-- 发起留言 -->
+        <activity android:name=".ui.NewLeaveMessageActivity" android:screenOrientation="portrait" android:theme="@style/horizontal_slide" />
+        <!-- 留言详情界面 -->
+        <activity android:name=".ui.TicketDetailActivity" android:screenOrientation="portrait" android:theme="@style/horizontal_slide"/>
+        <!-- 发起留言评论界面 -->
+        <activity android:name=".ui.NewCommentActivity" android:screenOrientation="portrait" android:theme="@style/horizontal_slide"/>
+        <activity android:name=".ui.FileDownloadActivity" android:screenOrientation="portrait" android:theme="@style/horizontal_slide"/>
 
         <!-- 开机自启动服务 -->
         <receiver android:name="com.easemob.chat.StartServiceReceiver" >
