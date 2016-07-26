@@ -74,7 +74,7 @@ public class RetrofitAPIManager {
          * @param newTicketBody
          * @return
          */
-        @POST("/tenants/{tenantId}/projects/{projectId}/tickets")
+        @POST("tenants/{tenantId}/projects/{projectId}/tickets")
         Call<TicketEntity> createTicket(@Path("tenantId") long tenantId,
                                         @Path("projectId") long projectId,
                                         @Query("easemob-appkey") String appkey,
@@ -97,7 +97,7 @@ public class RetrofitAPIManager {
          * @param userId    登录IM的账号
          * @return
          */
-        @GET("/tenants/{tenantId}/projects/{projectId}/tickets")
+        @GET("tenants/{tenantId}/projects/{projectId}/tickets")
         Call<TicketListResponse> getTickets(@Path("tenantId") long tenantId,
                                             @Path("projectId") long projectId,
                                             @Query("easemob-appkey") String appkey,
@@ -132,7 +132,7 @@ public class RetrofitAPIManager {
          * @param pageSize  每页显示数量
          * @return
          */
-        @GET("/tenants/{tenantId}/projects/{projectId}/tickets")
+        @GET("tenants/{tenantId}/projects/{projectId}/tickets")
         Call<TicketListResponse> getTickets(@Path("tenantId") long tenantId,
                                             @Path("projectId") long projectId,
                                             @Query("easemob-appkey") String appkey,
@@ -153,7 +153,7 @@ public class RetrofitAPIManager {
          * @param userId    登录IM的账号
          * @return
          */
-        @GET("/tenants/{tenantId}/projects/{projectId}/tickets/{ticketId}/comments")
+        @GET("tenants/{tenantId}/projects/{projectId}/tickets/{ticketId}/comments")
         Call<CommentListResponse> getComments(@Path("tenantId") long tenantId,
                                               @Path("projectId") long projectId,
                                               @Path("ticketId") String ticketId,
@@ -174,7 +174,7 @@ public class RetrofitAPIManager {
          * @param newCommentBody
          * @return
          */
-        @POST("/tenants/{tenantId}/projects/{projectId}/tickets/{ticketId}/comments")
+        @POST("tenants/{tenantId}/projects/{projectId}/tickets/{ticketId}/comments")
         Call<ResponseBody> createComment(@Path("tenantId") long tenantId,
                                          @Path("projectId") long projectId,
                                          @Path("ticketId") String ticketId,
@@ -184,5 +184,14 @@ public class RetrofitAPIManager {
                                          @Body NewCommentBody newCommentBody);
 
 
+        /**
+         * 是否显示留言信息(一般在上班显示联系客服界面,在下班情况下显示留言界面)
+         * 返回true 为下班状态, 返回false为上班状态
+         *
+         * @param tenantId 租户ID
+         * @return
+         */
+        @GET("v1/webimplugin/showMessage")
+        Call<ResponseBody> isShowLeaveMessage(@Query("tenantId") String tenantId);
     }
 }

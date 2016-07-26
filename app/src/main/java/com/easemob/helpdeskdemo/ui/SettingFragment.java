@@ -132,7 +132,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 						if (oldTenantId.equals(newTenantId)) {
 							return;
 						}
-						tvNick.setText(newTenantId);
+						tvTenantId.setText(newTenantId);
 						HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingTenantId(longTenantId);
 					}catch (NumberFormatException e){}
 					break;
@@ -144,7 +144,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 						if (oldProjectId.equals(newProjectId)) {
 							return;
 						}
-						tvNick.setText(newProjectId);
+						tvProjectId.setText(newProjectId);
 						HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingProjectId(longProjectId);
 					}catch (NumberFormatException e){}
 					break;

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,8 +46,6 @@ import retrofit2.Response;
  */
 public class TicketListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, IListener {
 
-    private static final String TAG = TicketListFragment.class.getSimpleName();
-
     private static final int MSG_LOAD_MORE_DATA = 0x01;
     private static final int MSG_REFRESH_DATA = 0x02;
     private static final int MSG_LOAD_ERROR = 0x03;
@@ -57,7 +56,6 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
     private List<TicketEntity> ticketEntityList = Collections.synchronizedList(new ArrayList<TicketEntity>());
     private EasyRecyclerView easyRecyclerView;
     private TicketListAdapter mAdapter;
-
 
     @Nullable
     @Override
@@ -152,6 +150,12 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
         ticketEntityList.addAll(entityList);
         mAdapter.addAll(entityList);
         mAdapter.notifyDataSetChanged();
+        mAdapter.sort(new Comparator<TicketEntity>() {
+            @Override
+            public int compare(TicketEntity lhs, TicketEntity rhs) {
+                return rhs.getUpdated_at().compareTo(lhs.getUpdated_at());
+            }
+        });
         mAdapter.pauseMore();
     }
 
@@ -172,6 +176,12 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
         mAdapter.clear();
         mAdapter.addAll(ticketEntityList);
         mAdapter.notifyDataSetChanged();
+        mAdapter.sort(new Comparator<TicketEntity>() {
+            @Override
+            public int compare(TicketEntity lhs, TicketEntity rhs) {
+                return rhs.getUpdated_at().compareTo(lhs.getUpdated_at());
+            }
+        });
         if (entityList.size() < PER_PAGE_COUNT){
             mAdapter.stopMore();
         }

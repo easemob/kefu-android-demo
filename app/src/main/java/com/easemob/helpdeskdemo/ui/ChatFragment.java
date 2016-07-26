@@ -94,7 +94,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	protected void setUpView() {
 		setChatFragmentListener(this);
 		super.setUpView();
-		titleBar.setRightImageResource(R.drawable.em_icon_comment2);
+		titleBar.setLeftImageResource(R.drawable.em_btn_back);
+		titleBar.setRightImageResource(R.drawable.em_icon_comment);
 		titleBar.setRightLayoutClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
