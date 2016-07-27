@@ -1,4 +1,5 @@
 language: android
+sudo: required
 android:
   components:
   - build-tools-23.0.1
@@ -11,10 +12,10 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: Lxy+BDj7o/fmMkaYDABxA2321ya4qKgtgwPceiCaAWhP0yn6XOfu6bVQ8HKafYpHJH529qwK8aPES3rNa7zsOTg+vC9ZyLyJJcwTB28BGqsJRbUIMktzQcCHee/trx/24CiMZrgNq393HEFF3AjgQ5lxEzrRO9jaxFvpwf+uzrUrRve6xJRtS95iVPKCNt7O8zYr7r/nXd/NuDGsWOZ4GcmeCXLLvUtbsotLtu45teTBmnAlpOg9SEJ3SPMeL2IJ2QaplL0fxzJSCbH3KojpyN/eFpFkwYThHA8K+1k4GePS4vMg2dcHPFzLX2VjJOl61zZJRG7oicdvVT7pm5j4+vYtm0opux4ZRLBL70DKvYPAjtdxy/hD/ERwutt/gmgJYK0PF/QMEv/51QNtPqQPDHVf3eF1FqQ/LOD/FXweQDwmJEsOfhu3tn6ei1MwAEVyDyaae3f+w7usRsyFIiHAK+i592W7Tjh3rpHYftxt7M05ZCi7WbfdioKySBHTDgg8oUTWtplVa2EHV+THoyBmUA5qzkxgc6vrwTMQN76KeEWKIpUp1m7g1dttXWXFBMHyeAta2/qTXGp/lulhxNiv/rCAk2kjUabLx6I1n/aX/10gSS+gwUC5JNOJTN6jSLPYeFEZ8Ejr4r8m3nAUpE5iFwpOucmDj5qGSGXomCNZpd8=
-  file: 'app/build/outputs/apk/app-Debug.apk'
+    secure: h9VbV1W1ErKsmyik6tc48Ejc6SJoHhLpT3lCXgPpEmVVyr9c1ryuRN3FRq0+shVsbwl2q9N0XsAY8FYskt1DoULQhsqKjZWDlyy8tRvmmuz2AqINh72UkIQ3dgmsCvhRxyG/NFwXrGZE/rmJK/P9xGgfKfke/4jCW+fosyG823zne3E/z/r3mfMtTWSnhABlFOnZd3KfgIqfDdpC8ZfaR4fHZpIRVaMdo2EaByq8dacWmcaMkhr+x2q2976sV8oDLPctZPBolg0dhvhzTiovPlClFaPDtX8HgmyBAw5/GUE6i5m9RDp+mTR7TElbhaK6/UdBLsHAKk4S3jExf7nbVbGDNcMc5ZT9sesQCb2Au1QpFHFCDLs4Q7A3HvvYXjxQ8F7ebSbD0w7RllKhgmgkOZyzdwjR7HCKfY67OKR0D1LQGT8oQ/CxLQtt5uXdJEVVD9RfyvyBMUKtXGh5MGmtxF6v9tVXhlwA8FlkFU2aIUZu2gwFuXu1sN02+iApxhGNYpE0fXZsR3KXAbI8FmsOQUERr6HRSYwRzBc3kcxlp+twb4IbpYK+PRadRxN1QRCS+Qe8nF0MaIKwh3BfDIWSOtuamgBKREj5h2bcVyITMZloLVYLQiBbOcW5E2psX5FhLag+aNLgY91Cqdlzi6y59JUq1eYZXP4xk/zn8WcGWww=
+  file: 'app/build/outputs/apk/app-debug.apk'
   skip_cleanup: true
   on:
-    tags: true 
+    tags: true
     all_branches: true
-    repo: liyuzhao/helpdeskdemo-android
+    repo: easemob/helpdeskdemo-android
