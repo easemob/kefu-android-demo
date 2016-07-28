@@ -1,4 +1,7 @@
 language: android
+env:
+  global:
+    - MALLOC_ARENA_MAX=2
 sudo: required
 android:
   components:
@@ -11,11 +14,9 @@ script:
 - "./gradlew :app:assembleDebug"
 deploy:
   provider: releases
-  api_key:
-    secure: h9VbV1W1ErKsmyik6tc48Ejc6SJoHhLpT3lCXgPpEmVVyr9c1ryuRN3FRq0+shVsbwl2q9N0XsAY8FYskt1DoULQhsqKjZWDlyy8tRvmmuz2AqINh72UkIQ3dgmsCvhRxyG/NFwXrGZE/rmJK/P9xGgfKfke/4jCW+fosyG823zne3E/z/r3mfMtTWSnhABlFOnZd3KfgIqfDdpC8ZfaR4fHZpIRVaMdo2EaByq8dacWmcaMkhr+x2q2976sV8oDLPctZPBolg0dhvhzTiovPlClFaPDtX8HgmyBAw5/GUE6i5m9RDp+mTR7TElbhaK6/UdBLsHAKk4S3jExf7nbVbGDNcMc5ZT9sesQCb2Au1QpFHFCDLs4Q7A3HvvYXjxQ8F7ebSbD0w7RllKhgmgkOZyzdwjR7HCKfY67OKR0D1LQGT8oQ/CxLQtt5uXdJEVVD9RfyvyBMUKtXGh5MGmtxF6v9tVXhlwA8FlkFU2aIUZu2gwFuXu1sN02+iApxhGNYpE0fXZsR3KXAbI8FmsOQUERr6HRSYwRzBc3kcxlp+twb4IbpYK+PRadRxN1QRCS+Qe8nF0MaIKwh3BfDIWSOtuamgBKREj5h2bcVyITMZloLVYLQiBbOcW5E2psX5FhLag+aNLgY91Cqdlzi6y59JUq1eYZXP4xk/zn8WcGWww=
+  api_key: c6aeec96a35d3f6d8099f4ed6e5b7917a6b45330
   file: 'app/build/outputs/apk/app-debug.apk'
+  overwrite: true
   skip_cleanup: true
   on:
     tags: true
-    all_branches: true
-    repo: easemob/helpdeskdemo-android

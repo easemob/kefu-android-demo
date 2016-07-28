@@ -13,8 +13,8 @@ android {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "1.2"
     }
     buildTypes {
         release {

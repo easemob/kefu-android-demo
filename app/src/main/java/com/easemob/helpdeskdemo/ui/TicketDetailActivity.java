@@ -149,7 +149,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             stringBuilder.append("<html><body><p>No.").append(ticketEntity.getId()).append("<br/>");
             stringBuilder.append("主题: ").append(ticketEntity.getSubject()).append("<br/>");
             TicketEntity.CreatorBean creatorBean = ticketEntity.getCreator();
-            if (creatorBean != null) {
+            if (creatorBean != null && !TextUtils.isEmpty(creatorBean.getName()) && !creatorBean.getName().equals("null")) {
                 stringBuilder.append("访客昵称: ").append(creatorBean.getName()).append("<br/>");
             }
             stringBuilder.append("内容: ").append(ticketEntity.getContent()).append("<br/>");

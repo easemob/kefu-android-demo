@@ -135,10 +135,11 @@ public class DemoHelper {
                             e.printStackTrace();
                         }
                         //设置客服昵称
-                        if (!TextUtils.isEmpty(strNick)) {
+                        if (!TextUtils.isEmpty(strNick) && !strNick.equals("null")) {
                             usernickView.setText(strNick);
                         } else {
-                            usernickView.setText(message.getFrom());
+//                            usernickView.setText(message.getFrom());
+                            usernickView.setText("");
                         }
                         //设置客服头像
                         if (!TextUtils.isEmpty(strUrl)) {

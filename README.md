@@ -1,4 +1,4 @@
-HuanXin-KefuDemo
+HuanXin-KefuDemo  ![](https://travis-ci.org/easemob/kefu-android-demo.svg)
 =====
 
 环信客服Demo是基于环信[easeui][1]库. 此Demo主要为了演示客服的一些功能。

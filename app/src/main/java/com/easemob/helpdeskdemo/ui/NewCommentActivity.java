@@ -11,10 +11,14 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +32,13 @@ import com.easemob.helpdeskdemo.utils.RetrofitAPIManager;
 import com.easemob.tagview.OnTagDeleteListener;
 import com.easemob.tagview.Tag;
 import com.easemob.tagview.TagView;
+import com.easemob.util.DensityUtil;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -57,13 +63,16 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private TagView tagView;
     private ProgressDialog pd;
     private String ticketId;
-    private List<FileEntity> fileList = new ArrayList<>();
+    private LinearLayout fileLayout;
+    private List<FileEntity> fileList = Collections.synchronizedList(new ArrayList<FileEntity>());
+    private LayoutInflater inflater;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_comment_reply);
         ticketId = getIntent().getStringExtra("id");
+        inflater = LayoutInflater.from(this);
         initView();
         initListener();
     }
@@ -74,6 +83,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         editText = $(R.id.edittext);
         tvAddFile = $(R.id.tv_add_file);
         tagView = $(R.id.tagView);
+        fileLayout = $(R.id.file_layout);
     }
 
     private void initListener() {
@@ -89,10 +99,55 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                 }
             }
         });
+        tagView.addTags(new ArrayList<Tag>());
     }
 
 
-    private void setTagView(FileEntity entty) {
+    private void setTagView(FileEntity entity){
+        if (entity == null){};
+        fileList.add(entity);
+        notifyChanged();
+    }
+
+    private void delClick(View view, int position){
+        if (position >= fileList.size()){
+            return;
+        }
+        fileList.remove(position);
+        notifyChanged();
+    }
+
+
+    public void notifyChanged(){
+        fileLayout.removeAllViews();
+        synchronized (fileList){
+            for (int i = 0; i < fileList.size(); i++){
+                FileEntity item = fileList.get(i);
+                final View view = inflater.inflate(R.layout.comment_file_with_delete, null);
+                TextView tvName = (TextView) view.findViewById(R.id.tv_file_name);
+                ImageView ivDel = (ImageView) view.findViewById(R.id.delete);
+                final int finalI = i;
+                ivDel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delClick(view, finalI);
+                    }
+                });
+                tvName.setText(item.name);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(this, 30));
+                lp.topMargin = DensityUtil.dip2px(this, 5);
+                lp.bottomMargin = DensityUtil.dip2px(this, 5);
+                lp.leftMargin = DensityUtil.dip2px(this, 5);
+                lp.rightMargin = DensityUtil.dip2px(this, 5);
+                fileLayout.addView(view, lp);
+            }
+        }
+    }
+
+
+
+
+    private void setTagView2(FileEntity entty) {
         if (entty == null) {
             return;
         }
