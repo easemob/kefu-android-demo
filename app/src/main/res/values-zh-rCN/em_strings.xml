@@ -102,6 +102,8 @@
     <string name="Download_the_pictures_new">下载图片:</string>
     <string name="Failed_to_download_file">下载文件失败:</string>
     <string name="set_nick">设置昵称</string>
+    <string name="set_tenantId">租户ID(TenantId)</string>
+    <string name="set_leave_messageid">留言ID(projectId)</string>
     <string name="login_user_nick">登录用户昵称</string>
     <string name="customer_account">客服账号</string>
     <string name="appkey">AppKey</string>
@@ -115,4 +117,15 @@
     <string name="hint_leave_message">留言</string>
     <string name="tip_btn_sumbit">提交</string>
     <string name="tip_btn_evaluation">立即评价</string>
+
+    <string name="title_goods_detail">商品详情</string>
+    <string name="txt_contact_customer_service">联系客服</string>
+    <string name="txt_I_was_watching">我正在看:</string>
+
+    <string name="leave_title">留言</string>
+    <string name="leave_name">姓名</string>
+    <string name="leave_phone">电话</string>
+    <string name="leave_email">邮箱</string>
+    <string name="leave_content">内容</string>
+    <string name="leave_sending">正在发送中...</string>
 </resources>

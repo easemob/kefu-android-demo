@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" filepath="$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" />
       <module fileurl="file://$PROJECT_DIR$/easeui/easeui.iml" filepath="$PROJECT_DIR$/easeui/easeui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/helpdeskdemo-android.iml" filepath="$PROJECT_DIR$/helpdeskdemo-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kefu-android-demo.iml" filepath="$PROJECT_DIR$/kefu-android-demo.iml" />
     </modules>
   </component>
 </project>

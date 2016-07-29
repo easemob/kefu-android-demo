@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:background="@drawable/em_bg_blue_comment_file"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:layout_margin="5dp"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/em_icon_comment_attachment"
+        />
+
+    <TextView
+        android:id="@+id/tv_file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="真的的OK,没有什么了"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:layout_marginLeft="5dp"
+        />
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/em_icon_comment_delete"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        />
+
+</LinearLayout>

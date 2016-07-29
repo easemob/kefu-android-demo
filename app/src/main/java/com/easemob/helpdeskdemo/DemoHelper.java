@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -37,6 +36,7 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.domain.EmojiconExampleGroupData;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.ui.MainActivity;
+import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.easemob.helpdeskdemo.utils.PreferenceManager;
 import com.easemob.util.EMLog;
 
@@ -135,10 +135,11 @@ public class DemoHelper {
                             e.printStackTrace();
                         }
                         //设置客服昵称
-                        if (!TextUtils.isEmpty(strNick)) {
+                        if (!TextUtils.isEmpty(strNick) && !strNick.equals("null")) {
                             usernickView.setText(strNick);
                         } else {
-                            usernickView.setText(message.getFrom());
+//                            usernickView.setText(message.getFrom());
+                            usernickView.setText("");
                         }
                         //设置客服头像
                         if (!TextUtils.isEmpty(strUrl)) {
@@ -293,6 +294,26 @@ public class DemoHelper {
                     if(!easeUI.hasForegroundActivies()){
                         getNotifier().onNewMsg(message);
                     }
+
+                    //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现
+                    boolean isNotification = isNotificationMessage(message);
+                    if (isNotification){
+                        // 检测是否为留言的通知消息
+                        String eventName = getEventNameByNotification(message);
+                        if (!TextUtils.isEmpty(eventName)){
+                            if (eventName.equals("TicketStatusChangedEvent") || eventName.equals("CommentCreatedEvent")){
+                                // 检测为留言部分的通知类消息,刷新留言列表
+                                JSONObject jsonTicket = null;
+                                try{
+                                    jsonTicket = message.getJSONObjectAttribute("weichat").getJSONObject("event").getJSONObject("ticket");
+                                }catch (Exception e){}
+                                ListenerManager.getInstance().sendBroadCast(eventName, jsonTicket);
+                            }
+                        }
+                        // 删除掉通知类消息
+                        EMChatManager.getInstance().clearConversation(message.getFrom());
+                    }
+
                     break;
                 case EventOfflineMessage:
                     if(!easeUI.hasForegroundActivies()){
@@ -325,7 +346,8 @@ public class DemoHelper {
                             @Override
                             public void onReceive(Context context, Intent intent) {
                                 // TODO Auto-generated method stub
-                                Toast.makeText(appContext, intent.getStringExtra("cmd_value"), Toast.LENGTH_SHORT).show();
+                                EMLog.e(TAG, "" + intent.getStringExtra("cmd_value"));
+//                                Toast.makeText(appContext, intent.getStringExtra("cmd_value"), Toast.LENGTH_SHORT).show();
                             }
                         };
                         
@@ -399,6 +421,46 @@ public class DemoHelper {
 			}
 		});
 	}
+
+    /**
+     * 检测是否为通知消息
+     * @param message
+     * @return
+     */
+    public boolean isNotificationMessage(EMMessage message) {
+        try {
+            JSONObject weichatJson = message.getJSONObjectAttribute("weichat");
+            if (weichatJson != null && weichatJson.has("notification")) {
+                return weichatJson.getBoolean("notification");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    /**
+     * 获取EventName
+     * @param message
+     * @return
+     */
+    public String getEventNameByNotification(EMMessage message){
+
+        try {
+            JSONObject weichatJson = message.getJSONObjectAttribute("weichat");
+            if (weichatJson != null && weichatJson.has("event")) {
+                JSONObject eventJson = weichatJson.getJSONObject("event");
+                if (eventJson != null && eventJson.has("eventName")){
+                    return eventJson.getString("eventName");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 	
 	/**
 	 * 获取消息通知类
