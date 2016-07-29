@@ -3,7 +3,6 @@ package com.easemob.helpdeskdemo.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,9 +28,6 @@ import com.easemob.helpdeskdemo.domain.NewCommentBody;
 import com.easemob.helpdeskdemo.utils.FileUploadManager;
 import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
 import com.easemob.helpdeskdemo.utils.RetrofitAPIManager;
-import com.easemob.tagview.OnTagDeleteListener;
-import com.easemob.tagview.Tag;
-import com.easemob.tagview.TagView;
 import com.easemob.util.DensityUtil;
 
 import org.json.JSONObject;
@@ -60,7 +56,6 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private Button btnSend;
     private EditText editText;
     private TextView tvAddFile;
-    private TagView tagView;
     private ProgressDialog pd;
     private String ticketId;
     private LinearLayout fileLayout;
@@ -82,7 +77,6 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         btnSend = $(R.id.btn_send);
         editText = $(R.id.edittext);
         tvAddFile = $(R.id.tv_add_file);
-        tagView = $(R.id.tagView);
         fileLayout = $(R.id.file_layout);
     }
 
@@ -90,16 +84,6 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         ibBack.setOnClickListener(this);
         btnSend.setOnClickListener(this);
         tvAddFile.setOnClickListener(this);
-        tagView.setOnTagDeleteListener(new OnTagDeleteListener() {
-            @Override
-            public void onTagDeleted(TagView view, Tag tag, int position) {
-                if (fileList != null && fileList.size() > position) {
-                    fileList.remove(position);
-                    view.remove(position);
-                }
-            }
-        });
-        tagView.addTags(new ArrayList<Tag>());
     }
 
 
@@ -144,21 +128,6 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-
-
-
-    private void setTagView2(FileEntity entty) {
-        if (entty == null) {
-            return;
-        }
-        fileList.add(entty);
-        Tag tag = new Tag(entty.name);
-        tag.radius = 10f;
-        int color = Color.parseColor("#4eb1f4");
-        tag.layoutColor = color;
-        tag.isDeletable = true;
-        tagView.addTag(tag);
-    }
 
     @Override
     public void onClick(View v) {

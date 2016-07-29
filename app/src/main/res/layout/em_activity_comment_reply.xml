@@ -74,15 +74,6 @@
         android:textColor="#4eb1f4"
         android:typeface="serif" />
 
-
-    <com.easemob.tagview.TagView
-        android:id="@+id/tagView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:visibility="gone"
-        >
-    </com.easemob.tagview.TagView>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
