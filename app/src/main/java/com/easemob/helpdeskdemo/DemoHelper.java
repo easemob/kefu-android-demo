@@ -396,7 +396,8 @@ public class DemoHelper {
 	 *            callback
 	 */
 	public void logout(boolean unbindDeviceToken, final EMCallBack callback) {
-		EMChatManager.getInstance().logout(unbindDeviceToken, new EMCallBack() {
+        // 如果需要解绑token,需要调用 EMChatManager.getInstance.logout(unbindDeviceToken, new EMCallBack(){});
+		EMChatManager.getInstance().logout(new EMCallBack() {
 
 			@Override
 			public void onSuccess() {
