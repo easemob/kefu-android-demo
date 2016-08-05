@@ -263,12 +263,8 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         // MultipartBody.Part is used to send also the actual file name
         MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
-        final String appkey = EMChat.getInstance().getAppkey();
-        final String orgName = appkey.substring(0, appkey.indexOf("#"));
-        final String appName = appkey.substring(appkey.indexOf("#") + 1);
-
         // finally, execute the request
-        Call<ResponseBody> call = service.upload(orgName, appName, body);
+        Call<ResponseBody> call = service.upload(body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -279,7 +275,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                         String result = response.body().string().trim();
                         JSONObject jsonObject = new JSONObject(result);
                         String uuid = jsonObject.getJSONArray("entities").getJSONObject(0).getString("uuid");
-                        String remoteUrl = String.format("%1$s%2$s/%3$s/chatfiles/%4$s", FileUploadManager.SERVER_URL, orgName, appName, uuid);
+                        String remoteUrl = String.format("%1$schatfiles/%2$s", FileUploadManager.SERVER_URL, uuid);
                         FileEntity fileEntity = getFileEntityByFilePath(file);
                         fileEntity.remoteUrl = remoteUrl;
                         setTagView(fileEntity);
