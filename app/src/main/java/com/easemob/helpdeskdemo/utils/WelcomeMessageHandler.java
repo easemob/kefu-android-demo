@@ -35,7 +35,7 @@ public class WelcomeMessageHandler implements Parcelable {
 
     public static final String EXTRA_WELCOME_MESSAGE = "extra_welcome_message";
     //kefu host
-    private static final String HOST = "http://kefu.easemob.com";
+    private static final String HOST = "http://sandbox.easemob.com";
     // robot welcome url
     private static final String URL_ROBOT = HOST + "/v1/Tenants/%s/robots/visitor/greetings?tenantId=%s";
     // get welcome url
@@ -51,9 +51,7 @@ public class WelcomeMessageHandler implements Parcelable {
     public static WelcomeMessageHandler instance;
 
     public static WelcomeMessageHandler getInstance(String tenantId, String imServiceUser) {
-        if (instance == null) {
-            instance = new WelcomeMessageHandler(tenantId, imServiceUser);
-        }
+        instance = new WelcomeMessageHandler(tenantId, imServiceUser);
         return instance;
     }
 
