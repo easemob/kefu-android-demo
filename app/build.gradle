@@ -11,7 +11,7 @@ android {
     }
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 12
         versionName "1.2"
@@ -28,7 +28,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':easeui')
     compile project(':bottomnavigation')
-    compile 'com.jude:easyrecyclerview:4.0.4'
+    compile 'com.jude:easyrecyclerview:4.0.6'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
     // network retrofit - squareup
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
