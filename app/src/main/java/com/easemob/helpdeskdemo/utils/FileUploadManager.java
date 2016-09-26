@@ -1,6 +1,6 @@
 package com.easemob.helpdeskdemo.utils;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.cloud.HttpClientConfig;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class FileUploadManager {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
-                                .addHeader("Authorization", "Bearer " + EMChatManager.getInstance().getAccessToken())
+                                .addHeader("Authorization", "Bearer " + KefuChatManager.getInstance().getAccessToken())
                                 .addHeader("restrict-access", "true")
                                 .build();
                         return chain.proceed(request);

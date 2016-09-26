@@ -17,8 +17,8 @@ import com.easemob.EMError;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.CmdMessageBody;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
@@ -94,9 +94,11 @@ public class DemoHelper {
 		if (EaseUI.getInstance().init(context)) {
 		    appContext = context;
             //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
-//            EMChatManager.getInstance().setMipushConfig("2882303761517370134", "5131737040134");
+            KefuChatManager.getInstance().setMipushConfig("2882303761517507836", "5631750729836");
+            //在华为手机上当app被kill时使用华为推送进行消息提醒, appId需要自己去华为申请,详情访问文档查看
+            KefuChatManager.getInstance().setHuaweiPushAppId("10663060");
 		    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
-		    EMChat.getInstance().setDebugMode(true);
+		    KefuChat.getInstance().setDebugMode(true);
 		    //get easeui instance
 		    easeUI = EaseUI.getInstance();
 		    //调用easeui的api设置providers
@@ -118,9 +120,9 @@ public class DemoHelper {
             public void setNickAndAvatar(Context context, EMMessage message, ImageView userAvatarView, TextView usernickView) {
                 JSONObject jsonAgent = getAgentInfoByMessage(message);
                 if (message.direct == EMMessage.Direct.SEND) {
-                    EaseUserUtils.setUserAvatar(context, EMChatManager.getInstance().getCurrentUser(), userAvatarView);
+                    EaseUserUtils.setUserAvatar(context, KefuChatManager.getInstance().getCurrentUser(), userAvatarView);
                     //发送方不显示nick
-                    //            UserUtils.setUserNick(EMChatManager.getInstance().getCurrentUser(), usernickView);
+                    //            UserUtils.setUserNick(KefuChatManager.getInstance().getCurrentUser(), usernickView);
                 } else {
                     if (jsonAgent == null) {
                         userAvatarView.setImageResource(R.drawable.ease_default_avatar);
@@ -246,7 +248,7 @@ public class DemoHelper {
             }
         };
         //注册连接监听
-        EMChatManager.getInstance().addConnectionListener(connectionListener);       
+        KefuChatManager.getInstance().addConnectionListener(connectionListener);
         //注册消息事件监听
         registerEventListener();
     }
@@ -311,7 +313,7 @@ public class DemoHelper {
                             }
                         }
                         // 删除掉通知类消息
-                        EMChatManager.getInstance().clearConversation(message.getFrom());
+                        KefuChatManager.getInstance().clearConversation(message.getFrom());
                     }
 
                     break;
@@ -375,7 +377,7 @@ public class DemoHelper {
             }
         };
         
-        EMChatManager.getInstance().registerEventListener(eventListener);
+        KefuChatManager.getInstance().registerEventListener(eventListener);
     }
 
 	/**
@@ -384,7 +386,7 @@ public class DemoHelper {
 	 * @return
 	 */
 	public boolean isLoggedIn() {
-		return EMChat.getInstance().isLoggedIn();
+		return KefuChat.getInstance().isLoggedIn();
 	}
 
 	/**
@@ -396,8 +398,8 @@ public class DemoHelper {
 	 *            callback
 	 */
 	public void logout(boolean unbindDeviceToken, final EMCallBack callback) {
-        // 如果需要解绑token,需要调用 EMChatManager.getInstance.logout(unbindDeviceToken, new EMCallBack(){});
-		EMChatManager.getInstance().logout(new EMCallBack() {
+        // 如果需要解绑token,需要调用 KefuChatManager.getInstance.logout(unbindDeviceToken, new EMCallBack(){});
+		KefuChatManager.getInstance().logout(new EMCallBack() {
 
 			@Override
 			public void onSuccess() {
@@ -508,7 +510,7 @@ public class DemoHelper {
         }
         
         // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
-        EMChat.getInstance().setAppInited();
+        KefuChat.getInstance().setAppInited();
         alreadyNotified = true;
     }
 	

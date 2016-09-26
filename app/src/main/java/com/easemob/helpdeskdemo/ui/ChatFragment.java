@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.easeui.ui.EaseChatFragment;
@@ -318,7 +318,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	 */
 	private void setUserInfoAttribute(EMMessage message) {
 		if (TextUtils.isEmpty(currentUserNick)) {
-			currentUserNick = EMChatManager.getInstance().getCurrentUser();
+			currentUserNick = KefuChatManager.getInstance().getCurrentUser();
 		}
 		JSONObject weichatJson = getWeichatJSONObject(message);
 		try {
@@ -340,7 +340,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	
 	private void setVisitorInfoSrc(EMMessage message){
 		//传递用户的属性到自定义的iframe界面
-		String strName = "name-test from hxid:" + EMChatManager.getInstance().getCurrentUser();
+		String strName = "name-test from hxid:" + KefuChatManager.getInstance().getCurrentUser();
 		JSONObject cmdJson = new JSONObject();
 		try {
 			JSONObject updateVisitorInfosrcJson = new JSONObject();

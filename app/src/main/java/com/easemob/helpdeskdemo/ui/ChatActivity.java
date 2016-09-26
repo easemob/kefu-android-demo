@@ -3,6 +3,7 @@ package com.easemob.helpdeskdemo.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.easemob.chat.KefuChatManager;
 import com.easemob.easeui.ui.EaseChatFragment;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
@@ -32,12 +33,14 @@ public class ChatActivity extends BaseActivity {
         // 传入参数
         chatFragment.setArguments(intent.getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
+        KefuChatManager.getInstance().bindChatUI(toChatUsername);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         activityInstance = null;
+        KefuChatManager.getInstance().unBind();
     }
 
     @Override

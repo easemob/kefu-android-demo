@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 
 import com.easemob.chat.EMMessage;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
@@ -41,7 +42,11 @@ public class ChatRowEvaluation extends EaseChatRow{
 
 	@Override
 	protected void onUpdateView() {
-		// TODO Auto-generated method stub
+		if(adapter instanceof EaseMessageAdapter){
+			((EaseMessageAdapter)adapter).refresh();
+		}else {
+			adapter.notifyDataSetChanged();
+		}
 		
 	}
 

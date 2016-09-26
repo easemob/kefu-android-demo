@@ -21,8 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.NewCommentBody;
 import com.easemob.helpdeskdemo.utils.FileUploadManager;
@@ -299,7 +299,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
 
     private void createComment(final String ticketId, String content) {
-        if (!EMChat.getInstance().isLoggedIn()) {
+        if (!KefuChat.getInstance().isLoggedIn()) {
             Toast.makeText(getApplicationContext(), "请先登录!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -311,7 +311,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         pd.show();
         RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
         String target = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
-        String userId = EMChatManager.getInstance().getCurrentUser();
+        String userId = KefuChatManager.getInstance().getCurrentUser();
         NewCommentBody newCommentBody = new NewCommentBody();
         newCommentBody.setContent(content);
         NewCommentBody.CreatorBean creatorBean = new NewCommentBody.CreatorBean();
@@ -324,7 +324,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
         newCommentBody.setAttachments(getAttachements(fileList));
 
-        Call<ResponseBody> call = apiLeaveMessage.createComment(tenantId, projectId, ticketId, EMChat.getInstance().getAppkey(), target, userId, newCommentBody);
+        Call<ResponseBody> call = apiLeaveMessage.createComment(tenantId, projectId, ticketId, KefuChat.getInstance().getAppkey(), target, userId, newCommentBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -22,8 +22,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
+import com.easemob.chat.KefuChatManager;
+import com.easemob.chat.KefuConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.EaseConstant;
 import com.easemob.easeui.widget.EaseChatMessageList.MessageListItemClickListener;
@@ -66,7 +66,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 	public int itemTypeCount; 
 	
 	// reference to conversation object in chatsdk
-	private EMConversation conversation;
+	private KefuConversation conversation;
 	EMMessage[] messages = null;
 	
     private String toChatUsername;
@@ -85,7 +85,7 @@ public class EaseMessageAdapter extends BaseAdapter{
 		this.context = context;
 		this.listView = listView;
 		toChatUsername = username;
-		this.conversation = EMChatManager.getInstance().getConversation(username);
+		this.conversation = KefuChatManager.getInstance().getConversation(username);
 	}
 	
 	Handler handler = new Handler() {

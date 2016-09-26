@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.Direct;
 import com.easemob.easeui.R;
@@ -122,9 +122,9 @@ public abstract class EaseChatRow extends LinearLayout {
             easeUserInfoProvider.setNickAndAvatar(context, message, userAvatarView, usernickView);
         }else{
             if(message.direct == Direct.SEND){
-                EaseUserUtils.setUserAvatar(context, EMChatManager.getInstance().getCurrentUser(), userAvatarView);
+                EaseUserUtils.setUserAvatar(context, KefuChatManager.getInstance().getCurrentUser(), userAvatarView);
                 //发送方不显示nick
-//            UserUtils.setUserNick(EMChatManager.getInstance().getCurrentUser(), usernickView);
+//            UserUtils.setUserNick(KefuChatManager.getInstance().getCurrentUser(), usernickView);
             }else{
                 EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
@@ -287,7 +287,7 @@ public abstract class EaseChatRow extends LinearLayout {
             public void onClick(View v) {
                 if (itemClickListener != null) {
                     if (message.direct == Direct.SEND) {
-                        itemClickListener.onUserAvatarClick(EMChatManager.getInstance().getCurrentUser());
+                        itemClickListener.onUserAvatarClick(KefuChatManager.getInstance().getCurrentUser());
                     } else {
                         itemClickListener.onUserAvatarClick(message.getFrom());
                     }

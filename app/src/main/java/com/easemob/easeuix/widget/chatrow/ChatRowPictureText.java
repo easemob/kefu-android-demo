@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.easeui.utils.EaseImageUtils;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
 import com.easemob.exceptions.EaseMobException;
@@ -54,7 +55,11 @@ public class ChatRowPictureText extends EaseChatRow {
 
 	@Override
 	protected void onUpdateView() {
-
+		if(adapter instanceof EaseMessageAdapter){
+			((EaseMessageAdapter)adapter).refresh();
+		}else {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override

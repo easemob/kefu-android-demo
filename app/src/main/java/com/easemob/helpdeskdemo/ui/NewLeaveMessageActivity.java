@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.NewTicketBody;
@@ -127,7 +127,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
     }
 
     private void commitLeaveMessage(){
-        if (!EMChat.getInstance().isLoggedIn()){
+        if (!KefuChat.getInstance().isLoggedIn()){
             // 未成功登录不允许发送留言信息
             return;
         }
@@ -150,11 +150,11 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
 
         RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
         String target = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();;
-        String userId = EMChatManager.getInstance().getCurrentUser();
+        String userId = KefuChatManager.getInstance().getCurrentUser();
         long tenantId = HelpDeskPreferenceUtils.getInstance(this).getSettingTenantId();
         long projectId = HelpDeskPreferenceUtils.getInstance(this).getSettingProjectId();
 
-        Call<TicketEntity> call = apiLeaveMessage.createTicket(tenantId, projectId, EMChat.getInstance().getAppkey(), target, userId, ticketBody);
+        Call<TicketEntity> call = apiLeaveMessage.createTicket(tenantId, projectId, KefuChat.getInstance().getAppkey(), target, userId, ticketBody);
         call.enqueue(new Callback<TicketEntity>() {
             @Override
             public void onResponse(Call<TicketEntity> call, Response<TicketEntity> response) {

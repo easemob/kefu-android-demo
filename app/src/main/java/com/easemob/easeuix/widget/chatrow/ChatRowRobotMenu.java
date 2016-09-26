@@ -9,13 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.easeui.utils.EaseSmileUtils;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
-import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
@@ -53,7 +51,11 @@ public class ChatRowRobotMenu extends EaseChatRow {
 
 	@Override
 	protected void onUpdateView() {
-		adapter.notifyDataSetChanged();
+		if(adapter instanceof EaseMessageAdapter){
+			((EaseMessageAdapter)adapter).refresh();
+		}else {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
@@ -110,14 +112,14 @@ public class ChatRowRobotMenu extends EaseChatRow {
 				break;
 			}
 		} else {
-			if (!message.isAcked() && message.getChatType() == ChatType.Chat) {
-				try {
-					EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
-					message.isAcked = true;
-				} catch (EaseMobException e) {
-					e.printStackTrace();
-				}
-			}
+//			if (!message.isAcked() && message.getChatType() == ChatType.Chat) {
+//				try {
+//					KefuChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+//					message.isAcked = true;
+//				} catch (EaseMobException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 

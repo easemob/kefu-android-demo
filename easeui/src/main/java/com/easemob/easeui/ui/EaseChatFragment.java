@@ -1,8 +1,5 @@
 package com.easemob.easeui.ui;
 
-import java.io.File;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -32,14 +29,14 @@ import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.EMValueCallBack;
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
-import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.ImageMessageBody;
+import com.easemob.chat.KefuChatManager;
+import com.easemob.chat.KefuConversation;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.easeui.EaseConstant;
 import com.easemob.easeui.R;
@@ -59,6 +56,9 @@ import com.easemob.easeui.widget.EaseVoiceRecorderView.EaseVoiceRecorderCallback
 import com.easemob.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * 可以直接new出来使用的聊天对话页面fragment，
@@ -85,7 +85,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
     protected EaseChatMessageList messageList;
     protected EaseChatInputMenu inputMenu;
 
-    protected EMConversation conversation;
+    protected KefuConversation conversation;
     
     protected InputMethodManager inputManager;
     protected ClipboardManager clipboard;
@@ -260,7 +260,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
     
     protected void onConversationInit(){
         // 获取当前conversation对象
-        conversation = EMChatManager.getInstance().getConversation(toChatUsername);
+        conversation = KefuChatManager.getInstance().getConversation(toChatUsername);
         // 把此会话的未读数置为0
         conversation.markAllMessagesAsRead();
         // 初始化db时，每个conversation加载数目是getChatOptions().getNumberOfMessagesLoaded
@@ -407,7 +407,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
                 if (locationAddress != null && !locationAddress.equals("")) {
                     sendLocationMessage(latitude, longitude, locationAddress);
                 } else {
-                    Toast.makeText(getActivity(), R.string.unable_to_get_loaction, 0).show();
+                    Toast.makeText(getActivity(), R.string.unable_to_get_loaction, Toast.LENGTH_SHORT).show();
                 }
                 
             }
@@ -421,7 +421,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             messageList.refresh();
         EaseUI.getInstance().pushActivity(getActivity());
         // register the event listener when enter the foreground
-        EMChatManager.getInstance().registerEventListener(
+        KefuChatManager.getInstance().registerEventListener(
                 this,
                 new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
                         EMNotifierEvent.Event.EventOfflineMessage, EMNotifierEvent.Event.EventDeliveryAck,
@@ -433,7 +433,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         super.onStop();
         // unregister this event listener when this activity enters the
         // background
-        EMChatManager.getInstance().unregisterEventListener(this);
+        KefuChatManager.getInstance().unregisterEventListener(this);
 
         // 把此activity 从foreground activity 列表里移除
         EaseUI.getInstance().popActivity(getActivity());
@@ -446,11 +446,11 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             EMGroupManager.getInstance().removeGroupChangeListener(groupListener);
         }
         if(chatType == EaseConstant.CHATTYPE_CHATROOM){
-            EMChatManager.getInstance().leaveChatRoom(toChatUsername);
+            KefuChatManager.getInstance().leaveChatRoom(toChatUsername);
         }
         
         if(chatRoomChangeListener != null){
-            EMChatManager.getInstance().removeChatRoomChangeListener(chatRoomChangeListener);
+            KefuChatManager.getInstance().removeChatRoomChangeListener(chatRoomChangeListener);
         }
     }
 
@@ -507,14 +507,14 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         if (inputMenu.onBackPressed()) {
             getActivity().finish();
             if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
-                EMChatManager.getInstance().leaveChatRoom(toChatUsername);
+                KefuChatManager.getInstance().leaveChatRoom(toChatUsername);
             }
         }
     }
 
     protected void onChatRoomViewCreation() {
         final ProgressDialog pd = ProgressDialog.show(getActivity(), "", "Joining......");
-        EMChatManager.getInstance().joinChatRoom(toChatUsername, new EMValueCallBack<EMChatRoom>() {
+        KefuChatManager.getInstance().joinChatRoom(toChatUsername, new EMValueCallBack<EMChatRoom>() {
 
             @Override
             public void onSuccess(final EMChatRoom value) {
@@ -524,7 +524,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
                         if(getActivity().isFinishing() || !toChatUsername.equals(value.getUsername()))
                             return;
                         pd.dismiss();
-                        EMChatRoom room = EMChatManager.getInstance().getChatRoom(toChatUsername);
+                        EMChatRoom room = KefuChatManager.getInstance().getChatRoom(toChatUsername);
                         if (room != null) {
                             titleBar.setTitle(room.getName());
                         } else {
@@ -578,9 +578,9 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             @Override
             public void onMemberKicked(String roomId, String roomName, String participant) {
                 if (roomId.equals(toChatUsername)) {
-                    String curUser = EMChatManager.getInstance().getCurrentUser();
+                    String curUser = KefuChatManager.getInstance().getCurrentUser();
                     if (curUser.equals(participant)) {
-                        EMChatManager.getInstance().leaveChatRoom(toChatUsername);
+                        KefuChatManager.getInstance().leaveChatRoom(toChatUsername);
                         getActivity().finish();
                     }else{
                         showChatroomToast("member : " + participant + " was kicked from the room : " + roomId + " room name : " + roomName);
@@ -590,7 +590,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
 
         };
         
-        EMChatManager.getInstance().addChatRoomChangeListener(chatRoomChangeListener);
+        KefuChatManager.getInstance().addChatRoomChangeListener(chatRoomChangeListener);
     }
     
     protected void showChatroomToast(final String toastContent){
@@ -682,7 +682,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             message.setChatType(ChatType.ChatRoom);
         }
         //发送消息
-        EMChatManager.getInstance().sendMessage(message, null);
+        KefuChatManager.getInstance().sendMessage(message, null);
         //刷新ui
         messageList.refreshSelectLast();
     }
@@ -690,7 +690,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
     
     public void resendMessage(EMMessage message){
         message.status = EMMessage.Status.CREATE;
-        EMChatManager.getInstance().sendMessage(message, null);
+        KefuChatManager.getInstance().sendMessage(message, null);
         messageList.refresh();
     }
     
@@ -757,12 +757,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         }
         File file = new File(filePath);
         if (file == null || !file.exists()) {
-            Toast.makeText(getActivity(), R.string.File_does_not_exist, 0).show();
+            Toast.makeText(getActivity(), R.string.File_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
         //大于10M不让发送
         if (file.length() > 10 * 1024 * 1024) {
-            Toast.makeText(getActivity(), R.string.The_file_is_not_greater_than_10_m, 0).show();
+            Toast.makeText(getActivity(), R.string.The_file_is_not_greater_than_10_m, Toast.LENGTH_SHORT).show();
             return;
         }
         sendFileMessage(filePath);
@@ -773,11 +773,11 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
      */
     protected void selectPicFromCamera() {
         if (!EaseCommonUtils.isExitsSdcard()) {
-            Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, 0).show();
+            Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        cameraFile = new File(PathUtil.getInstance().getImagePath(), EMChatManager.getInstance().getCurrentUser()
+        cameraFile = new File(PathUtil.getInstance().getImagePath(), KefuChatManager.getInstance().getCurrentUser()
                 + System.currentTimeMillis() + ".jpg");
         cameraFile.getParentFile().mkdirs();
         startActivityForResult(
@@ -815,7 +815,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             public void onResult(boolean confirmed, Bundle bundle) {
                 if(confirmed){
                     // 清空会话
-                    EMChatManager.getInstance().clearConversation(toChatUsername);
+                    KefuChatManager.getInstance().clearConversation(toChatUsername);
                     messageList.refresh();
                 }
             }
@@ -830,7 +830,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             EMGroup group = EMGroupManager.getInstance().getGroup(toChatUsername);
             if (group == null) {
-                Toast.makeText(getActivity(), R.string.gorup_not_found, 0).show();
+                Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
                 return;
             }
             if(chatFragmentListener != null){
@@ -860,7 +860,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
      * @param forward_msg_id
      */
     protected void forwardMessage(String forward_msg_id) {
-        final EMMessage forward_msg = EMChatManager.getInstance().getMessage(forward_msg_id);
+        final EMMessage forward_msg = KefuChatManager.getInstance().getMessage(forward_msg_id);
         EMMessage.Type type = forward_msg.getType();
         switch (type) {
         case TXT:
@@ -890,7 +890,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         }
         
         if(forward_msg.getChatType() == ChatType.ChatRoom){
-            EMChatManager.getInstance().leaveChatRoom(forward_msg.getTo());
+            KefuChatManager.getInstance().leaveChatRoom(forward_msg.getTo());
         }
     }
 
@@ -906,7 +906,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
 
                 public void run() {
                     if (toChatUsername.equals(groupId)) {
-                        Toast.makeText(getActivity(), R.string.you_are_group, 1).show();
+                        Toast.makeText(getActivity(), R.string.you_are_group, Toast.LENGTH_LONG).show();
                         getActivity().finish();
                     }
                 }
@@ -919,7 +919,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     if (toChatUsername.equals(groupId)) {
-                        Toast.makeText(getActivity(), R.string.the_current_group, 1).show();
+                        Toast.makeText(getActivity(), R.string.the_current_group, Toast.LENGTH_LONG).show();
                         getActivity().finish();
                     }
                 }

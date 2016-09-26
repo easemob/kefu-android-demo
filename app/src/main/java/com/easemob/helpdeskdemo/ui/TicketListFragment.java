@@ -14,8 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.TicketEntity;
 import com.easemob.helpdeskdemo.domain.TicketListResponse;
@@ -192,10 +192,10 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
         final int nextPage = mCurPageNo + 1;
         RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
         String target = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAccount();
-        String userId = EMChatManager.getInstance().getCurrentUser();
+        String userId = KefuChatManager.getInstance().getCurrentUser();
         long tenantId = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingTenantId();
         long projectId = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingProjectId();
-        String appkey = EMChat.getInstance().getAppkey();
+        String appkey = KefuChat.getInstance().getAppkey();
         Call<TicketListResponse> call = apiLeaveMessage.getTickets(tenantId, projectId, appkey, target, userId, nextPage, PER_PAGE_COUNT);
         call.enqueue(new Callback<TicketListResponse>() {
             @Override
@@ -229,10 +229,10 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
                 if(checkIMToken()){
                     RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
                     String target = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingCustomerAccount();
-                    String userId = EMChatManager.getInstance().getCurrentUser();
+                    String userId = KefuChatManager.getInstance().getCurrentUser();
                     long tenantId = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingTenantId();
                     long projectId = HelpDeskPreferenceUtils.getInstance(getActivity()).getSettingProjectId();
-                    String appkey = EMChat.getInstance().getAppkey();
+                    String appkey = KefuChat.getInstance().getAppkey();
                     Call<TicketListResponse> call = apiLeaveMessage.getTickets(tenantId, projectId, appkey, target, userId, 0, PER_PAGE_COUNT);
                     try {
                         Response<TicketListResponse> response = call.execute();
@@ -281,12 +281,12 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
      */
     private boolean checkIMToken() {
         // 如果未登录,需要先登录,后获取
-        if (!EMChat.getInstance().isLoggedIn()){
+        if (!KefuChat.getInstance().isLoggedIn()){
             return false;
         }
 
         try {
-            String token = EMChatManager.getInstance().getAccessToken();
+            String token = KefuChatManager.getInstance().getAccessToken();
         } catch (Exception e) {
             return false;
         }

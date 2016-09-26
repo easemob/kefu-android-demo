@@ -17,10 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMChatRoom;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMConversation.EMConversationType;
+import com.easemob.chat.KefuConversation;
+import com.easemob.chat.KefuConversation.KefuConversationType;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
@@ -36,10 +36,10 @@ import com.easemob.util.DateUtils;
  * 会话列表adapter
  *
  */
-public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
+public class EaseConversationAdapater extends ArrayAdapter<KefuConversation> {
 	private static final String TAG = "ChatAllHistoryAdapter";
-	private List<EMConversation> conversationList;
-	private List<EMConversation> copyConversationList;
+	private List<KefuConversation> conversationList;
+	private List<KefuConversation> copyConversationList;
 	private ConversationFilter conversationFilter;
 	private boolean notiyfyByFilter;
 
@@ -56,10 +56,10 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 	private int borderColor = -1;
 	private int avatarRadius = -1;
 
-	public EaseConversationAdapater(Context context, int resource, List<EMConversation> objects) {
+	public EaseConversationAdapater(Context context, int resource, List<KefuConversation> objects) {
 		super(context, resource, objects);
 		conversationList = objects;
-		copyConversationList = new ArrayList<EMConversation>();
+		copyConversationList = new ArrayList<KefuConversation>();
 		copyConversationList.addAll(objects);
 	}
 
@@ -85,7 +85,7 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 	}
 
 	@Override
-	public EMConversation getItem(int arg0) {
+	public KefuConversation getItem(int arg0) {
 		if (arg0 < conversationList.size()) {
 			return conversationList.get(arg0);
 		}
@@ -117,18 +117,18 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 		holder.list_itease_layout.setBackgroundResource(R.drawable.ease_mm_listitem);
 
 		// 获取与此用户/群组的会话
-		EMConversation conversation = getItem(position);
+		KefuConversation conversation = getItem(position);
 		// 获取用户username或者群组groupid
 		String username = conversation.getUserName();
 
-		if (conversation.getType() == EMConversationType.GroupChat) {
+		if (conversation.getType() == KefuConversationType.GroupChat) {
 			// 群聊消息，显示群聊头像
 			holder.avatar.setImageResource(R.drawable.ease_group_icon);
 			EMGroup group = EMGroupManager.getInstance().getGroup(username);
 			holder.name.setText(group != null ? group.getGroupName() : username);
-		} else if (conversation.getType() == EMConversationType.ChatRoom) {
+		} else if (conversation.getType() == KefuConversationType.ChatRoom) {
 			holder.avatar.setImageResource(R.drawable.ease_group_icon);
-			EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
+			EMChatRoom room = KefuChatManager.getInstance().getChatRoom(username);
 			holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		} else {
 			EaseUserUtils.setUserAvatar(getContext(), username, holder.avatar);
@@ -228,9 +228,9 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 	}
 
 	private class ConversationFilter extends Filter {
-		List<EMConversation> mOriginalValues = null;
+		List<KefuConversation> mOriginalValues = null;
 
-		public ConversationFilter(List<EMConversation> mList) {
+		public ConversationFilter(List<KefuConversation> mList) {
 			mOriginalValues = mList;
 		}
 
@@ -239,7 +239,7 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 			FilterResults results = new FilterResults();
 
 			if (mOriginalValues == null) {
-				mOriginalValues = new ArrayList<EMConversation>();
+				mOriginalValues = new ArrayList<KefuConversation>();
 			}
 			if (prefix == null || prefix.length() == 0) {
 				results.values = copyConversationList;
@@ -247,10 +247,10 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 			} else {
 				String prefixString = prefix.toString();
 				final int count = mOriginalValues.size();
-				final ArrayList<EMConversation> newValues = new ArrayList<EMConversation>();
+				final ArrayList<KefuConversation> newValues = new ArrayList<KefuConversation>();
 
 				for (int i = 0; i < count; i++) {
-					final EMConversation value = mOriginalValues.get(i);
+					final KefuConversation value = mOriginalValues.get(i);
 					String username = value.getUserName();
 
 					EMGroup group = EMGroupManager.getInstance().getGroup(username);
@@ -289,7 +289,7 @@ public class EaseConversationAdapater extends ArrayAdapter<EMConversation> {
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			conversationList.clear();
-			conversationList.addAll((List<EMConversation>) results.values);
+			conversationList.addAll((List<KefuConversation>) results.values);
 			if (results.count > 0) {
 				notiyfyByFilter = true;
 				notifyDataSetChanged();
