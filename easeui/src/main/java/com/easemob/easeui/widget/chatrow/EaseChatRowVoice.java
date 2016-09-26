@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.VoiceMessageBody;
 import com.easemob.easeui.R;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.util.EMLog;
 
 public class EaseChatRowVoice extends EaseChatRowFile{
@@ -87,7 +88,11 @@ public class EaseChatRowVoice extends EaseChatRowFile{
 
     @Override
     protected void onUpdateView() {
-        super.onUpdateView();
+        if(adapter instanceof EaseMessageAdapter){
+            ((EaseMessageAdapter)adapter).refresh();
+        }else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

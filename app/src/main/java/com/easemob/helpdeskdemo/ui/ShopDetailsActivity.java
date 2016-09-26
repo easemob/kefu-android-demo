@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.model.EaseImageCache;
 import com.easemob.helpdeskdemo.Constant;
@@ -83,7 +83,7 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 		super.onResume();
 		DemoHelper.getInstance().pushActivity(this);
 		//register the event listener when enter the foreground
-		EMChatManager.getInstance().registerEventListener(this,
+		KefuChatManager.getInstance().registerEventListener(this,
 						new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
 								EMNotifierEvent.Event.EventOfflineMessage });
 	}
@@ -92,7 +92,7 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 	protected void onStop() {
 		super.onStop();
 		DemoHelper.getInstance().popActivity(this);
-		EMChatManager.getInstance().unregisterEventListener(this);
+		KefuChatManager.getInstance().unregisterEventListener(this);
 	}
 
 	@Override

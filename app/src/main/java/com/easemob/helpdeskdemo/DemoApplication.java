@@ -16,7 +16,7 @@ package com.easemob.helpdeskdemo;
 import android.app.Application;
 import android.content.Context;
 
-import com.easemob.chat.EMChat;
+import com.easemob.chat.KefuChat;
 import com.easemob.helpdeskdemo.utils.HelpDeskPreferenceUtils;
 
 public class DemoApplication extends Application {
@@ -34,7 +34,7 @@ public class DemoApplication extends Application {
 
 		//代码中设置环信IM的Appkey
 		String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
-        EMChat.getInstance().setAppkey(appkey);
+        KefuChat.getInstance().setAppkey(appkey);
 		// init demo helper
 		DemoHelper.getInstance().init(applicationContext);
 	}

@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.easeui.R;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
@@ -147,7 +147,7 @@ public class EaseShowVideoActivity extends EaseBaseActivity{
 			}
 		};
 
-		EMChatManager.getInstance().downloadFile(remoteUrl, localFilePath, header, callback);
+		KefuChatManager.getInstance().downloadFile(remoteUrl, localFilePath, header, callback);
 	}
 
 	@Override

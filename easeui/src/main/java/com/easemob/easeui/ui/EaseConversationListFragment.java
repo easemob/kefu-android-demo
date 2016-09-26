@@ -28,8 +28,8 @@ import android.widget.ImageButton;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
+import com.easemob.chat.KefuChatManager;
+import com.easemob.chat.KefuConversation;
 import com.easemob.easeui.R;
 import com.easemob.easeui.widget.EaseConversationList;
 
@@ -41,7 +41,7 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 	protected EditText query;
 	protected ImageButton clearSearch;
 	protected boolean hidden;
-	protected List<EMConversation> conversationList = new ArrayList<EMConversation>();
+	protected List<KefuConversation> conversationList = new ArrayList<KefuConversation>();
 	protected EaseConversationList conversationListView;
 	protected FrameLayout errorItemContainer;
 
@@ -82,13 +82,13 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					EMConversation conversation = conversationListView.getItem(position);
+					KefuConversation conversation = conversationListView.getItem(position);
 					listItemClickListener.onListItemClicked(conversation);
 				}
 			});
 		}
 
-		EMChatManager.getInstance().addConnectionListener(connectionListener);
+		KefuChatManager.getInstance().addConnectionListener(connectionListener);
 
 		query.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -187,22 +187,22 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 	 * @param context
 	 * @return +
 	 */
-	protected List<EMConversation> loadConversationList() {
+	protected List<KefuConversation> loadConversationList() {
 		// 获取所有会话，包括陌生人
-		Hashtable<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+		Hashtable<String, KefuConversation> conversations = KefuChatManager.getInstance().getAllConversations();
 		// 过滤掉messages size为0的conversation
 		/**
 		 * 如果在排序过程中有新消息收到，lastMsgTime会发生变化 影响排序过程，Collection.sort会产生异常
 		 * 保证Conversation在Sort过程中最后一条消息的时间不变 避免并发问题
 		 */
-		List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
+		List<Pair<Long, KefuConversation>> sortList = new ArrayList<Pair<Long, KefuConversation>>();
 		synchronized (conversations) {
-			for (EMConversation conversation : conversations.values()) {
+			for (KefuConversation conversation : conversations.values()) {
 				if (conversation.getAllMessages().size() != 0) {
 					// if(conversation.getType() !=
-					// EMConversationType.ChatRoom){
+					// KefuConversationType.ChatRoom){
 					sortList.add(
-							new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+							new Pair<Long, KefuConversation>(conversation.getLastMessage().getMsgTime(), conversation));
 					// }
 				}
 			}
@@ -213,8 +213,8 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		List<EMConversation> list = new ArrayList<EMConversation>();
-		for (Pair<Long, EMConversation> sortItem : sortList) {
+		List<KefuConversation> list = new ArrayList<KefuConversation>();
+		for (Pair<Long, KefuConversation> sortItem : sortList) {
 			list.add(sortItem.second);
 		}
 		return list;
@@ -225,10 +225,10 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 	 * 
 	 * @param usernames
 	 */
-	private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
-		Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
+	private void sortConversationByLastChatTime(List<Pair<Long, KefuConversation>> conversationList) {
+		Collections.sort(conversationList, new Comparator<Pair<Long, KefuConversation>>() {
 			@Override
-			public int compare(final Pair<Long, EMConversation> con1, final Pair<Long, EMConversation> con2) {
+			public int compare(final Pair<Long, KefuConversation> con1, final Pair<Long, KefuConversation> con2) {
 
 				if (con1.first == con2.first) {
 					return 0;
@@ -271,7 +271,7 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		EMChatManager.getInstance().removeConnectionListener(connectionListener);
+		KefuChatManager.getInstance().removeConnectionListener(connectionListener);
 	}
 
 	@Override
@@ -289,7 +289,7 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 		 * @param conversation
 		 *            被点击item所对应的会话
 		 */
-		void onListItemClicked(EMConversation conversation);
+		void onListItemClicked(KefuConversation conversation);
 	}
 
 	/**

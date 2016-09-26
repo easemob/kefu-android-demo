@@ -15,7 +15,7 @@ import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.bottomnavigation.BottomNavigation;
 import com.easemob.bottomnavigation.OnBottomNavigationSelectedListener;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements EMEventListener, OnBot
 
         //注册一个监听连接状态的listener
         connectionListener = new MyConnectionListener();
-        EMChatManager.getInstance().addConnectionListener(connectionListener);
+        KefuChatManager.getInstance().addConnectionListener(connectionListener);
 
         //内部测试方法，请忽略
         registerInternalDebugReceiver();
@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity implements EMEventListener, OnBot
         super.onResume();
         DemoHelper.getInstance().pushActivity(this);
         //register the event listener when enter the foreground
-        EMChatManager.getInstance().registerEventListener(this,
+        KefuChatManager.getInstance().registerEventListener(this,
                 new EMNotifierEvent.Event[]{EMNotifierEvent.Event.EventNewMessage,
                         EMNotifierEvent.Event.EventOfflineMessage});
     }
@@ -162,14 +162,14 @@ public class MainActivity extends BaseActivity implements EMEventListener, OnBot
         super.onStop();
         // 把此activity 从foreground activity 列表里移除
         DemoHelper.getInstance().popActivity(this);
-        EMChatManager.getInstance().unregisterEventListener(this);
+        KefuChatManager.getInstance().unregisterEventListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (connectionListener != null) {
-            EMChatManager.getInstance().removeConnectionListener(connectionListener);
+            KefuChatManager.getInstance().removeConnectionListener(connectionListener);
         }
         try {
             unregisterReceiver(internalDebugReceiver);

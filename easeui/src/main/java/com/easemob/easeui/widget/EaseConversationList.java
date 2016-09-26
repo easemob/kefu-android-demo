@@ -27,10 +27,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMChatRoom;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMConversation.EMConversationType;
+import com.easemob.chat.KefuConversation;
+import com.easemob.chat.KefuConversation.KefuConversationType;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
@@ -56,7 +56,7 @@ public class EaseConversationList extends ListView {
     
     protected Context context;
     protected EaseConversationAdapater adapter;
-    protected List<EMConversation> conversationList = new ArrayList<EMConversation>();
+    protected List<KefuConversation> conversationList = new ArrayList<KefuConversation>();
     
     
     public EaseConversationList(Context context, AttributeSet attrs) {
@@ -84,7 +84,7 @@ public class EaseConversationList extends ListView {
         
     }
     
-    public void init(List<EMConversation> conversationList){
+    public void init(List<KefuConversation> conversationList){
         this.conversationList = conversationList;
         adapter = new EaseConversationAdapater(context, 0, conversationList);
         adapter.setPrimaryColor(primaryColor);
@@ -120,9 +120,9 @@ public class EaseConversationList extends ListView {
      * @param context
      * @return
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         +    */
-    private List<EMConversation> loadConversationsWithRecentChat() {
+    private List<KefuConversation> loadConversationsWithRecentChat() {
         // 获取所有会话，包括陌生人
-        Map<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+        Map<String, KefuConversation> conversations = KefuChatManager.getInstance().getAllConversations();
         // 过滤掉messages size为0的conversation
         /**
          * 如果在排序过程中有新消息收到，lastMsgTime会发生变化
@@ -130,11 +130,11 @@ public class EaseConversationList extends ListView {
          * 保证Conversation在Sort过程中最后一条消息的时间不变 
          * 避免并发问题
          */
-        List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
+        List<Pair<Long, KefuConversation>> sortList = new ArrayList<Pair<Long, KefuConversation>>();
         synchronized (conversations) {
-            for (EMConversation conversation : conversations.values()) {
+            for (KefuConversation conversation : conversations.values()) {
                 if (conversation.getAllMessages().size() != 0) {
-                    sortList.add(new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+                    sortList.add(new Pair<Long, KefuConversation>(conversation.getLastMessage().getMsgTime(), conversation));
                 }
             }
         }
@@ -144,8 +144,8 @@ public class EaseConversationList extends ListView {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<EMConversation> list = new ArrayList<EMConversation>();
-        for (Pair<Long, EMConversation> sortItem : sortList) {
+        List<KefuConversation> list = new ArrayList<KefuConversation>();
+        for (Pair<Long, KefuConversation> sortItem : sortList) {
             list.add(sortItem.second);
         }
         return list;
@@ -156,10 +156,10 @@ public class EaseConversationList extends ListView {
      * 
      * @param usernames
      */
-    private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
-        Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
+    private void sortConversationByLastChatTime(List<Pair<Long, KefuConversation>> conversationList) {
+        Collections.sort(conversationList, new Comparator<Pair<Long, KefuConversation>>() {
             @Override
-            public int compare(final Pair<Long, EMConversation> con1, final Pair<Long, EMConversation> con2) {
+            public int compare(final Pair<Long, KefuConversation> con1, final Pair<Long, KefuConversation> con2) {
 
                 if (con1.first == con2.first) {
                     return 0;
@@ -173,8 +173,8 @@ public class EaseConversationList extends ListView {
         });
     }
     
-    public EMConversation getItem(int position) {
-        return (EMConversation)adapter.getItem(position);
+    public KefuConversation getItem(int position) {
+        return (KefuConversation)adapter.getItem(position);
     }
     
     public void refresh() {

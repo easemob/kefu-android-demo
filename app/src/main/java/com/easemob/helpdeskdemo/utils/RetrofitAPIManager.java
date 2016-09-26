@@ -1,6 +1,6 @@
 package com.easemob.helpdeskdemo.utils;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.helpdeskdemo.domain.CommentListResponse;
 import com.easemob.helpdeskdemo.domain.NewCommentBody;
 import com.easemob.helpdeskdemo.domain.NewTicketBody;
@@ -49,7 +49,7 @@ public class RetrofitAPIManager {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
-                                .addHeader("Authorization", "Easemob IM " + EMChatManager.getInstance().getAccessToken())
+                                .addHeader("Authorization", "Easemob IM " + KefuChatManager.getInstance().getAccessToken())
                                 .addHeader("Connection", "keep-alive")
                                 .addHeader("Accept", "application/json")
                                 .addHeader("Content-Type", "application/json")

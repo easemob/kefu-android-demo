@@ -1,7 +1,5 @@
 package com.easemob.easeui.widget.chatrow;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.VideoMessageBody;
 import com.easemob.easeui.R;
 import com.easemob.easeui.model.EaseImageCache;
@@ -22,6 +20,8 @@ import com.easemob.util.DateUtils;
 import com.easemob.util.EMLog;
 import com.easemob.util.ImageUtils;
 import com.easemob.util.TextFormater;
+
+import java.io.File;
 
 public class EaseChatRowVideo extends EaseChatRowFile{
 
@@ -111,7 +111,7 @@ public class EaseChatRowVideo extends EaseChatRowFile{
                 && message.getChatType() != ChatType.GroupChat) {
             message.isAcked = true;
             try {
-                EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+                KefuChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -158,7 +158,7 @@ public class EaseChatRowVideo extends EaseChatRowFile{
                     } else {
                         if (message.status == EMMessage.Status.FAIL) {
                             if (EaseCommonUtils.isNetWorkConnected(activity)) {
-                                EMChatManager.getInstance().asyncFetchMessage(message);
+                                KefuChatManager.getInstance().asyncFetchMessage(message);
                             }
                         }
 

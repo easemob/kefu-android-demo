@@ -11,7 +11,7 @@ import android.os.SystemClock;
 import android.text.format.Time;
 
 import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
 
@@ -56,7 +56,7 @@ public class EaseVoiceRecorder {
             // one easy way is to use temp file
             // file = File.createTempFile(PREFIX + userId, EXTENSION,
             // User.getVoicePath());
-            voiceFileName = getVoiceFileName(EMChatManager.getInstance().getCurrentUser());
+            voiceFileName = getVoiceFileName(KefuChatManager.getInstance().getCurrentUser());
             voiceFilePath = PathUtil.getInstance().getVoicePath() + "/" + voiceFileName;
             file = new File(voiceFilePath);
             recorder.setOutputFile(file.getAbsolutePath());

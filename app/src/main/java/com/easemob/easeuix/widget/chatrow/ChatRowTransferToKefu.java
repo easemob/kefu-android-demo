@@ -10,9 +10,10 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.CmdMessageBody;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.easeui.widget.chatrow.EaseChatRow;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.Constant;
@@ -52,7 +53,11 @@ public class ChatRowTransferToKefu extends EaseChatRow {
 
     @Override
     protected void onUpdateView() {
-
+        if(adapter instanceof EaseMessageAdapter){
+            ((EaseMessageAdapter)adapter).refresh();
+        }else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -107,7 +112,7 @@ public class ChatRowTransferToKefu extends EaseChatRow {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        EMChatManager.getInstance().sendMessage(cmdMessage, new EMCallBack() {
+        KefuChatManager.getInstance().sendMessage(cmdMessage, new EMCallBack() {
 
             @Override
             public void onSuccess() {

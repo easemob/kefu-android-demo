@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 import com.easemob.EMConnectionListener;
 import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMContactManager;
 import com.easemob.easeui.R;
 import com.easemob.easeui.domain.EaseUser;
@@ -99,7 +99,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
 
     @Override
     protected void setUpView() {
-        EMChatManager.getInstance().addConnectionListener(connectionListener);
+        KefuChatManager.getInstance().addConnectionListener(connectionListener);
         
         //黑名单列表
         blackList = EMContactManager.getInstance().getBlackListUsernames();
@@ -224,7 +224,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
     @Override
     public void onDestroy() {
         
-        EMChatManager.getInstance().removeConnectionListener(connectionListener);
+        KefuChatManager.getInstance().removeConnectionListener(connectionListener);
         
         super.onDestroy();
     }

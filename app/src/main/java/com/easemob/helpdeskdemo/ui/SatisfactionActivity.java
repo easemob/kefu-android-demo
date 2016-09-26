@@ -13,9 +13,6 @@
  */
 package com.easemob.helpdeskdemo.ui;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -30,13 +27,16 @@ import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.Type;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SatisfactionActivity extends BaseActivity {
 
@@ -75,7 +75,7 @@ public class SatisfactionActivity extends BaseActivity {
 
 		@Override
 		public void onClick(View v) {
-			final EMMessage message = EMChatManager.getInstance().getMessage(msgId);
+			final EMMessage message = KefuChatManager.getInstance().getMessage(msgId);
 			try {
 				final JSONObject jsonObj = message.getJSONObjectAttribute(Constant.WEICHAT_MSG);
 				JSONObject jsonArgs = jsonObj.getJSONObject("ctrlArgs");
@@ -93,7 +93,7 @@ public class SatisfactionActivity extends BaseActivity {
 				pd.setMessage(getResources().getString(R.string.tip_wating));
 				pd.show();
 
-				EMChatManager.getInstance().sendMessage(sendMessage, new EMCallBack() {
+				KefuChatManager.getInstance().sendMessage(sendMessage, new EMCallBack() {
 
 					@Override
 					public void onSuccess() {
@@ -104,7 +104,7 @@ public class SatisfactionActivity extends BaseActivity {
 								if (pd != null && pd.isShowing()) {
 									pd.dismiss();
 								}
-								EMChatManager.getInstance().getConversation(message.getFrom())
+								KefuChatManager.getInstance().getConversation(message.getFrom())
 										.removeMessage(sendMessage.getMsgId());
 								Toast.makeText(getApplicationContext(), "评价成功", Toast.LENGTH_SHORT).show();
 								setResult(RESULT_OK);

@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.EMEventListener;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.domain.EaseEmojicon;
@@ -117,8 +117,8 @@ public final class EaseUI {
             return false;
         }
         // 初始化环信SDK,一定要先调用init()
-        EMChat.getInstance().init(context);
-        
+        KefuChat.getInstance().init(context);
+//        KefuChat.getInstance().setKefuServerAddress("http://sandbox.kefu.easemob.com");
         initChatOptions();
         if(settingsProvider == null){
             settingsProvider = new DefaultSettingsProvider();
@@ -132,7 +132,7 @@ public final class EaseUI {
         Log.d(TAG, "init HuanXin Options");
         
         // 获取到EMChatOptions对象
-        EMChatOptions options = EMChatManager.getInstance().getChatOptions();
+        EMChatOptions options = KefuChatManager.getInstance().getChatOptions();
         // 默认添加好友时，是不需要验证的，改成需要验证
         options.setAcceptInvitationAlways(false);
         // 默认环信是不维护好友关系列表的，如果app依赖环信的好友关系，把这个属性设置为true

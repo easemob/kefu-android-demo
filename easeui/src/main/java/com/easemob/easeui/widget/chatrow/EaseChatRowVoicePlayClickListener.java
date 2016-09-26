@@ -26,7 +26,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.VoiceMessageBody;
@@ -126,7 +126,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 						message.isAcked = true;
 						// 告知对方已读这条消息
 						if (chatType != ChatType.GroupChat && chatType != ChatType.ChatRoom)
-							EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+							KefuChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
 					}
 				} catch (Exception e) {
 					message.isAcked = false;
@@ -134,7 +134,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 				if (!message.isListened() && iv_read_status != null && iv_read_status.getVisibility() == View.VISIBLE) {
 					// 隐藏自己未播放这条语音消息的标志
 					iv_read_status.setVisibility(View.INVISIBLE);
-					EMChatManager.getInstance().setMessageListened(message);
+					KefuChatManager.getInstance().setMessageListened(message);
 				}
 
 			}
@@ -186,7 +186,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 
 					@Override
 					protected Void doInBackground(Void... params) {
-						EMChatManager.getInstance().asyncFetchMessage(message);
+						KefuChatManager.getInstance().asyncFetchMessage(message);
 						return null;
 					}
 

@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChat;
+import com.easemob.chat.KefuChat;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.R;
@@ -157,7 +157,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 
 	private void showCustomMessage(final String newAppkey) {
 		HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingCustomerAppkey(newAppkey);
-		EMChat.getInstance().setAppkey(newAppkey);
+		KefuChat.getInstance().setAppkey(newAppkey);
 		// 退出登录 (修改appkey需要退出重新登录)
 		DemoHelper.getInstance().logout(true, null);
 	}
