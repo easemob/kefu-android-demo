@@ -16,18 +16,16 @@ package com.easemob.helpdeskdemo.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.model.EaseImageCache;
 import com.easemob.helpdeskdemo.Constant;
@@ -53,17 +51,16 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 		rl_tochat = (RelativeLayout) findViewById(R.id.rl_tochat);
 		mImageButton = (ImageButton) findViewById(R.id.ib_shop_back);
 		mImageView = (ImageView) findViewById(R.id.iv_buy);
-		mImageView.setScaleType(ScaleType.CENTER_INSIDE);
+		mImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 		mBitmap = EaseImageCache.getInstance().get("shop_image_details");
-		if(mBitmap==null){
-			Options opts= new Options();
+		if(mBitmap==null || mBitmap.isRecycled()){
+			BitmapFactory.Options opts= new BitmapFactory.Options();
 			opts.inSampleSize =2;
 			mBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.em_shop_image_details);
 			EaseImageCache.getInstance().put("shop_image_details", mBitmap);
 		}
 		if(mBitmap!=null)
 			mImageView.setImageBitmap(mBitmap);
-		
 		mImageButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -86,7 +83,7 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 		super.onResume();
 		DemoHelper.getInstance().pushActivity(this);
 		//register the event listener when enter the foreground
-		EMChatManager.getInstance().registerEventListener(this,
+		KefuChatManager.getInstance().registerEventListener(this,
 						new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,
 								EMNotifierEvent.Event.EventOfflineMessage });
 	}
@@ -95,7 +92,7 @@ public class ShopDetailsActivity extends BaseActivity implements EMEventListener
 	protected void onStop() {
 		super.onStop();
 		DemoHelper.getInstance().popActivity(this);
-		EMChatManager.getInstance().unregisterEventListener(this);
+		KefuChatManager.getInstance().unregisterEventListener(this);
 	}
 
 	@Override

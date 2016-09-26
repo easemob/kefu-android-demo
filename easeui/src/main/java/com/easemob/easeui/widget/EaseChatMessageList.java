@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
+import com.easemob.chat.KefuChatManager;
+import com.easemob.chat.KefuConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.R;
 import com.easemob.easeui.adapter.EaseMessageAdapter;
@@ -22,7 +22,7 @@ public class EaseChatMessageList extends RelativeLayout{
     protected ListView listView;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected Context context;
-    protected EMConversation conversation;
+    protected KefuConversation conversation;
     protected int chatType;
     protected String toChatUsername;
     protected EaseMessageAdapter messageAdapter;
@@ -63,7 +63,7 @@ public class EaseChatMessageList extends RelativeLayout{
         this.chatType = chatType;
         this.toChatUsername = toChatUsername;
         
-        conversation = EMChatManager.getInstance().getConversation(toChatUsername);
+        conversation = KefuChatManager.getInstance().getConversation(toChatUsername);
         messageAdapter = new EaseMessageAdapter(context, toChatUsername, chatType, listView);
         messageAdapter.setShowAvatar(showAvatar);
         messageAdapter.setShowUserNick(showUserNick);

@@ -43,7 +43,6 @@ public class PreferenceManager {
 	/**
 	 * 单例模式，获取instance实例
 	 * 
-	 * @param cxt
 	 * @return
 	 */
 	public synchronized static PreferenceManager getInstance() {

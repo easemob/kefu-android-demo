@@ -31,12 +31,16 @@
 	    android:layout_width="match_parent"
 	    android:paddingBottom="52dp"
 	    >
-        <ImageView
-            android:id="@+id/iv_buy"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_buy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                />
+        </LinearLayout>
     </ScrollView>
     <RelativeLayout 
         android:id="@+id/rl_tochat"

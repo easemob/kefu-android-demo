@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.FileMessageBody;
 import com.easemob.easeui.R;
 import com.easemob.util.FileUtils;
@@ -34,7 +34,7 @@ public class EaseShowNormalFileActivity extends EaseBaseActivity {
 		}
 		
 		//下载文件
-		EMChatManager.getInstance().downloadFile(messageBody.getRemoteUrl(), messageBody.getLocalUrl(), maps,
+		KefuChatManager.getInstance().downloadFile(messageBody.getRemoteUrl(), messageBody.getLocalUrl(), maps,
                 new EMCallBack() {
                     
                     @Override

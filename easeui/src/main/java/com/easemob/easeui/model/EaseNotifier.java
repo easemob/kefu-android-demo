@@ -29,7 +29,7 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.easeui.controller.EaseUI;
 import com.easemob.easeui.controller.EaseUI.EaseSettingsProvider;
@@ -122,7 +122,7 @@ public class EaseNotifier {
      * @param message
      */
     public synchronized void onNewMsg(EMMessage message) {
-        if(EMChatManager.getInstance().isSlientMessage(message)){
+        if(KefuChatManager.getInstance().isSlientMessage(message)){
             return;
         }
         EaseSettingsProvider settingsProvider = EaseUI.getInstance().getSettingsProvider();
@@ -143,7 +143,7 @@ public class EaseNotifier {
     }
     
     public synchronized void onNewMesg(List<EMMessage> messages) {
-        if(EMChatManager.getInstance().isSlientMessage(messages.get(messages.size()-1))){
+        if(KefuChatManager.getInstance().isSlientMessage(messages.get(messages.size()-1))){
             return;
         }
         EaseSettingsProvider settingsProvider = EaseUI.getInstance().getSettingsProvider();
@@ -293,7 +293,7 @@ public class EaseNotifier {
      */
     public void viberateAndPlayTone(EMMessage message) {
         if(message != null){
-            if(EMChatManager.getInstance().isSlientMessage(message)){
+            if(KefuChatManager.getInstance().isSlientMessage(message)){
                 return;
             } 
         }

@@ -27,8 +27,8 @@ public class Constant extends EaseConstant{
 	
 	public static final String WEICHAT_MSG = "weichat";
 
-	public static final String DEFAULT_COSTOMER_APPKEY = "sipsoft#sandbox";
-	public static final String DEFAULT_COSTOMER_ACCOUNT = "test111";
+	public static final String DEFAULT_CUSTOMER_APPKEY = "experience-kefu#sandbox";
+	public static final String DEFAULT_CUSTOMER_ACCOUNT = "166029";
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
@@ -58,7 +58,7 @@ public class Constant extends EaseConstant{
 	public static final int MODIFY_INDEX_LEAVE_EMAIL = 8;
 	public static final int MODIFY_INDEX_LEAVE_CONTENT = 9;
 
-	public static final long DEFAULT_PROJECT_ID = 48022l;
-	public static final long DEFAULT_TENANT_ID = 35l;
+	public static final long DEFAULT_PROJECT_ID = 184562l;
+	public static final long DEFAULT_TENANT_ID = 25115l;
 
 }

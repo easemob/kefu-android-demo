@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.domain.CommentEntity;
 import com.easemob.helpdeskdemo.domain.CommentListResponse;
@@ -192,17 +192,17 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
      * @param ticketId 留言的ID
      */
     private void loadAllComments(String ticketId) {
-        if (!EMChat.getInstance().isLoggedIn()) {
+        if (!KefuChat.getInstance().isLoggedIn()) {
             Toast.makeText(getApplicationContext(), "请先登录!", Toast.LENGTH_SHORT).show();
             return;
         }
         RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
         String target = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
-        String userId = EMChatManager.getInstance().getCurrentUser();
+        String userId = KefuChatManager.getInstance().getCurrentUser();
         long tenantId = HelpDeskPreferenceUtils.getInstance(this).getSettingTenantId();
         long projectId = HelpDeskPreferenceUtils.getInstance(this).getSettingProjectId();
 
-        Call<CommentListResponse> call = apiLeaveMessage.getComments(tenantId, projectId, ticketId, EMChat.getInstance().getAppkey(), target, userId);
+        Call<CommentListResponse> call = apiLeaveMessage.getComments(tenantId, projectId, ticketId, KefuChat.getInstance().getAppkey(), target, userId);
         call.enqueue(new Callback<CommentListResponse>() {
             @Override
             public void onResponse(Call<CommentListResponse> call, Response<CommentListResponse> response) {

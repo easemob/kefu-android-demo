@@ -1,7 +1,5 @@
 package com.easemob.easeui.widget.chatrow;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,15 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.FileMessageBody;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.NormalFileMessageBody;
 import com.easemob.easeui.R;
+import com.easemob.easeui.adapter.EaseMessageAdapter;
 import com.easemob.easeui.ui.EaseShowNormalFileActivity;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.FileUtils;
 import com.easemob.util.TextFormater;
+
+import java.io.File;
 
 public class EaseChatRowFile extends EaseChatRow{
 
@@ -110,7 +110,11 @@ public class EaseChatRowFile extends EaseChatRow{
 
 	@Override
     protected void onUpdateView() {
-        adapter.notifyDataSetChanged();
+        if(adapter instanceof EaseMessageAdapter){
+            ((EaseMessageAdapter)adapter).refresh();
+        }else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -126,7 +130,7 @@ public class EaseChatRowFile extends EaseChatRow{
         }
         if (message.direct == EMMessage.Direct.RECEIVE && !message.isAcked) {
             try {
-                EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+                KefuChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
                 message.isAcked = true;
             } catch (EaseMobException e) {
                 // TODO Auto-generated catch block

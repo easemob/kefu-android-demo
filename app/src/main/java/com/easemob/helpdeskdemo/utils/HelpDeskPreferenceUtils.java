@@ -55,7 +55,7 @@ public class HelpDeskPreferenceUtils {
 	}
 
 	public String getSettingCustomerAppkey() {
-		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, Constant.DEFAULT_COSTOMER_APPKEY);
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, Constant.DEFAULT_CUSTOMER_APPKEY);
 	}
 
 	public void setSettingCustomerAccount(String account) {
@@ -64,7 +64,7 @@ public class HelpDeskPreferenceUtils {
 	}
 
 	public String getSettingCustomerAccount() {
-		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, Constant.DEFAULT_COSTOMER_ACCOUNT);
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, Constant.DEFAULT_CUSTOMER_ACCOUNT);
 	}
 
 	public void setSettingCurrentNick(String nick){

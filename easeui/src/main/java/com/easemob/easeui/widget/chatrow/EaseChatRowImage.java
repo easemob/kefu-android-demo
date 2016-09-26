@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.ImageMessageBody;
@@ -96,7 +96,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
         if (message != null && message.direct == EMMessage.Direct.RECEIVE && !message.isAcked
                 && message.getChatType() != ChatType.GroupChat) {
             try {
-                EMChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
+                KefuChatManager.getInstance().ackMessageRead(message.getFrom(), message.getMsgId());
                 message.isAcked = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,7 +148,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
 
                                     @Override
                                     public void run() {
-                                        EMChatManager.getInstance().asyncFetchMessage(message);
+                                        KefuChatManager.getInstance().asyncFetchMessage(message);
                                     }
                                 }).start();
                             }

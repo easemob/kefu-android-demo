@@ -1,6 +1,7 @@
 package com.easemob.helpdeskdemo.utils;
 
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChatManager;
+import com.easemob.cloud.HttpClientConfig;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 
 /**
  *
@@ -26,7 +26,7 @@ import retrofit2.http.Path;
  *
  */
 public class FileUploadManager {
-    public static final String SERVER_URL = "http://a1.easemob.com/";
+    public static final String SERVER_URL = HttpClientConfig.getBaseUrlByAppKey() + "/";
 
     static Retrofit mRetrofit;
 
@@ -48,7 +48,7 @@ public class FileUploadManager {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
-                                .addHeader("Authorization", "Bearer " + EMChatManager.getInstance().getAccessToken())
+                                .addHeader("Authorization", "Bearer " + KefuChatManager.getInstance().getAccessToken())
                                 .addHeader("restrict-access", "true")
                                 .build();
                         return chain.proceed(request);
@@ -64,32 +64,24 @@ public class FileUploadManager {
          *
          * 通过List<MultipartBody.Part>传入多个part实现多文件上传
          *
-         * @param orgName
-         * @param appName
          * @param parts 每个part代表一个
          * @return 状态信息
          */
         @Multipart
-        @POST("{orgname}/{appname}/chatfiles")
+        @POST("chatfiles")
         Call<List<ResponseBody>> uploadFilesWithParts(
-                @Path("orgname") String orgName,
-                @Path("appname") String appName,
                 @Part()List<MultipartBody.Part> parts
         );
 
 
         /**
          * 单文件上传
-         * @param orgName
-         * @param appName
          * @param file
          * @return
          */
         @Multipart
-        @POST("{orgname}/{appname}/chatfiles")
-        Call<ResponseBody> upload(@Path("orgname") String orgName,
-                                  @Path("appname") String appName,
-                                  @Part MultipartBody.Part file);
+        @POST("chatfiles")
+        Call<ResponseBody> upload(@Part MultipartBody.Part file);
 
     }
 

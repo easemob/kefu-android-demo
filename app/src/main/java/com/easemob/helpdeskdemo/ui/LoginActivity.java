@@ -22,8 +22,8 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
+import com.easemob.chat.KefuChat;
+import com.easemob.chat.KefuChatManager;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
@@ -45,8 +45,8 @@ public class LoginActivity extends BaseActivity {
 				Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		
-		//EMChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
-		if (EMChat.getInstance().isLoggedIn()) {
+		//KefuChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
+		if (KefuChat.getInstance().isLoggedIn()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
 			progressDialog.show();
@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity {
 				public void run() {
 					try {
 						//加载本地数据库中的消息到内存中
-						EMChatManager.getInstance().loadAllConversations();
+						KefuChatManager.getInstance().loadAllConversations();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void run() {
 				try {
-					EMChatManager.getInstance().createAccountOnServer(uname, pwd);
+					KefuChatManager.getInstance().createAccountOnServer(uname, pwd);
 					if (callback != null) {
 						callback.onSuccess();
 					}
@@ -165,7 +165,7 @@ public class LoginActivity extends BaseActivity {
 			progressDialog.show();
 		}
 		// login huanxin server
-		EMChatManager.getInstance().login(uname, upwd, new EMCallBack() {
+		KefuChatManager.getInstance().login(uname, upwd, new EMCallBack() {
 			@Override
 			public void onSuccess() {
 				if (!progressShow) {
@@ -174,7 +174,7 @@ public class LoginActivity extends BaseActivity {
 				DemoHelper.getInstance().setCurrentUserName(uname);
 				DemoHelper.getInstance().setCurrentPassword(upwd);
 				try {
-					EMChatManager.getInstance().loadAllConversations();
+					KefuChatManager.getInstance().loadAllConversations();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;
