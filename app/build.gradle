@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "com.easemob.helpdeskdemo"
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库
+            abiFilters 'armeabi','arm64-v8a'
+            //还可以添加 'armeabi-v7a', 'x86'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // 移除lint检查的error
+    lintOptions{
+        // 如果为true, 则只报告错误
+        ignoreWarnings true
+    }
+
+
+    sourceSets{
+        main(){
+            jniLibs.srcDirs=['libs']
+        }
+    }
+
+
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:23.1.1'
+    compile project(':kefu-easeui')
+    compile project(':bottomnavigation')
+
+    compile 'com.jude:easyrecyclerview:4.0.6'
+    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+    // network retrofit - squareup
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    //rxJava
+    compile 'io.reactivex:rxjava:latest.release'
+    compile 'io.reactivex:rxandroid:latest.release'
+    compile 'com.wefika:flowlayout:0.4.0'
+}

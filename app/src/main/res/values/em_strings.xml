@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HuanXin Kefu</string>
+    <string name="text_ack_msg">Read</string>
+    <string name="text_delivered_msg">Delivered</string>
+    <string name="button_send">Send</string>
+    <string name="attach_location">Location</string>
+    <string name="attach_short_cut_message">Messages</string>
+    <string name="location_message">The location information</string>
+    <string name="please_check">key validation error!Please on AndroidManifest.xml file check the key set</string>
+    <string name="text_fahuo">How long you will be able to deliver?</string>
+    <string name="text_weight">What should I wear, 165 or 46 kg?</string>
+    <string name="text_color">Are there any other colors?</string>
+    <string name="text_kuaidi">What is you send Courier?</string>
+    <string name="unable_to_get_loaction">Unable to get to your location information!</string>
+    <string name="cant_find_pictures">"Can't find pictures"</string>
+    <string name="system_is_regist">System is automatically registered users for you...</string>
+    <string name="is_contact_customer">Being contact customer service, please wait...</string>
+    <string name="is_contact_customer_failure_seconed">Contact customer service failure:</string>
+    <string name="shopping">Market</string>
+    <string name="setting">Setting</string>
+    <string name="customernumber">IM service No.</string>
+    <string name="connect_customer">Contact customer service</string>
+    <string name="feedback">Feedback</string>
+    <string name="history_record">History record</string>
+    <string name="set_nick">Set Nick</string>
+    <string name="set_tenantId">TenantId</string>
+    <string name="set_leave_messageid">Leave Message ID</string>
+    <string name="login_user_nick">User Nick</string>
+    <string name="customer_account">Customer Service Account</string>
+    <string name="appkey">AppKey</string>
+    <string name="pop_pre_sales">Pre_Sales</string>
+    <string name="pop_after_sales">After_Sales</string>
+	<!-- demo -->
+	<string name="register_user_fail">register user failed!</string>
+
+    <string name="leave_title">Leave Message</string>
+    <string name="leave_name">Name</string>
+    <string name="leave_phone">Phone</string>
+    <string name="leave_email">Email</string>
+    <string name="leave_content">Content</string>
+    <string name="leave_sending">Sending...</string>
+
+    <string name="delete_message">Delete message</string>
+    <string name="copy_message">Copy message</string>
+    <string name="delete_voice">Delete voice</string>
+    <string name="delete">Delete</string>
+    <string name="Making_sure_your_location">Making sure your location..</string>
+    <string name="em_tip_wating">Waiting...</string>
+    <string name="em_tip_request_fail">request fail!</string>
+    <string name="title_satifisfaction_eval">Satisfaction evaluation</string>
+    <string name="nick_service">Service Nick</string>
+    <string name="tip_eval">Please make evaluation to my service</string>
+    <string name="hint_leave_message">Leave message</string>
+    <string name="tip_btn_sumbit">Submit</string>
+    <string name="tip_btn_evaluation">Evaluation</string>
+</resources>

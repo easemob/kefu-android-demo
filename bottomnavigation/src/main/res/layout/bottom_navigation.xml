@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/bottom_nav_shop_selector"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:checked="true"
+            android:textSize="12sp"
+            android:text="@string/bottom_nav_shop"
+            android:textColor="@drawable/bottom_nav_text_color_selector" />
+
+        <RadioButton
+            android:id="@+id/rb2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/bottom_nav_ticket_selector"
+            android:gravity="center"
+            android:text="@string/bottom_nav_leavemessages"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
+            android:textColor="@drawable/bottom_nav_text_color_selector" />
+
+        <RadioButton
+            android:id="@+id/rb3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
+            android:drawableTop="@drawable/bottom_nav_setting_selector"
+            android:gravity="center"
+            android:text="@string/bottom_nav_setting"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
+            android:textColor="@drawable/bottom_nav_text_color_selector" />
+    </RadioGroup>
+
+</RelativeLayout>

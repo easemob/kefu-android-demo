@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">环信移动客服</string>
+    <string name="text_ack_msg">已读</string>
+    <string name="text_delivered_msg">送达</string>
+    <string name="button_send">发送</string>
+    <string name="attach_location">位置</string>
+    <string name="attach_short_cut_message">常用语</string>
+    <string name="location_message">位置信息</string>
+    <string name="Network_error">网络出错</string>
+    <string name="text_fahuo">你们多久可以发货?</string>
+    <string name="text_weight">这个我应该穿什么号的？我身高165，体重46kg</string>
+    <string name="text_color">还有其他颜色的吗?</string>
+    <string name="text_kuaidi">你们发的是什么快递?</string>
+    <string name="system_is_regist">系统正在自动为您注册用户...</string>
+    <string name="is_contact_customer">正在联系客服，请稍等...</string>
+    <string name="is_contact_customer_failure_seconed">联系客服失败:</string>
+    <string name="shopping">商城</string>
+    <string name="setting">设置</string>
+    <string name="customernumber"> IM服务号</string>
+    <string name="connect_customer"> 联系客服</string>
+    <string name="feedback"> 意见反馈</string>
+    <string name="history_record">历史记录</string>
+    <string name="set_nick">设置昵称</string>
+    <string name="set_tenantId">租户ID(TenantId)</string>
+    <string name="set_leave_messageid">留言ID(projectId)</string>
+    <string name="login_user_nick">登录用户昵称</string>
+    <string name="customer_account">客服账号</string>
+    <string name="appkey">AppKey</string>
+    <string name="pop_pre_sales">售前客服</string>
+    <string name="pop_after_sales">售后客服</string>
+
+    <string name="leave_title">留言</string>
+    <string name="leave_name">姓名</string>
+    <string name="leave_phone">电话</string>
+    <string name="leave_email">邮箱</string>
+    <string name="leave_content">内容</string>
+    <string name="leave_sending">正在发送中...</string>
+
+    <string name="delete_message">删除消息</string>
+    <string name="copy_message">复制消息</string>
+    <string name="delete_voice">删除语音</string>
+    <string name="delete">删除</string>
+    <string name="Making_sure_your_location">正在确定你的位置...</string>
+    <string name="em_tip_wating">请稍等...</string>
+    <string name="em_tip_request_fail">请求失败</string>
+
+    <string name="title_satifisfaction_eval">满意度评价</string>
+    <string name="nick_service">客服昵称</string>
+
+    <string name="tip_eval">请对我的服务做出评价</string>
+    <string name="hint_leave_message">留言</string>
+    <string name="tip_btn_sumbit">提交</string>
+    <string name="tip_btn_evaluation">立即评价</string>
+
+</resources>
