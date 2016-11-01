@@ -1,4 +1,5 @@
 
+如需旧版商城demo请跳转:[2.x商城Demo](https://github.com/easemob/kefu-android-demo/tree/master-2.x)
 
 ## 环信客服SDK (Android版)
 
@@ -10,7 +11,7 @@
 
 > **Android Studio**
 
-#####  如果用eclipse，请查看[eclipse使用aar](http://www.cnblogs.com/shortboy/p/4424944.html)
+
 ----
 
 ## 目录
@@ -256,5 +257,5 @@ ChatClient.getInstance().getChat().addMessageListener(new ChatManager.MessageLis
         });
 ```
 
-#  其他更多属性请进入官网文档查询
+#  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/start)查询
 
