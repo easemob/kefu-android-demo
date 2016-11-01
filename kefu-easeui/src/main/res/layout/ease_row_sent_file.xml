@@ -131,7 +131,7 @@
                 android:id="@+id/progress_bar"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/percentage"
