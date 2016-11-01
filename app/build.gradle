@@ -8,8 +8,8 @@ android {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 14
+        versionName "1.4"
 
         ndk {
             //选择要添加的对应cpu类型的.so库
