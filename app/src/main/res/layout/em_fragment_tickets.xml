@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_modified_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#ED5485">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFF"
+            android:text="留言箱"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <com.jude.easyrecyclerview.EasyRecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_empty="@layout/em_view_empty"
+        app:layout_progress="@layout/em_view_progress"
+        />
+
+
+</LinearLayout>

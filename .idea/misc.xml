@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
@@ -34,6 +38,16 @@
       </value>
     </option>
   </component>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev
+=======
+>>>>>>> dev
+=======
+=======
+>>>>>>> dev
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>
@@ -111,6 +125,10 @@
       </profile-state>
     </entry>
   </component>
+<<<<<<< HEAD
+>>>>>>> dev-advance
+=======
+>>>>>>> dev
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />

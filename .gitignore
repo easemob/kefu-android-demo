@@ -1,10 +1,13 @@
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
+local.properties
+.idea/workspace.xml
+.idea/libraries
 /build
 /captures
 app/*.iml
 /.idea/vcs.xml
+.DS_Store
+kefu-easeui/kefu-easeui.iml
+bottomnavigation/bottomnavigation.iml
+
 
