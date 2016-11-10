@@ -257,17 +257,5 @@ ChatClient.getInstance().getChat().addMessageListener(new ChatManager.MessageLis
         });
 ```
 
-#  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/start)查询
+#  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/300visitoraccess/androidsdk)查询
 
-<<<<<<< ed0408985842be6b7bdd0e6abc4af5e8be0a9903
-=======
-##快速入门
-更多详情见[http://docs.easemob.com](http://docs.easemob.com/doku.php?id=start:200androidcleintintegration:10androidsdkimport)
-
-
-此项目依赖easeUI库，需要引用easeUI库。
-
-[点击跳入easeUI库链接](https://github.com/easemob/easeui)
-
-
->>>>>>> delete old demo code
