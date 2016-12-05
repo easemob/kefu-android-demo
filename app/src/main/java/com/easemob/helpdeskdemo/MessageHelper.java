@@ -25,6 +25,7 @@ public class MessageHelper {
 		info.nickName(Preferences.getInstance().getNickName())
 		    .name(Preferences.getInstance().getUserName())
 		    .qq("10000")
+			.phone("15811200000")
 		    .companyName("环信")
 		    .description("")
 		    .email("abc@123.com");

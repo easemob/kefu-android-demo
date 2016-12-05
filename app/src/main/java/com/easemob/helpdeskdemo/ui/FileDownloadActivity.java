@@ -37,6 +37,7 @@ public class FileDownloadActivity extends BaseActivity {
     private NumberProgressBar numberProgressBar;
     private String remoteUrl;
     private String localName;
+    private String fileType;
 
 
     private void initView(){
@@ -57,6 +58,7 @@ public class FileDownloadActivity extends BaseActivity {
         Intent intent = getIntent();
         remoteUrl = intent.getStringExtra("remoteUrl");
         localName = intent.getStringExtra("localName");
+        fileType = intent.getStringExtra("type");
         initView();
 
         downloadFile();
@@ -78,7 +80,12 @@ public class FileDownloadActivity extends BaseActivity {
                 try {
                     File file = saveFile(response);
                     if (file != null) {
-                        openFile(file);
+                        if (fileType != null && fileType.equals("audio")){
+                            Toast.makeText(getApplicationContext(), "语音下载成功", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else {
+                            openFile(file);
+                        }
                     } else {
                         showFailToast();
                     }

@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -26,6 +28,8 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
@@ -57,8 +61,6 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_COUNT = 18;
 	
 	
-//	public int itemTypeCount;
-	
 	// reference to conversation object in chatsdk
 	private Conversation conversation;
 	Message[] messages = null;
@@ -72,14 +74,24 @@ public class MessageAdapter extends BaseAdapter {
     private boolean showAvatar;
     private Drawable myBubbleBg;
     private Drawable otherBuddleBg;
-
+	public View animView;
     private ListView listView;
+	public int mMinItemWidth;
+	public int mMaxItemWidth;
+
+
 
 	public MessageAdapter(Context context, String username, ListView listView) {
 		this.context = context;
 		this.listView = listView;
 		toChatUsername = username;
 		this.conversation = ChatClient.getInstance().getChat().getConversation(username);
+
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		wm.getDefaultDisplay().getMetrics(displayMetrics);
+		mMaxItemWidth = (int)(displayMetrics.widthPixels * 0.4f);
+		mMinItemWidth = (int)(displayMetrics.widthPixels * 0.15f);
 	}
 
 	Handler handler = new Handler() {
@@ -88,6 +100,13 @@ public class MessageAdapter extends BaseAdapter {
 			// 否则在UI刷新过程中，如果收到新的消息，会导致并发问题
 			if(conversation != null) {
 				List<Message> list = conversation.getAllMessages();
+				Collections.sort(list, new Comparator<Message>() {
+					@Override
+					public int compare(Message lhs, Message rhs) {
+						return (int) (lhs.getMsgTime() - rhs.getMsgTime());
+					}
+				});
+
 			    messages = list.toArray(new Message[list.size()]);
 			    conversation.markAllMessagesAsRead();
 			    notifyDataSetChanged();

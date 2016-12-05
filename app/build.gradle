@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 23
-        versionCode 14
-        versionName "1.4"
+        versionCode 15
+        versionName "1.0.2"
 
         ndk {
             //选择要添加的对应cpu类型的.so库
@@ -53,7 +53,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     //rxJava
-    compile 'io.reactivex:rxjava:latest.release'
-    compile 'io.reactivex:rxandroid:latest.release'
+    compile 'io.reactivex:rxjava:1.2.2'
+    compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.wefika:flowlayout:0.4.0'
 }

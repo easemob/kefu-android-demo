@@ -27,7 +27,7 @@
             android:background="@drawable/ease_default_avatar"
             android:scaleType="fitXY" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
@@ -36,16 +36,17 @@
             android:layout_below="@+id/tv_userid"
             android:background="@drawable/ease_chatfrom_bg"
             >
+            <View
+                android:id="@+id/id_recorder_anim"
+                android:layout_gravity="center_vertical|left"
+                android:background="@drawable/ease_chatfrom_voice_playing"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
 
-            <ImageView
-                android:id="@+id/iv_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-	            android:paddingRight="12dp"
-	            android:layout_centerInParent="true"
-                android:src="@drawable/ease_chatfrom_voice_playing" />
-        </RelativeLayout>
+        </FrameLayout>
+
+
+
 
         <TextView
             android:id="@+id/tv_length"

@@ -36,27 +36,23 @@
             android:background="@drawable/ease_chatting_setmode_keyboard_btn"
             android:visibility="gone" />
 
-        <LinearLayout
+        <!--语音输入-->
+        <com.hyphenate.helpdesk.easeui.widget.RecorderButton
             android:id="@+id/btn_press_to_speak"
+            android:layout_centerVertical="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="6dp"
+            android:layout_margin="6dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_weight="1"
-            android:background="@drawable/ease_chat_press_speak_btn"
-            android:gravity="center"
-            android:visibility="gone" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/button_pushtotalk"
-                android:textColor="#666666"
-                android:textSize="16sp" />
-        </LinearLayout>
+            android:background="@drawable/btn_recorder_normal"
+            android:minHeight="0dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/button_pushtotalk"
+            android:textColor="#727272"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/edittext_layout"

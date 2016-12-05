@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,13 +27,12 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
     private RelativeLayout edittext_layout;
     private View buttonSetModeVoice;
     private View buttonSend;
-    private View buttonPressToSpeak;
+    private RecorderButton buttonPressToSpeak;
     private ImageView faceNormal;
     private ImageView faceChecked;
     private Button buttonMore;
     private RelativeLayout faceLayout;
     private Context context;
-    private VoiceRecorderView voiceRecorderView;
 
     public EaseChatPrimaryMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -58,7 +56,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
         edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
         buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
         buttonSend = findViewById(R.id.btn_send);
-        buttonPressToSpeak = findViewById(R.id.btn_press_to_speak);
+        buttonPressToSpeak = (RecorderButton) findViewById(R.id.btn_press_to_speak);
         faceNormal = (ImageView) findViewById(R.id.iv_face_normal);
         faceChecked = (ImageView) findViewById(R.id.iv_face_checked);
         faceLayout = (RelativeLayout) findViewById(R.id.rl_face);
@@ -110,26 +108,17 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
             }
         });
 
-        buttonPressToSpeak.setOnTouchListener(new OnTouchListener() {
-
+        buttonPressToSpeak.setAudioFinishRecorderListener(new RecorderButton.AudioFinishRecorderListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onFinish(float seconds, String filePath) {
                 if (listener != null) {
-                    return listener.onPressToSpeakBtnTouch(v, event);
+                    listener.onRecorderCompleted(seconds, filePath);
                 }
-                return false;
             }
         });
+
     }
 
-    /**
-     * 设置长按说话录制控件
-     *
-     * @param voiceRecorderView
-     */
-    public void setPressToSpeakRecorderView(VoiceRecorderView voiceRecorderView) {
-        this.voiceRecorderView = voiceRecorderView;
-    }
 
     /**
      * 表情输入
