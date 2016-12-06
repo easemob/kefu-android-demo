@@ -222,10 +222,10 @@ public class DemoHelper {
             public void onMessage(List<Message> msgs) {
                 for (Message message : msgs){
                     Log.d(TAG, "onMessageReceived id : " + message.getMsgId());
-                    //应用在后台,不需要刷新UI,通知栏提示新消息
-                    if (_uiProvider.hasForegroundActivies()){
-                        getNotifier().viberateAndPlayTone(message);
-                    }
+//                    //应用在后台,不需要刷新UI,通知栏提示新消息
+//                    if (_uiProvider.hasForegroundActivies()){
+//                        getNotifier().viberateAndPlayTone(message);
+//                    }
 
 
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现

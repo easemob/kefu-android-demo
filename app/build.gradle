@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 11
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 15
-        versionName "1.0.2"
+        versionName "1.5"
 
         ndk {
             //选择要添加的对应cpu类型的.so库

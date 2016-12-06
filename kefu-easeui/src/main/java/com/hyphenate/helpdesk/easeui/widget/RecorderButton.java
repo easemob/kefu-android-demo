@@ -44,7 +44,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
     private boolean isHasRecorderPermission = false;
 
     /*记录时间*/
-    private float mTime;
+    private volatile float mTime;
 
     Runnable mGetAudioVoiceLevelRunnable = new Runnable() {
         @Override

@@ -120,7 +120,8 @@ public class ChatRowFile extends ChatRow{
             FileUtils.openFile(file, (Activity) context);
         } else {
             // 下载
-            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));
+//            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));
+            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("messageId", message.getMsgId()));
         }
 
     }

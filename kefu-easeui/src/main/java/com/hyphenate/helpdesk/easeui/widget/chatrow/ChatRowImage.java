@@ -139,7 +139,7 @@ public class ChatRowImage extends ChatRowFile{
                     } else {
                         EMImageMessageBody imageBody = (EMImageMessageBody) message.getBody();
                         if (imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
-                                || imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.FAILED) {
+                                || imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
 
                         } else {
                             if (CommonUtils.isNetWorkConnected(activity)) {

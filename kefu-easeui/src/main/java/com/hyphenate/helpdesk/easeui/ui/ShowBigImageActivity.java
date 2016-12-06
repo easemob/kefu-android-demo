@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
@@ -46,7 +47,6 @@ public class ShowBigImageActivity extends BaseActivity {
     private ProgressDialog pd;
     private PhotoView image;
     private int default_res = R.drawable.ease_default_image;
-    private String localFilePath;
     private Bitmap bitmap;
     private boolean isDownloaded;
     private ProgressBar loadLocalPb;
@@ -60,7 +60,6 @@ public class ShowBigImageActivity extends BaseActivity {
         loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
         default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_image);
         Uri uri = getIntent().getParcelableExtra("uri");
-        localFilePath = getIntent().getExtras().getString("localUrl");
         String msgId = getIntent().getExtras().getString("messageId");
         EMLog.d(TAG, "show big msgId:" + msgId);
 
@@ -105,8 +104,11 @@ public class ShowBigImageActivity extends BaseActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.setMessage(str1);
         pd.show();
-        final File temp = new File(localFilePath);
-        final String tempPath = temp.getPath() + "/temp_" + temp.getName();
+
+        Message msg = ChatClient.getInstance().getChat().getMessage(msgId);
+        EMImageMessageBody imgBody = (EMImageMessageBody) msg.getBody();
+        final String localPath = imgBody.getLocalUrl();
+        final File localFile = new File(localPath);
         final Callback callback = new Callback() {
             @Override
             public void onSuccess() {
@@ -114,21 +116,20 @@ public class ShowBigImageActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        new File(tempPath).renameTo(new File(localFilePath));
-                        if (temp != null && temp.length() < 614400){
-                            bitmap = BitmapFactory.decodeFile(localFilePath);
+                        if (localFile != null && localFile.length() < 614400){
+                            bitmap = BitmapFactory.decodeFile(localPath);
                         }else{
                             DisplayMetrics metrics = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(metrics);
                             int screenWidth = metrics.widthPixels;
                             int screenHeight = metrics.heightPixels;
-                            bitmap = ImageUtils.decodeScaleImage(localFilePath, screenWidth, screenHeight);
+                            bitmap = ImageUtils.decodeScaleImage(localPath, screenWidth, screenHeight);
                         }
                         if (bitmap == null) {
                             image.setImageResource(default_res);
                         } else {
                             image.setImageBitmap(bitmap);
-                            ImageCache.getInstance().put(localFilePath, bitmap);
+                            ImageCache.getInstance().put(localPath, bitmap);
                             isDownloaded = true;
                         }
                         if (isFinishing()){
@@ -154,9 +155,8 @@ public class ShowBigImageActivity extends BaseActivity {
             @Override
             public void onError(int i, String error) {
                 EMLog.d(TAG, "offline file transfer error:" + error);
-                File file = new File(tempPath);
-                if (file.exists() && file.isFile()) {
-                    file.delete();
+                if (localFile.exists() && localFile.isFile()) {
+                    localFile.delete();
                 }
                 if (isFinishing()) {
                     return;
@@ -185,7 +185,7 @@ public class ShowBigImageActivity extends BaseActivity {
                 });
             }
         };
-        Message msg = ChatClient.getInstance().getChat().getMessage(msgId);
+
         msg.setMessageStatusCallback(callback);
         ChatClient.getInstance().getChat().downloadAttachment(msg);
     }
