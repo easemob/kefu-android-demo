@@ -48,7 +48,7 @@ public class LoginActivity extends DemoBaseActivity {
 				Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		messageToIndex = intent.getIntExtra(Constant.MESSAGE_TO_INTENT_EXTRA, Constant.MESSAGE_TO_DEFAULT);
 		
-		//EMChat.getInstance().isLoggedIn() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
+		//ChatClient.getInstance().isLoggedInBefore() 可以检测是否已经登录过环信，如果登录过则环信SDK会自动登录，不需要再次调用登录操作
 		if (ChatClient.getInstance().isLoggedInBefore()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));

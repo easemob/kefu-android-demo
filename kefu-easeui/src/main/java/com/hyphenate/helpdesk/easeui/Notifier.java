@@ -42,6 +42,7 @@ public class Notifier {
     };
 
     protected static int notifyID = 0525; // start notification id
+    protected int oldNotifyID = notifyID;
     protected static int foregroundNotifyID = 0555;
 
     protected NotificationManager notificationManager = null;
@@ -98,8 +99,10 @@ public class Notifier {
     }
 
     void cancelNotificaton() {
-        if (notificationManager != null)
-            notificationManager.cancel(notifyID);
+        if (notificationManager != null){
+            notificationManager.cancel(oldNotifyID);
+        }
+
     }
 
     /**
@@ -186,7 +189,6 @@ public class Notifier {
                     notifyText += msgs[1];
                     break;
                 case VOICE:
-
                     notifyText += msgs[2];
                     break;
                 case LOCATION:
@@ -270,7 +272,9 @@ public class Notifier {
                 notificationManager.notify(foregroundNotifyID, notification);
                 notificationManager.cancel(foregroundNotifyID);
             } else {
+                notificationManager.cancel(oldNotifyID);
                 notificationManager.notify(notifyID, notification);
+                oldNotifyID = notifyID;
             }
 
         } catch (Exception e) {

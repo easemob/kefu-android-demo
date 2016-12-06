@@ -4,8 +4,6 @@ package com.hyphenate.helpdesk.easeui.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -89,11 +87,11 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
         void onSendBtnClicked(String content);
 
         /**
-         * 长按说话按钮ontouch事件
+         * 录音完成
          *
          * @return
          */
-        boolean onPressToSpeakBtnTouch(View v, MotionEvent event);
+        void onRecorderCompleted(float seconds, String filePath);
 
         /**
          * 长按说话按钮隐藏或显示事件

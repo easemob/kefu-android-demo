@@ -3,14 +3,15 @@
 
     <string name="text_ack_msg">已读</string>
     <string name="text_delivered_msg">送达</string>
-    <string name="button_pushtotalk">按住说话</string>
+    <string name="button_pushtotalk">按住录音</string>
     <string name="button_send">发送</string>
     <string name="attach_picture">图片</string>
     <string name="attach_take_pic">拍照</string>
     <string name="attach_location">位置</string>
     <string name="attach_file">文件</string>
-    <string name="move_up_to_cancel">手指上滑，取消发送</string>
-    <string name="release_to_cancel">松开手指，取消发送</string>
+    <string name="move_up_to_cancel">手指上滑，取消录音</string>
+    <string name="release_to_cancel">松开手指，取消录音</string>
+    <string name="str_recorder_recording">松开结束</string>
     <string name="send_fail">发送消息失败,</string>
     <string name="resend">重发</string>
     <string name="confirm_resend">确认重发该信息？</string>
@@ -29,7 +30,7 @@
     <string name="recoding_fail">录音失败，请重试！</string>
     <string name="downwaiting">正在下载文件请稍后</string>
     <string name="not_download">未下载:</string>
-    <string name="is_down_please_wait">正在下载视频请稍候</string>
+    <string name="is_down_please_wait">正在下载请稍候</string>
 
     <string name="sd_card_does_not_exist">SD卡不存在，不能拍照</string>
     <string name="cant_find_pictures">找不到图片</string>
@@ -48,6 +49,7 @@
     <string name="Is_download_voice_click_later">正在下载语音，稍后点击</string>
     <string name= "no_more_messages">没有更多的消息了</string>
     <string name="error_send_invalid_content">你发送了不合法的消息内容</string>
+    <string name="message_content_beyond_limit">字数超过限制</string>
 
     <string name="transfertocs">转人工客服</string>
 

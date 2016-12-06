@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.BDNotifyListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
@@ -43,7 +42,6 @@ public class BaiduMapActivity extends BaseActivity {
     // 定位相关
     LocationClient mLocClient;
     public MyLocationListenner myListener = new MyLocationListenner();
-    public NotifyLister mNotifyer = null;
 
     Button sendButton = null;
 
@@ -54,8 +52,6 @@ public class BaiduMapActivity extends BaseActivity {
     public static BaiduMapActivity instance = null;
     ProgressDialog progressDialog;
     private BaiduMap mBaiduMap;
-
-    private MyLocationConfiguration.LocationMode mCurrentMode;
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
@@ -89,7 +85,7 @@ public class BaiduMapActivity extends BaseActivity {
         sendButton = (Button) findViewById(R.id.btn_location_send);
         Intent intent = getIntent();
         double latitude = intent.getDoubleExtra("latitude", 0);
-        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+        MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         mBaiduMap = mMapView.getMap();
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
         mBaiduMap.setMapStatus(msu);
@@ -238,11 +234,6 @@ public class BaiduMapActivity extends BaseActivity {
             if (poiLocation == null) {
                 return;
             }
-        }
-    }
-
-    public class NotifyLister extends BDNotifyListener {
-        public void onNotify(BDLocation mlocation, float distance) {
         }
     }
 

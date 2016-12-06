@@ -66,7 +66,7 @@ public class ChatActivity extends BaseActivity {
      * @param selectedIndex
      */
     private void sendOrderMessage(int selectedIndex){
-        Message message = Message.createTxtSendMessage("", toChatUsername);
+        Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(MessageHelper.createOrderInfo(selectedIndex));
         ChatClient.getInstance().getChat().saveMessage(message);
     }
@@ -76,10 +76,27 @@ public class ChatActivity extends BaseActivity {
      * @param selectedIndex
      */
     private void sendTrackMessage(int selectedIndex) {
-        Message message = Message.createTxtSendMessage("", toChatUsername);
+        Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(MessageHelper.createVisitorTrack(selectedIndex));
         ChatClient.getInstance().getChat().sendMessage(message);
     }
+
+    private String getMessageContent(int selectedIndex){
+        switch (selectedIndex){
+            case 1:
+                return "早春新款牛仔裙";
+            case 2:
+                return "假两件衬衣和毛衣";
+            case 3:
+                return "漏肩名媛范套装";
+            case 4:
+                return "插肩棒球衫外套";
+        }
+        // 内容自己随意定义。
+        return "";
+    }
+
+
 
     @Override
     protected void onDestroy() {

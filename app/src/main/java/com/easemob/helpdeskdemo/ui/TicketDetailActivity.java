@@ -2,6 +2,8 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,6 +30,7 @@ import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.CommentEntity;
 import com.hyphenate.helpdesk.domain.CommentListResponse;
 import com.hyphenate.helpdesk.domain.TicketEntity;
+import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.helpdesk.util.ISO8601DateFormat;
@@ -194,12 +197,9 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             Toast.makeText(getApplicationContext(), "请先登录!", Toast.LENGTH_SHORT).show();
             return;
         }
-//        RetrofitAPIManager.ApiLeaveMessage apiLeaveMessage = RetrofitAPIManager.retrofit().create(RetrofitAPIManager.ApiLeaveMessage.class);
         String target = Preferences.getInstance().getCustomerAccount();
-//        String userId = ChatClient.getInstance().getCurrentUserName();
         String tenantId = Preferences.getInstance().getTenantId();
         String projectId = Preferences.getInstance().getProjectId();
-//        String appkey = Preferences.getInstance().getAppKey();
 
         TicketManager.getInstance().getComments(projectId, ticketId, target, new ValueCallBack<String>(){
 
@@ -237,42 +237,6 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                 });
             }
         });
-
-
-//        Call<CommentListResponse> call = apiLeaveMessage.getComments(tenantId, projectId, ticketId, appkey, target, userId);
-//        call.enqueue(new Callback<CommentListResponse>() {
-//            @Override
-//            public void onResponse(Call<CommentListResponse> call, Response<CommentListResponse> response) {
-//                if (isFinishing()) {
-//                    return;
-//                }
-//                int statusCode = response.code();
-//                if (statusCode == 200) {
-//                    CommentListResponse commentListResponse = response.body();
-//                    if (commentListResponse != null && commentListResponse.getSize() != 0) {
-//                        mCommentDatas.clear();
-//                        mCommentDatas.addAll(commentListResponse.getEntities());
-//                        Collections.sort(mCommentDatas, new Comparator<CommentEntity>() {
-//                            @Override
-//                            public int compare(CommentEntity lhs, CommentEntity rhs) {
-//                                return lhs.getCreated_at().compareTo(rhs.getCreated_at());
-//                            }
-//                        });
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "评论加载出错!", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CommentListResponse> call, Throwable t) {
-//                Log.e(TAG, t.getMessage());
-//                Toast.makeText(getApplicationContext(), "评论加载出错!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
     }
 
     @Override
@@ -371,31 +335,52 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                 if (attachments != null && attachments.size() > 0){
                     viewHolder.flowLayout.setVisibility(View.VISIBLE);
                     viewHolder.flowLayout.removeAllViews();
-                    for (final CommentEntity.AttachmentsBean bean :
-                            attachments) {
-                        TextView textView = (TextView) inflater.inflate(R.layout.em_comment_file_textview, null);
-                        textView.setText(bean.getName());
-                        textView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String remoteUrl = bean.getUrl();
-                                String localName = CommonUtils.stringToMD5(bean.getUrl()) + "-" + bean.getName();
-                                String localPath = PathUtil.getInstance().getFilePath() + File.separator + localName;
-                                File file = new File(localPath);
-                                if (file.exists()) {
-                                    openLocalFile(file);
-                                } else {
-                                    downloadFile(remoteUrl, localName);
+                    for (final CommentEntity.AttachmentsBean bean :attachments) {
+                        final String remoteUrl = bean.getUrl();
+                        final String localName = CommonUtils.stringToMD5(bean.getUrl()) + "-" + bean.getName();
+                        final String localPath = PathUtil.getInstance().getFilePath() + File.separator + localName;
+                        final String fileType = bean.getType();
+                        if (fileType != null && fileType.equals("audio")){
+                            View audioView = inflater.inflate(R.layout.em_comment_audio_view, null);
+                            audioView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(final View v) {
+                                    File file = new File(localPath);
+                                    if (file.exists()){
+                                        playVoiceItem(v, localPath);
+                                    }else{
+                                        downloadFile(remoteUrl, localName, fileType);
+                                    }
                                 }
+                            });
+                            FlowLayout.LayoutParams lp = new FlowLayout.LayoutParams(DensityUtil.dip2px(getBaseContext(), 50), DensityUtil.dip2px(getBaseContext(), 30));
+                            lp.topMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            lp.bottomMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            lp.leftMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            lp.rightMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            viewHolder.flowLayout.addView(audioView, lp);
 
-                            }
-                        });
+                        } else {
+                            TextView textView = (TextView) inflater.inflate(R.layout.em_comment_file_textview, null);
+                            textView.setText(bean.getName());
+                            textView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
+                                    File file = new File(localPath);
+                                    if (file.exists()) {
+                                        openLocalFile(file);
+                                    } else {
+                                        downloadFile(remoteUrl, localName, fileType);
+                                    }
 
-                        FlowLayout.LayoutParams lp = new FlowLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(getBaseContext(), 30));
-                        lp.topMargin = DensityUtil.dip2px(getBaseContext(), 5);
-                        lp.bottomMargin = DensityUtil.dip2px(getBaseContext(), 5);
-                        viewHolder.flowLayout.addView(textView, lp);
+                                }
+                            });
+                            FlowLayout.LayoutParams lp = new FlowLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(getBaseContext(), 30));
+                            lp.topMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            lp.bottomMargin = DensityUtil.dip2px(getBaseContext(), 5);
+                            viewHolder.flowLayout.addView(textView, lp);
+                        }
                     }
 
                 }else{
@@ -416,11 +401,36 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             FlowLayout flowLayout;
         }
 
-        private void downloadFile(String remoteUrl,String localName){
+        private View animView;
+
+        private void playVoiceItem(View v, String voiceLocalPath){
+            //播放动画
+            if (animView != null){
+                animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                animView = null;
+            }
+
+            animView = v.findViewById(R.id.id_recorder_anim);
+            animView.setBackgroundResource(R.drawable.ease_voice_from_icon);
+            AnimationDrawable anim = (AnimationDrawable) animView.getBackground();
+            anim.start();
+
+            //播放音频
+            MediaManager.playSound(getBaseContext(), voiceLocalPath, new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                }
+            });
+
+        }
+
+        private void downloadFile(String remoteUrl,String localName, String fileType){
             Intent intent = new Intent();
             intent.setClass(getBaseContext(), FileDownloadActivity.class);
             intent.putExtra("remoteUrl", remoteUrl);
             intent.putExtra("localName", localName);
+            intent.putExtra("type", fileType);
             startActivity(intent);
         }
 

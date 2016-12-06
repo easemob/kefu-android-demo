@@ -27,7 +27,7 @@
             android:background="@drawable/ease_default_avatar"
             android:scaleType="fitXY" />
 
-        <RelativeLayout 
+        <FrameLayout 
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,15 +35,16 @@
             android:layout_marginRight="10dp"
              android:background="@drawable/ease_chatto_bg"
             >
-	        <ImageView
-	            android:id="@+id/iv_voice"
-	            android:layout_centerInParent="true"
-	            android:paddingLeft="12dp"
-	            android:paddingRight="10dp"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:src="@drawable/ease_chatto_voice_playing" />
-		</RelativeLayout>
+            <View
+                android:id="@+id/id_recorder_anim"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/ease_chatto_voice_playing"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
+
+		</FrameLayout>
         <TextView
             android:id="@+id/tv_length"
             style="@style/chat_text_name_style"

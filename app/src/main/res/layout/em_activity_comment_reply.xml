@@ -59,20 +59,46 @@
 
     <View style="@style/line_e3e9e9" />
 
-    <TextView
-        android:id="@+id/tv_add_file"
-        android:layout_width="wrap_content"
-        android:layout_height="30dip"
-        android:layout_margin="10dp"
-        android:background="@drawable/em_blue_bg_comment"
-        android:drawableLeft="@drawable/em_icon_comment_add"
-        android:drawablePadding="5dp"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="添加附件"
-        android:textColor="#4eb1f4"
-        android:typeface="serif" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_add_file"
+            android:layout_width="wrap_content"
+            android:layout_height="30dip"
+            android:layout_margin="10dp"
+            android:background="@drawable/em_blue_bg_comment"
+            android:drawableLeft="@drawable/em_icon_comment_add"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="添加附件"
+            android:textColor="#4eb1f4"
+            android:typeface="serif" />
+
+        <com.hyphenate.helpdesk.easeui.widget.RecorderButton
+            android:id="@+id/btn_voice"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/rl_multi_and_send"
+            android:layout_toRightOf="@+id/btn_voice_or_text"
+            android:background="@drawable/btn_recorder_normal"
+            android:minHeight="0dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="#727272"
+            android:text="按住录音"
+            >
+
+
+        </com.hyphenate.helpdesk.easeui.widget.RecorderButton>
+
+    </LinearLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"

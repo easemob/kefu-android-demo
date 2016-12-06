@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -197,11 +196,10 @@ public class EaseChatInputMenu extends LinearLayout {
             }
 
             @Override
-            public boolean onPressToSpeakBtnTouch(View v, MotionEvent event) {
+            public void onRecorderCompleted(float seconds, String filePath) {
                 if (listener != null) {
-                    return listener.onPressToSpeakBtnTouch(v, event);
+                    listener.onRecorderCompleted(seconds, filePath);
                 }
-                return false;
             }
 
             @Override
@@ -357,13 +355,13 @@ public class EaseChatInputMenu extends LinearLayout {
         void onBigExpressionClicked(Emojicon emojicon);
 
         /**
-         * 长按说话按钮touch事件
+         * 录音完成
          *
-         * @param v
-         * @param event
+         * @param seconds duration
+         * @param filePath
          * @return
          */
-        boolean onPressToSpeakBtnTouch(View v, MotionEvent event);
+        void onRecorderCompleted(float seconds, String filePath);
     }
 
 }

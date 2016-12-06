@@ -60,6 +60,7 @@ public class DemoHelper {
         //在华为手机上当APP被kill时使用华为推送进行消息提示, SDK已支持,可选
         options.setHuaweiPushAppId("10663060");
 
+//        options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
 
@@ -221,10 +222,10 @@ public class DemoHelper {
             public void onMessage(List<Message> msgs) {
                 for (Message message : msgs){
                     Log.d(TAG, "onMessageReceived id : " + message.getMsgId());
-                    //应用在后台,不需要刷新UI,通知栏提示新消息
-                    if (_uiProvider.hasForegroundActivies()){
-                        getNotifier().viberateAndPlayTone(message);
-                    }
+//                    //应用在后台,不需要刷新UI,通知栏提示新消息
+//                    if (_uiProvider.hasForegroundActivies()){
+//                        getNotifier().viberateAndPlayTone(message);
+//                    }
 
 
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现

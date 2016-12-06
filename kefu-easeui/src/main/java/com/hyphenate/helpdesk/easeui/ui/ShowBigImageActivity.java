@@ -13,30 +13,31 @@
  */
 package com.hyphenate.helpdesk.easeui.ui;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.EMImageMessageBody;
+import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.photoview.PhotoView;
 import com.hyphenate.helpdesk.easeui.util.LoadLocalBigImgTask;
 import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.ImageUtils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 下载显示大图
@@ -46,7 +47,6 @@ public class ShowBigImageActivity extends BaseActivity {
     private ProgressDialog pd;
     private PhotoView image;
     private int default_res = R.drawable.ease_default_image;
-    private String localFilePath;
     private Bitmap bitmap;
     private boolean isDownloaded;
     private ProgressBar loadLocalPb;
@@ -58,14 +58,12 @@ public class ShowBigImageActivity extends BaseActivity {
 
         image = (PhotoView) findViewById(R.id.image);
         loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
-        default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_avatar);
+        default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_image);
         Uri uri = getIntent().getParcelableExtra("uri");
-        String remotepath = getIntent().getExtras().getString("remotepath");
-        localFilePath = getIntent().getExtras().getString("localUrl");
-        String secret = getIntent().getExtras().getString("secret");
-        Log.d(TAG, "show big image uri:" + uri + " remotepath:" + remotepath);
+        String msgId = getIntent().getExtras().getString("messageId");
+        EMLog.d(TAG, "show big msgId:" + msgId);
 
-        //本地存在，直接显示本地的图片
+        // show the image if it exist in local path
         if (uri != null && new File(uri.getPath()).exists()) {
             Log.d(TAG, "showbigimage file exists. directly show it");
             DisplayMetrics metrics = new DisplayMetrics();
@@ -84,13 +82,8 @@ public class ShowBigImageActivity extends BaseActivity {
             } else {
                 image.setImageBitmap(bitmap);
             }
-        } else if (remotepath != null) { //去服务器下载图片
-            Log.d(TAG, "download remote image");
-            Map<String, String> maps = new HashMap<String, String>();
-            if (!TextUtils.isEmpty(secret)) {
-                maps.put("share-secret", secret);
-            }
-            downloadImage(remotepath, maps);
+        } else if (msgId != null) { //去服务器下载图片
+            downloadImage(msgId);
         } else {
             image.setImageResource(default_res);
         }
@@ -103,51 +96,67 @@ public class ShowBigImageActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 下载图片
-     *
-     * @param remoteFilePath
-     */
-    private void downloadImage(final String remoteFilePath, final Map<String, String> headers) {
+    private void downloadImage(final String msgId){
+        EMLog.e(TAG, "download with messageId:" + msgId);
         String str1 = getResources().getString(R.string.Download_the_pictures);
         pd = new ProgressDialog(this);
         pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pd.setCanceledOnTouchOutside(false);
         pd.setMessage(str1);
         pd.show();
+
+        Message msg = ChatClient.getInstance().getChat().getMessage(msgId);
+        EMImageMessageBody imgBody = (EMImageMessageBody) msg.getBody();
+        final String localPath = imgBody.getLocalUrl();
+        final File localFile = new File(localPath);
         final Callback callback = new Callback() {
             @Override
             public void onSuccess() {
+                EMLog.d(TAG, "onSuccess");
                 runOnUiThread(new Runnable() {
-                    @SuppressLint("NewApi")
                     @Override
                     public void run() {
-                        DisplayMetrics metrics = new DisplayMetrics();
-                        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                        int screenWidth = metrics.widthPixels;
-                        int screenHeight = metrics.heightPixels;
-
-                        bitmap = ImageUtils.decodeScaleImage(localFilePath, screenWidth, screenHeight);
+                        if (localFile != null && localFile.length() < 614400){
+                            bitmap = BitmapFactory.decodeFile(localPath);
+                        }else{
+                            DisplayMetrics metrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                            int screenWidth = metrics.widthPixels;
+                            int screenHeight = metrics.heightPixels;
+                            bitmap = ImageUtils.decodeScaleImage(localPath, screenWidth, screenHeight);
+                        }
                         if (bitmap == null) {
                             image.setImageResource(default_res);
                         } else {
                             image.setImageBitmap(bitmap);
-                            ImageCache.getInstance().put(localFilePath, bitmap);
+                            ImageCache.getInstance().put(localPath, bitmap);
                             isDownloaded = true;
                         }
+                        if (isFinishing()){
+                            return;
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            if (isDestroyed()){
+                                return;
+                            }
+                        }
+
                         if (pd != null) {
                             pd.dismiss();
                         }
+
+
                     }
                 });
+
+
             }
 
             @Override
-            public void onError(int code, String error) {
-                Log.e(TAG, "offline file transfer error:" + error);
-                File file = new File(localFilePath);
-                if (file.exists() && file.isFile()) {
-                    file.delete();
+            public void onError(int i, String error) {
+                EMLog.d(TAG, "offline file transfer error:" + error);
+                if (localFile.exists() && localFile.isFile()) {
+                    localFile.delete();
                 }
                 if (isFinishing()) {
                     return;
@@ -176,7 +185,9 @@ public class ShowBigImageActivity extends BaseActivity {
                 });
             }
         };
-        ChatClient.getInstance().getChat().downloadFile(remoteFilePath, localFilePath, headers, callback);
+
+        msg.setMessageStatusCallback(callback);
+        ChatClient.getInstance().getChat().downloadAttachment(msg);
     }
 
     @Override

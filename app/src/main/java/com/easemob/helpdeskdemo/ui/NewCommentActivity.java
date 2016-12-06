@@ -3,6 +3,8 @@ package com.easemob.helpdeskdemo.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +30,9 @@ import com.google.gson.Gson;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.NewCommentBody;
+import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.RecorderButton;
 import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.util.DensityUtil;
 
@@ -56,6 +60,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     protected static final int REQUEST_CODE_LOCAL = 3;
     private ImageButton ibBack;
     private Button btnSend;
+    private RecorderButton recButton;
     private EditText editText;
     private TextView tvAddFile;
     private ProgressDialog pd;
@@ -63,6 +68,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private LinearLayout fileLayout;
     private List<FileEntity> fileList = Collections.synchronizedList(new ArrayList<FileEntity>());
     private LayoutInflater inflater;
+
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -80,17 +86,24 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         editText = $(R.id.edittext);
         tvAddFile = $(R.id.tv_add_file);
         fileLayout = $(R.id.file_layout);
+        recButton = $(R.id.btn_voice);
     }
 
     private void initListener() {
         ibBack.setOnClickListener(this);
         btnSend.setOnClickListener(this);
         tvAddFile.setOnClickListener(this);
+        recButton.setAudioFinishRecorderListener(new RecorderButton.AudioFinishRecorderListener() {
+            @Override
+            public void onFinish(float seconds, String filePath) {
+                uploadFile(filePath);
+            }
+        });
     }
 
 
     private void setTagView(FileEntity entity){
-        if (entity == null){}
+        if (entity == null){return;}
         fileList.add(entity);
         notifyChanged();
     }
@@ -103,23 +116,60 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         notifyChanged();
     }
 
+    private View animView;
+
+    private void playVoiceItem(View v, String voiceLocalPath) {
+        //播放动画
+        if (animView != null) {
+            animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+            animView = null;
+        }
+
+        animView = v.findViewById(R.id.id_recorder_anim);
+        animView.setBackgroundResource(R.drawable.ease_voice_from_icon);
+        AnimationDrawable anim = (AnimationDrawable) animView.getBackground();
+        anim.start();
+
+        //播放音频
+        MediaManager.playSound(getBaseContext(), voiceLocalPath, new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+            }
+        });
+    }
 
     public void notifyChanged(){
         fileLayout.removeAllViews();
         synchronized (fileList){
             for (int i = 0; i < fileList.size(); i++){
                 FileEntity item = fileList.get(i);
-                final View view = inflater.inflate(R.layout.em_comment_file_with_delete, null);
-                TextView tvName = (TextView) view.findViewById(R.id.tv_file_name);
+                String type = item.type;
+                final String localPath = item.localPath;
+                final View view;
+                if (type != null && type.equals("audio")) {
+                    view = inflater.inflate(R.layout.em_comment_audio_with_delete, null);
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!TextUtils.isEmpty(localPath)){
+                                playVoiceItem(v, localPath);
+                            }
+                        }
+                    });
+                } else {
+                    view = inflater.inflate(R.layout.em_comment_file_with_delete, null);
+                    TextView tvName = (TextView) view.findViewById(R.id.tv_file_name);
+                    tvName.setText(item.name);
+                }
                 ImageView ivDel = (ImageView) view.findViewById(R.id.delete);
                 final int finalI = i;
-                ivDel.setOnClickListener(new View.OnClickListener() {
+                ivDel.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
                         delClick(view, finalI);
                     }
                 });
-                tvName.setText(item.name);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(this, 30));
                 lp.topMargin = DensityUtil.dip2px(this, 5);
                 lp.bottomMargin = DensityUtil.dip2px(this, 5);
@@ -139,7 +189,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.btn_send:
                 String content = editText.getText().toString();
-                if (TextUtils.isEmpty(content)) {
+                if (TextUtils.isEmpty(content) && fileList.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "评论内容不能为空!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -225,7 +275,9 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         String type = "file";
         String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
         if (isImage(prefix)) {
-            type = "image";
+            type = "img";
+        }else if (isAudio(prefix)){
+            type = "audio";
         }
         fileEntity.type = type;
         fileEntity.localPath = file.getPath();
@@ -242,6 +294,12 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                 || prefix.equalsIgnoreCase("jpeg") || prefix.equals("webp");
     }
 
+    private boolean isAudio(String prefix){
+        if (TextUtils.isEmpty(prefix)){
+            return false;
+        }
+        return prefix.equalsIgnoreCase("amr") || prefix.equalsIgnoreCase("mp3");
+    }
 
     private void uploadFile(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
@@ -317,7 +375,6 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         creatorBean.setUsername(userId);
         creatorBean.setType("VISITOR"); // 此处必须是访客(VISITOR)
         newCommentBody.setCreator(creatorBean);
-        String tenantId = Preferences.getInstance().getTenantId();
         String projectId = Preferences.getInstance().getProjectId();
 
         newCommentBody.setAttachments(getAttachements(fileList));

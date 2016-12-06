@@ -35,6 +35,7 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
+import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -46,8 +47,6 @@ import com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu.ChatInputMenuListe
 import com.hyphenate.helpdesk.easeui.widget.ExtendMenu.EaseChatExtendMenuItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
-import com.hyphenate.helpdesk.easeui.widget.VoiceRecorderView;
-import com.hyphenate.helpdesk.easeui.widget.VoiceRecorderView.EaseVoiceRecorderCallback;
 import com.hyphenate.helpdesk.model.AgentIdentityInfo;
 import com.hyphenate.helpdesk.model.QueueIdentityInfo;
 import com.hyphenate.helpdesk.model.VisitorInfo;
@@ -86,7 +85,6 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     protected InputMethodManager inputManager;
     protected ClipboardManager clipboard;
     protected String cameraFilePath = null;
-    protected VoiceRecorderView voiceRecorderView;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected ListView listView;
 
@@ -151,9 +149,6 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      */
     @Override
     protected void initView() {
-        // 按住说话录音控件
-        voiceRecorderView = (VoiceRecorderView) getView().findViewById(R.id.voice_recorder);
-
         // 消息列表layout
         messageList = (MessageList) getView().findViewById(R.id.message_list);
         messageList.setShowUserNick(showUserNick);
@@ -173,21 +168,15 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             }
 
             @Override
-            public boolean onPressToSpeakBtnTouch(View v, MotionEvent event) {
-                return voiceRecorderView.onPressToSpeakBtnTouch(v, event, new EaseVoiceRecorderCallback() {
-
-                    @Override
-                    public void onVoiceRecordComplete(String voiceFilePath, int voiceTimeLength) {
-                        // 发送语音消息
-                        sendVoiceMessage(voiceFilePath, voiceTimeLength);
-                    }
-                });
-            }
-
-            @Override
             public void onBigExpressionClicked(Emojicon emojicon) {
                 //发送大表情(动态表情) 暂不支持,后期支持后添加接口
 
+            }
+
+            @Override
+            public void onRecorderCompleted(float seconds, String filePath) {
+                // 发送语音消息
+                sendVoiceMessage(filePath, (int)seconds);
             }
         });
 
@@ -217,7 +206,9 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                if(getActivity() != null){
+                    getActivity().finish();
+                }
             }
         });
         titleBar.setRightLayoutClickListener(new OnClickListener() {
@@ -395,6 +386,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         super.onResume();
         if (isMessageListInited)
             messageList.refresh();
+        MediaManager.resume();
         UIProvider.getInstance().pushActivity(getActivity());
         // register the event listener when enter the foreground
         ChatClient.getInstance().getChat().addMessageListener(this);
@@ -696,6 +688,10 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     // 发送消息方法
     //=============================================
     protected void sendTextMessage(String content) {
+        if (content != null && content.length() > 1500){
+            Toast.makeText(getContext(), R.string.message_content_beyond_limit, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Message message = Message.createTxtSendMessage(content, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().getChat().sendMessage(message);
@@ -746,6 +742,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         }
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MediaManager.pause();
+    }
+
 
 
 }

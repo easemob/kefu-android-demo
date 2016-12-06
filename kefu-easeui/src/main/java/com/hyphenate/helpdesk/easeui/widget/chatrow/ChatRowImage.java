@@ -11,11 +11,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
-import com.hyphenate.chat.ChatClient;
-import com.hyphenate.helpdesk.R;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -90,8 +90,7 @@ public class ChatRowImage extends ChatRowFile{
             // The local full size pic does not exist yet.
             // ShowBigImage needs to download it from the server
             // first
-            intent.putExtra("secret", imgBody.getSecret());
-            intent.putExtra("remotepath", imgBody.getRemoteUrl());
+            intent.putExtra("messageId", message.getMsgId());
             intent.putExtra("localUrl", imgBody.getLocalUrl());
         }
         context.startActivity(intent);
@@ -139,8 +138,8 @@ public class ChatRowImage extends ChatRowFile{
                         ImageCache.getInstance().put(thumbernailPath, image);
                     } else {
                         EMImageMessageBody imageBody = (EMImageMessageBody) message.getBody();
-                        if (imageBody.downloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
-                                || imageBody.downloadStatus() == EMFileMessageBody.EMDownloadStatus.FAILED) {
+                        if (imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
+                                || imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
 
                         } else {
                             if (CommonUtils.isNetWorkConnected(activity)) {

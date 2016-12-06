@@ -257,5 +257,5 @@ ChatClient.getInstance().getChat().addMessageListener(new ChatManager.MessageLis
         });
 ```
 
-#  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/300visitoraccess/androidsdk)查询
+#  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/start)查询
 
