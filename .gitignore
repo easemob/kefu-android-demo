@@ -7,7 +7,6 @@ local.properties
 app/*.iml
 /.idea/vcs.xml
 .DS_Store
-kefu-easeui/kefu-easeui.iml
-bottomnavigation/bottomnavigation.iml
-
+kefu-easeui/*.iml
+bottomnavigation/*.iml
 
