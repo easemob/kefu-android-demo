@@ -9,4 +9,4 @@ app/*.iml
 .DS_Store
 kefu-easeui/*.iml
 bottomnavigation/*.iml
-
+*.iml

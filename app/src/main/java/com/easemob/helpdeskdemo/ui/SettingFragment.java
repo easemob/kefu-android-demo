@@ -32,6 +32,13 @@ import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SettingFragment extends Fragment implements View.OnClickListener{
 
@@ -40,6 +47,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private RelativeLayout rlNick;
 	private RelativeLayout rlTenantId;
 	private RelativeLayout rlProjectId;
+
+	private TextView tvQcode;
 
 	private TextView tvAppkey;
 	private TextView tvAccount;
@@ -53,6 +62,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_NICK = 3;
 	private static final int REQUEST_CODE_TENANT_ID = 4;
 	private static final int REQUEST_CODE_PROJECT_ID = 5;
+
+	private static final int REQUEST_CODE_QCODE = 6;
 
 	private Dialog dialog;
 	
@@ -80,6 +91,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlNick = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_nick);
 		rlTenantId = (RelativeLayout) getView().findViewById(R.id.ll_setting_tenant_id);
 		rlProjectId = (RelativeLayout) getView().findViewById(R.id.ll_setting_project_id);
+
+		tvQcode = (TextView) getView().findViewById(R.id.tv_qcode);
 	}
 
 	private void initListener() {
@@ -94,6 +107,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlNick.setOnClickListener(this);
 		rlTenantId.setOnClickListener(this);
 		rlProjectId.setOnClickListener(this);
+
+		tvQcode.setOnClickListener(this);
 	}
 
 	
@@ -101,48 +116,48 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(resultCode == Activity.RESULT_OK){
+		if (resultCode == Activity.RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_APPKEY:
-				String oldAppkey = tvAppkey.getText().toString();
-				String newAppkey = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-				if(TextUtils.isEmpty(newAppkey.trim())){
-					Toast.makeText(getActivity(), "appkey不能为空,设置失败!", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if(!newAppkey.matches("^[0-9a-zA-Z-_#]+$")){
-					Toast.makeText(getActivity(), "appkey格式不正确,设置失败!", Toast.LENGTH_SHORT).show();
-					return;
-				}
+				case REQUEST_CODE_APPKEY:
+					String oldAppkey = tvAppkey.getText().toString();
+					String newAppkey = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					if (TextUtils.isEmpty(newAppkey.trim())) {
+						Toast.makeText(getActivity(), "appkey不能为空,设置失败!", Toast.LENGTH_SHORT).show();
+						return;
+					}
+					if (!newAppkey.matches("^[0-9a-zA-Z-_#]+$")) {
+						Toast.makeText(getActivity(), "appkey格式不正确,设置失败!", Toast.LENGTH_SHORT).show();
+						return;
+					}
 
-				if(oldAppkey.equals(newAppkey)){
-					return;
-				}
-				tvAppkey.setText(newAppkey);
-				showCustomMessage(newAppkey);
-				break;
-			case REQUEST_CODE_ACCOUNT:
-				String oldAccount = tvAccount.getText().toString();
-				String newAccount = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-				if(oldAccount.equals(newAccount)){
-					return;
-				}
-				tvAccount.setText(newAccount);
-				Preferences.getInstance().setCustomerAccount(newAccount);
-				break;
-			case REQUEST_CODE_NICK:
-				String oldNick = tvNick.getText().toString();
-				String newNick = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-				if(oldNick.equals(newNick)){
-					return;
-				}
-				tvNick.setText(newNick);
-				Preferences.getInstance().setNickName(newNick);
-				break;
+					if (oldAppkey.equals(newAppkey)) {
+						return;
+					}
+					tvAppkey.setText(newAppkey);
+					showCustomMessage(newAppkey);
+					break;
+				case REQUEST_CODE_ACCOUNT:
+					String oldAccount = tvAccount.getText().toString();
+					String newAccount = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					if (oldAccount.equals(newAccount)) {
+						return;
+					}
+					tvAccount.setText(newAccount);
+					Preferences.getInstance().setCustomerAccount(newAccount);
+					break;
+				case REQUEST_CODE_NICK:
+					String oldNick = tvNick.getText().toString();
+					String newNick = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					if (oldNick.equals(newNick)) {
+						return;
+					}
+					tvNick.setText(newNick);
+					Preferences.getInstance().setNickName(newNick);
+					break;
 				case REQUEST_CODE_TENANT_ID:
 					String oldTenantId = tvTenantId.getText().toString();
 					String newTenantId = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-					if (!TextUtils.isDigitsOnly(newTenantId)){
+					if (!TextUtils.isDigitsOnly(newTenantId)) {
 						return;
 					}
 					if (oldTenantId.equals(newTenantId)) {
@@ -155,7 +170,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				case REQUEST_CODE_PROJECT_ID:
 					String oldProjectId = tvProjectId.getText().toString();
 					String newProjectId = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-					if (!TextUtils.isDigitsOnly(newProjectId)){
+					if (!TextUtils.isDigitsOnly(newProjectId)) {
 						return;
 					}
 					if (oldProjectId.equals(newProjectId)) {
@@ -164,10 +179,77 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					tvProjectId.setText(newProjectId);
 					Preferences.getInstance().setSettingProjectId(newProjectId);
 					break;
-			default:
-				break;
+				case REQUEST_CODE_QCODE:
+					//处理扫描结果
+					if (null != data){
+						Bundle bundle = data.getExtras();
+						if (bundle == null){
+							return;
+						}
+						if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS){
+							String result = bundle.getString(CodeUtils.RESULT_STRING);
+							//http://m.easemob.com/download/app/cs_demo?appkey=zdxd#sq&tenantid=25115#projectId=23&imservicenum=ceshia
+							try{
+								Map<String, String> paramMap = urlParamParse(result);
+								String appkey = paramMap.get("appkey");
+								String imServiceNum = paramMap.get("imservicenum");
+								String tenantId = paramMap.get("tenantid");
+								String projectId = paramMap.get("projectid");
+								if (!TextUtils.isEmpty(appkey)){
+									tvAppkey.setText(appkey);
+									showCustomMessage(appkey);
+								}
+								if (!TextUtils.isEmpty(projectId)){
+									tvProjectId.setText(projectId);
+									Preferences.getInstance().setSettingProjectId(projectId);
+								}
+								if (!TextUtils.isEmpty(tenantId)){
+									tvTenantId.setText(tenantId);
+									Preferences.getInstance().setTenantId(tenantId);
+									ChatClient.getInstance().setTenantId(tenantId);
+								}
+								if (!TextUtils.isEmpty(imServiceNum)){
+									tvAccount.setText(imServiceNum);
+									Preferences.getInstance().setCustomerAccount(imServiceNum);
+								}
+								Toast.makeText(getActivity(), "扫描成功！", Toast.LENGTH_SHORT).show();
+							}catch (Exception e){
+								Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_SHORT).show();
+							}
+						}else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED){
+							Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_SHORT).show();
+						}
+					}
+					break;
+				default:
+					break;
 			}
 		}
+	}
+
+	public static Map<String, String> urlParamParse(String url) {
+		Map<String, String> mapRequest = new HashMap<String, String>();
+		String[] arrSplit = null;
+		String strUrlParam = url.substring(url.indexOf('?') + 1);
+		try {
+			strUrlParam = URLDecoder.decode(strUrlParam, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		strUrlParam = strUrlParam.toLowerCase();
+		arrSplit = strUrlParam.split("&");
+		for (String strSplite : arrSplit) {
+			String[] arrSpliteEqual = null;
+			arrSpliteEqual = strSplite.split("=");
+			if (arrSpliteEqual.length > 1) {
+				mapRequest.put(arrSpliteEqual[0], arrSpliteEqual[1]);
+			} else {
+				if (arrSpliteEqual[0] != "") {
+					mapRequest.put(arrSpliteEqual[0], "");
+				}
+			}
+		}
+		return mapRequest;
 	}
 
 	private void showCustomMessage(final String newAppkey) {
@@ -266,6 +348,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_PROJECT_ID);
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strProjectId);
 				startActivityForResult(intent, REQUEST_CODE_PROJECT_ID);
+				break;
+			case R.id.tv_qcode:
+				intent.setClass(getActivity(), CaptureActivity.class);
+				startActivityForResult(intent, REQUEST_CODE_QCODE);
 				break;
 			default:
 				break;
