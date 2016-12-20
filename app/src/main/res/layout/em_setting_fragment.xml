@@ -10,16 +10,35 @@
         android:background="#EFEFF4"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/btn_image_title"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_centerHorizontal="true"
-            android:background="#ED5485"
-            android:gravity="center"
-            android:text="@string/setting"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:background="#ED5485">
+
+            <TextView
+                android:id="@+id/btn_image_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/setting"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+            
+            <TextView
+                android:id="@+id/tv_qcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:text="@string/qcode"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                />
+            
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/ll_setting_list_appkey"

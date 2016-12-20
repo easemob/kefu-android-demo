@@ -15,6 +15,8 @@ package com.easemob.helpdeskdemo;
 
 import android.app.Application;
 
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 public class DemoApplication extends Application {
 
     public void onCreate() {
@@ -22,6 +24,9 @@ public class DemoApplication extends Application {
 
         Preferences.init(this);
         DemoHelper.getInstance().init(this);
+
+        //通过二维码扫描关联，只为测试用，APP中可以去掉
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
 }
