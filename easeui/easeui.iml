@@ -122,9 +122,9 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="imsdkx" level="project" />
     <orderEntry type="library" exported="" name="HwPush_SDK_V2705_nomap" level="project" />
-    <orderEntry type="library" exported="" name="easemobchat_2.3.2" level="project" />
+    <orderEntry type="library" exported="" name="imsdkx-noasset-v1.0.3-dependence-2.3.3" level="project" />
+    <orderEntry type="library" exported="" name="easemobchat_2.3.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="MiPush_SDK_Client_2_2_19" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
