@@ -18,32 +18,37 @@ public class UserUtil {
 
     public static void setAgentNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView){
         AgentInfo agentInfo = MessageHelper.getAgentInfo(message);
-        if (agentInfo != null) {
-            if (!TextUtils.isEmpty(agentInfo.getNickname())) {
-                usernickView.setText(agentInfo.getNickname());
-            }
-            if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
-                String strUrl = agentInfo.getAvatar();
-                // 设置客服头像
-                if (!TextUtils.isEmpty(strUrl)) {
-                    if (!strUrl.startsWith("http")) {
-                        strUrl = "http:" + strUrl;
-                    }
-                    //正常的string路径
-                    Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(userAvatarView);
-                } else {
-                    Glide.with(context).load(R.drawable.ease_default_avatar).into(userAvatarView);
-                }
-
-            }
-        } else {
-            userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+        if (usernickView != null){
             usernickView.setText(message.getFrom());
+            if (agentInfo != null){
+                if (!TextUtils.isEmpty(agentInfo.getNickname())) {
+                    usernickView.setText(agentInfo.getNickname());
+                }
+            }
+        }
+        if (userAvatarView != null){
+            userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+            if (agentInfo != null){
+                if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
+                    String strUrl = agentInfo.getAvatar();
+                    // 设置客服头像
+                    if (!TextUtils.isEmpty(strUrl)) {
+                        if (!strUrl.startsWith("http")) {
+                            strUrl = "http:" + strUrl;
+                        }
+                        //正常的string路径
+                        Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(userAvatarView);
+                    }
+                }
+            }
+
         }
     }
 
     public static void setCurrentUserNickAndAvatar(Context context,ImageView userAvatarView, TextView userNickView){
-
+        if (userAvatarView != null){
+            userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+        }
     }
 
 }

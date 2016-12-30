@@ -58,7 +58,7 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 14;
 	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 15;
 
-	private static final int MESSAGE_TYPE_COUNT = 18;
+	private static final int MESSAGE_TYPE_COUNT = 16;
 	
 	
 	// reference to conversation object in chatsdk
@@ -107,9 +107,9 @@ public class MessageAdapter extends BaseAdapter {
 					}
 				});
 
-			    messages = list.toArray(new Message[list.size()]);
-			    conversation.markAllMessagesAsRead();
-			    notifyDataSetChanged();
+				messages = list.toArray(new Message[list.size()]);
+				conversation.markAllMessagesAsRead();
+				notifyDataSetChanged();
 			}
 		}
 		
@@ -243,7 +243,7 @@ public class MessageAdapter extends BaseAdapter {
 
 		return -1;// invalid
 	}
-	
+
 	protected ChatRow createChatRow(Context context, Message message, int position) {
         ChatRow chatRow = null;
         if(customRowProvider != null && customRowProvider.getCustomChatRow(message, position, this) != null){

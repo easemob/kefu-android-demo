@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
@@ -15,6 +17,7 @@ import com.hyphenate.helpdesk.easeui.Notifier;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
+import com.hyphenate.helpdesk.easeui.util.UserUtil;
 import com.hyphenate.helpdesk.util.Log;
 
 import org.json.JSONObject;
@@ -80,20 +83,21 @@ public class DemoHelper {
 
 
     private void setEaseUIProvider(final Context context){
-        //设置头像和昵称
-//        UIProvider.getInstance().setUserProfileProvider(new UIProvider.UserProfileProvider() {
-//            @Override
-//            public void setNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView) {
-//                if (message.getDirect() == Message.Direct.RECEIVE) {
-//                    //设置接收方的昵称和头像
-//                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
-//                } else {
-//                    //此处设置当前登录用户的昵称信息(发送方)
-////                    userAvatarView.setImageResource();
-////                    usernickView.setText("");
-//                }
-//            }
-//        });
+        //设置头像和昵称 某些控件可能没有头像和昵称，需要注意
+        UIProvider.getInstance().setUserProfileProvider(new UIProvider.UserProfileProvider() {
+            @Override
+            public void setNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView) {
+                if (message.direct() == Message.Direct.RECEIVE) {
+                    //设置接收方的昵称和头像
+                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+                } else {
+                    //此处设置当前登录用户的头像，
+                    if (userAvatarView != null){
+                        userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+                    }
+                }
+            }
+        });
 
 
         //设置通知栏样式
@@ -226,8 +230,6 @@ public class DemoHelper {
 //                    if (_uiProvider.hasForegroundActivies()){
 //                        getNotifier().viberateAndPlayTone(message);
 //                    }
-
-
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现
                     if (message.isNotificationMessage()){
                         // 检测是否为留言的通知消息

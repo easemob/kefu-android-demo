@@ -93,7 +93,7 @@ public class VoiceRecorder {
     /**
      * stop the recoding
      *
-     * @return seconds of the voice recorded
+     * seconds of the voice recorded
      */
 
     public void discardRecording() {

@@ -24,7 +24,7 @@
                 android:text="@string/setting"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
-            
+
             <TextView
                 android:id="@+id/tv_qcode"
                 android:layout_width="wrap_content"
@@ -32,11 +32,11 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:text="@string/qcode"
+                android:text="@string/qrcode"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 />
-            
+
         </RelativeLayout>
 
 

@@ -22,9 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 聊天页面底部的聊天输入菜单栏 <br/>
- * 主要包含3个控件:EaseChatPrimaryMenu(主菜单栏，包含文字输入、发送等功能), <br/>
- * EaseChatExtendMenu(扩展栏，点击加号按钮出来的小宫格的菜单栏), <br/>
+ * 聊天页面底部的聊天输入菜单栏
+ * 主要包含3个控件:EaseChatPrimaryMenu(主菜单栏，包含文字输入、发送等功能),
+ * EaseChatExtendMenu(扩展栏，点击加号按钮出来的小宫格的菜单栏),
  * 以及EaseEmojiconMenu(表情栏)
  */
 public class EaseChatInputMenu extends LinearLayout {
@@ -321,7 +321,7 @@ public class EaseChatInputMenu extends LinearLayout {
     /**
      * 系统返回键被按时调用此方法
      *
-     * @return 返回false表示返回键时扩展菜单栏时打开状态，true则表示按返回键时扩展栏是关闭状态<br/>
+     * 返回false表示返回键时扩展菜单栏时打开状态，true则表示按返回键时扩展栏是关闭状态
      *         如果返回时打开状态状态，会先关闭扩展栏再返回值
      */
     public boolean onBackPressed() {
@@ -359,7 +359,6 @@ public class EaseChatInputMenu extends LinearLayout {
          *
          * @param seconds duration
          * @param filePath
-         * @return
          */
         void onRecorderCompleted(float seconds, String filePath);
     }

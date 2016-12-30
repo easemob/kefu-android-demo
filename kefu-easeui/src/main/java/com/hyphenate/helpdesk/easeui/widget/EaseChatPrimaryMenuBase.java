@@ -89,7 +89,6 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
         /**
          * 录音完成
          *
-         * @return
          */
         void onRecorderCompleted(float seconds, String filePath);
 
