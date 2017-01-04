@@ -73,5 +73,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             }
         });
 
+        ChatClient.getInstance().getChat().downloadAttachment(message);
+
     }
 }

@@ -22,6 +22,7 @@
     <string name="setting">Setting</string>
     <string name="qrcode">QrCode</string>
     <string name="qrcode_success">QrCode scanning success</string>
+    <string name="qrcode_invalid">QrCode Invalid</string>
     <string name="qrcode_fail">QrCode scanning fail</string>
     <string name="customernumber">IM service No.</string>
     <string name="connect_customer">Contact customer service</string>

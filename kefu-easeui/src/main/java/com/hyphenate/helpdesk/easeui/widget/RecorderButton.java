@@ -33,7 +33,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
     private static final int STATE_WANT_TO_CANCEL = 3;
 
     private int mCurState = STATE_NORMAL;
-    private boolean isRecording = false;
+    private volatile boolean isRecording = false;
 
     /*是否触发longClick*/
     private boolean mReady;
@@ -98,7 +98,9 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                 case MSG_DIALOG_DISMISS:
                     if (null != button) {
                         button.mDialogManager.dismissDialog();
+                        button.reset();
                     }
+
                     break;
             }
         }
@@ -150,7 +152,6 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
-                reset();
                 /*Audio结束，释放资源*/
                 mAudioManager.cancel();
                 mHandler.sendEmptyMessage(MSG_DIALOG_DISMISS);
