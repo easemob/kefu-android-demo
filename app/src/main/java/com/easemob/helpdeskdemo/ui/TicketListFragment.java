@@ -105,7 +105,11 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void notifyEvent(String str, Object obj) {
-        onRefresh();
+        if (str.equals("clearTicketEvent")){
+            refreshView(new ArrayList<TicketEntity>());
+        }else {
+            onRefresh();
+        }
     }
 
 
@@ -159,7 +163,8 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
     public void loadDataError(){
         easyRecyclerView.setRefreshing(false);
         easyRecyclerView.showError();
-
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     public void refreshView(List<TicketEntity> entityList){

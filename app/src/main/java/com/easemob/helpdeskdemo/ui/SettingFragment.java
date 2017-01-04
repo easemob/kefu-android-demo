@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
@@ -66,10 +67,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_QCODE = 6;
 
 	private Dialog dialog;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.em_setting_fragment, null);
 	}
 
@@ -111,7 +112,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		tvQcode.setOnClickListener(this);
 	}
 
-	
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -212,12 +213,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 									tvAccount.setText(imServiceNum);
 									Preferences.getInstance().setCustomerAccount(imServiceNum);
 								}
-								Toast.makeText(getActivity(), "扫描成功！", Toast.LENGTH_SHORT).show();
+								if (!TextUtils.isEmpty(appkey) && !TextUtils.isEmpty(tenantId)){
+									Toast.makeText(getActivity(), getString(R.string.qrcode_success), Toast.LENGTH_SHORT).show();
+								}else{
+									Toast.makeText(getActivity(), getString(R.string.qrcode_invalid), Toast.LENGTH_SHORT).show();
+								}
 							}catch (Exception e){
-								Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_SHORT).show();
+								Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
 							}
 						}else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED){
-							Toast.makeText(getActivity(), "解析二维码失败", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
 						}
 					}
 					break;
@@ -254,6 +259,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 
 	private void showCustomMessage(final String newAppkey) {
 		Preferences.getInstance().setAppKey(newAppkey);
+		ListenerManager.getInstance().sendBroadCast("clearTicketEvent", null);
 		if (!ChatClient.getInstance().isLoggedInBefore()){
 			changeAppKey(newAppkey);
 		}else{
@@ -292,7 +298,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	/**
 	 * 动态修改appkey,只能未登录状态修改,否则会抛出异常
 	 * @param appkey
-     */
+	 */
 	private void changeAppKey(final String appkey){
 		if (getActivity() == null){
 			return;
@@ -356,7 +362,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			default:
 				break;
 		}
-		
+
 	}
 
 	private void closeDialog(){

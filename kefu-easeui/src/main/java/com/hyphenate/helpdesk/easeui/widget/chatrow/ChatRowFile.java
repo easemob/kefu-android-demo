@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMNormalFileMessageBody;
-import com.hyphenate.helpdesk.R;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowNormalFileActivity;

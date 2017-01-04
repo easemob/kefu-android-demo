@@ -119,15 +119,18 @@ public abstract class ChatRow extends LinearLayout {
 
         UIProvider.UserProfileProvider userInfoProvider = UIProvider.getInstance().getUserProfileProvider();
 
-        if (userInfoProvider != null && usernickView != null) {
+        if (userInfoProvider != null) {
             userInfoProvider.setNickAndAvatar(context, message, userAvatarView, usernickView);
-        } else if (usernickView != null) {
+        }else{
             if (message.direct() == Message.Direct.RECEIVE) {
-                UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+                if (usernickView != null){
+                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+                }
             } else {
                 UserUtil.setCurrentUserNickAndAvatar(context, userAvatarView, usernickView);
             }
         }
+
 
 //        if (deliveredView != null) {
 //            if (message.isDelivered()) {
@@ -150,23 +153,33 @@ public abstract class ChatRow extends LinearLayout {
 
 
         if (adapter instanceof MessageAdapter) {
-            if (((MessageAdapter) adapter).isShowAvatar())
-                userAvatarView.setVisibility(View.VISIBLE);
-            else
-                userAvatarView.setVisibility(View.GONE);
+            if (userAvatarView != null){
+                if (((MessageAdapter) adapter).isShowAvatar()){
+                    userAvatarView.setVisibility(View.VISIBLE);
+                }
+                else{
+                    userAvatarView.setVisibility(View.GONE);
+                }
+            }
+
+
             if (usernickView != null) {
                 if (((MessageAdapter) adapter).isShowUserNick())
                     usernickView.setVisibility(View.VISIBLE);
                 else
                     usernickView.setVisibility(View.GONE);
             }
-            if (message.direct() == Message.Direct.SEND) {
-                if (((MessageAdapter) adapter).getMyBubbleBg() != null)
-                    bubbleLayout.setBackgroundDrawable(((MessageAdapter) adapter).getMyBubbleBg());
-            } else if (message.direct() == Message.Direct.RECEIVE) {
-                if (((MessageAdapter) adapter).getOtherBuddleBg() != null)
-                    bubbleLayout.setBackgroundDrawable(((MessageAdapter) adapter).getOtherBuddleBg());
+            if (bubbleLayout != null) {
+                if (message.direct() == Message.Direct.SEND) {
+                    if (((MessageAdapter) adapter).getMyBubbleBg() != null)
+                        bubbleLayout.setBackgroundDrawable(((MessageAdapter) adapter).getMyBubbleBg());
+                } else if (message.direct() == Message.Direct.RECEIVE) {
+                    if (((MessageAdapter) adapter).getOtherBuddleBg() != null)
+                        bubbleLayout.setBackgroundDrawable(((MessageAdapter) adapter).getOtherBuddleBg());
+                }
+
             }
+
         }
     }
 

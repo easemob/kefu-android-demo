@@ -22,8 +22,6 @@ public class CommonUtils {
     /**
      * 检测网络是否可用
      *
-     * @param context
-     * @return
      */
     public static boolean isNetWorkConnected(Context context) {
         if (context != null) {

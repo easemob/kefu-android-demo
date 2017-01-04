@@ -3,7 +3,6 @@
 
     <style name="AppTheme" parent="android:Theme.Light" />
 
-
     <style name="chat_content_date_style">
         <item name="android:minHeight">50dp</item>
         <item name="android:gravity">center</item>

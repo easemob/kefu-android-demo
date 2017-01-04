@@ -59,8 +59,6 @@ import java.util.List;
  * 可以直接new出来使用的聊天对话页面fragment，
  * 使用时需调用setArguments方法传入IM服务号
  * app也可继承此fragment续写
- * <br/>
- * <br/>
  * 参数传入示例可查看demo里的ChatActivity
  */
 public class ChatFragment extends BaseFragment implements ChatManager.MessageListener {

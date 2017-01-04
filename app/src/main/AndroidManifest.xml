@@ -101,6 +101,10 @@
             android:name=".ui.FileDownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" />
+        <activity android:name=".ui.ForwardWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle"
+            />
         
 
         <!-- umeng appkey，可忽略 -->

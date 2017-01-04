@@ -11,7 +11,7 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
  */
 public interface CustomChatRowProvider {
     /**
-     * 获取多少种类型的自定义chatrow<br/>
+     * 获取多少种类型的自定义chatrow
      * 注意，每一种chatrow至少有两种type：发送type和接收type
      * @return
      */

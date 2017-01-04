@@ -84,7 +84,6 @@ public class UIProvider {
 
     /**
      * @param context
-     * @return
      */
     public synchronized void init(final Context context){
         appContext = context;

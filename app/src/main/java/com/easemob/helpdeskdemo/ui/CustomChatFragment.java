@@ -12,12 +12,14 @@ import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowEvaluation;
+import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -44,6 +46,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public static final int MESSAGE_TYPE_RECV_EVAL = 6;
     public static final int MESSAGE_TYPE_SENT_TRACK = 7;
     public static final int MESSAGE_TYPE_RECV_TRACK = 8;
+    public static final int MESSAGE_TYPE_SENT_FORM = 9;
+    public static final int MESSAGE_TYPE_RECV_FORM = 10;
 
 
     @Override
@@ -197,6 +201,22 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         messageList.refreshSelectLast();
     }
 
+    public boolean checkFormChatRow(Message message){
+        if (message.getStringAttribute("type", null) != null){
+            try {
+                String type = message.getStringAttribute("type");
+                if (type.equals("html/form")){
+                    return true;
+                }
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+
     /**
      * chat row provider
      */
@@ -206,7 +226,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         public int getCustomChatRowTypeCount() {
             //地图 和 满意度 发送接收 共4种
             //订单 和 轨迹 发送接收共4种
-            return 8;
+            // form 发送接收2种
+            return 11;
         }
 
         @Override
@@ -221,6 +242,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ORDER : MESSAGE_TYPE_SENT_ORDER;
                 }else if (MessageHelper.getVisitorTrack(message) != null){
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRACK : MESSAGE_TYPE_SENT_TRACK;
+                }else if (checkFormChatRow(message)){
+                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_FORM : MESSAGE_TYPE_SENT_FORM;
                 }
             }
 
@@ -238,6 +261,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return new ChatRowOrder(getActivity(), message, position, adapter);
                 }else if (MessageHelper.getVisitorTrack(message) != null) {
                     return new ChatRowTrack(getActivity(), message, position, adapter);
+                }else if (checkFormChatRow(message)){
+                    return new ChatRowForm(getActivity(), message, position, adapter);
                 }
             }
             return null;

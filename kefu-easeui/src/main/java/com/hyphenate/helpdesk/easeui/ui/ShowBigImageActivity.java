@@ -39,6 +39,8 @@ import com.hyphenate.util.ImageUtils;
 
 import java.io.File;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * 下载显示大图
  */
@@ -104,7 +106,6 @@ public class ShowBigImageActivity extends BaseActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.setMessage(str1);
         pd.show();
-
         Message msg = ChatClient.getInstance().getChat().getMessage(msgId);
         EMImageMessageBody imgBody = (EMImageMessageBody) msg.getBody();
         final String localPath = imgBody.getLocalUrl();
@@ -185,7 +186,6 @@ public class ShowBigImageActivity extends BaseActivity {
                 });
             }
         };
-
         msg.setMessageStatusCallback(callback);
         ChatClient.getInstance().getChat().downloadAttachment(msg);
     }

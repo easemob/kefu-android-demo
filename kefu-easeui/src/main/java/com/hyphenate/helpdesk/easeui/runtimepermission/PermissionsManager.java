@@ -147,7 +147,7 @@ public class PermissionsManager {
 
   /**
    * This static method can be used to check whether or not you have a specific permission.
-   * It is basically a less verbose method of using {@link ActivityCompat#checkSelfPermission(Context, String)}
+   * It is basically a less verbose method of using {ActivityCompat#checkSelfPermission(Context, String)}
    * and will simply return a boolean whether or not you have the permission. If you pass
    * in a null Context object, it will return false as otherwise it cannot check the permission.
    * However, the Activity parameter is nullable so that you can pass in a reference that you
@@ -165,7 +165,7 @@ public class PermissionsManager {
 
   /**
    * This static method can be used to check whether or not you have several specific permissions.
-   * It is simpler than checking using {@link ActivityCompat#checkSelfPermission(Context, String)}
+   * It is simpler than checking using {ActivityCompat#checkSelfPermission(Context, String)}
    * for each permission and will simply return a boolean whether or not you have all the permissions.
    * If you pass in a null Context object, it will return false as otherwise it cannot check the
    * permission. However, the Activity parameter is nullable so that you can pass in a reference
@@ -194,7 +194,7 @@ public class PermissionsManager {
    * you of the user allowing or denying each permission. The Activity and PermissionsResultAction
    * parameters are both annotated Nullable, but this method will not work if the Activity
    * is null. It is only annotated Nullable as a courtesy to prevent crashes in the case
-   * that you call this from a Fragment where {@link Fragment#getActivity()} could yield
+   * that you call this from a Fragment where Fragment#getActivity() could yield
    * null. Additionally, you will not receive any notification of permissions being granted
    * if you provide a null PermissionsResultAction.
    *
@@ -254,7 +254,7 @@ public class PermissionsManager {
    * they need to be requested (i.e. we don't have permission yet) and will add the
    * PermissionsResultAction to the queue to be notified of permissions being granted or
    * denied. In the case of pre-Android Marshmallow, permissions will be granted immediately.
-   * The Fragment variable is used, but if {@link Fragment#getActivity()} returns null, this method
+   * The Fragment variable is used, but if {Fragment#getActivity()} returns null, this method
    * will fail to work as the activity reference is necessary to check for permissions.
    *
    * @param fragment    the fragment necessary to request the permissions.
@@ -290,7 +290,7 @@ public class PermissionsManager {
    * the permissions requests using an Activity, then this method should be called from the
    * Activity callback onRequestPermissionsResult() with the variables passed to that method. If
    * you are passing a Fragment to make the permissions request, then you should call this in
-   * the {@link Fragment#onRequestPermissionsResult(int, String[], int[])} method.
+   * the {Fragment#onRequestPermissionsResult(int, String[], int[])} method.
    * It will notify all the pending PermissionsResultAction objects currently
    * in the queue, and will remove the permissions request from the list of pending requests.
    *

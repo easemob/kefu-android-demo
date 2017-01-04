@@ -99,7 +99,6 @@ public class Emojicon {
 
     /**
      * 设置大图片资源id
-     * @return
      */
     public void setBigIcon(int dynamicIcon) {
         this.bigIcon = dynamicIcon;
