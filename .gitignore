@@ -9,5 +9,4 @@ app/*.iml
 .DS_Store
 kefu-easeui/kefu-easeui.iml
 bottomnavigation/bottomnavigation.iml
-*.iml
-.idea
+.idea/misc.xml
