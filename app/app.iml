@@ -110,11 +110,11 @@
     <orderEntry type="library" exported="" name="okio-1.8.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.4.0" level="project" />
     <orderEntry type="library" exported="" name="umeng-analytics-v6.0.1" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-1.2.4" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-1.2.5" level="project" />
     <orderEntry type="library" exported="" name="utdid4all-1.0.4" level="project" />
     <orderEntry type="library" exported="" name="gson-2.7" level="project" />
-    <orderEntry type="library" exported="" name="retrofit-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="annotations-12.0" level="project" />
+    <orderEntry type="library" exported="" name="retrofit-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="converter-gson-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="rxandroid-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="library-1.2" level="project" />
@@ -125,5 +125,14 @@
     <orderEntry type="library" exported="" name="flowlayout-0.4.0" level="project" />
     <orderEntry type="module" module-name="easeui" exported="" />
     <orderEntry type="module" module-name="bottomnavigation" exported="" />
+    <orderEntry type="library" exported="" name="HwPush_SDK_V2705_nomap" level="project" />
+    <orderEntry type="library" exported="" name="imsdkx-v1.0.3-dependence-2.3.4" level="project" />
+    <orderEntry type="library" exported="" name="imsdkx-noasset-v1.0.3-dependence-2.3.4" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="MiPush_SDK_Client_2_2_19" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="easemobchat_2.3.4" level="project" />
+    <orderEntry type="library" exported="" name="BaiduLBS_Android" level="project" />
+    <orderEntry type="library" exported="" name="glide-3.6.1" level="project" />
   </component>
 </module>
