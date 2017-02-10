@@ -110,7 +110,7 @@ public class ChatRowVoice extends ChatRowFile{
 
                     @Override
                     protected Void doInBackground(Void... params) {
-                        ChatClient.getInstance().getChat().downloadAttachment(message);
+                        ChatClient.getInstance().chatManager().downloadAttachment(message);
                         return null;
                     }
 
@@ -131,6 +131,8 @@ public class ChatRowVoice extends ChatRowFile{
 
 
     private void playVoice(View v, String localPath, final boolean isSend){
+
+
         //播放动画
         if (((MessageAdapter)adapter).animView != null){
             boolean preIsSend = (boolean) ((MessageAdapter)adapter).animView.getTag();
@@ -141,6 +143,13 @@ public class ChatRowVoice extends ChatRowFile{
             }
             ((MessageAdapter)adapter).animView = null;
         }
+        if (((MessageAdapter)adapter).currentPlayView != null && ((MessageAdapter)adapter).currentPlayView == v){
+            MediaManager.release();
+            ((MessageAdapter)adapter).currentPlayView = null;
+            return;
+        }
+
+        ((MessageAdapter)adapter).currentPlayView = v;
         ((MessageAdapter)adapter).animView = v.findViewById(R.id.id_recorder_anim);
         ((MessageAdapter)adapter).animView.setTag(isSend);
         if (isSend){
@@ -150,7 +159,7 @@ public class ChatRowVoice extends ChatRowFile{
             if (!message.isListened()){
                 readStatusView.setVisibility(View.GONE);
                 message.setListened(true);
-                ChatClient.getInstance().getChat().setMessageListened(message);
+                ChatClient.getInstance().chatManager().setMessageListened(message);
             }
         }
 
@@ -161,6 +170,7 @@ public class ChatRowVoice extends ChatRowFile{
         MediaManager.playSound(getContext(), localPath, new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                ((MessageAdapter)adapter).currentPlayView = null;
                 if (isSend){
                     ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_chatto_voice_playing);
                 }else{

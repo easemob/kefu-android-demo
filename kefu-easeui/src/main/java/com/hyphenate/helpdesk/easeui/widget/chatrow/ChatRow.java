@@ -132,26 +132,6 @@ public abstract class ChatRow extends LinearLayout {
         }
 
 
-//        if (deliveredView != null) {
-//            if (message.isDelivered()) {
-//                deliveredView.setVisibility(View.VISIBLE);
-//            } else {
-//                deliveredView.setVisibility(View.INVISIBLE);
-//            }
-//        }
-//
-//        if (ackedView != null) {
-//            if (message.isAcked()) {
-//                if (deliveredView != null) {
-//                    deliveredView.setVisibility(View.INVISIBLE);
-//                }
-//                ackedView.setVisibility(View.VISIBLE);
-//            } else {
-//                ackedView.setVisibility(View.INVISIBLE);
-//            }
-//        }
-
-
         if (adapter instanceof MessageAdapter) {
             if (userAvatarView != null){
                 if (((MessageAdapter) adapter).isShowAvatar()){
@@ -204,8 +184,9 @@ public abstract class ChatRow extends LinearLayout {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (percentageView != null)
-                                percentageView.setText(progress + "%");
+                            if (percentageView != null && progress < 100){
+                                    percentageView.setText(progress + "%");
+                            }
 
                         }
                     });
@@ -236,7 +217,7 @@ public abstract class ChatRow extends LinearLayout {
                 public void onProgress(final int progress, String s) {
                     activity.runOnUiThread(new Runnable() {
                         public void run() {
-                            if (percentageView != null) {
+                            if (percentageView != null && progress < 100) {
                                 percentageView.setText(progress + "%");
                             }
                         }

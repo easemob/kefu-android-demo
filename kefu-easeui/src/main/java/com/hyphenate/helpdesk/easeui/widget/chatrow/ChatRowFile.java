@@ -88,7 +88,7 @@ public class ChatRowFile extends ChatRow{
                     progressBar.setVisibility(View.VISIBLE);
                 if(percentageView != null){
                     percentageView.setVisibility(View.VISIBLE);
-                    percentageView.setText(message.getProgress() + "%");
+                    percentageView.setText("");
                 }
                 statusView.setVisibility(View.INVISIBLE);
                 break;

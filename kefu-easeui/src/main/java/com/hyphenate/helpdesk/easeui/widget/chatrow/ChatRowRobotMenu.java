@@ -80,7 +80,7 @@ public class ChatRowRobotMenu extends ChatRow{
                         Message sendMessage = Message.createTxtSendMessage(content, message.getFrom());
                         //存在上下文的机器人菜单消息
                         sendMessage.addContent(ContentFactory.createRobotMenuIdInfo(null).setMenuId(menuId));
-                        ChatClient.getInstance().getChat().sendMessage(sendMessage);
+                        ChatClient.getInstance().chatManager().sendMessage(sendMessage);
                     }
                 });
                 LinearLayout.LayoutParams llLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);

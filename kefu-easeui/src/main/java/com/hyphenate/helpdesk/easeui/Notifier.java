@@ -114,7 +114,7 @@ public class Notifier {
      * @param message
      */
     public synchronized void onNewMsg(Message message) {
-        if(ChatClient.getInstance().getChat().isSilentMessage(message)){
+        if(ChatClient.getInstance().chatManager().isSilentMessage(message)){
             return;
         }
         UIProvider.SettingsProvider settingsProvider = UIProvider.getInstance().getSettingsProvider();
@@ -135,7 +135,7 @@ public class Notifier {
     }
 
     public synchronized void onNewMesg(List<Message> messages) {
-        if(ChatClient.getInstance().getChat().isSilentMessage(messages.get(messages.size()-1))){
+        if(ChatClient.getInstance().chatManager().isSilentMessage(messages.get(messages.size()-1))){
             return;
         }
         UIProvider.SettingsProvider settingsProvider = UIProvider.getInstance().getSettingsProvider();
