@@ -75,6 +75,7 @@ public class MessageAdapter extends BaseAdapter {
     private Drawable myBubbleBg;
     private Drawable otherBuddleBg;
 	public View animView;
+	public View currentPlayView;
     private ListView listView;
 	public int mMinItemWidth;
 	public int mMaxItemWidth;
