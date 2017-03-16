@@ -105,6 +105,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"
             />
+        <activity android:name=".ui.SpecialActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
         
 
         <!-- umeng appkey，可忽略 -->

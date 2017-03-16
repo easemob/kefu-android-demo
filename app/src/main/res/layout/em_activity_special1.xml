@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f4f4f4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_top_bar"
+            android:background="@color/top_bar_normal_bg"
+            android:gravity="center_vertical">
+
+            <include layout="@layout/em_commom_back_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="中信证券"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="「信·策略」25期：
+  立足平衡 寻找确定性  "
+                android:textColor="@android:color/black"
+                android:textSize="23sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="2017年03月06日
+来源：中信证券投资者团队
+作者：中信证券市场研究部"
+                android:textColor="#8d8d8d"
+                android:textSize="14sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="写在前面"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="      经历了前两月温和上涨，市场稳步前行到了三月。
+影响市场的核心因素是否有变化？市场整体将表现出怎
+样的态势？机会和风险分别在哪里？   请关注本期信策
+略：立足弱平衡，寻找确定性。"
+                android:textColor="#303030"
+                android:textSize="15sp"
+                android:typeface="sans" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:src="@drawable/special_icon_1" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="经济和政策“弱平衡”中有隐忧，
+去杠杆防风险力度有望加大。
+
+第一，经济和政策“弱平衡”
+         奠定前两月市场上行基础。
+"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:typeface="sans" />
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="      经济“弱平衡”体现为短期数据向好和中长期不确定性。2月官方制造业PMI为51.6，连续7个月在荣枯线上2月发电耗煤同比增速达35.64%；2月上旬粗钢产量同比增速达10%；系列高频数据表明中国经济短期势头良好。但中长期不确定性仍然存在。支持中长期向好的主要论据有两个：一是中国自身经济周期已触底向上；二是全球贸易增长对中国经济拉动。支持二次探底的论据也主要有两个：一是去年政府靠刺激地产和汽车稳住经济，今年手段相对有限；二是房地产泡沫是否可控。中长期不确定的背景下，前两月投资者倾向于“看短做短”，有产品涨价或业绩改善预期的部分周期股和价值股受到青睐。
+
+      政策“弱平衡”体现为“去杠杆”和“防风险”平衡。正如信策略反复提及，经济短期向好为去杠杆、去泡沫创造良好条件，近期一行三会对此积极表态和行动。但在去杠杆的同时，政府也重视防风险。如前期央行上调MLF和逆回购利率，但最近没有继续，体现了央行边走边看的态度。央行副行长易纲近日表态“央行肯定要做到不松不紧”，侧面反应了政府调控的审慎态度。政策的“弱平衡”也是基于经济中长期不确定性，在一定程度上体现了对经济的呵护。这种微妙的态度暗示了短期风险的可控，对投资者风险偏好的提升有所助益。资主线。而两会在三月份召开，多数改革预期已在两会前充分反映到股价中。政府和重要国企三月的工作重心在两会，相关事件和投资机会可到4月份再看。
+
+      立足“弱平衡”，寻找确定性。在经济和政策“弱平衡”的背景下，关注经济和政策的不确定性因素，特别是去杠杆防风险力度的加大对市场带来的风险和机遇。总体判断市场将呈现出波澜不惊的状态，沪指有望在3200-3300点附近运行。在结构性行情中寻找确定性是投资者最核心的工作。
+"
+            android:textColor="#303030"
+            android:textSize="14sp"
+            android:typeface="sans" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="第二，“弱平衡”中有隐忧，
+不确定性会否发酵有待观察"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:typeface="serif" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="      经济的主要风险在地产。前两月部分城市的新房销售同比下滑严重，如2月上海新房成交同比下滑49%；但部
+分三四线城市土地成交价升量增和二手房价格继续上涨的局面也同时存在，三四线土地连续两月成交建面增速超30%，2月更是高达50%。分化会让市场预期进一步混乱。如果房价出现趋势性下跌，当前向好的经济局面可能会逆转；如果房价继续上涨，政策上可能会进一步打压和趋紧；如果地产的风险得到控制，经济继续向好，资金有可能从资本市场流向实体经济。
+
+      以上几种路径，除了经济向好有利于企业盈利提升之外，对股市风险偏好或资金流向形成利空。政策的不确定性也会受其他国家货币政策的掣肘。特别是近日美联储耶伦的表态进一步提升了美元三月加息的概率。从汇率和资本管控出发，中国央行会否进一步采取趋紧政策，也有待继续观察。由此来说，当前经济和政策的“弱平衡”格局值得投资者珍惜。
+"
+                android:textColor="#303030"
+                android:textSize="14sp"
+                android:typeface="sans" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:typeface="monospace"
+                    android:text="往期回顾："
+                    android:textSize="15sp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#3f99fc"
+                    android:typeface="sans"
+                    android:textStyle="bold"
+                    android:text="图解「信·策略」"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_height="30dp">
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:layout_marginRight="10dp"
+                   android:background="@drawable/bg_special_icon"
+                   >
+                   <LinearLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_centerInParent="true">
+                       <ImageView
+                           android:layout_width="15dp"
+                           android:layout_height="15dp"
+                           android:src="@drawable/special_icon_shared"
+                           />
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="5dp"
+                           android:text="分享"
+                           android:textColor="#b5b5b5"
+                           android:textSize="14sp"
+                           />
+                   </LinearLayout>
+                   
+                   
+               </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/bg_special_icon"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:src="@drawable/special_icon_zan"
+                            />
+                        <TextView
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100000+"
+                            android:textColor="#b5b5b5"
+                            android:textSize="14sp"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+            
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="5dp"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="写留言"
+                    android:textSize="15dp"
+                    android:textColor="#000"
+                    />
+                <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/special_icon_pen"
+                    />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

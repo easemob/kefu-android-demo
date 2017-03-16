@@ -223,7 +223,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ChatClient.getInstance().getChat().unBind();
+        ChatClient.getInstance().chatManager().unBind();
     }
 
     /**

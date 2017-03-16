@@ -15,6 +15,7 @@ import com.easemob.helpdeskdemo.widget.chatrow.ChatRowEvaluation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
+import com.easemob.helpdeskdemo.widget.chatrow.ChatRowSpecialText;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -48,7 +49,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public static final int MESSAGE_TYPE_RECV_TRACK = 8;
     public static final int MESSAGE_TYPE_SENT_FORM = 9;
     public static final int MESSAGE_TYPE_RECV_FORM = 10;
-
+    public static final int MESSAGE_TYPE_RECV_SPECIAL = 11;
+    public static final int MESSAGE_TYPE_SENT_SPECIAL = 12;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -217,6 +219,16 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     }
 
 
+    public boolean checkTxtMsg(Message message){
+        try{
+            EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+            String txtContent = txtBody.getMessage();
+            return txtContent.startsWith("_zx_");
+        }catch (Exception ignored){
+        }
+        return false;
+    }
+
     /**
      * chat row provider
      */
@@ -227,7 +239,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             //地图 和 满意度 发送接收 共4种
             //订单 和 轨迹 发送接收共4种
             // form 发送接收2种
-            return 11;
+            return 13;
         }
 
         @Override
@@ -244,6 +256,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRACK : MESSAGE_TYPE_SENT_TRACK;
                 }else if (checkFormChatRow(message)){
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_FORM : MESSAGE_TYPE_SENT_FORM;
+                }else if (checkTxtMsg(message)){
+                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_SPECIAL : MESSAGE_TYPE_SENT_SPECIAL;
                 }
             }
 
@@ -263,6 +277,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return new ChatRowTrack(getActivity(), message, position, adapter);
                 }else if (checkFormChatRow(message)){
                     return new ChatRowForm(getActivity(), message, position, adapter);
+                }else if (checkTxtMsg(message)){
+                    return new ChatRowSpecialText(getActivity(), message, position, adapter);
                 }
             }
             return null;
