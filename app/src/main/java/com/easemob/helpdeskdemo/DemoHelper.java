@@ -63,7 +63,10 @@ public class DemoHelper {
         //在华为手机上当APP被kill时使用华为推送进行消息提示, SDK已支持,可选
         options.setHuaweiPushAppId("10663060");
 
-//        options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
+        options.setKefuServerAddress("http://kf.114hunan.cn");
+        options.setIMServer("im1.114hunan.cn");
+        options.setRestServer("a1.114hunan.cn");
+        options.setIMPort(5051);
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
 
