@@ -37,6 +37,7 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
+import com.hyphenate.util.EasyUtils;
 
 import java.util.List;
 
@@ -198,7 +199,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     protected void onResume() {
         super.onResume();
         DemoHelper.getInstance().pushActivity(this);
-        ChatClient.getInstance().getChat().addMessageListener(messageListener);
+        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
     @Override
@@ -224,15 +225,19 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     ChatManager.MessageListener messageListener = new ChatManager.MessageListener() {
 
         @Override
-        public void onMessage(List<Message> msgs) {
+        public void onMessage(final List<Message> msgs) {
 
-            /*runOnUiThread(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     //未读数可以显示在UI上
-                    int unreadMsgCount = ChatClient.getInstance().getChat().getUnreadMsgsCount();
+//                    int unreadMsgCount = ChatClient.getInstance().chatManager().getUnreadMsgsCount();
+
+                    if (EasyUtils.isAppRunningForeground(MainActivity.this)){
+                        DemoHelper.getInstance().getNotifier().onNewMesg(msgs);
+                    }
                 }
-            });*/
+            });
         }
 
         @Override

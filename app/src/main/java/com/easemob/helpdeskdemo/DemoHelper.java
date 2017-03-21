@@ -3,11 +3,14 @@ package com.easemob.helpdeskdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.helpdeskdemo.receiver.CallReceiver;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
+import com.easemob.helpdeskdemo.ui.VideoCallActivity;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
@@ -42,6 +45,9 @@ public class DemoHelper {
 
     private UIProvider _uiProvider;
 
+    public boolean isVideoCalling;
+    private CallReceiver callReceiver;
+    private Context appContext;
 
     private DemoHelper(){}
     public synchronized static DemoHelper getInstance() {
@@ -54,6 +60,7 @@ public class DemoHelper {
      * @param context application context
      */
     public void init(final Context context) {
+        appContext = context;
         ChatClient.Options options = new ChatClient.Options();
         options.setAppkey(Preferences.getInstance().getAppKey());
         options.setTenantId(Preferences.getInstance().getTenantId());
@@ -77,6 +84,8 @@ public class DemoHelper {
             setEaseUIProvider(context);
             //设置全局监听
             setGlobalListeners();
+
+
         }
     }
 
@@ -94,6 +103,7 @@ public class DemoHelper {
                     //此处设置当前登录用户的头像，
                     if (userAvatarView != null){
                         userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+//                        Glide.with(context).load("http://oev49clxj.bkt.clouddn.com/7a8aed7bjw1f32d0cumhkj20ey0mitbx.png").diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(userAvatarView);
                     }
                 }
             }
@@ -132,12 +142,17 @@ public class DemoHelper {
 
             @Override
             public Intent getLaunchIntent(Message message) {
-                //设置点击通知栏跳转事件
-                Intent intent = new IntentBuilder(context)
-                        .setTargetClass(ChatActivity.class)
-                        .setServiceIMNumber(message.getFrom())
-                        .setShowUserNick(true)
-                        .build();
+                Intent intent;
+                if (isVideoCalling){
+                    intent = new Intent(context, VideoCallActivity.class);
+                }else{
+                    //设置点击通知栏跳转事件
+                    intent = new IntentBuilder(context)
+                            .setTargetClass(ChatActivity.class)
+                            .setServiceIMNumber(message.getFrom())
+                            .setShowUserNick(true)
+                            .build();
+                }
                 return intent;
             }
         });
@@ -212,6 +227,13 @@ public class DemoHelper {
 
         //注册消息事件监听
         registerEventListener();
+
+        IntentFilter callFilter = new IntentFilter(ChatClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        if (callReceiver == null){
+            callReceiver = new CallReceiver();
+        }
+        // register incoming call receiver
+        appContext.registerReceiver(callReceiver, callFilter);
     }
 
     /**
@@ -226,10 +248,7 @@ public class DemoHelper {
             public void onMessage(List<Message> msgs) {
                 for (Message message : msgs){
                     Log.d(TAG, "onMessageReceived id : " + message.getMsgId());
-//                    //应用在后台,不需要刷新UI,通知栏提示新消息
-//                    if (_uiProvider.hasForegroundActivies()){
-//                        getNotifier().viberateAndPlayTone(message);
-//                    }
+//
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现
                     if (message.isNotificationMessage()){
                         // 检测是否为留言的通知消息
@@ -271,7 +290,7 @@ public class DemoHelper {
             }
         };
 
-        ChatClient.getInstance().getChat().addMessageListener(messageListener);
+        ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
 

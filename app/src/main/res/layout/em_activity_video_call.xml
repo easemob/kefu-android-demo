@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.hyphenate.media.OppositeSurfaceView
+        android:id="@+id/opposite_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/ll_btns"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <com.hyphenate.media.LocalSurfaceView
+            android:id="@+id/local_surface"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_top_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="环信商城客服"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_call_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <com.easemob.helpdeskdemo.widget.MyChronometer
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chronometer"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="张三"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/ll_surface_baseline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+                <View
+                    android:id="@+id/left_bottom_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/ll_bottom_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="18dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_voice_control"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/iv_switch_camera"
+                            android:layout_width="27dip"
+                            android:layout_height="27dip"
+                            android:layout_weight="1"
+                            android:src="@drawable/em_switch_camera" />
+
+                        <ImageView
+                            android:id="@+id/iv_mute"
+                            android:layout_width="27dip"
+                            android:layout_height="27dip"
+                            android:layout_weight="1"
+                            android:src="@drawable/em_icon_mute_normal" />
+
+                        <ImageView
+                            android:id="@+id/iv_handsfree"
+                            android:layout_width="27dip"
+                            android:layout_height="27dip"
+                            android:layout_weight="1"
+                            android:src="@drawable/em_icon_speaker_on" />
+
+                        <ImageView
+                            android:id="@+id/iv_local_video"
+                            android:layout_width="27dip"
+                            android:layout_height="27dip"
+                            android:layout_weight="1"
+                            android:src="@drawable/em_icon_local_video_on" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp">
+
+                        <Button
+                            android:id="@+id/btn_hangup_call"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:background="@drawable/em_bg_call_hangup"
+                            android:gravity="center"
+                            android:text="挂断"
+                            android:textColor="@android:color/white"
+                            android:textSize="20sp"
+                            android:visibility="invisible" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_coming_call"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/btn_refuse_call"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/em_bg_call_hangup"
+                                android:gravity="center"
+                                android:text="拒绝"
+                                android:textColor="@android:color/white"
+                                android:textSize="20sp" />
+
+                            <Button
+                                android:id="@+id/btn_answer_call"
+                                android:layout_width="wrap_content"
+                                android:layout_height="45dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/em_bg_call_accept"
+                                android:gravity="center"
+                                android:text="接受"
+                                android:textColor="@android:color/white"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_network_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white" />
+
+
+</RelativeLayout>

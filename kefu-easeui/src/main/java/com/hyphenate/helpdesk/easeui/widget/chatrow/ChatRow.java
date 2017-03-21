@@ -185,7 +185,8 @@ public abstract class ChatRow extends LinearLayout {
                         @Override
                         public void run() {
                             if (percentageView != null && progress < 100){
-                                    percentageView.setText(progress + "%");
+                                percentageView.setTag(progress);
+                                percentageView.setText(progress + "%");
                             }
 
                         }

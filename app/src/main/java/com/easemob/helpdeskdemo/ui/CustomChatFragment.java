@@ -16,6 +16,7 @@ import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
+import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
@@ -26,11 +27,15 @@ import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener {
 
     //避免和基类定义的常量可能发生冲突,常量从11开始定义
     private static final int ITEM_MAP = 11;
     private static final int ITEM_SHORTCUT = 12;
+    private static final int ITEM_VIDEO = 13;
 
     private static final int REQUEST_CODE_SELECT_MAP = 11;
     private static final int REQUEST_CODE_SHORTCUT = 12;
@@ -131,6 +136,9 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 getActivity().overridePendingTransition(R.anim.em_activity_open, 0);
                 break;
 
+            case ITEM_VIDEO:
+                startVideoCall();
+                break;
 //            case ITEM_FILE:
 //                //如果需要覆盖内部的,可以return true
 //                //demo中通过系统API选择文件,实际app中最好是做成qq那种选择发送文件
@@ -141,6 +149,36 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         //不覆盖已有的点击事件
         return false;
     }
+
+
+    private void startVideoCall(){
+
+        if(!ChatClient.getInstance().isConnected()){
+            Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        inputMenu.hideExtendMenuContainer();
+
+        Message message = Message.createTxtSendMessage("邀请客服进行实时视频", toChatUsername);
+        JSONObject jsonInvit = new JSONObject();
+        try {
+            JSONObject jsonMsg = new JSONObject();
+            jsonMsg.put("msg", "邀请客服进行实时视频");
+            String appKeyStr[] = ChatClient.getInstance().getAppKey().split("#");
+            jsonMsg.put("orgName", appKeyStr[0]);
+            jsonMsg.put("appName", appKeyStr[1]);
+            jsonMsg.put("userName", ChatClient.getInstance().getCurrentUserName());
+            jsonMsg.put("resource", "mobile");
+            jsonInvit.put("liveStreamInvitation", jsonMsg);
+            message.setAttribute("msgtype", jsonInvit);
+            message.setAttribute("type", "rtcmedia/video");
+            ChatClient.getInstance().chatManager().sendMessage(message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     public CustomChatRowProvider onSetCustomChatRowProvider() {
@@ -153,7 +191,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         super.registerExtendMenuItem();
         //增加扩展的item
         inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.ease_chat_location_selector, ITEM_MAP, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.attach_short_cut_message, R.drawable.em_icon_answer, ITEM_SHORTCUT, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_short_cut_message, R.drawable.em_chat_phrase_selector, ITEM_SHORTCUT, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, extendMenuItemClickListener);
     }
 
     @Override

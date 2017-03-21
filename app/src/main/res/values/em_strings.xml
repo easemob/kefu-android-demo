@@ -7,6 +7,7 @@
     <string name="button_send">Send</string>
     <string name="attach_location">Location</string>
     <string name="attach_short_cut_message">Messages</string>
+    <string name="attach_call_video">Call Video</string>
     <string name="location_message">The location information</string>
     <string name="please_check">key validation error!Please on AndroidManifest.xml file check the key set</string>
     <string name="text_fahuo">How long you will be able to deliver?</string>
@@ -59,4 +60,33 @@
     <string name="hint_leave_message">Leave message</string>
     <string name="tip_btn_sumbit">Submit</string>
     <string name="tip_btn_evaluation">Evaluation</string>
+
+    <!-- call start -->
+    <string name="The_other_is_not_online">The peer is not online</string>
+    <string name="Is_not_yet_connected_to_the_server">Not connect to server</string>
+    <string name="illegal_user_name">Illegal user name</string>
+    <string name="The_other_is_on_the_phone">The peer is on the phone</string>
+    <string name="can_not_connect_chat_server_connection">Cannot connect to server</string>
+    <string name="not_connect_to_server">Not connect to server, please try again later</string>
+    <string name="Are_connected_to_each_other">Connecting to peer..</string>
+    <string name="have_connected_with">Connected to the peer and waiting for the peer to accept</string>
+    <string name="In_the_call">In the call..</string>
+    <string name="network_unavailable">The network connection is not available, please check the network</string>
+    <string name="network_unstable">Network unstable</string> 
+    <string name="no_call_data">No call data</string>
+    <string name="The_other_party_refused_to_accept">The call was refused</string> 
+    <string name="Connection_failure">Connection failed!</string>
+    <string name="The_other_party_is_not_online">The peer is not online now, please try later</string>
+    <string name="The_other_is_on_the_phone_please">The peer is busy now, please try later</string>
+    <string name="The_other_party_did_not_answer">The peer did not answer</string>
+    <string name="hang_up">Hang up</string>
+    <string name="The_other_is_hang_up">The peer has ended the call</string>
+    <string name="did_not_answer">did not answer</string>
+    <string name="Has_been_cancelled">Cancelled</string>
+    <string name="Refused">Refused</string>
+    <string name="call_version_inconsistent">Both call version are inconsistent</string>
+    <string name="hanging_up">Hanging up..</string>
+    <string name="answering">answering...</string>
+
+    <!-- call end -->
 </resources>

@@ -223,7 +223,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ChatClient.getInstance().getChat().unBind();
+        ChatClient.getInstance().chatManager().unBind();
     }
 
     /**
@@ -692,13 +692,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         }
         Message message = Message.createTxtSendMessage(content, toChatUsername);
         attachMessageAttrs(message);
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     protected void sendVoiceMessage(String filePath, int length) {
         Message message = Message.createVoiceSendMessage(filePath, length, toChatUsername);
         attachMessageAttrs(message);
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     protected void sendImageMessage(String imagePath) {
@@ -712,19 +712,19 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
         Message message = Message.createImageSendMessage(imagePath, false, toChatUsername);
         attachMessageAttrs(message);
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     protected void sendFileMessage(String filePath) {
         Message message = Message.createFileSendMessage(filePath, toChatUsername);
         attachMessageAttrs(message);
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress, String toChatUsername){
         Message message = Message.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
         attachMessageAttrs(message);
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
 

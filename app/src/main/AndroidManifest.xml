@@ -18,6 +18,8 @@
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- 听筒和扬声器模式切换 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
 
     <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
@@ -34,7 +36,6 @@
         <!-- 主界面 -->
         <activity
             android:name="com.easemob.helpdeskdemo.ui.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan">
@@ -105,7 +106,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"
             />
-        
+        <!-- 视频通话 -->
+        <activity android:name=".ui.VideoCallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/horizontal_slide"
+            />
 
         <!-- umeng appkey，可忽略 -->
         <meta-data

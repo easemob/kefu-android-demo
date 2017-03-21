@@ -68,7 +68,7 @@ public class ChatActivity extends BaseActivity {
     private void sendOrderMessage(int selectedIndex){
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(MessageHelper.createOrderInfo(selectedIndex));
-        ChatClient.getInstance().getChat().saveMessage(message);
+        ChatClient.getInstance().chatManager().saveMessage(message);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ChatActivity extends BaseActivity {
     private void sendTrackMessage(int selectedIndex) {
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(MessageHelper.createVisitorTrack(selectedIndex));
-        ChatClient.getInstance().getChat().sendMessage(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     private String getMessageContent(int selectedIndex){
