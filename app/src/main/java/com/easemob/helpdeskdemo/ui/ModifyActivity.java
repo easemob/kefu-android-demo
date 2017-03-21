@@ -116,7 +116,6 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 			break;
 		case R.id.ib_clear:
 			edittext.getText().clear();
-			hideSoftKeyboard();
 			break;
 		default:
 			break;

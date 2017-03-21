@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.R;
+import com.hyphenate.chat.ChatClient;
 
 /**
  * Created by liyuzhao on 15/12/2016.
@@ -36,5 +37,8 @@ public class EasemobJavascriptInterface {
         }
     }
 
-
+    @JavascriptInterface
+    public String imToken(){
+        return ChatClient.getInstance().getAccessToken();
+    }
 }
