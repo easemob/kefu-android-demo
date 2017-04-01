@@ -478,7 +478,7 @@ public class VideoCallActivity extends CallActivity implements View.OnClickListe
                     if (bottomContainer.getVisibility() == View.VISIBLE){
                         bottomContainer.setVisibility(View.GONE);
                         topContainer.setVisibility(View.GONE);
-                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+                        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
                     } else {
                         bottomContainer.setVisibility(View.VISIBLE);
                         topContainer.setVisibility(View.VISIBLE);
