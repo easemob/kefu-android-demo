@@ -19,7 +19,6 @@ public class ShortCutMsgActivity extends DemoBaseActivity {
     private ArrayAdapter<String> mAdapter;
     private ListView mListView;
     private TextView txtTitle;
-    private ImageButton btnBack;
     //    private String[] promptItemStrings = { getString(R.string.text_fahuo), getString(R.string.text_weight), getString(R.string.text_color), getString(R.string.text_kuaidi) };
     protected int[] promptItemStrings = {R.string.text_fahuo, R.string.text_weight, R.string.text_color, R.string.text_kuaidi};
 
@@ -34,8 +33,7 @@ public class ShortCutMsgActivity extends DemoBaseActivity {
             mAdapter.add(getString(item));
         }
         mListView.setAdapter(mAdapter);
-        txtTitle.setText("常用语");
-        btnBack.setOnClickListener(new onBackClickListener());
+        txtTitle.setText(getResources().getString(R.string.short_cut_msg));
         mListView.setOnItemClickListener(new ListOnItemClick());
     }
 
@@ -43,7 +41,6 @@ public class ShortCutMsgActivity extends DemoBaseActivity {
     private void initView() {
         mListView = (ListView) findViewById(R.id.list);
         txtTitle = (TextView) findViewById(R.id.txtTitle);
-        btnBack = (ImageButton) findViewById(R.id.ib_back);
     }
 
 
@@ -57,12 +54,8 @@ public class ShortCutMsgActivity extends DemoBaseActivity {
         }
     }
 
-    class onBackClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            closeActivity();
-        }
+    public void back(View v) {
+        closeActivity();
     }
 
     @Override

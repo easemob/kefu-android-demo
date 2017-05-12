@@ -7,24 +7,21 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485">
+        android:layout_height="@dimen/title_height"
+        android:background="@color/sub_page_title_bg_color">
 
-        <ImageButton
-            android:id="@+id/ib_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/ease_icon_title_back" />
+        <include layout="@layout/em_commom_back_btn"
+                 android:id="@+id/rl_back"/>
 
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginLeft="37dp"
+            android:layout_centerVertical="true"
+            android:text="@string/short_cut_msg"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="19sp" />
     </RelativeLayout>
 
     <ListView

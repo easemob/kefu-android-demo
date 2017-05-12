@@ -24,7 +24,7 @@ public class ChatRowLocation extends ChatRow {
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                com.hyphenate.helpdesk.R.layout.ease_row_received_location : com.hyphenate.helpdesk.R.layout.ease_row_sent_location, this);
+                com.hyphenate.helpdesk.R.layout.hd_row_received_location : com.hyphenate.helpdesk.R.layout.hd_row_sent_location, this);
     }
 
     @Override

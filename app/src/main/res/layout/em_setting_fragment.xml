@@ -2,40 +2,43 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFEFF4" >
+    android:background="@color/normal_bg_color" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#EFEFF4"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="#ED5485">
+            android:layout_height="@dimen/title_height"
+            android:background="@color/title_bg_color">
 
             <TextView
                 android:id="@+id/btn_image_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:gravity="center"
+                android:layout_marginLeft="@dimen/title_text_margin"
+                android:gravity="center_vertical"
                 android:text="@string/setting"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/title_text_size"/>
 
-            <TextView
-                android:id="@+id/tv_qcode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+            <RelativeLayout
+	            android:id="@+id/rl_qcode"
+                android:layout_width="@dimen/title_icon_btn_layout_width"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:text="@string/qrcode"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                />
+                android:background="@drawable/hd_common_tab_bg"
+                android:clickable="true">
+                <ImageView
+                    android:layout_width="@dimen/title_customer_icon_size"
+                    android:layout_height="@dimen/title_customer_icon_size"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/hd_scan_icon"
+                    />
+            </RelativeLayout>
+
 
         </RelativeLayout>
 
@@ -48,7 +51,7 @@
             android:layout_marginTop="10dp"
             android:background="#FFFFFF"
             android:onClick="startAppKeyedit"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textview_appkey"
@@ -58,21 +61,21 @@
                 android:gravity="center_vertical"
                 android:text="AppKey  "
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tv_setting_appkey"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/textview_appkey"
                 android:layout_toLeftOf="@+id/iv_appkey_right"
+                android:layout_toRightOf="@id/textview_appkey"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:ellipsize="end"
                 android:text="sipsoft#sandbox"
                 android:textColor="#9B9B9B"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/iv_appkey_right"
@@ -81,19 +84,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -102,7 +105,7 @@
             android:layout_height="44dp"
             android:layout_marginTop="20dp"
             android:background="#FFFFFF"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textview_accountnumber"
@@ -112,20 +115,20 @@
                 android:gravity="center_vertical"
                 android:text="@string/customernumber"
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tv_setting_account"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/textview_accountnumber"
                 android:layout_toLeftOf="@+id/iv_account_right"
+                android:layout_toRightOf="@id/textview_accountnumber"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:ellipsize="end"
                 android:textColor="#9B9B9B"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/iv_account_right"
@@ -134,19 +137,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -155,7 +158,7 @@
             android:layout_height="44dp"
             android:layout_marginTop="20dp"
             android:background="#FFFFFF"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textview_nick"
@@ -165,20 +168,20 @@
                 android:gravity="center_vertical"
                 android:text="@string/set_nick"
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tv_setting_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/textview_nick"
                 android:layout_toLeftOf="@+id/iv_nick_right"
-                android:gravity="center_vertical"
-                android:singleLine="true"
+                android:layout_toRightOf="@id/textview_nick"
                 android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
                 android:textColor="#9B9B9B"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/iv_nick_right"
@@ -187,19 +190,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -208,7 +211,7 @@
             android:layout_height="44dp"
             android:layout_marginTop="20dp"
             android:background="#FFFFFF"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textview_tenant_id"
@@ -218,20 +221,20 @@
                 android:gravity="center_vertical"
                 android:text="@string/set_tenantId"
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tv_setting_tenant_id"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/textview_tenant_id"
                 android:layout_toLeftOf="@+id/iv_tenantId_right"
+                android:layout_toRightOf="@id/textview_tenant_id"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:ellipsize="end"
                 android:textColor="#9B9B9B"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/iv_tenantId_right"
@@ -240,19 +243,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -261,7 +264,7 @@
             android:layout_height="44dp"
             android:layout_marginTop="20dp"
             android:background="#FFFFFF"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textview_project_id"
@@ -271,20 +274,20 @@
                 android:gravity="center_vertical"
                 android:text="@string/set_leave_messageid"
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/tv_setting_project_id"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/textview_project_id"
                 android:layout_toLeftOf="@+id/iv_projectid_right"
+                android:layout_toRightOf="@id/textview_project_id"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:ellipsize="end"
                 android:textColor="#9B9B9B"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/iv_projectid_right"
@@ -293,19 +296,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -315,7 +318,7 @@
             android:layout_marginTop="20dp"
             android:background="#FFFFFF"
             android:onClick="contactCustomer"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -324,7 +327,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/feedback"
                 android:textColor="#000000"
-                android:textSize="17sp" />
+                android:textSize="17sp"/>
 
             <ImageView
                 android:id="@+id/imageview_back"
@@ -333,19 +336,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/em_btn_back" />
+                android:background="@drawable/em_btn_back"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentTop="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="#D6D5DB" />
+                android:background="#D6D5DB"/>
         </RelativeLayout>
     </LinearLayout>
 

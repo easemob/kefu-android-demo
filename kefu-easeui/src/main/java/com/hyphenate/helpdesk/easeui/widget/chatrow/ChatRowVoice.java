@@ -44,7 +44,7 @@ public class ChatRowVoice extends ChatRowFile{
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                R.layout.ease_row_received_voice : R.layout.ease_row_sent_voice, this);
+                R.layout.hd_row_received_voice : R.layout.hd_row_sent_voice, this);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ChatRowVoice extends ChatRowFile{
             voiceLengthView.setText(voiceBody.getLength() + "\"");
             voiceLengthView.setVisibility(View.VISIBLE);
         }else{
-            voiceLengthView.setVisibility(View.INVISIBLE);
+            voiceLengthView.setVisibility(View.GONE);
         }
 
         ViewGroup.LayoutParams layoutParams = bubbleLayout.getLayoutParams();
@@ -70,7 +70,7 @@ public class ChatRowVoice extends ChatRowFile{
         if (message.direct() == Message.Direct.RECEIVE) {
             if (message.isListened()) {
                 // 隐藏语音未听标志
-                readStatusView.setVisibility(View.INVISIBLE);
+                readStatusView.setVisibility(View.GONE);
             } else {
                 readStatusView.setVisibility(View.VISIBLE);
             }
@@ -80,7 +80,7 @@ public class ChatRowVoice extends ChatRowFile{
                 progressBar.setVisibility(View.VISIBLE);
                 setMessageReceiveCallback();
             } else {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
 
             }
             return;
@@ -137,9 +137,9 @@ public class ChatRowVoice extends ChatRowFile{
         if (((MessageAdapter)adapter).animView != null){
             boolean preIsSend = (boolean) ((MessageAdapter)adapter).animView.getTag();
             if (preIsSend){
-                ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_chatto_voice_playing);
+                ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_chatto_voice_playing);
             }else{
-                ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
             }
             ((MessageAdapter)adapter).animView = null;
         }
@@ -153,9 +153,9 @@ public class ChatRowVoice extends ChatRowFile{
         ((MessageAdapter)adapter).animView = v.findViewById(R.id.id_recorder_anim);
         ((MessageAdapter)adapter).animView.setTag(isSend);
         if (isSend){
-            ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_voice_to_icon);
+            ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_voice_to_icon);
         }else{
-            ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_voice_from_icon);
+            ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_voice_from_icon);
             if (!message.isListened()){
                 readStatusView.setVisibility(View.GONE);
                 message.setListened(true);
@@ -172,9 +172,9 @@ public class ChatRowVoice extends ChatRowFile{
             public void onCompletion(MediaPlayer mp) {
                 ((MessageAdapter)adapter).currentPlayView = null;
                 if (isSend){
-                    ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_chatto_voice_playing);
+                    ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_chatto_voice_playing);
                 }else{
-                    ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                    ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
                 }
 
             }

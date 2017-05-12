@@ -47,7 +47,7 @@ public class EmojiconMenu extends EmojiconMenuBase{
     }
 
     private void init(Context context, AttributeSet attrs){
-        LayoutInflater.from(context).inflate(R.layout.ease_widget_emojicon, this);
+        LayoutInflater.from(context).inflate(R.layout.hd_widget_emojicon, this);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EmojiconMenu);
         emojiconColumns = ta.getInt(R.styleable.EmojiconMenu_emojiconColumns, defaultColumns);
         bigEmojiconColumns = ta.getInt(R.styleable.EmojiconMenu_bigEmojiconRows, defaultBigColumns);

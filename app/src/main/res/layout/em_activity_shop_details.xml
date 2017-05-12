@@ -2,28 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF" >
+    android:background="@color/normal_bg_color" >
     <RelativeLayout 
         android:id="@+id/rl_shop_detail_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_bg_color"
         >
-        <ImageButton 
-            android:id="@+id/ib_shop_back"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ease_icon_title_back"/>
+
+	    <RelativeLayout
+		    android:id="@+id/rl_back"
+		    android:layout_width="@dimen/title_back_btn_layout_width"
+		    android:layout_height="match_parent"
+		    android:background="@drawable/hd_common_tab_bg"
+		    android:clickable="true">
+		    <ImageView
+			    android:layout_centerInParent="true"
+			    android:layout_width="@dimen/title_back_btn_size"
+			    android:layout_height="@dimen/title_back_btn_size"
+			    android:background="@drawable/hd_icon_title_back"/>
+	    </RelativeLayout>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:text="商品详情"/>
+            android:layout_toRightOf="@+id/rl_back"
+            android:layout_centerVertical="true"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/title_text_size"
+            android:text="@string/shop_detail_title"/>
     </RelativeLayout>
 	<ScrollView 
 	    android:layout_below="@id/rl_shop_detail_title"
@@ -31,40 +38,69 @@
 	    android:layout_width="match_parent"
 	    android:paddingBottom="52dp"
 	    >
-        <ImageView
-            android:id="@+id/iv_buy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/em_shop_image_details"
-            android:adjustViewBounds="true"
-            />
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<!-- 长图 分图显示 -->
+			<ImageView
+				android:id="@+id/iv_buy_part1"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:scaleType="fitXY"
+				android:adjustViewBounds="true"
+				/>
+			<ImageView
+				android:id="@+id/iv_buy_part2"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:scaleType="fitXY"
+				android:adjustViewBounds="true"
+				/>
+			<ImageView
+				android:id="@+id/iv_buy_part3"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:scaleType="fitXY"
+				android:adjustViewBounds="true"
+				/>
+		</LinearLayout>
     </ScrollView>
     <RelativeLayout 
         android:id="@+id/rl_tochat"
         android:layout_alignParentBottom="true"
-        android:layout_height="52dp"
-        android:background="#ddF2F1F1"
+        android:layout_height="@dimen/bottom_navi_height"
+        android:background="@color/normal_bg_color"
         android:layout_width="match_parent">
         
-        <RelativeLayout 
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_centerInParent="true">
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 	        <ImageView 
-	            android:layout_marginRight="10dp"
+	            android:layout_marginLeft="@dimen/title_text_margin"
 	            android:id="@+id/iv_connect_customer"
-	            android:layout_height="wrap_content"
-	            android:layout_width="wrap_content"
-	            android:background="@drawable/em_icon_chat"/>
+	            android:layout_height="@dimen/title_customer_icon_size"
+	            android:layout_width="@dimen/title_customer_icon_size"
+	            android:background="@drawable/hd_chat_icon_red"/>
 	        <TextView 
-	            android:layout_toRightOf="@id/iv_connect_customer"
+	            android:layout_marginLeft="@dimen/bottom_text_margin_left_icon"
 	            android:layout_height="wrap_content"
 	            android:layout_width="wrap_content"
-	            android:textColor="#000000"
-	            android:textSize="18sp"
-	            android:text="联系客服"/>
-        </RelativeLayout>
+	            android:textColor="@color/bottom_customer_text_color"
+	            android:textSize="@dimen/title_text_size"
+	            android:text="@string/shop_detail_kefu_service"/>
+	        <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"/>
+	        <ImageView
+		        android:layout_marginRight="@dimen/title_text_margin"
+		        android:layout_height="@dimen/title_customer_icon_size"
+		        android:layout_width="@dimen/title_customer_icon_size"
+		        android:background="@drawable/hd_icon_like_gray"/>
+        </LinearLayout>
     </RelativeLayout>
 	<View 
 	    	android:layout_above="@id/rl_tochat"

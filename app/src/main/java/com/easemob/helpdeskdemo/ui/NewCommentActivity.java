@@ -1,6 +1,7 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
@@ -8,18 +9,24 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +39,8 @@ import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.NewCommentBody;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
-import com.hyphenate.helpdesk.easeui.widget.RecorderButton;
+import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
+import com.hyphenate.helpdesk.easeui.widget.RecorderMenu;
 import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.util.DensityUtil;
 
@@ -58,42 +66,55 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
     private static final String TAG = NewCommentActivity.class.getSimpleName();
     protected static final int REQUEST_CODE_LOCAL = 3;
-    private ImageButton ibBack;
-    private Button btnSend;
-    private RecorderButton recButton;
+    private RelativeLayout rlBack;
+    private RelativeLayout rlSend;
+    private RecorderMenu recorderMenu;
+    private ImageButton recButton;
+    private ImageButton addFile;
     private EditText editText;
-    private TextView tvAddFile;
     private ProgressDialog pd;
     private String ticketId;
     private LinearLayout fileLayout;
+    private ScrollView sFileLayout;
     private List<FileEntity> fileList = Collections.synchronizedList(new ArrayList<FileEntity>());
     private LayoutInflater inflater;
+    private InputMethodManager iMM;
 
+    private boolean isDisplayRecMenu = false;
 
+    private Handler mHandler = new Handler();
+
+    private final long refleshDelayTime = 200;
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_comment_reply);
         ticketId = getIntent().getStringExtra("id");
         inflater = LayoutInflater.from(this);
+        iMM = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         initView();
         initListener();
     }
 
     private void initView() {
-        ibBack = $(R.id.ib_back);
-        btnSend = $(R.id.btn_send);
+        rlBack = $(R.id.rl_back);
+        rlSend = $(R.id.rl_new_comment_send);
         editText = $(R.id.edittext);
-        tvAddFile = $(R.id.tv_add_file);
+        addFile = $(R.id.ib_add_file);
+        recButton = $(R.id.ib_record_btn);
         fileLayout = $(R.id.file_layout);
-        recButton = $(R.id.btn_voice);
+        sFileLayout = $(R.id.sv_file_layout);
+        recorderMenu = $(R.id.new_comment_record_menu);
+        isDisplayRecMenu = false;
     }
 
     private void initListener() {
-        ibBack.setOnClickListener(this);
-        btnSend.setOnClickListener(this);
-        tvAddFile.setOnClickListener(this);
-        recButton.setAudioFinishRecorderListener(new RecorderButton.AudioFinishRecorderListener() {
+        rlBack.setOnClickListener(this);
+        rlSend.setOnClickListener(this);
+        addFile.setOnClickListener(this);
+        recButton.setOnClickListener(this);
+        editText.setOnClickListener(this);
+        recorderMenu.setAudioFinishRecorderListener(new RecorderMenu.AudioFinishRecorderListener() {
             @Override
             public void onFinish(float seconds, String filePath) {
                 uploadFile(filePath);
@@ -121,12 +142,12 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private void playVoiceItem(View v, String voiceLocalPath) {
         //播放动画
         if (animView != null) {
-            animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+            animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
             animView = null;
         }
 
         animView = v.findViewById(R.id.id_recorder_anim);
-        animView.setBackgroundResource(R.drawable.ease_voice_from_icon);
+        animView.setBackgroundResource(R.drawable.hd_voice_from_icon);
         AnimationDrawable anim = (AnimationDrawable) animView.getBackground();
         anim.start();
 
@@ -134,7 +155,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         MediaManager.playSound(getBaseContext(), voiceLocalPath, new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
             }
         });
     }
@@ -178,26 +199,60 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                 fileLayout.addView(view, lp);
             }
         }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sFileLayout.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        }, refleshDelayTime);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ib_back:
+            case R.id.rl_back:
                 finish();
                 break;
-            case R.id.btn_send:
+            case R.id.rl_new_comment_send:
                 String content = editText.getText().toString();
                 if (TextUtils.isEmpty(content) && fileList.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "评论内容不能为空!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.comment_content_not_null, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 createComment(ticketId, content);
                 break;
-            case R.id.tv_add_file:
+            case R.id.ib_add_file:
                 openFilesView();
                 break;
+            case R.id.ib_record_btn:
+                switchRecordBtnStatus();
+                break;
+            case R.id.edittext:
+                if (isDisplayRecMenu) {
+                    switchRecordBtnStatus();
+                }
+                break;
+        }
+    }
+
+    private void switchRecordBtnStatus() {
+        if (isDisplayRecMenu) {
+            recButton.setBackgroundResource(R.drawable.hd_comment_voice_btn_normal);
+            recorderMenu.setVisibility(View.GONE);
+        } else {
+            recButton.setBackgroundResource(R.drawable.hd_chatting_setmode_keyboard_btn_normal);
+            recorderMenu.setVisibility(View.VISIBLE);
+            hideKeyboard();
+        }
+        isDisplayRecMenu = !isDisplayRecMenu;
+    }
+
+    public void hideKeyboard() {
+        if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+            if (getCurrentFocus() != null)
+                iMM.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -347,7 +402,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e(TAG, "Upload Error:" + t.getMessage());
                 closeDialog();
-                Toast.makeText(getApplicationContext(), "文件上传失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.file_upload_fail, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -357,14 +412,14 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
     private void createComment(final String ticketId, String content) {
         if (!ChatClient.getInstance().isLoggedInBefore()) {
-            Toast.makeText(getApplicationContext(), "请先登录!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.login_user_noti, Toast.LENGTH_SHORT).show();
             return;
         }
         if (pd == null) {
             pd = new ProgressDialog(this);
             pd.setCanceledOnTouchOutside(false);
         }
-        pd.setMessage("请等待...");
+        pd.setMessage(getResources().getString(R.string.please_wait_noti));
         pd.show();
         String target = Preferences.getInstance().getCustomerAccount();
         String userId = ChatClient.getInstance().getCurrentUserName();
@@ -391,7 +446,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void run() {
                         closeDialog();
-                        Toast.makeText(getApplicationContext(), "评论成功!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.comment_suc, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK, getIntent());
                         finish();
                     }
@@ -407,7 +462,9 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void run() {
                         closeDialog();
-                        Toast.makeText(getApplicationContext(), "评论失败!", Toast.LENGTH_SHORT).show();
+                        if (!NewCommentActivity.this.isFinishing()) {
+                            showAlertDialog();
+                        }
                     }
                 });
             }
@@ -415,6 +472,20 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
     }
 
+    private void showAlertDialog() {
+        FragmentTransaction mFragTransaction = getSupportFragmentManager().beginTransaction();
+        String fragmentTag = "dialogFragment";
+        Fragment fragment =  getSupportFragmentManager().findFragmentByTag(fragmentTag);
+        if(fragment!=null){
+            //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
+            mFragTransaction.remove(fragment);
+        }
+        final AlertDialogFragment dialogFragment = new AlertDialogFragment();
+        dialogFragment.setTitleText(getString(R.string.new_leave_msg_sub_fail));
+        dialogFragment.setContentText(getString(R.string.new_leave_msg_sub_fail_alert_content));
+        dialogFragment.setRightBtnText(getString(R.string.new_leave_msg_alert_ok));
+        dialogFragment.show(mFragTransaction, fragmentTag);
+    }
 
     private List<NewCommentBody.AttachmentsBean> getAttachements(List<FileEntity> fileEntities) {
         List<NewCommentBody.AttachmentsBean> beanList = new ArrayList<>();
@@ -432,7 +503,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private void showDialog() {
         if (pd == null) {
             pd = new ProgressDialog(this);
-            pd.setMessage("文件上传中...");
+            pd.setMessage(getResources().getString(R.string.file_uploading));
             pd.setCanceledOnTouchOutside(false);
             pd.setCancelable(false);
         }

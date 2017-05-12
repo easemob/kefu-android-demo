@@ -42,7 +42,7 @@ public class EmojiconScrollTabBar extends RelativeLayout{
     
     private void init(Context context, AttributeSet attrs){
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.ease_widget_emojicon_tab_bar, this);
+        LayoutInflater.from(context).inflate(R.layout.hd_widget_emojicon_tab_bar, this);
         
         scrollView = (HorizontalScrollView) findViewById(R.id.scroll_view);
         tabContainer = (LinearLayout) findViewById(R.id.tab_container);
@@ -53,7 +53,7 @@ public class EmojiconScrollTabBar extends RelativeLayout{
      * @param icon
      */
     public void addTab(int icon){
-        View tabView = View.inflate(context, R.layout.ease_scroll_tab_item, null);
+        View tabView = View.inflate(context, R.layout.hd_scroll_tab_item, null);
         ImageView imageView = (ImageView) tabView.findViewById(R.id.iv_icon);
         imageView.setImageResource(icon);
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, tabWidth), LayoutParams.MATCH_PARENT);

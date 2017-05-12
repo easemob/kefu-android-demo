@@ -25,7 +25,7 @@ public class ChatRowText extends ChatRow{
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                R.layout.ease_row_received_message : R.layout.ease_row_sent_message, this);
+                R.layout.hd_row_received_message : R.layout.hd_row_sent_message, this);
     }
 
     @Override

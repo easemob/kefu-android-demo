@@ -2,35 +2,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFEFF4"
+    android:background="@color/main_bg_color"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_modified_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485">
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_bg_color">
 
-        <ImageButton
-            android:id="@+id/ib_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/ease_icon_title_back" />
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/title_back_btn_layout_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/title_back_btn_size"
+                android:layout_height="@dimen/title_back_btn_size"
+                android:background="@drawable/hd_icon_title_back"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#FFFFFF"
-            android:text="留言详情"
-            android:textSize="20sp" />
+            android:layout_toRightOf="@+id/rl_back"
+            android:layout_centerVertical="true"
+            android:textColor="@color/main_text_color"
+            android:text="@string/note_detail"
+            android:textSize="@dimen/title_text_size" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/main_text_color"
         >
 <!--
         <include
@@ -42,13 +49,15 @@
             />-->
         <Button
             android:id="@+id/button_reply"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#ED5485"
+            android:layout_width="@dimen/bottom_big_btn_width"
+            android:layout_height="@dimen/bottom_big_btn_height"
+            android:layout_marginBottom="@dimen/bottom_big_btn_margin_bottom"
+            android:background="@color/title_bg_color"
             android:layout_alignParentBottom="true"
-            android:text="回复"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/note_responses"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/main_content_text_size"
             android:gravity="center"
             />
 
@@ -57,7 +66,7 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="@dimen/bottom_navi_height"
             android:cacheColorHint="@android:color/transparent">
         </ListView>
     </RelativeLayout>

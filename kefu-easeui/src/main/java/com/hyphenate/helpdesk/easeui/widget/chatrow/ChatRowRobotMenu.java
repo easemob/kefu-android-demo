@@ -31,8 +31,8 @@ public class ChatRowRobotMenu extends ChatRow{
     @Override
     protected void onInflatView() {
         if (MessageHelper.getRobotMenu(message) != null) {
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.ease_row_received_menu
-                    : R.layout.ease_row_sent_message, this);
+            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_menu
+                    : R.layout.hd_row_sent_message, this);
         }
     }
 
@@ -72,7 +72,7 @@ public class ChatRowRobotMenu extends ChatRow{
                 final TextView textView = new TextView(context);
                 textView.setText(content);
                 textView.setTextSize(15);
-                textView.setTextColor(context.getResources().getColorStateList(R.color.ease_menu_msg_text_color));
+                textView.setTextColor(context.getResources().getColorStateList(R.color.hd_menu_msg_text_color));
                 textView.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -94,7 +94,7 @@ public class ChatRowRobotMenu extends ChatRow{
                 final TextView textView = new TextView(context);
                 textView.setText(content);
                 textView.setTextSize(15);
-                textView.setTextColor(context.getResources().getColorStateList(R.color.ease_menu_msg_text_color));
+                textView.setTextColor(context.getResources().getColorStateList(R.color.hd_menu_msg_text_color));
                 textView.setOnClickListener(new View.OnClickListener(){
 
                     @Override

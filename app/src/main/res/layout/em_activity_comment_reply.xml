@@ -2,113 +2,130 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/common_bg">
 
     <RelativeLayout
-        android:id="@+id/rl_modified_title"
+        android:id="@+id/rl_comment_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485">
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_bg_color">
 
-        <ImageButton
-            android:id="@+id/ib_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/ease_icon_title_back" />
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/title_back_btn_layout_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/title_back_btn_size"
+                android:layout_height="@dimen/title_back_btn_size"
+                android:background="@drawable/hd_icon_title_back"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="写评论"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="发送"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:layout_toRightOf="@id/rl_back"
+            android:text="@string/new_comment_title"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/title_text_size" />
 
+        <RelativeLayout
+            android:id="@+id/rl_new_comment_send"
+            android:layout_width="@dimen/title_icon_btn_layout_width"
+            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <TextView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_comment_send"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/new_leave_text_size"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/edittext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:gravity="left|top"
-        android:hint="写评论..."
-        android:minLines="5"
-        android:padding="10dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="#b9b9b9"
-        android:textSize="16sp" />
+            android:id="@+id/edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="200dp"
+            android:background="@android:color/transparent"
+            android:gravity="left|top"
+            android:hint="@string/new_comment_hint"
+            android:minLines="8"
+            android:padding="10dp"
+            android:textColor="@color/comment_text_color"
+            android:textColorHint="@color/new_leave_hint_text_color"
+            android:textSize="@dimen/new_leave_text_size" />
 
-    <View style="@style/line_e3e9e9" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_add_file"
-            android:layout_width="wrap_content"
-            android:layout_height="30dip"
-            android:layout_margin="10dp"
-            android:background="@drawable/em_blue_bg_comment"
-            android:drawableLeft="@drawable/em_icon_comment_add"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="添加附件"
-            android:textColor="#4eb1f4"
-            android:typeface="serif" />
-
-        <com.hyphenate.helpdesk.easeui.widget.RecorderButton
-            android:id="@+id/btn_voice"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/rl_multi_and_send"
-            android:layout_toRightOf="@+id/btn_voice_or_text"
-            android:background="@drawable/btn_recorder_normal"
-            android:minHeight="0dp"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="#727272"
-            android:text="按住录音"
-            >
-
-
-        </com.hyphenate.helpdesk.easeui.widget.RecorderButton>
-
-    </LinearLayout>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/file_layout"
+            android:id="@+id/rl_file_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="14dp"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingLeft="18dp"
+            >
 
-    </ScrollView>
+            <ScrollView
+                android:id="@+id/sv_file_layout"
+                android:layout_width="@dimen/activity_comment_reply_file_layout_width"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true">
 
+                <LinearLayout
+                    android:id="@+id/file_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+            </ScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/ib_add_file"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/hd_chatting_setmode_attachment_btn_normal"/>
+
+            <ImageButton
+                android:id="@+id/ib_record_btn"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:background="@drawable/hd_chatting_setmode_voice_btn_normal"/>
+        </LinearLayout>
+
+        <com.hyphenate.helpdesk.easeui.widget.RecorderMenu
+            android:id="@+id/new_comment_record_menu"
+            android:layout_width="match_parent"
+            android:layout_height="139dp"
+            android:visibility="gone"/>
+    </LinearLayout>
 </LinearLayout>

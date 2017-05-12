@@ -59,7 +59,7 @@ public class BaiduMapActivity extends BaseActivity {
     public class BaiduSDKReceiver extends BroadcastReceiver {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getAction();
-            String st1 = getResources().getString(R.string.Network_error);
+            String st1 = getResources().getString(R.string.network_error);
             if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
 
                 String st2 = getResources().getString(R.string.please_check);
@@ -120,7 +120,7 @@ public class BaiduMapActivity extends BaseActivity {
         converter.from(CoordinateConverter.CoordType.COMMON);
         LatLng convertLatLng = converter.convert();
         OverlayOptions ooA = new MarkerOptions().position(convertLatLng).icon(BitmapDescriptorFactory
-                .fromResource(R.drawable.ease_icon_marka))
+                .fromResource(R.drawable.hd_icon_marka))
                 .zIndex(4).draggable(true);
         mBaiduMap.addOverlay(ooA);
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(convertLatLng, 17.0f);
@@ -223,7 +223,7 @@ public class BaiduMapActivity extends BaseActivity {
             converter.from(CoordinateConverter.CoordType.COMMON);
             LatLng convertLatLng = converter.convert();
             OverlayOptions ooA = new MarkerOptions().position(convertLatLng).icon(BitmapDescriptorFactory
-                    .fromResource(R.drawable.ease_icon_marka))
+                    .fromResource(R.drawable.hd_icon_marka))
                     .zIndex(4).draggable(true);
             mBaiduMap.addOverlay(ooA);
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(convertLatLng, 17.0f);
@@ -248,7 +248,7 @@ public class BaiduMapActivity extends BaseActivity {
         intent.putExtra("address", lastLocation.getAddrStr());
         this.setResult(RESULT_OK, intent);
         finish();
-        overridePendingTransition(R.anim.ease_slide_in_from_left, R.anim.ease_slide_out_to_right);
+        overridePendingTransition(R.anim.hd_slide_in_from_left, R.anim.hd_slide_out_to_right);
     }
 
 }

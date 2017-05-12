@@ -34,7 +34,7 @@ public class ChatRowTrack extends ChatRow {
     @Override
     protected void onInflatView() {
         if (MessageHelper.getVisitorTrack(message) != null) {
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.ease_row_received_message : R.layout.em_row_sent_track, this);
+            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_message : R.layout.em_row_sent_track, this);
         }
 
     }
@@ -77,7 +77,7 @@ public class ChatRowTrack extends ChatRow {
         mTextViewprice.setText(visitorTrack.getPrice());
         String imageUrl = visitorTrack.getImageUrl();
         if (!TextUtils.isEmpty(imageUrl)) {
-            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.ease_default_image).into(mImageView);
+            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mImageView);
         }
     }
 

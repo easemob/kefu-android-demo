@@ -3,6 +3,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:keepScreenOn="true"
     android:animateLayoutChanges="true">
 
     <com.hyphenate.media.OppositeSurfaceView
@@ -36,7 +37,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="环信商城客服"
+                android:text="@string/easemob_cs_title"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
@@ -63,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="张三"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -142,7 +142,7 @@
                             android:layout_height="45dp"
                             android:background="@drawable/em_bg_call_hangup"
                             android:gravity="center"
-                            android:text="挂断"
+                            android:text="@string/video_call_hang_up"
                             android:textColor="@android:color/white"
                             android:textSize="20sp"
                             android:visibility="invisible" />
@@ -159,7 +159,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/em_bg_call_hangup"
                                 android:gravity="center"
-                                android:text="拒绝"
+                                android:text="@string/video_call_reject"
                                 android:textColor="@android:color/white"
                                 android:textSize="20sp" />
 
@@ -171,7 +171,7 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/em_bg_call_accept"
                                 android:gravity="center"
-                                android:text="接受"
+                                android:text="@string/video_call_accept"
                                 android:textColor="@android:color/white"
                                 android:textSize="20sp" />
                         </LinearLayout>

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ECECEC" >
+    android:background="@color/normal_bg_color" >
 
     <RelativeLayout
         android:id="@+id/shop_title"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#ED5485" >
+        android:layout_height="@dimen/title_height"
+        android:background="@color/title_bg_color" >
 
         <Button
             android:id="@+id/btnHistory"
@@ -17,36 +18,27 @@
             android:text="@string/history_record"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/btn_image_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/shopping"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+        <ImageView
+            android:layout_width="96.8dp"
+            android:layout_height="16.8dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/hd_logo" />
 
-        <TextView
+        <RelativeLayout
             android:id="@+id/textview_customer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/title_icon_btn_layout_width"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/connect_customer"
-            android:textColor="#FFFFFF"
-            android:textSize="17sp" />
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <ImageView
+                android:layout_width="@dimen/title_customer_icon_size"
+                android:layout_height="@dimen/title_customer_icon_size"
+                android:layout_centerInParent="true"
+                android:background="@drawable/hd_chat_icon"/>
+        </RelativeLayout>
     </RelativeLayout>
 
-    <!--
-         <WebView 
-        android:layout_below="@+id/btn_image_title"
-        android:id="@+id/webView"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"/>
-    -->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -61,7 +53,11 @@
             android:paddingBottom="50dp"
             
              >
-
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/shop_main_introduce"
+                android:background="@drawable/em_main_introduce"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,67 +65,149 @@
                 
                 >
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginRight="1dp"
                     android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical" >
                     <ImageButton
                         android:id="@+id/ib_shop_imageone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleType="center"
-                        android:src="@drawable/em_example_image_1" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/em_example_image_1" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="2015早春新款高腰复古牛仔裙"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="14dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example1_text"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ff0000"
+                            android:layout_marginRight="5dp"
+                            android:text="¥8000"
+                            android:textSize="10dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" ￥ 128"
-                        android:textColor="#CC0033"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="3dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="8dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example1_text_description"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/em_example1_thru_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginRight="5dp"
+                            android:text="¥120000"
+                            android:textSize="8dp"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="1dp"
                     android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical" >
+
                     <ImageButton
                         android:id="@+id/ib_shop_imagetwo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleType="center"
-                        android:src="@drawable/em_example_image_2" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@drawable/em_example_image_2"
+                        android:scaleType="fitCenter"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="露肩名媛范套装"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="14dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example2_text"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ff0000"
+                            android:layout_marginRight="5dp"
+                            android:text="¥158000"
+                            android:textSize="10dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" ￥ 518"
-                        android:textColor="#CC0033"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="3dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="8dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example2_text_description"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/em_example2_thru_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginRight="5dp"
+                            android:text="¥160000"
+                            android:textSize="8dp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -139,71 +217,153 @@
                 android:orientation="horizontal" >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginTop="1dp"
                     android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical" >
 
                     <ImageButton
                         android:id="@+id/ib_shop_imagethree"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleType="center"
-                        android:src="@drawable/em_example_image_3" />
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@drawable/em_example_image_3"
+                        android:scaleType="fitCenter"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="假两件衬衣+V领毛衣上衣"
-                        android:textColor="#000000" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="14dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example3_text"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ff0000"
+                            android:layout_marginRight="5dp"
+                            android:text="¥5400"
+                            android:textSize="10dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" ￥ 235"
-                        android:textColor="#CC0033"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="3dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="8dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example3_text_description"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/em_example3_thru_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginRight="5dp"
+                            android:text="¥6000"
+                            android:textSize="8dp"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="1dp"
                     android:layout_weight="1"
                     android:background="#FFFFFF"
                     android:orientation="vertical" >
 
                     <ImageButton
                         android:id="@+id/ib_shop_imagefour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:scaleType="center"
-                        android:src="@drawable/em_example_image_4" />
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@drawable/em_example_image_4"
+                        android:scaleType="fitCenter"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="插肩棒球衫外套"
-                        android:textColor="#000000" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="14dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example4_text"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ff0000"
+                            android:layout_marginRight="5dp"
+                            android:text="160000"
+                            android:textSize="10dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=" ￥ 162"
-                        android:textColor="#CC0033"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="3dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="120dp"
+                            android:maxLines="3"
+                            android:textSize="8dp"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/em_example4_text_description"
+                            />
+                        <View
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/em_example4_thru_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4c4c4c"
+                            android:layout_marginRight="5dp"
+                            android:text="¥1655000"
+                            android:textSize="8dp"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

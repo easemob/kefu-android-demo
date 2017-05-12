@@ -82,7 +82,7 @@ public class SatisfactionActivity extends BaseActivity {
                             if (pd != null && pd.isShowing()) {
                                 pd.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), "评价成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.comment_suc, Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK);
                             finish();
                         }

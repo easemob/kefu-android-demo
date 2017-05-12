@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="common_botton_bar_blue">#2ea7e0</color>
+    <color name="common_bg">#fcfcfc</color>
+    <color name="top_bar_normal_bg">#00acff</color>
+    <color name="btn_gray_normal">#c0c0c0</color>
+    <color name="btn_gray_pressed_status">#b5b5b6</color>
+    <color name="btn_blue_normal">#1e90ff</color>
+    <color name="btn_blue_pressed">#0066FF</color>
+    <color name="orange">#FFA500</color>
+    <color name="gray_pressed">#b5b5b6</color>
+    <color name="gray_normal">#666667</color>
+	<color name="holo_blue_bright">#ff00ddff</color>
+	<color name="holo_green_light">#ff99cc00</color>
+	<color name="holo_orange_light">#ffffbb33</color>
+	<color name="holo_red_light">#ffff4444</color>
+	<color name="emojicon_tab_selected">#D9D9D9</color>
+    <color name="emojicon_tab_nomal">#ffffff</color>
+
+	<color name="title_bg_color">#b81616</color>
+	<color name="sub_page_title_bg_color">#b6000000</color>
+	<color name="main_text_color">#FFFFFF</color>
+	<color name="main_bg_color">#00FFFFFF</color>
+	<color name="normal_bg_color">#FFFFFF</color>
+	<color name="bottom_customer_text_color">#4c4c4c</color>
+	<color name="new_leave_text_color">#4c4c4c</color>
+	<color name="new_leave_hint_text_color">#979797</color>
+	<color name="divider_color">#979797</color>
+	<color name="emoji_send_btn_disable_bg_color">#D8D8D8</color>
+	<color name="emoji_send_btn_enable_bg_color">#b81616</color>
+	<color name="comment_text_color">#2b2b2b</color>
+</resources>

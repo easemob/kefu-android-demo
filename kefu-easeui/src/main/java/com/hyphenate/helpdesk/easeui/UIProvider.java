@@ -42,7 +42,7 @@ public class UIProvider {
      */
     private Notifier notifier = null;
 
-    private boolean showProgress = false;
+    private boolean showProgress = true;
 
     /**
      * 用来记录注册了eventlistener的foreground Activity

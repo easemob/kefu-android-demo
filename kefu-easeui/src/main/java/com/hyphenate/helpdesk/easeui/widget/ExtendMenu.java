@@ -162,7 +162,7 @@ public class ExtendMenu extends GridView {
         }
 
         private void init(Context context, AttributeSet attrs) {
-            LayoutInflater.from(context).inflate(R.layout.ease_chat_menu_item, this);
+            LayoutInflater.from(context).inflate(R.layout.hd_chat_menu_item, this);
             imageView = (ImageView) findViewById(R.id.image);
             textView = (TextView) findViewById(R.id.text);
         }

@@ -48,8 +48,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private RelativeLayout rlNick;
 	private RelativeLayout rlTenantId;
 	private RelativeLayout rlProjectId;
-
-	private TextView tvQcode;
+	private RelativeLayout rlQcode;
 
 	private TextView tvAppkey;
 	private TextView tvAccount;
@@ -92,8 +91,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlNick = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_nick);
 		rlTenantId = (RelativeLayout) getView().findViewById(R.id.ll_setting_tenant_id);
 		rlProjectId = (RelativeLayout) getView().findViewById(R.id.ll_setting_project_id);
-
-		tvQcode = (TextView) getView().findViewById(R.id.tv_qcode);
+		rlQcode = (RelativeLayout) getView().findViewById(R.id.rl_qcode);
 	}
 
 	private void initListener() {
@@ -108,8 +106,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlNick.setOnClickListener(this);
 		rlTenantId.setOnClickListener(this);
 		rlProjectId.setOnClickListener(this);
-
-		tvQcode.setOnClickListener(this);
+		rlQcode.setOnClickListener(this);
 	}
 
 
@@ -123,11 +120,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					String oldAppkey = tvAppkey.getText().toString();
 					String newAppkey = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
 					if (TextUtils.isEmpty(newAppkey.trim())) {
-						Toast.makeText(getActivity(), "appkey不能为空,设置失败!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), R.string.app_key_cannot_be_empty, Toast.LENGTH_SHORT).show();
 						return;
 					}
 					if (!newAppkey.matches("^[0-9a-zA-Z-_#]+$")) {
-						Toast.makeText(getActivity(), "appkey格式不正确,设置失败!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getActivity(), R.string.app_key_format_wrong, Toast.LENGTH_SHORT).show();
 						return;
 					}
 
@@ -309,7 +306,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				try {
 					ChatClient.getInstance().changeAppKey(appkey);
 				} catch (HyphenateException e) {
-					Toast.makeText(getActivity(), "修改appkey失败!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), R.string.app_key_modify_fail, Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -355,7 +352,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strProjectId);
 				startActivityForResult(intent, REQUEST_CODE_PROJECT_ID);
 				break;
-			case R.id.tv_qcode:
+			case R.id.rl_qcode:
 				intent.setClass(getActivity(), CaptureActivity.class);
 				startActivityForResult(intent, REQUEST_CODE_QCODE);
 				break;

@@ -7,12 +7,14 @@
     <string name="attach_location">位置</string>
     <string name="attach_short_cut_message">常用语</string>
     <string name="attach_call_video">发起视频</string>
-    <string name="location_message">位置信息</string>
-    <string name="Network_error">网络出错</string>
+    <string name="location_message">发送位置</string>
+    <string name="please_check">key检查出错!请在 AndroidManifest.xml 中检查key</string>
     <string name="text_fahuo">你们多久可以发货?</string>
     <string name="text_weight">这个我应该穿什么号的？我身高165，体重46kg</string>
     <string name="text_color">还有其他颜色的吗?</string>
     <string name="text_kuaidi">你们发的是什么快递?</string>
+    <string name="unable_to_get_loaction">不能获取您的位置!</string>
+    <string name="cant_find_pictures">找不到图片</string>
     <string name="system_is_regist">系统正在自动为您注册用户...</string>
     <string name="is_contact_customer">正在联系客服，请稍等...</string>
     <string name="is_contact_customer_failure_seconed">联系客服失败:</string>
@@ -35,11 +37,15 @@
     <string name="pop_pre_sales">售前客服</string>
     <string name="pop_after_sales">售后客服</string>
 
+    <string name="register_user_fail">注册失败!</string>
+
     <string name="leave_title">留言</string>
-    <string name="leave_name">姓名</string>
-    <string name="leave_phone">电话</string>
-    <string name="leave_email">邮箱</string>
-    <string name="leave_content">内容</string>
+    <string name="leave_name">名字:</string>
+    <string name="leave_phone">电话:</string>
+    <string name="leave_email">邮箱:</string>
+    <string name="leave_theme">主题:</string>
+    <string name="leave_detail">详细信息</string>
+    <string name="leave_content">输入留言</string>
     <string name="leave_sending">正在发送中...</string>
 
     <string name="delete_message">删除消息</string>
@@ -58,7 +64,48 @@
     <string name="tip_btn_sumbit">提交</string>
     <string name="tip_btn_evaluation">立即评价</string>
 
+    <string name="empty_view_tip">暂无数据</string>
+    <string name="audio_download_suc">语音下载成功</string>
+    <string name="file_download_fail">文件下载失败</string>
+    <string name="file_cannot_be_opened">文件无法打开</string>
+    
+    <string name="user_already_exists">用户已经存在</string>
+    <string name="no_register_authority">无开放注册权限</string>
+    <string name="file_upload_fail">文件上传失败</string>
+    <string name="login_user_noti">请先登录</string>
+    <string name="comment_suc">评论成功</string>
+    <string name="comment_fail">评论失败</string>
+    <string name="file_uploading">文件下载中...</string>
+    <string name="comment_content_not_null">评论内容不能为空</string>
+    <string name="please_wait_noti">请等待...</string>
+    <string name="send_suc">发送成功</string>
+    <string name="app_key_cannot_be_empty">appkey不能为空, 设置失败!</string>
+    <string name="app_key_format_wrong">appkey格式不正确，设置失败!</string>
+    <string name="app_key_modify_fail">修改appkey失败!</string>
+    <string name="short_cut_msg">常用语</string>
+    <string name="comment_load_fail">评论加载出错</string>
 
+    <!-- Note Detail start -->
+    <string name="note_detail">留言详情</string>
+    <string name="note_reply">回复</string>
+    <string name="note_id">留言ID:</string>
+    <string name="note_subject">主题:</string>
+    <string name="note_name">访客昵称:</string>
+    <string name="note_content">内容:</string>
+    <string name="note_phone">手机:</string>
+    <string name="note_qq">QQ:</string>
+    <string name="note_weibo">微博:</string>
+    <string name="note_email">邮件:</string>
+    <string name="note_responses">评论</string>
+    <!-- Note Detail end -->
+
+    <!-- New Comment start -->
+    <string name="new_comment_title">写评论</string>
+    <string name="new_comment_send">发送</string>
+    <string name="new_comment_hint">写评论...</string>
+    <string name="new_comment_attach">添加附件</string>
+    <string name="new_comment_talk">按住录音</string>
+    <!-- New Leave Msg end -->
 
     <!-- call start -->
     <string name="The_other_is_not_online">对方不在线</string>
@@ -88,5 +135,26 @@
     <string name="hanging_up">挂断中……</string>
     <string name="answering">接受中...</string>
     <!-- call end -->
+    <string name="setting_name">名字:</string>
+    <string name="setting_org">组织:</string>
+    <string name="setting_appname">应用名:</string>
+    <string name="setting_number">号码:</string>
+    <string name="setting_confirm">确认:</string>
+    <string name="setting_status">状态:</string>
+    <string name="setting_time">时间:</string>
 
+    <string name="modify_save">保存</string>
+    <string name="network_error">网络错误</string>
+	<string name="file_download_title">文件下载</string>
+
+	<string name="em_example1_text">古驰亮色夹克</string>
+    <string name="em_example1_text_description">11月销量: 3399</string>
+    <string name="em_example2_text">铂金女士手提袋</string>
+    <string name="em_example2_text_description">11月销量: 20</string>
+    <string name="em_example3_text">缪缪女士高跟鞋</string>
+    <string name="em_example3_text_description">11月销量: 435</string>
+    <string name="em_example4_text">卡地亚的一块手表</string>
+    <string name="em_example4_text_description">11月销量:  10</string>
+    <string name="em_notice_sending">发送中...</string>
+    <string name="order_number">订单号</string>
 </resources>

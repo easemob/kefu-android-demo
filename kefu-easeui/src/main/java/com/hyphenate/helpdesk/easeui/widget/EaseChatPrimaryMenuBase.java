@@ -4,8 +4,10 @@ package com.hyphenate.helpdesk.easeui.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
@@ -13,6 +15,7 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
     protected EaseChatPrimaryMenuListener listener;
     protected Activity activity;
     protected InputMethodManager inputManager;
+    protected Button emojiSendBtn;
 
     public EaseChatPrimaryMenuBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -32,6 +35,10 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
     private void init(Context context) {
         this.activity = (Activity) context;
         inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    }
+
+    public void setEmojiSendBtn(Button btn){
+       emojiSendBtn = btn;
     }
 
     /**
@@ -75,6 +82,10 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
                 inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public void displayKeyboard(View view) {
+        inputManager.showSoftInput(view, 0);
     }
 
     public interface EaseChatPrimaryMenuListener {

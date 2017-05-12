@@ -92,15 +92,15 @@ public class LoginActivity extends DemoBaseActivity {
 							progressDialog.dismiss();
 						}
 						if (errorCode == Error.NETWORK_ERROR){
-							Toast.makeText(getApplicationContext(), "网络不可用", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.network_unavailable, Toast.LENGTH_SHORT).show();
 						}else if (errorCode == Error.USER_ALREADY_EXIST){
-							Toast.makeText(getApplicationContext(), "用户已经存在", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.user_already_exists, Toast.LENGTH_SHORT).show();
 						}else if(errorCode == Error.USER_AUTHENTICATION_FAILED){
-							Toast.makeText(getApplicationContext(), "无开放注册权限", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.no_register_authority, Toast.LENGTH_SHORT).show();
 						} else if (errorCode == Error.USER_ILLEGAL_ARGUMENT){
-							Toast.makeText(getApplicationContext(), "用户名非法", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.illegal_user_name, Toast.LENGTH_SHORT).show();
 						}else {
-							Toast.makeText(getApplicationContext(), getString(R.string.register_user_fail), Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), R.string.register_user_fail, Toast.LENGTH_SHORT).show();
 						}
 						finish();
 					}

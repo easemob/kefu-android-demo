@@ -36,7 +36,7 @@ public class ChatRowForm extends ChatRow {
 
     @Override
     protected void onInflatView() {
-        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.em_row_received_form : R.layout.ease_row_sent_message, this);
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.em_row_received_form : R.layout.hd_row_sent_message, this);
     }
 
     @Override
