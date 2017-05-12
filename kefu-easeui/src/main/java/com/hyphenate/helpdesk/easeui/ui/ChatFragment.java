@@ -96,7 +96,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     protected static final int ITEM_FILE = 3;
 
     protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture, R.string.attach_file};
-    protected int[] itemdrawables = {R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector, R.drawable.ease_chat_file_selector};
+    protected int[] itemdrawables = {R.drawable.hd_chat_takepic_selector, R.drawable.hd_chat_image_selector, R.drawable.hd_chat_file_selector};
 
     protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_FILE};
     private boolean isMessageListInited;
@@ -107,7 +107,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ease_fragment_chat, container, false);
+        return inflater.inflate(R.layout.hd_fragment_chat, container, false);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         if (savedInstanceState != null){
             cameraFilePath = savedInstanceState.getString("cameraFilePath");
         }
-        ChatClient.getInstance().getChat().bindChatUI(toChatUsername);
+        ChatClient.getInstance().chatManager().bindChatUI(toChatUsername);
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsResultAction() {
             @Override
             public void onGranted() {
@@ -174,7 +174,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             @Override
             public void onRecorderCompleted(float seconds, String filePath) {
                 // 发送语音消息
-                sendVoiceMessage(filePath, (int)seconds);
+                int time = seconds > 1 ? (int) seconds : 1;
+                sendVoiceMessage(filePath, time);
             }
         });
 
@@ -194,7 +195,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     protected void setUpView() {
 
         titleBar.setTitle(toChatUsername);
-        titleBar.setRightImageResource(R.drawable.ease_mm_title_remove);
+        titleBar.setRightImageResource(R.drawable.hd_mm_title_remove);
 
         onConversationInit();
         onMessageListInit();
@@ -264,8 +265,10 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                inputMenu.hideExtendMenuContainer();
+                if (!inputMenu.isVoiceRecording()){//录音时，点击列表不做操作
+                    hideKeyboard();
+                    inputMenu.hideExtendMenuContainer();
+                }
                 return false;
             }
         });
@@ -387,7 +390,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         MediaManager.resume();
         UIProvider.getInstance().pushActivity(getActivity());
         // register the event listener when enter the foreground
-        ChatClient.getInstance().getChat().addMessageListener(this);
+        ChatClient.getInstance().chatManager().addMessageListener(this);
     }
 
 
@@ -396,7 +399,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         super.onStop();
         // unregister this event listener when this activity enters the
         // background
-        ChatClient.getInstance().getChat().removeMessageListener(this);
+        ChatClient.getInstance().chatManager().removeMessageListener(this);
         // 把此activity 从foreground activity 列表里移除
         UIProvider.getInstance().popActivity(getActivity());
     }
@@ -588,7 +591,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             @Override
             public void onResult(boolean confirmed, Bundle bundle) {
                 if (confirmed) {
-                    ChatClient.getInstance().getChat().clearConversation(toChatUsername);
+                    MediaManager.release();
+                    ChatClient.getInstance().chatManager().clearConversation(toChatUsername);
                     messageList.refresh();
                 }
             }
@@ -696,6 +700,9 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     }
 
     protected void sendVoiceMessage(String filePath, int length) {
+        if (TextUtils.isEmpty(filePath)){
+            return;
+        }
         Message message = Message.createVoiceSendMessage(filePath, length, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);

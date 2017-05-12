@@ -134,7 +134,7 @@ public abstract class ChatRow extends LinearLayout {
 
         if (adapter instanceof MessageAdapter) {
             if (userAvatarView != null){
-                if (((MessageAdapter) adapter).isShowAvatar()){
+                if (((MessageAdapter) adapter).isShowAvatar() && message.direct() == Message.Direct.RECEIVE){
                     userAvatarView.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -144,7 +144,7 @@ public abstract class ChatRow extends LinearLayout {
 
 
             if (usernickView != null) {
-                if (((MessageAdapter) adapter).isShowUserNick())
+                if (((MessageAdapter) adapter).isShowUserNick() && message.direct() == Message.Direct.RECEIVE)
                     usernickView.setVisibility(View.VISIBLE);
                 else
                     usernickView.setVisibility(View.GONE);

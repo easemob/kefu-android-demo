@@ -19,11 +19,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdeskdemo.Constant;
@@ -36,12 +39,14 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 
 	private ImageButton btnClear;
 	private EditText edittext;
-	private ImageButton btnBack;
+	private RelativeLayout btnBack;
+	private RelativeLayout rlSave;
 	private InputMethodManager inputMethodManager;
 	private int index = Constant.MODIFY_INDEX_DEFAULT;
 	private String txtContent;
 	private TextView txtTitle;
-
+    private RelativeLayout titleLayout;
+	private RelativeLayout saveLayout;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -62,8 +67,33 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 		case Constant.MODIFY_INDEX_NICK:
 			txtTitle.setText(R.string.login_user_nick);
 			break;
+		case Constant.MODIFY_INDEX_TENANT_ID:
+			txtTitle.setText(R.string.set_tenantId);
+			break;
+		case Constant.MODIFY_INDEX_PROJECT_ID:
+			txtTitle.setText(R.string.set_leave_messageid);
+			break;
+		case Constant.MODIFY_INDEX_LEAVE_NAME:
+			txtTitle.setText(R.string.leave_name);
+			break;
+		case Constant.MODIFY_INDEX_LEAVE_PHONE:
+			txtTitle.setText(R.string.leave_phone);
+			break;
+		case Constant.MODIFY_INDEX_LEAVE_EMAIL:
+			txtTitle.setText(R.string.leave_email);
+			break;
+		case Constant.MODIFY_INDEX_LEAVE_CONTENT:
+			txtTitle.setText(R.string.leave_content);
+			break;
 		default:
 			break;
+		}
+		if (index >= Constant.MODIFY_INDEX_LEAVE_NAME) {
+			titleLayout.setBackgroundResource(R.color.sub_page_title_bg_color);
+			saveLayout.setBackgroundResource(R.color.sub_page_title_bg_color);
+		} else {
+			titleLayout.setBackgroundResource(R.color.title_bg_color);
+			saveLayout.setBackgroundResource(R.color.title_bg_color);
 		}
 		if (!TextUtils.isEmpty(txtContent)) {
 			edittext.setText(txtContent);
@@ -75,14 +105,27 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 		edittext.addTextChangedListener(this);
 		btnBack.setOnClickListener(this);
 		btnClear.setOnClickListener(this);
+		rlSave.setOnClickListener(this);
+		edittext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+					actionSave();
+					return true;
+				}
+				return false;
+			}
+		});
 		showSoftkeyboard();
 	}
 
 	private void initView() {
 		btnClear = (ImageButton) findViewById(R.id.ib_clear);
-		btnBack = (ImageButton) findViewById(R.id.ib_back);
+		btnBack = (RelativeLayout) findViewById(R.id.rl_back);
 		edittext = (EditText) findViewById(R.id.edittext);
 		txtTitle = (TextView) findViewById(R.id.txtTitle);
+		rlSave = (RelativeLayout) findViewById(R.id.rl_sub_modify_save);
+		titleLayout = (RelativeLayout) findViewById(R.id.rl_modified_title);
+		saveLayout = (RelativeLayout) findViewById(R.id.rl_modified_save);
 		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 
@@ -108,11 +151,11 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.ib_back:
-			hideSoftKeyboard();
-			String strContent = edittext.getText().toString();
-			setResult(RESULT_OK, new Intent().putExtra("content", strContent));
+		case R.id.rl_back:
 			finish();
+			break;
+		case R.id.rl_sub_modify_save:
+			actionSave();
 			break;
 		case R.id.ib_clear:
 			edittext.getText().clear();
@@ -120,6 +163,13 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 		default:
 			break;
 		}
+	}
+
+	private void actionSave() {
+		hideSoftKeyboard();
+		String strContent = edittext.getText().toString();
+		setResult(RESULT_OK, new Intent().putExtra("content", strContent));
+		finish();
 	}
 
 	@Override

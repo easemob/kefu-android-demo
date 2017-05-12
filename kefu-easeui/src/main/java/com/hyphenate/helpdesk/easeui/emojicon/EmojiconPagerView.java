@@ -114,7 +114,7 @@ public class EmojiconPagerView extends ViewPager {
         int pageSize = totalSize % itemSize == 0 ? totalSize/itemSize : totalSize/itemSize + 1;
         List<View> views = new ArrayList<View>();
         for(int i = 0; i < pageSize; i++){
-            View view = View.inflate(context, R.layout.ease_expression_gridview, null);
+            View view = View.inflate(context, R.layout.hd_expression_gridview, null);
             GridView gv = (GridView) view.findViewById(R.id.gridview);
             if(emojiType == Emojicon.Type.BIG_EXPRESSION){
                 gv.setNumColumns(bigEmojiconColumns);

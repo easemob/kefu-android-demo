@@ -27,7 +27,7 @@ public class UserUtil {
             }
         }
         if (userAvatarView != null){
-            userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+            userAvatarView.setImageResource(R.drawable.hd_default_avatar);
             if (agentInfo != null){
                 if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
                     String strUrl = agentInfo.getAvatar();
@@ -37,7 +37,7 @@ public class UserUtil {
                             strUrl = "http:" + strUrl;
                         }
                         //正常的string路径
-                        Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(userAvatarView);
+                        Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.hd_default_avatar).into(userAvatarView);
                     }
                 }
             }
@@ -47,7 +47,7 @@ public class UserUtil {
 
     public static void setCurrentUserNickAndAvatar(Context context,ImageView userAvatarView, TextView userNickView){
         if (userAvatarView != null){
-            userAvatarView.setImageResource(R.drawable.ease_default_avatar);
+            userAvatarView.setImageResource(R.drawable.hd_default_avatar);
         }
     }
 

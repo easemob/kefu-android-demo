@@ -33,7 +33,7 @@ public class ChatRowFile extends ChatRow{
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                R.layout.ease_row_received_file : R.layout.ease_row_sent_file, this);
+                R.layout.hd_row_received_file : R.layout.hd_row_sent_file, this);
     }
 
     @Override
@@ -72,15 +72,15 @@ public class ChatRowFile extends ChatRow{
         setMessageSendCallback();
         switch (message.getStatus()) {
             case SUCCESS:
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if(percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
-                statusView.setVisibility(View.INVISIBLE);
+                    percentageView.setVisibility(View.GONE);
+                statusView.setVisibility(View.GONE);
                 break;
             case FAIL:
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if(percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
+                    percentageView.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
                 break;
             case INPROGRESS:
@@ -95,12 +95,12 @@ public class ChatRowFile extends ChatRow{
                         percentageView.setText("");
                     }
                 }
-                statusView.setVisibility(View.INVISIBLE);
+                statusView.setVisibility(View.GONE);
                 break;
             default:
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if(percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
+                    percentageView.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
                 break;
         }

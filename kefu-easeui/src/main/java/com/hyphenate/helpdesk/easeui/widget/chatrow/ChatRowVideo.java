@@ -38,7 +38,7 @@ public class ChatRowVideo extends ChatRowFile {
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                R.layout.ease_row_received_video : R.layout.ease_row_sent_video, this);
+                R.layout.hd_row_received_video : R.layout.hd_row_sent_video, this);
     }
 
     @Override
@@ -83,11 +83,11 @@ public class ChatRowVideo extends ChatRowFile {
         if (message.direct() == Message.Direct.RECEIVE) {
             if (videoBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
                     videoBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                imageView.setImageResource(R.drawable.ease_default_image);
+                imageView.setImageResource(R.drawable.hd_default_image);
                 setMessageReceiveCallback();
             } else {
                 // System.err.println("!!!! not back receive, show image directly");
-                imageView.setImageResource(R.drawable.ease_default_image);
+                imageView.setImageResource(R.drawable.hd_default_image);
                 if (localThumb != null) {
                     showVideoThumbView(localThumb, imageView, videoBody.getThumbnailUrl(), message);
                 }

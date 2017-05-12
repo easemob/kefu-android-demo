@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.hyphenate.helpdesk.R;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by liyuzhao on 09/11/2016.
  */
@@ -21,6 +23,7 @@ public class DialogManager {
 
     private TextView mLabel;
     private Context mContext;
+    private DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
     public DialogManager(Context context) {
         mContext = context;
@@ -29,7 +32,7 @@ public class DialogManager {
     public void showRecordingDialog() {
         mDialog = new Dialog(mContext, R.style.Theme_Audio_Dialog);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.ease_widget_voice_recorder, null);
+        View view = inflater.inflate(R.layout.hd_widget_voice_recorder, null);
         mDialog.setContentView(view);
         mVoice = (ImageView) mDialog.findViewById(R.id.mic_image);
         mLabel = (TextView) mDialog.findViewById(R.id.recording_hint);
@@ -52,7 +55,7 @@ public class DialogManager {
             mLabel.setVisibility(View.VISIBLE);
 
             mLabel.setText(R.string.release_to_cancel);
-            mLabel.setBackgroundResource(R.drawable.ease_recording_text_hint_bg);
+            mLabel.setBackgroundResource(R.drawable.hd_recording_text_hint_bg);
 
         }
     }
@@ -77,8 +80,13 @@ public class DialogManager {
 
     public void updateVoiceLevel(int level) {
         if (mDialog != null && mDialog.isShowing()) {
-            int resId = mContext.getResources().getIdentifier("ease_record_animate_" + level, "drawable", mContext.getPackageName());
+            int resId = mContext.getResources().getIdentifier("hd_record_animate_" + level, "drawable", mContext.getPackageName());
             mVoice.setImageResource(resId);
+        }
+    }
+    public void updateRecordTime(float time) {
+        if (mDialog != null && mDialog.isShowing()) {
+            mLabel.setText(decimalFormat.format(time));
         }
     }
 }

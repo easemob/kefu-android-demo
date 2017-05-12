@@ -6,7 +6,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,11 +43,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 
 /**
  * 留言详情界面,用于展示留言的具体内容和评论内容
@@ -61,7 +60,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
     /**
      * 返回按钮
      */
-    private ImageButton btnBack;
+    private RelativeLayout btnBack;
     /**
      * 这里放在了listview的headview中,展示留言详情信息
      */
@@ -100,13 +99,14 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
      */
     private Button buttonReply;
 
+    private ISO8601DateFormat dateFormat = new ISO8601DateFormat();
 
     /**
      * 初始化View
      */
     private void initView() {
         mListView = $(R.id.listView);
-        btnBack = $(R.id.ib_back);
+        btnBack = $(R.id.rl_back);
         buttonReply = $(R.id.button_reply);
         mHeaderView = LayoutInflater.from(this).inflate(R.layout.em_ticket_detail_header, null);
         tvContent = (TextView) mHeaderView.findViewById(R.id.ticketContent);
@@ -146,26 +146,27 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
     private void loadData() {
         ticketEntity = getIntent().getParcelableExtra("ticket");
         if (ticketEntity != null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("<html><body><p>No.").append(ticketEntity.getId()).append("<br/>");
-            stringBuilder.append("主题: ").append(ticketEntity.getSubject()).append("<br/>");
             TicketEntity.CreatorBean creatorBean = ticketEntity.getCreator();
             if (creatorBean != null && !TextUtils.isEmpty(creatorBean.getName()) && !creatorBean.getName().equals("null")) {
-                stringBuilder.append("访客昵称: ").append(creatorBean.getName()).append("<br/>");
+                ((TextView)mHeaderView.findViewById(R.id.tv_ticket_name)).setText(creatorBean.getName());
             }
-            stringBuilder.append("内容: ").append(ticketEntity.getContent()).append("<br/>");
             if (creatorBean != null) {
                 if (!TextUtils.isEmpty(creatorBean.getPhone())) {
-                    stringBuilder.append("手机: ").append(creatorBean.getPhone()).append("<br/>");
+                    ((TextView)mHeaderView.findViewById(R.id.tv_ticket_phone)).setText(creatorBean.getPhone());
+
                 }
                 if (!TextUtils.isEmpty(creatorBean.getEmail())) {
-                    stringBuilder.append("邮箱: ").append(creatorBean.getEmail()).append("<br/>");
+                    ((TextView)mHeaderView.findViewById(R.id.tv_ticket_email)).setText(creatorBean.getEmail());
                 }
             }
-            stringBuilder.append("</p></body></html>");
-
-            // 此处用了简单的TextView, APP用户可以用自己喜欢的样式,应该是都可以的.
-            tvContent.setText(Html.fromHtml(stringBuilder.toString()));
+            ((TextView)mHeaderView.findViewById(R.id.tv_ticket_theme)).setText(ticketEntity.getSubject());
+            ((TextView)mHeaderView.findViewById(R.id.tv_ticket_detail)).setText(ticketEntity.getContent());
+            try {
+                ((TextView)mHeaderView.findViewById(R.id.tv_ticket_date))
+                        .setText(DateUtils.getTimestampString(dateFormat.parse(ticketEntity.getUpdated_at())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             loadAllComments(ticketEntity.getId());
         } else {
             tvContent.setText("");
@@ -194,7 +195,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
      */
     private void loadAllComments(String ticketId) {
         if (!ChatClient.getInstance().isLoggedInBefore()) {
-            Toast.makeText(getApplicationContext(), "请先登录!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.login_user_noti, Toast.LENGTH_SHORT).show();
             return;
         }
         String target = Preferences.getInstance().getCustomerAccount();
@@ -232,7 +233,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                     @Override
                     public void run() {
                         Log.e(TAG, "errorMsg:" + errorMsg);
-                        Toast.makeText(getApplicationContext(), "评论加载出错!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.comment_load_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -406,12 +407,12 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
         private void playVoiceItem(View v, String voiceLocalPath){
             //播放动画
             if (animView != null){
-                animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
                 animView = null;
             }
 
             animView = v.findViewById(R.id.id_recorder_anim);
-            animView.setBackgroundResource(R.drawable.ease_voice_from_icon);
+            animView.setBackgroundResource(R.drawable.hd_voice_from_icon);
             AnimationDrawable anim = (AnimationDrawable) animView.getBackground();
             anim.start();
 
@@ -419,7 +420,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             MediaManager.playSound(getBaseContext(), voiceLocalPath, new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    animView.setBackgroundResource(R.drawable.ease_chatfrom_voice_playing);
+                    animView.setBackgroundResource(R.drawable.hd_chatfrom_voice_playing);
                 }
             });
 
@@ -451,7 +452,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
             try{
                 startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
             }catch (Exception e){
-                Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.file_cannot_be_opened, Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -47,7 +47,7 @@ public class MessageList extends RelativeLayout {
 
     private void init(Context context){
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.ease_chat_message_list, this);
+        LayoutInflater.from(context).inflate(R.layout.hd_chat_message_list, this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipe_layout);
         listView = (ListView) findViewById(R.id.list);
     }
@@ -110,8 +110,6 @@ public class MessageList extends RelativeLayout {
             messageAdapter.refreshSeekTo(position);
         }
     }
-
-
 
     /**
      * 获取listview

@@ -7,43 +7,50 @@
     <RelativeLayout 
         android:id="@+id/rl_modified_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485"
+        android:layout_height="@dimen/title_height"
         >
-        <ImageButton 
-            android:id="@+id/ib_back"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ease_icon_title_back"/>
+	    <RelativeLayout
+		    android:id="@+id/rl_back"
+		    android:layout_width="@dimen/title_back_btn_layout_width"
+		    android:layout_height="match_parent"
+		    android:background="@drawable/hd_common_tab_bg"
+		    android:clickable="true">
+		    <ImageView
+			    android:layout_centerInParent="true"
+			    android:layout_width="@dimen/title_back_btn_size"
+			    android:layout_height="@dimen/title_back_btn_size"
+			    android:background="@drawable/hd_icon_title_back"/>
+	    </RelativeLayout>
+
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"/>
+            android:layout_toRightOf="@+id/rl_back"
+            android:layout_centerVertical="true"
+            android:text="Text"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/title_text_size"/>
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/title_text_margin"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="@dimen/bottom_navi_height"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/rl_modified_title"
-        android:background="#FFFFFF"
+        android:background="@color/main_text_color"
         android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/edittext"
-            android:paddingLeft="20dp"
+            android:paddingLeft="@dimen/title_text_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/ib_clear"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="#9B9B9B"/>
         
         <ImageButton
@@ -70,5 +77,28 @@
             android:layout_alignParentBottom="true"
             android:background="#D6D5DB" />
     </RelativeLayout>
-
+	<RelativeLayout
+		android:id="@+id/rl_modified_save"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/bottom_navi_height"
+		android:orientation="horizontal"
+		android:layout_alignParentBottom="true">
+		<RelativeLayout
+			android:id="@+id/rl_sub_modify_save"
+			android:layout_width="@dimen/title_icon_btn_layout_width"
+			android:layout_height="match_parent"
+			android:layout_alignParentRight="true"
+			android:background="@drawable/hd_common_tab_bg"
+			android:clickable="true">
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true"
+				android:textAllCaps="false"
+				android:background="@android:color/transparent"
+				android:text="@string/modify_save"
+				android:textColor="@color/main_text_color"
+				android:textSize="@dimen/main_content_text_size" />
+		</RelativeLayout>
+	</RelativeLayout>
 </RelativeLayout>

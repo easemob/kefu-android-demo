@@ -294,7 +294,6 @@ public class MessageAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-
 	public String getToChatUsername(){
 	    return toChatUsername;
 	}

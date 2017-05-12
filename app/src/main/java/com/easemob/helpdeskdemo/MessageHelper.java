@@ -1,5 +1,6 @@
 package com.easemob.helpdeskdemo;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.hyphenate.helpdesk.model.AgentIdentityInfo;
@@ -14,10 +15,10 @@ import com.hyphenate.helpdesk.model.VisitorTrack;
  */
 public class MessageHelper {
 
-	public static final String IMAGE_URL_1 = "http://o8ugkv090.bkt.clouddn.com/em_one.png";
-	public static final String IMAGE_URL_2 = "http://o8ugkv090.bkt.clouddn.com/em_two.png";
-	public static final String IMAGE_URL_3 = "http://o8ugkv090.bkt.clouddn.com/em_three.png";
-	public static final String IMAGE_URL_4 = "http://o8ugkv090.bkt.clouddn.com/em_four.png";
+	public static final String IMAGE_URL_1 = "http://o8ugkv090.bkt.clouddn.com/hd_one.png";
+	public static final String IMAGE_URL_2 = "http://o8ugkv090.bkt.clouddn.com/hd_two.png";
+	public static final String IMAGE_URL_3 = "http://o8ugkv090.bkt.clouddn.com/hd_three.png";
+	public static final String IMAGE_URL_4 = "http://o8ugkv090.bkt.clouddn.com/hd_four.png";
 
 
 	public static VisitorInfo createVisitorInfo() {
@@ -26,7 +27,7 @@ public class MessageHelper {
 		    .name(Preferences.getInstance().getUserName())
 		    .qq("10000")
 			.phone("15811200000")
-		    .companyName("环信")
+		    .companyName("easemob")
 		    .description("")
 		    .email("abc@123.com");
 		return info;
@@ -35,20 +36,20 @@ public class MessageHelper {
 
 
 
-	public static VisitorTrack createVisitorTrack(int index) {
+	public static VisitorTrack createVisitorTrack(Context context, int index) {
 		VisitorTrack track = ContentFactory.createVisitorTrack(null);
 		switch(index) {
 		case 3:
 			track.title("test_track1")
-                 .price("￥235")
-                 .desc("假两件衬衣+V领毛衣上衣")
+                 .price("￥5400")
+                 .desc(context.getString(R.string.em_example3_text))
                  .imageUrl(IMAGE_URL_3)
                  .itemUrl("http://www.baidu.com");
 			break;
 		case 4:
 			track.title("test_track2")
-					.price("￥230")
-					.desc("插肩棒球衫外套")
+					.price("￥3915000")
+					.desc(context.getString(R.string.em_example4_text))
             .     imageUrl(IMAGE_URL_4)
                  .itemUrl("http://www.baidu.com");
 			break;
@@ -56,22 +57,22 @@ public class MessageHelper {
 		return track;
 	}
 	
-	public static OrderInfo createOrderInfo( int index) {
+	public static OrderInfo createOrderInfo(Context context, int index) {
 		OrderInfo info = ContentFactory.createOrderInfo(null);
 		switch(index) {
 		case 1:
 			info.title("test_order1")
-			    .orderTitle("订单号：7890")
-			    .price("￥128")
-			    .desc("2015早春新款高腰复古牛仔裙")
+			    .orderTitle(String.format("%s：7890",context.getString(R.string.order_number)))
+			    .price("￥8000")
+			    .desc(context.getString(R.string.em_example1_text))
 			    .imageUrl(IMAGE_URL_1)
 			    .itemUrl("http://www.baidu.com");
 			break;
 		case 2:
 			info.title("test_order2")
-		        .orderTitle("订单号：7890")
-		        .price("￥518")
-		        .desc("露肩名媛范套装")
+				.orderTitle(String.format("%s：7890",context.getString(R.string.order_number)))
+		        .price("￥158000")
+		        .desc(context.getString(R.string.em_example2_text))
 		        .imageUrl(IMAGE_URL_2)
 		        .itemUrl("http://www.baidu.com");
 			break;

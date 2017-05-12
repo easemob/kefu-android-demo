@@ -19,14 +19,14 @@
     <string name="system_is_regist">System is automatically registered users for you...</string>
     <string name="is_contact_customer">Being contact customer service, please wait...</string>
     <string name="is_contact_customer_failure_seconed">Contact customer service failure:</string>
-    <string name="shopping">Market</string>
+    <string name="shopping">Store</string>
     <string name="setting">Setting</string>
-    <string name="qrcode">QrCode</string>
+    <string name="qrcode">QR Code</string>
     <string name="qrcode_success">QrCode scanning success</string>
     <string name="qrcode_invalid">QrCode Invalid</string>
     <string name="qrcode_fail">QrCode scanning fail</string>
     <string name="customernumber">IM service No.</string>
-    <string name="connect_customer">Contact customer service</string>
+    <string name="connect_customer">Contact us</string>
     <string name="feedback">Feedback</string>
     <string name="history_record">History record</string>
     <string name="set_nick">Set Nick</string>
@@ -40,11 +40,13 @@
     <!-- demo -->
     <string name="register_user_fail">register user failed!</string>
 
-    <string name="leave_title">Leave Message</string>
-    <string name="leave_name">Name</string>
-    <string name="leave_phone">Phone</string>
-    <string name="leave_email">Email</string>
-    <string name="leave_content">Content</string>
+    <string name="leave_title">Note</string>
+    <string name="leave_name">Name:</string>
+    <string name="leave_phone">Phone:</string>
+    <string name="leave_email">Email:</string>
+    <string name="leave_theme">Theme:</string>
+    <string name="leave_detail">Detail:</string>
+    <string name="leave_content">Input content</string>
     <string name="leave_sending">Sending...</string>
 
     <string name="delete_message">Delete message</string>
@@ -61,10 +63,52 @@
     <string name="tip_btn_sumbit">Submit</string>
     <string name="tip_btn_evaluation">Evaluation</string>
 
+    <string name="empty_view_tip">No data here.</string>
+    <string name="audio_download_suc">Audio file download successful</string>
+    <string name="file_download_fail">File download failed</string>
+    <string name="file_cannot_be_opened">File cannot be opened</string>
+    <string name="user_already_exists">The user is already existed.</string>
+    <string name="no_register_authority">No registration authority.</string>
+    <string name="file_upload_fail">File upload fail</string>
+    <string name="login_user_noti">Please login again.</string>
+    <string name="comment_suc">Add comment successful.</string>
+    <string name="comment_fail">Add comment fail.</string>
+    <string name="file_uploading">File is uploading.</string>
+    <string name="comment_content_not_null">Comment content cannot be empty.</string>
+    <string name="please_wait_noti">Please waiting for a moment.</string>
+    <string name="send_suc">Send successful</string>
+    <string name="app_key_cannot_be_empty">Appkey cannot be empty!</string>
+    <string name="app_key_format_wrong">Appkey format error!</string>
+    <string name="app_key_modify_fail">Appkey modify fail!</string>
+    <string name="short_cut_msg">Short cut message</string>
+    <string name="comment_load_fail">Comments load fail.</string>
+
+    <!-- Note Detail start-->
+    <string name="note_detail">Note Detail</string>
+    <string name="note_reply">Reply</string>
+    <string name="note_id">No. </string>
+    <string name="note_subject">Subject:</string>
+    <string name="note_name">Nick Name:</string>
+    <string name="note_content">Content:</string>
+    <string name="note_phone">Phone:</string>
+    <string name="note_qq">QQ:</string>
+    <string name="note_weibo">Weibo:</string>
+    <string name="note_email">Email:</string>
+    <string name="note_responses">Responses</string>
+    <!-- Note Detail end-->
+
+    <!-- New Comment start -->
+    <string name="new_comment_title">Reply</string>
+    <string name="new_comment_send">Send</string>
+    <string name="new_comment_hint">Type your reply here</string>
+    <string name="new_comment_attach">Add attachment</string>
+    <string name="new_comment_talk">Hold to Talk</string>
+    <!-- New Leave Msg end -->
+
     <!-- call start -->
-    <string name="The_other_is_not_online">The peer is not online</string>
-    <string name="Is_not_yet_connected_to_the_server">Not connect to server</string>
-    <string name="illegal_user_name">Illegal user name</string>
+    <string name="The_other_is_not_online">The peer is not online.</string>
+    <string name="Is_not_yet_connected_to_the_server">Not connect to server.</string>
+    <string name="illegal_user_name">Illegal user name.</string>
     <string name="The_other_is_on_the_phone">The peer is on the phone</string>
     <string name="can_not_connect_chat_server_connection">Cannot connect to server</string>
     <string name="not_connect_to_server">Not connect to server, please try again later</string>
@@ -87,6 +131,28 @@
     <string name="call_version_inconsistent">Both call version are inconsistent</string>
     <string name="hanging_up">Hanging up..</string>
     <string name="answering">answering...</string>
+	<!-- call end -->
 
-    <!-- call end -->
+    <string name="setting_name">name:</string>
+    <string name="setting_org">org:</string>
+    <string name="setting_appname">appName:</string>
+    <string name="setting_number">number:</string>
+    <string name="setting_confirm">confirm:</string>
+    <string name="setting_status">status:</string>
+    <string name="setting_time">time:</string>
+
+    <string name="modify_save">Save</string>
+    <string name="network_error">network error!</string>
+	<string name="file_download_title">File download</string>
+
+	<string name="em_example1_text">Crackie leather bomber</string>
+    <string name="em_example1_text_description">November sales: 3399</string>
+    <string name="em_example2_text">Birkin Bag</string>
+    <string name="em_example2_text_description">November sales: 20</string>
+    <string name="em_example3_text">Jeffrey campbell duice pump</string>
+    <string name="em_example3_text_description">November sales: 435</string>
+    <string name="em_example4_text">Cartier</string>
+    <string name="em_example4_text_description">November sales: 10</string>
+    <string name="em_notice_sending">Sending</string>
+    <string name="order_number">Order number</string>
 </resources>

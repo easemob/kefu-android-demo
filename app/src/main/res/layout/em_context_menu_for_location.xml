@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ease_context_menu_item_bg"
+        android:background="@drawable/hd_context_menu_item_bg"
         android:clickable="true"
         android:gravity="center_vertical"
         android:onClick="delete"

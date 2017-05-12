@@ -39,7 +39,7 @@ public class ChatRowOrder extends ChatRow {
 
     @Override
     protected void onInflatView() {
-        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.ease_row_received_message : R.layout.em_row_sent_order, this);
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_message : R.layout.em_row_sent_order, this);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ChatRowOrder extends ChatRow {
         mTextViewprice.setText(orderInfo.getPrice());
         String imageUrl = orderInfo.getImageUrl();
         if (!TextUtils.isEmpty(imageUrl)){
-            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.ease_default_image).into(mImageView);
+            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mImageView);
         }
 
         message.setMessageStatusCallback(new Callback() {
@@ -115,7 +115,7 @@ public class ChatRowOrder extends ChatRow {
             @Override
             public void onClick(View v) {
                 if (message.getStatus() == Message.Status.INPROGRESS){
-                    Toast.makeText(context, "发送中...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.em_notice_sending, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

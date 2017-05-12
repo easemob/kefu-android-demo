@@ -1,247 +1,331 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFEFF4"
-    android:orientation="vertical">
+    android:background="@color/normal_bg_color">
 
     <RelativeLayout
+        android:id="@+id/rl_new_leave_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ED5485">
-
-        <ImageButton
-            android:id="@+id/ib_back"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/ease_icon_title_back" />
-
+        android:layout_height="@dimen/title_height"
+        android:background="@color/sub_page_title_bg_color">
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/title_back_btn_layout_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="@dimen/title_back_btn_size"
+                android:layout_height="@dimen/title_back_btn_size"
+                android:background="@drawable/hd_icon_title_back"/>
+        </RelativeLayout>
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/rl_back"
+            android:layout_centerVertical="true"
             android:text="@string/leave_title"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textAllCaps="false"
-            android:background="@android:color/transparent"
-            android:text="@string/button_send"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/title_text_size" />
     </RelativeLayout>
+    <ScrollView
+        android:id="@+id/sv_new_leave_root"
+        android:layout_below="@+id/rl_new_leave_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <RelativeLayout
+                android:id="@+id/rl_new_leave_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/rl_new_leave_success"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/new_leave_success_layout_height"
+                    android:visibility="gone">
+                    <ImageView
+                        android:layout_width="@dimen/new_leave_success_icon_size"
+                        android:layout_height="@dimen/new_leave_success_icon_size"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/new_leave_success_icon_margin_top"
+                        android:background="@drawable/hd_icon_leave_suc"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/new_leave_success_title_margin_top"
+                        android:text="@string/new_leave_send_success"
+                        android:textColor="@color/bottom_customer_text_color"
+                        android:textSize="@dimen/main_content_text_size" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/new_leave_success_content_margin_top"
+                        android:gravity="center"
+                        android:text="@string/new_leave_send_description"
+                        android:textColor="@color/bottom_customer_text_color"
+                        android:textSize="@dimen/sub_content_text_size" />
+                </RelativeLayout>
+                <EditText
+                    android:id="@+id/et_new_leave_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/new_leave_content_height"
+                    android:hint="@string/leave_content"
+                    android:textColorHint="@color/new_leave_hint_text_color"
+                    android:textColor="@color/new_leave_text_color"
+                    android:maxLines="9"
+                    android:background="@null"
+                    android:textSize="@dimen/new_leave_text_size"
+                    android:layout_margin="@dimen/new_leave_margin_side"
+                    android:gravity="top"
+                    />
+            </RelativeLayout>
 
-    <View
-        style="@style/line_e3e9e9"
-        android:layout_marginTop="15dp" />
+            <RelativeLayout
+                android:id="@+id/rl_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_leave_item_height"
+                android:background="@color/main_bg_color"
+                android:orientation="horizontal"
+                android:layout_below="@+id/rl_new_leave_content"
+                android:layout_marginLeft="@dimen/new_leave_margin_side"
+                android:layout_marginRight="@dimen/new_leave_margin_side">
+
+                <TextView
+                    android:id="@+id/lable_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/leave_name"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+
+                <EditText
+                    android:id="@+id/et_name"
+                    android:layout_width="@dimen/new_leave_item_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:background="@null"
+                    android:hint="@string/new_leave_item_hint_text"
+                    android:textColorHint="@color/new_leave_hint_text_color"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/divider_color"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_phone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_leave_item_height"
+                android:background="@color/main_bg_color"
+                android:orientation="horizontal"
+                android:layout_below="@+id/rl_name"
+                android:layout_marginLeft="@dimen/new_leave_margin_side"
+                android:layout_marginRight="@dimen/new_leave_margin_side">
+
+                <TextView
+                    android:id="@+id/lable_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/leave_phone"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+
+                <EditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="@dimen/new_leave_item_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:background="@null"
+                    android:hint="@string/new_leave_item_hint_text"
+                    android:textColorHint="@color/new_leave_hint_text_color"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/divider_color"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_leave_item_height"
+                android:background="@color/main_bg_color"
+                android:orientation="horizontal"
+                android:layout_below="@+id/rl_phone"
+                android:layout_marginLeft="@dimen/new_leave_margin_side"
+                android:layout_marginRight="@dimen/new_leave_margin_side">
+
+                <TextView
+                    android:id="@+id/lable_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/leave_email"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:background="@null"
+                    android:hint="@string/new_leave_item_hint_text"
+                    android:textColorHint="@color/new_leave_hint_text_color"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/divider_color"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_theme"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_leave_item_height"
+                android:background="@color/main_bg_color"
+                android:orientation="horizontal"
+                android:layout_below="@+id/rl_email"
+                android:layout_marginLeft="@dimen/new_leave_margin_side"
+                android:layout_marginRight="@dimen/new_leave_margin_side">
+
+                <TextView
+                    android:id="@+id/lable_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/leave_theme"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+
+                <EditText
+                    android:id="@+id/et_theme"
+                    android:layout_width="@dimen/new_leave_item_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:background="@null"
+                    android:hint="@string/new_leave_item_hint_text"
+                    android:textColorHint="@color/new_leave_hint_text_color"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/divider_color"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_leave_item_height"
+                android:background="@color/main_bg_color"
+                android:orientation="horizontal"
+                android:layout_below="@+id/rl_theme"
+                android:layout_marginLeft="@dimen/new_leave_margin_side"
+                android:layout_marginRight="@dimen/new_leave_margin_side"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/lable_detail_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/leave_detail"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="@dimen/new_leave_item_edit_text_width"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:textColor="@color/new_leave_text_color"
+                    android:textSize="@dimen/new_leave_text_size" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/divider_color"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
 
     <RelativeLayout
-        android:id="@+id/rl_name"
+        android:id="@+id/rl_new_leave_send"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/lable_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="@string/leave_name"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/name_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:layout_height="@dimen/bottom_navi_height"
+        android:background="@color/sub_page_title_bg_color"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+        <RelativeLayout
+            android:id="@+id/rl_send"
+            android:layout_width="@dimen/title_icon_btn_layout_width"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/em_icon_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/name_right_arrow"
-            android:layout_toRightOf="@id/lable_name"
-            android:ellipsize="end"
-            android:gravity="center_vertical|right"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:background="@drawable/hd_common_tab_bg"
+            android:clickable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textAllCaps="false"
+                android:background="@android:color/transparent"
+                android:text="@string/button_send"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/main_content_text_size" />
+        </RelativeLayout>
 
     </RelativeLayout>
-
-    <View style="@style/line_e3e9e9" />
-
-    <View
-        style="@style/line_e3e9e9"
-        android:layout_marginTop="15dp" />
-
-    <RelativeLayout
-        android:id="@+id/rl_phone"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/lable_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="@string/leave_phone"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/phone_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/em_icon_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/phone_right_arrow"
-            android:layout_toRightOf="@id/lable_phone"
-            android:ellipsize="end"
-            android:gravity="center_vertical|right"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
-
-    <View style="@style/line_e3e9e9" />
-
-    <View
-        style="@style/line_e3e9e9"
-        android:layout_marginTop="15dp" />
-
-    <RelativeLayout
-        android:id="@+id/rl_email"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/lable_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="@string/leave_email"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/email_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/em_icon_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/email_right_arrow"
-            android:layout_toRightOf="@id/lable_email"
-            android:ellipsize="end"
-            android:gravity="center_vertical|right"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
-
-    <View style="@style/line_e3e9e9" />
-
-    <View
-        style="@style/line_e3e9e9"
-        android:layout_marginTop="15dp" />
-
-    <RelativeLayout
-        android:id="@+id/rl_content"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/lable_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="@string/leave_content"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/content_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/em_icon_right_arrow" />
-
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/content_right_arrow"
-            android:layout_toRightOf="@id/lable_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical|right"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
-
-    <View style="@style/line_e3e9e9" />
-
-    <View
-        style="@style/line_e3e9e9"
-        android:layout_marginTop="15dp" />
-</LinearLayout>
+</RelativeLayout>

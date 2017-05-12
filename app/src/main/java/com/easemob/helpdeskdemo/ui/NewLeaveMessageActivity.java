@@ -1,9 +1,19 @@
 package com.easemob.helpdeskdemo.ui;
 
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +26,7 @@ import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.NewTicketBody;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
 import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.helpdesk.util.Log;
 
@@ -27,100 +38,150 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
 
     private static final String TAG = NewLeaveMessageActivity.class.getSimpleName();
 
-    private static final int REQUEST_CODE_NAME = 0x01;
-    private static final int REQUEST_CODE_PHONE = 0x02;
-    private static final int REQUEST_CODE_EMAIL = 0x03;
-    private static final int REQUEST_CODE_CONTENT = 0x04;
-
-    /**
-     * 姓名
-     */
-    private TextView tvName;
-    /**
-     * 电话
-     */
-    private TextView tvPhone;
-    /**
-     * 邮箱
-     */
-    private TextView tvEmail;
-    /**
-     * 内容
-     */
-    private TextView tvContent;
-
-    private String tempName;
-    private String tempPhone;
-    private String tempEmail;
-    private String tempContent;
-
     private ProgressDialog progressDialog;
+
+    private RelativeLayout sendLayout;
+    private RelativeLayout successLayout;
+    private EditText contentText;
+    private RelativeLayout rlName;
+    private RelativeLayout rlPhone;
+    private RelativeLayout rlEmail;
+    private RelativeLayout rlTheme;
+    private EditText itemName;
+    private EditText itemPhone;
+    private EditText itemEmail;
+    private EditText itemTheme;
+    private RelativeLayout detailLayout;
+    private TextView detailText;
 
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.em_activity_newleave);
         initView();
         initListener();
     }
 
     private void initView() {
-        tvName = $(R.id.tv_name);
-        tvPhone = $(R.id.tv_phone);
-        tvEmail = $(R.id.tv_email);
-        tvContent = $(R.id.tv_content);
+        sendLayout = $(R.id.rl_new_leave_send);
+        successLayout = $(R.id.rl_new_leave_success);
+        contentText = $(R.id.et_new_leave_content);
+        itemName = $(R.id.et_name);
+        rlName = $(R.id.rl_name);
+        itemPhone = $(R.id.et_phone);
+        rlPhone = $(R.id.rl_phone);
+        itemEmail = $(R.id.et_email);
+        rlEmail = $(R.id.rl_email);
+        itemTheme = $(R.id.et_theme);
+        rlTheme = $(R.id.rl_theme);
+        detailLayout = $(R.id.rl_detail_content);
+        detailText = $(R.id.tv_detail);
+        contentText.requestFocus();
     }
 
     private void initListener() {
-        $(R.id.rl_name).setOnClickListener(this);
-        $(R.id.rl_phone).setOnClickListener(this);
-        $(R.id.rl_email).setOnClickListener(this);
-        $(R.id.rl_content).setOnClickListener(this);
+        $(R.id.rl_back).setOnClickListener(this);
+        $(R.id.rl_send).setOnClickListener(this);
+        //输入法回车焦点切换
+        itemName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    itemPhone.requestFocus();
+                        return true;
+                    }
+                        return false;
+                }
+            });
+        itemPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    itemEmail.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        itemEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    itemTheme.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        itemTheme.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    itemTheme.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-        $(R.id.ib_back).setOnClickListener(this);
-        $(R.id.btn_send).setOnClickListener(this);
+        /* 4个内容的点击区域过小 点击layout可以request focus */
+        rlName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemName.requestFocus();
+            }
+        });
+        rlPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemPhone.requestFocus();
+            }
+        });
+        rlEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemEmail.requestFocus();
+            }
+        });
+        rlTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemTheme.requestFocus();
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.rl_name:
-                String strName = tvName.getText().toString();
-                intent.setClass(this, ModifyActivity.class);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_LEAVE_NAME);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strName);
-                startActivityForResult(intent, REQUEST_CODE_NAME);
-                break;
-            case R.id.rl_phone:
-                String strPhone = tvPhone.getText().toString();
-                intent.setClass(this, ModifyActivity.class);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_LEAVE_PHONE);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strPhone);
-                startActivityForResult(intent, REQUEST_CODE_PHONE);
-                break;
-            case R.id.rl_email:
-                String strEmail = tvEmail.getText().toString();
-                intent.setClass(this, ModifyActivity.class);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_LEAVE_EMAIL);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strEmail);
-                startActivityForResult(intent, REQUEST_CODE_EMAIL);
-                break;
-            case R.id.rl_content:
-                String strContent = tvContent.getText().toString();
-                intent.setClass(this, ModifyActivity.class);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_LEAVE_CONTENT);
-                intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strContent);
-                startActivityForResult(intent, REQUEST_CODE_CONTENT);
-                break;
-            case R.id.ib_back:
+            case R.id.rl_back:
                 finish();
                 break;
-            case R.id.btn_send:
+            case R.id.rl_send:
+                if (hasItemsNoValue()) {
+                    Toast.makeText(NewLeaveMessageActivity.this, R.string.new_leave_item_empty_value_toast, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                contentText.requestFocus();
                 commitLeaveMessage();
                 break;
         }
+    }
+
+    private boolean hasItemsNoValue () {
+        if (itemName.getText().toString().length() == 0){
+            return true;
+        }
+        if (itemPhone.getText().toString().length() == 0) {
+            return true;
+        }
+        if (itemEmail.getText().toString().length() == 0) {
+            return true;
+        }
+        if (itemTheme.getText().toString().length() == 0) {
+            return true;
+        }
+        return false;
     }
 
     private void commitLeaveMessage(){
@@ -132,17 +193,19 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
         if (progressDialog == null){
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getString(R.string.leave_sending));
+            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();
 
 
         NewTicketBody ticketBody = new NewTicketBody();
-        ticketBody.setContent(tvContent.getText().toString());
+        ticketBody.setContent(contentText.getText().toString());
+        ticketBody.setSubject(itemTheme.getText().toString());
         NewTicketBody.CreatorBean creatorBean = new NewTicketBody.CreatorBean();
-        creatorBean.setEmail(tvEmail.getText().toString());
-        creatorBean.setName(tvName.getText().toString());
-        creatorBean.setPhone(tvPhone.getText().toString());
+        creatorBean.setEmail(itemEmail.getText().toString());
+        creatorBean.setName(itemName.getText().toString());
+        creatorBean.setPhone(itemPhone.getText().toString());
         ticketBody.setCreator(creatorBean);
 
         String target = Preferences.getInstance().getCustomerAccount();
@@ -157,10 +220,17 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void run() {
                         closeDialog();
-                        Toast.makeText(getApplicationContext(), "发送成功", Toast.LENGTH_SHORT).show();
-                        finish();
                         ListenerManager.getInstance().sendBroadCast("NewTicketEvent", null);
                         Log.d(TAG, "value:" + value);
+                        sendLayout.setVisibility(View.GONE);
+                        contentText.setVisibility(View.GONE);
+                        successLayout.setVisibility(View.VISIBLE);
+                        itemName.setKeyListener(null);
+                        itemPhone.setKeyListener(null);
+                        itemEmail.setKeyListener(null);
+                        itemTheme.setKeyListener(null);
+                        detailLayout.setVisibility(View.VISIBLE);
+                        detailText.setText(contentText.getText().toString());
                     }
                 });
             }
@@ -172,7 +242,9 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
                     public void run() {
                         closeDialog();
                         Log.e(TAG, "error:" + error);
-                    Toast.makeText(getApplicationContext(), "发送失败,请检查网络", Toast.LENGTH_SHORT).show();
+                        if (!NewLeaveMessageActivity.this.isFinishing()) {
+                            showAlertDialog();
+                        }
                     }
                 });
             }
@@ -180,49 +252,19 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
         });
     }
 
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK){
-            return;
+    private void showAlertDialog() {
+        FragmentTransaction mFragTransaction = getSupportFragmentManager().beginTransaction();
+        String fragmentTag = "dialogFragment";
+        Fragment fragment =  getSupportFragmentManager().findFragmentByTag(fragmentTag);
+        if(fragment!=null){
+            //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
+            mFragTransaction.remove(fragment);
         }
-        switch (requestCode){
-            case REQUEST_CODE_NAME:
-                String newName = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-                if(tempName != null && tempName.equals(newName)){
-                    return;
-                }
-                tempName = newName;
-                tvName.setText(newName);
-                break;
-            case REQUEST_CODE_PHONE:
-                String newPhone = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-                if(tempPhone != null && tempPhone.equals(newPhone)){
-                    return;
-                }
-                tempPhone = newPhone;
-                tvPhone.setText(newPhone);
-                break;
-            case REQUEST_CODE_EMAIL:
-                String newEmail = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-                if(tempEmail != null && tempEmail.equals(newEmail)){
-                    return;
-                }
-                tempEmail = newEmail;
-                tvEmail.setText(newEmail);
-                break;
-            case REQUEST_CODE_CONTENT:
-                String newContent = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
-                if(tempContent != null && tempContent.equals(newContent)){
-                    return;
-                }
-                tempContent = newContent;
-                tvContent.setText(newContent);
-                break;
-        }
-
+        final AlertDialogFragment dialogFragment = new AlertDialogFragment();
+        dialogFragment.setTitleText(getString(R.string.new_leave_msg_sub_fail));
+        dialogFragment.setContentText(getString(R.string.new_leave_msg_sub_fail_alert_content));
+        dialogFragment.setRightBtnText(getString(R.string.new_leave_msg_alert_ok));
+        dialogFragment.show(mFragTransaction, fragmentTag);
     }
 
     @Override

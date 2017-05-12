@@ -9,6 +9,7 @@ import com.easemob.helpdeskdemo.MessageHelper;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -25,7 +26,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setContentView(R.layout.ease_activity_chat);
+        setContentView(R.layout.hd_activity_chat);
         instance = this;
         //IM服务号
         toChatUsername = getIntent().getExtras().getString(Config.EXTRA_SERVICE_IM_NUMBER);
@@ -67,7 +68,7 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendOrderMessage(int selectedIndex){
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
-        message.addContent(MessageHelper.createOrderInfo(selectedIndex));
+        message.addContent(MessageHelper.createOrderInfo(this, selectedIndex));
         ChatClient.getInstance().chatManager().saveMessage(message);
     }
 
@@ -77,20 +78,20 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendTrackMessage(int selectedIndex) {
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
-        message.addContent(MessageHelper.createVisitorTrack(selectedIndex));
+        message.addContent(MessageHelper.createVisitorTrack(this, selectedIndex));
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     private String getMessageContent(int selectedIndex){
         switch (selectedIndex){
             case 1:
-                return "早春新款牛仔裙";
+                return getResources().getString(R.string.em_example1_text);
             case 2:
-                return "假两件衬衣和毛衣";
+                return getResources().getString(R.string.em_example2_text);
             case 3:
-                return "漏肩名媛范套装";
+                return getResources().getString(R.string.em_example3_text);
             case 4:
-                return "插肩棒球衫外套";
+                return getResources().getString(R.string.em_example4_text);
         }
         // 内容自己随意定义。
         return "";
@@ -101,6 +102,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MediaManager.release();
         instance = null;
     }
 

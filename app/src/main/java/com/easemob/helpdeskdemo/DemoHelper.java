@@ -70,7 +70,7 @@ public class DemoHelper {
         //在华为手机上当APP被kill时使用华为推送进行消息提示, SDK已支持,可选
         options.setHuaweiPushAppId("10663060");
 
-//        options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
+        //options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
 
@@ -84,7 +84,6 @@ public class DemoHelper {
             setEaseUIProvider(context);
             //设置全局监听
             setGlobalListeners();
-
 
         }
     }
@@ -102,8 +101,9 @@ public class DemoHelper {
                 } else {
                     //此处设置当前登录用户的头像，
                     if (userAvatarView != null){
-                        userAvatarView.setImageResource(R.drawable.ease_default_avatar);
-//                        Glide.with(context).load("http://oev49clxj.bkt.clouddn.com/7a8aed7bjw1f32d0cumhkj20ey0mitbx.png").diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ease_default_avatar).into(userAvatarView);
+                        userAvatarView.setImageResource(R.drawable.hd_default_avatar);
+//                        Glide.with(context).load("http://oev49clxj.bkt.clouddn.com/7a8aed7bjw1f32d0cumhkj20ey0mitbx.png").diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.hd_default_avatar).into(userAvatarView);
+//                        如果用圆角，可以采用此方案：http://blog.csdn.net/weidongjian/article/details/47144549
                     }
                 }
             }

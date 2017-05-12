@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
@@ -33,7 +34,7 @@ public class FileDownloadActivity extends BaseActivity {
 
     private static final String TAG = FileDownloadActivity.class.getSimpleName();
 
-    private ImageButton ibBack;
+    private RelativeLayout rlBack;
     private NumberProgressBar numberProgressBar;
     private String remoteUrl;
     private String localName;
@@ -41,9 +42,9 @@ public class FileDownloadActivity extends BaseActivity {
 
 
     private void initView(){
-        ibBack = $(R.id.ib_back);
+        rlBack = $(R.id.rl_back);
         numberProgressBar = $(R.id.number_progress_bar);
-        ibBack.setOnClickListener(new View.OnClickListener() {
+        rlBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -81,7 +82,7 @@ public class FileDownloadActivity extends BaseActivity {
                     File file = saveFile(response);
                     if (file != null) {
                         if (fileType != null && fileType.equals("audio")){
-                            Toast.makeText(getApplicationContext(), "语音下载成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),R.string.audio_download_suc, Toast.LENGTH_SHORT).show();
                             finish();
                         }else {
                             openFile(file);
@@ -116,7 +117,7 @@ public class FileDownloadActivity extends BaseActivity {
 
 
     private void showFailToast() {
-        Toast.makeText(getApplicationContext(), "文件下载失败!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.file_download_fail, Toast.LENGTH_SHORT).show();
         File file = new File(PathUtil.getInstance().getFilePath(), localName);
         if (file.exists()) {
             file.delete();
@@ -181,7 +182,7 @@ public class FileDownloadActivity extends BaseActivity {
             startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
             finish();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.file_cannot_be_opened, Toast.LENGTH_SHORT).show();
         }
     }
 

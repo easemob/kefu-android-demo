@@ -32,36 +32,36 @@
     </style>
 
     <style name="AnimFade" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ease_fade_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/ease_hold</item>
-        <item name="android:activityCloseExitAnimation">@anim/ease_fade_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/hd_fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/hd_hold</item>
+        <item name="android:activityCloseExitAnimation">@anim/hd_fade_out</item>
     </style>
 
     <style name="AnimFade2" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/ease_slide_in_from_right</item>
-        <item name="android:activityOpenExitAnimation">@anim/ease_slide_out_to_left</item>
-        <item name="android:activityCloseExitAnimation">@anim/ease_slide_out_to_right</item>
-        <item name="android:activityCloseEnterAnimation">@anim/ease_slide_in_from_left</item>
+        <item name="android:activityOpenEnterAnimation">@anim/hd_slide_in_from_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/hd_slide_out_to_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/hd_slide_out_to_right</item>
+        <item name="android:activityCloseEnterAnimation">@anim/hd_slide_in_from_left</item>
     </style>
 
     <style name="AnimBottom" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/ease_push_bottom_in</item>
-        <item name="android:windowExitAnimation">@anim/ease_push_bottom_out</item>
+        <item name="android:windowEnterAnimation">@anim/hd_push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/hd_push_bottom_out</item>
     </style>
 
     <style name="AnimTop" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/ease_push_top_in</item>
-        <item name="android:windowExitAnimation">@anim/ease_push_top_out</item>
+        <item name="android:windowEnterAnimation">@anim/hd_push_top_in</item>
+        <item name="android:windowExitAnimation">@anim/hd_push_top_out</item>
     </style>
 
     <style name="AnimTop2" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/ease_push_top_in2</item>
-        <item name="android:windowExitAnimation">@anim/ease_push_top_out2</item>
+        <item name="android:windowEnterAnimation">@anim/hd_push_top_in2</item>
+        <item name="android:windowExitAnimation">@anim/hd_push_top_out2</item>
     </style>
 
     <style name="AnimHead" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/ease_head_in</item>
-        <item name="android:windowExitAnimation">@anim/ease_head_out</item>
+        <item name="android:windowEnterAnimation">@anim/hd_head_in</item>
+        <item name="android:windowExitAnimation">@anim/hd_head_out</item>
     </style>
 
     <style name="Anim_style" parent="android:Theme.NoTitleBar.Fullscreen">
@@ -166,7 +166,7 @@
         <item name="android:paddingRight">6.0dip</item>
         <item name="android:paddingBottom">6.0dip</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:background">@drawable/ease_edit_text_bg</item>
+        <item name="android:background">@drawable/hd_edit_text_bg</item>
     </style>
     
  <style name="my_dialog" parent="android:Theme.Dialog">
@@ -178,14 +178,14 @@
     </style>
     
  	<style name="myRatingBar" parent="@android:style/Widget.RatingBar">
- 	    <item name="android:progressDrawable">@drawable/ease_ratingbar_drawable</item>
+ 	    <item name="android:progressDrawable">@drawable/hd_ratingbar_drawable</item>
  	    <item name="android:minHeight">52dip</item>
  	    <item name="android:maxHeight">52dip</item>
  	</style>
 
     <style name="AnimBottomIn" parent="android:Theme.Light.NoTitleBar">
-        <item name="android:windowEnterAnimation">@anim/ease_push_bottom_in</item>
-        <item name="android:windowExitAnimation">@anim/ease_push_bottom_out</item>
+        <item name="android:windowEnterAnimation">@anim/hd_push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/hd_push_bottom_out</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>

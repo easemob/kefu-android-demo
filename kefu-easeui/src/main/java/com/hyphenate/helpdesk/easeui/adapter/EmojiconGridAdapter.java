@@ -29,9 +29,9 @@ public class EmojiconGridAdapter extends ArrayAdapter<Emojicon>{
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             if(emojiconType == Type.BIG_EXPRESSION){
-                convertView = View.inflate(getContext(), R.layout.ease_row_big_expression, null);
+                convertView = View.inflate(getContext(), R.layout.hd_row_big_expression, null);
             }else{
-                convertView = View.inflate(getContext(), R.layout.ease_row_expression, null);
+                convertView = View.inflate(getContext(), R.layout.hd_row_expression, null);
             }
         }
         
@@ -42,12 +42,12 @@ public class EmojiconGridAdapter extends ArrayAdapter<Emojicon>{
             textView.setText(emojicon.getName());
         }
         if(SmileUtils.DELETE_KEY.equals(emojicon.getEmojiText())){
-            imageView.setImageResource(R.drawable.ease_delete_expression);
+            imageView.setImageResource(R.drawable.hd_delete_expression);
         }else{
             if(emojicon.getIcon() != 0){
                 imageView.setImageResource(emojicon.getIcon());
             }else if(emojicon.getIconPath() != null){
-                Glide.with(getContext()).load(emojicon.getIconPath()).placeholder(R.drawable.ease_default_expression).into(imageView);
+                Glide.with(getContext()).load(emojicon.getIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
             }
         }
         

@@ -14,11 +14,9 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -26,10 +24,11 @@ import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 
 public class ShopDetailsActivity extends DemoBaseActivity {
-	private ImageView mImageView;
 	private RelativeLayout rl_tochat;
-	private ImageButton mImageButton;
-	private Bitmap mBitmap = null;
+	private RelativeLayout mImageButton;
+	private ImageView iv_buy_1;
+	private ImageView iv_buy_2;
+	private ImageView iv_buy_3;
 	private int index = Constant.INTENT_CODE_IMG_SELECTED_DEFAULT;
 	
 
@@ -39,9 +38,14 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 		setContentView(R.layout.em_activity_shop_details);
 		index = getIntent().getIntExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		
-		rl_tochat = (RelativeLayout) findViewById(R.id.rl_tochat);
-		mImageButton = (ImageButton) findViewById(R.id.ib_shop_back);
-		mImageView = (ImageView) findViewById(R.id.iv_buy);
+		rl_tochat = $(R.id.rl_tochat);
+		mImageButton = $(R.id.rl_back);
+		iv_buy_1 = $(R.id.iv_buy_part1);
+		iv_buy_2 = $(R.id.iv_buy_part2);
+		iv_buy_3 = $(R.id.iv_buy_part3);
+
+		//长图分图显示
+		setLongPicRes();
 
 		mImageButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -60,16 +64,41 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 			}
 		});
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
+
+	private void setLongPicRes() {
+		int iImageView1;
+		int iImageView2;
+		int iImageView3;
+		String sImageView1;
+		String sImageView2;
+		String sImageView3;
+
+		sImageView1 = String.format("product_details_%d_a", index);
+		sImageView2 = String.format("product_details_%d_b", index);
+		sImageView3 = String.format("product_details_%d_c", index);
+
+		iImageView1 = getResources().getIdentifier(sImageView1, "drawable",getPackageName());
+		iImageView2 = getResources().getIdentifier(sImageView2, "drawable",getPackageName());
+		iImageView3 = getResources().getIdentifier(sImageView3, "drawable",getPackageName());
+
+		if (iImageView1 != 0) {
+			iv_buy_1.setImageResource(iImageView1);
+		}
+		if (iImageView2 != 0) {
+			iv_buy_2.setImageResource(iImageView2);
+		}
+		if (iImageView3 != 0) {
+			iv_buy_3.setImageResource(iImageView3);
+		}
 	}
 
-
+	@Override
+	protected void onDestroy() {
+		//释放长图资源避免OOM
+		iv_buy_1.setImageDrawable(null);
+		iv_buy_2.setImageDrawable(null);
+		iv_buy_3.setImageDrawable(null);
+		System.gc();
+		super.onDestroy();
+	}
 }

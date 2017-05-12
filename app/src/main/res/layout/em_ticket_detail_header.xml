@@ -5,6 +5,180 @@
     android:clickable="false"
     android:orientation="vertical">
     <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/ticket_name"
+                    android:textColor="@color/bottom_customer_text_color"
+                    android:textSize="@dimen/ticket_detail_text_size"/>
+
+                <TextView
+                    android:id="@+id/tv_ticket_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:lineSpacingMultiplier="1.5"
+                    android:maxWidth="244dp"
+                    android:gravity="right"
+                    android:textColor="@color/bottom_customer_text_color"
+                    android:textSize="@dimen/ticket_detail_text_size"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/ticket_phone"
+                    android:textColor="@color/bottom_customer_text_color"
+                    android:textSize="@dimen/ticket_detail_text_size"/>
+
+                <TextView
+                    android:id="@+id/tv_ticket_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:lineSpacingMultiplier="1.5"
+                    android:maxWidth="244dp"
+                    android:gravity="right"
+                    android:textColor="@color/bottom_customer_text_color"
+                    android:textSize="@dimen/ticket_detail_text_size"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/ticket_email"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+                <TextView
+                    android:id="@+id/tv_ticket_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="244dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:lineSpacingMultiplier="1.5"
+                    android:gravity="right"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/ticket_theme"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+                <TextView
+                    android:id="@+id/tv_ticket_theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="244dp"
+                    android:maxLines="2"
+                    android:lineSpacingMultiplier="1.5"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/ticket_detail"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+                <TextView
+                    android:id="@+id/tv_ticket_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="244dp"
+                    android:maxLines="8"
+                    android:ellipsize="end"
+                    android:lineSpacingMultiplier="1.5"
+                    android:gravity="right"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ticket_time"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+                <TextView
+                    android:id="@+id/tv_ticket_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="244dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:lineSpacingMultiplier="1.5"
+                    android:gravity="right"
+                    android:textSize="@dimen/ticket_detail_text_size"
+                    android:textColor="@color/bottom_customer_text_color"/>
+            </RelativeLayout>
+        </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -22,13 +196,13 @@
     <View style="@style/line_e3e9e9" android:layout_marginTop="15dp"/>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="45dip"
+        android:layout_height="50dip"
         android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:text="评论"
+        android:text="@string/note_responses"
         android:gravity="left|center_vertical"
         android:background="@android:color/white"
-        android:paddingLeft="10dp"
+        android:paddingLeft="25dp"
         />
     <View style="@style/line_e3e9e9"/>
 </LinearLayout>

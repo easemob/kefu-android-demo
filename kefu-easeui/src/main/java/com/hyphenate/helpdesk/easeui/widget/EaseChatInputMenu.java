@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -29,11 +30,12 @@ import java.util.List;
  */
 public class EaseChatInputMenu extends LinearLayout {
     FrameLayout primaryMenuContainer, emojiconMenuContainer;
-    protected EaseChatPrimaryMenuBase chatPrimaryMenu;
+    protected EaseChatPrimaryMenu chatPrimaryMenu;
     protected EmojiconMenuBase emojiconMenu;
     protected ExtendMenu chatExtendMenu;
     protected FrameLayout chatExtendMenuContainer;
     protected LayoutInflater layoutInflater;
+    protected Button emojiSendBtn;
 
     private Handler handler = new Handler();
     private ChatInputMenuListener listener;
@@ -57,12 +59,13 @@ public class EaseChatInputMenu extends LinearLayout {
     private void init(Context context, AttributeSet attrs) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
-        layoutInflater.inflate(R.layout.ease_widget_chat_input_menu, this);
+        layoutInflater.inflate(R.layout.hd_widget_chat_input_menu, this);
         primaryMenuContainer = (FrameLayout) findViewById(R.id.primary_menu_container);
         emojiconMenuContainer = (FrameLayout) findViewById(R.id.emojicon_menu_container);
         chatExtendMenuContainer = (FrameLayout) findViewById(R.id.extend_menu_container);
         // 扩展按钮栏
         chatExtendMenu = (ExtendMenu) findViewById(R.id.extend_menu);
+        emojiSendBtn = (Button) findViewById(R.id.emoji_send_button);
     }
 
     /**
@@ -78,17 +81,18 @@ public class EaseChatInputMenu extends LinearLayout {
         }
         // 主按钮菜单栏,没有定义用默认的
         if (chatPrimaryMenu == null) {
-            chatPrimaryMenu = (EaseChatPrimaryMenu) layoutInflater.inflate(R.layout.ease_layout_chat_primary_menu,
+            chatPrimaryMenu = (EaseChatPrimaryMenu) layoutInflater.inflate(R.layout.hd_layout_chat_primary_menu,
                     null);
         }
         primaryMenuContainer.addView(chatPrimaryMenu);
+        chatPrimaryMenu.setEmojiSendBtn(emojiSendBtn);
 
         // 表情栏
         if (emojiconMenu == null) {
-            emojiconMenu = (EmojiconMenu) layoutInflater.inflate(R.layout.ease_layout_emojicon_menu, null);
+            emojiconMenu = (EmojiconMenu) layoutInflater.inflate(R.layout.hd_layout_emojicon_menu, null);
             if (emojiconGroupList == null) {
                 emojiconGroupList = new ArrayList<EmojiconGroupEntity>();
-                emojiconGroupList.add(new EmojiconGroupEntity(R.drawable.ee_1, Arrays
+                emojiconGroupList.add(new EmojiconGroupEntity(R.drawable.e_e_1, Arrays
                         .asList(DefaultEmojiconDatas.getData())));
             }
             ((EmojiconMenu) emojiconMenu).init(emojiconGroupList);
@@ -122,7 +126,7 @@ public class EaseChatInputMenu extends LinearLayout {
      *
      * @param customPrimaryMenu
      */
-    public void setCustomPrimaryMenu(EaseChatPrimaryMenuBase customPrimaryMenu) {
+    public void setCustomPrimaryMenu(EaseChatPrimaryMenu customPrimaryMenu) {
         this.chatPrimaryMenu = customPrimaryMenu;
     }
 
@@ -248,6 +252,10 @@ public class EaseChatInputMenu extends LinearLayout {
             }
         });
 
+    }
+
+    public boolean isVoiceRecording(){
+        return chatPrimaryMenu.isRecording();
     }
 
     /**

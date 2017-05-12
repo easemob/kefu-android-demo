@@ -14,6 +14,7 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdeskdemo.Constant;
@@ -30,7 +33,7 @@ import com.easemob.helpdeskdemo.widget.PopupListWindow;
 public class ShopFragment extends Fragment implements OnClickListener {
 
 	private PopupListWindow mPopupListWindow;
-	private TextView tvCustomer;
+	private RelativeLayout tvCustomer;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,7 +47,11 @@ public class ShopFragment extends Fragment implements OnClickListener {
 		getView().findViewById(R.id.ib_shop_imagetwo).setOnClickListener(this);
 		getView().findViewById(R.id.ib_shop_imagethree).setOnClickListener(this);
 		getView().findViewById(R.id.ib_shop_imagefour).setOnClickListener(this);
-		tvCustomer = (TextView) getView().findViewById(R.id.textview_customer);
+		((TextView)getView().findViewById(R.id.em_example1_thru_text)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		((TextView)getView().findViewById(R.id.em_example2_thru_text)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		((TextView)getView().findViewById(R.id.em_example3_thru_text)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		((TextView)getView().findViewById(R.id.em_example4_thru_text)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		tvCustomer = (RelativeLayout) getView().findViewById(R.id.textview_customer);
 		tvCustomer.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

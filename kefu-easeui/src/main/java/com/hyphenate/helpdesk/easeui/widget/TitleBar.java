@@ -40,7 +40,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     private void init(Context context, AttributeSet attrs){
-        LayoutInflater.from(context).inflate(R.layout.ease_widget_title_bar, this);
+        LayoutInflater.from(context).inflate(R.layout.hd_widget_title_bar, this);
         leftLayout = (RelativeLayout) findViewById(R.id.left_layout);
         leftImage = (ImageView) findViewById(R.id.left_image);
         rightLayout = (RelativeLayout) findViewById(R.id.right_layout);

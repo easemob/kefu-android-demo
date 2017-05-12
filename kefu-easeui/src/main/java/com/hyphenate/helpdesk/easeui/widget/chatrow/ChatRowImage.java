@@ -17,6 +17,7 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.ImageCache;
+import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.util.ImageUtils;
@@ -34,7 +35,7 @@ public class ChatRowImage extends ChatRowFile{
 
     @Override
     protected void onInflatView() {
-        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.ease_row_received_picture : R.layout.ease_row_sent_picture, this);
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_picture : R.layout.hd_row_sent_picture, this);
     }
 
     @Override
@@ -51,12 +52,12 @@ public class ChatRowImage extends ChatRowFile{
         if (message.direct() == Message.Direct.RECEIVE) {
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
                     imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                imageView.setImageResource(R.drawable.ease_default_image);
+                imageView.setImageResource(R.drawable.hd_default_image);
                 setMessageReceiveCallback();
             } else {
                 progressBar.setVisibility(View.GONE);
                 percentageView.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.ease_default_image);
+                imageView.setImageResource(R.drawable.hd_default_image);
                 String thumbPath = imgBody.thumbnailLocalPath();
                 if (!new File(thumbPath).exists()) {
                     // 兼容旧版SDK收到的thumbnail
@@ -76,7 +77,12 @@ public class ChatRowImage extends ChatRowFile{
 
     @Override
     protected void onUpdateView() {
-        super.onUpdateView();
+        //super.onUpdateView();
+        if (adapter instanceof MessageAdapter) {
+            ((MessageAdapter) adapter).refreshSelectLast();
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

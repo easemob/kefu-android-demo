@@ -29,7 +29,7 @@ public class ChatRowBigExpression extends ChatRowText{
     @Override
     protected void onInflatView() {
         inflater.inflate(message.direct() == Message.Direct.RECEIVE ?
-                R.layout.ease_row_received_bigexpression : R.layout.ease_row_sent_bigexpression, this);
+                R.layout.hd_row_received_bigexpression : R.layout.hd_row_sent_bigexpression, this);
     }
 
     @Override
@@ -48,11 +48,11 @@ public class ChatRowBigExpression extends ChatRowText{
         }
         if(emojicon != null){
             if(emojicon.getBigIcon() != 0){
-                Glide.with(activity).load(emojicon.getBigIcon()).placeholder(R.drawable.ease_default_expression).into(imageView);
+                Glide.with(activity).load(emojicon.getBigIcon()).placeholder(R.drawable.hd_default_expression).into(imageView);
             }else if(emojicon.getBigIconPath() != null){
-                Glide.with(activity).load(emojicon.getBigIconPath()).placeholder(R.drawable.ease_default_expression).into(imageView);
+                Glide.with(activity).load(emojicon.getBigIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
             }else{
-                imageView.setImageResource(R.drawable.ease_default_expression);
+                imageView.setImageResource(R.drawable.hd_default_expression);
             }
         }
 

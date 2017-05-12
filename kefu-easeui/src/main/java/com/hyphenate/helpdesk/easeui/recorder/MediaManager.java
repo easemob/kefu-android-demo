@@ -3,6 +3,7 @@ package com.hyphenate.helpdesk.easeui.recorder;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -16,6 +17,7 @@ public class MediaManager {
 
     private static MediaPlayer mMediaPlayer;
     private static boolean isPause;
+    private static String playFilePath;
 
     public static void playSound(Context context, String filePath, MediaPlayer.OnCompletionListener onCompletionListener) {
         if (mMediaPlayer == null) {
@@ -32,7 +34,7 @@ public class MediaManager {
         } else {
             mMediaPlayer.reset();
         }
-
+        playFilePath = filePath;
         try {
             mMediaPlayer.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
             mMediaPlayer.setOnCompletionListener(onCompletionListener);
@@ -65,6 +67,16 @@ public class MediaManager {
             mMediaPlayer = null;
         }
     }
+
+    public static void release(String filePath) {
+        if (!TextUtils.isEmpty(playFilePath) && !TextUtils.isEmpty(filePath) && playFilePath.equals(filePath)){
+            if (mMediaPlayer != null) {
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+        }
+    }
+
 
 
     static MediaPlayer getMediaPlayer(Context context) {

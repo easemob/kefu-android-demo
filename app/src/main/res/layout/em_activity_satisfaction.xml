@@ -3,26 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
+    android:background="@color/normal_bg_color"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
-        android:background="@color/top_bar_normal_bg"
+        android:background="@color/sub_page_title_bg_color"
         android:gravity="center_vertical" >
 
-        <include layout="@layout/em_commom_back_btn" />
+        <include layout="@layout/em_commom_back_btn"
+            android:id="@+id/rl_back"/>
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/rl_back"
+            android:layout_centerVertical="true"
             android:text="@string/title_satifisfaction_eval"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/title_text_size" />
     </RelativeLayout>
 
     <ScrollView
@@ -53,7 +55,7 @@
                         android:layout_width="45dip"
                         android:layout_height="45dip"
                         android:visibility="gone"
-                        android:src="@drawable/ease_default_avatar" />
+                        android:src="@drawable/hd_default_avatar" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -134,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dip"
-                android:background="@drawable/ease_bg_sumbit_button"
+                android:background="@drawable/hd_bg_sumbit_button"
                 android:padding="10dip"
                 android:text="@string/tip_btn_sumbit"
                 android:textColor="@android:color/white"

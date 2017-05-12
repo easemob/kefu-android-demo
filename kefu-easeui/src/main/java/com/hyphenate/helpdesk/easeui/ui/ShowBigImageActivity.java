@@ -39,8 +39,6 @@ import com.hyphenate.util.ImageUtils;
 
 import java.io.File;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * 下载显示大图
  */
@@ -48,19 +46,19 @@ public class ShowBigImageActivity extends BaseActivity {
     private static final String TAG = "ShowBigImage";
     private ProgressDialog pd;
     private PhotoView image;
-    private int default_res = R.drawable.ease_default_image;
+    private int default_res = R.drawable.hd_default_image;
     private Bitmap bitmap;
     private boolean isDownloaded;
     private ProgressBar loadLocalPb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.ease_activity_show_big_image);
+        setContentView(R.layout.hd_activity_show_big_image);
         super.onCreate(savedInstanceState);
 
         image = (PhotoView) findViewById(R.id.image);
         loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
-        default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_image);
+        default_res = getIntent().getIntExtra("default_image", R.drawable.hd_default_image);
         Uri uri = getIntent().getParcelableExtra("uri");
         String msgId = getIntent().getExtras().getString("messageId");
         EMLog.d(TAG, "show big msgId:" + msgId);

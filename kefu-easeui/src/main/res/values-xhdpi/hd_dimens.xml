@@ -1,0 +1,4 @@
+<resources>
+	<dimen name="activity_comment_reply_file_layout_width">250dp</dimen>
+	<dimen name="activity_comment_reply_file_name_max_width">180dp</dimen>
+</resources>
