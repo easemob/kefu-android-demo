@@ -270,11 +270,13 @@ public class EaseChatInputMenu extends LinearLayout {
                     chatExtendMenuContainer.setVisibility(View.VISIBLE);
                     chatExtendMenu.setVisibility(View.VISIBLE);
                     emojiconMenu.setVisibility(View.GONE);
+                    emojiSendBtn.setVisibility(GONE);
                 }
             }, 50);
         } else {
             if (emojiconMenu.getVisibility() == View.VISIBLE) {
                 emojiconMenu.setVisibility(View.GONE);
+                emojiSendBtn.setVisibility(GONE);
                 chatExtendMenu.setVisibility(View.VISIBLE);
             } else {
                 chatExtendMenuContainer.setVisibility(View.GONE);
@@ -295,15 +297,18 @@ public class EaseChatInputMenu extends LinearLayout {
                     chatExtendMenuContainer.setVisibility(View.VISIBLE);
                     chatExtendMenu.setVisibility(View.GONE);
                     emojiconMenu.setVisibility(View.VISIBLE);
+                    emojiSendBtn.setVisibility(VISIBLE);
                 }
             }, 50);
         } else {
             if (emojiconMenu.getVisibility() == View.VISIBLE) {
                 chatExtendMenuContainer.setVisibility(View.GONE);
                 emojiconMenu.setVisibility(View.GONE);
+                emojiSendBtn.setVisibility(GONE);
             } else {
                 chatExtendMenu.setVisibility(View.GONE);
                 emojiconMenu.setVisibility(View.VISIBLE);
+                emojiSendBtn.setVisibility(VISIBLE);
             }
 
         }

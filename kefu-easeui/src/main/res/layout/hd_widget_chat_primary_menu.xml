@@ -21,16 +21,20 @@
 
         <Button
             android:id="@+id/btn_set_mode_voice"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
             android:layout_marginLeft="18dp"
             android:background="@drawable/hd_chatting_setmode_voice_btn_normal"
             android:visibility="visible" />
 
         <Button
             android:id="@+id/btn_set_mode_keyboard"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
             android:layout_marginLeft="18dp"
             android:background="@drawable/hd_chatting_setmode_keyboard_btn_normal"
             android:visibility="gone" />
@@ -66,8 +70,10 @@
                 >
             <ImageView
                 android:id="@+id/iv_face"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="2dp"
+                android:cropToPadding="true"
                 android:scaleType="fitCenter"
                 android:layout_centerVertical="true"
                 android:src="@drawable/hd_chatting_biaoqing_btn_normal"
@@ -75,8 +81,10 @@
 
             <ImageView
                 android:id="@+id/iv_face_keyboard"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="2dp"
+                android:cropToPadding="true"
                 android:scaleType="fitCenter"
                 android:layout_centerVertical="true"
                 android:src="@drawable/hd_chatting_setmode_keyboard_btn_normal"
@@ -87,8 +95,10 @@
 
         <Button
             android:id="@+id/btn_more"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/hd_type_select_btn_nor"
@@ -96,8 +106,10 @@
 
         <Button
             android:id="@+id/btn_less"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/hd_type_less_btn_nor"
@@ -107,8 +119,8 @@
 
     <!--语音输入-->
     <com.hyphenate.helpdesk.easeui.widget.RecorderMenu
+        android:id="@+id/record_menu"
         android:layout_width="match_parent"
         android:layout_height="139dp"
-        android:id="@+id/record_menu"
         android:visibility="gone"/>
 </LinearLayout>

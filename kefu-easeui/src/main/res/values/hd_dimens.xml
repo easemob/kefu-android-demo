@@ -54,4 +54,6 @@
 	<dimen name="title_customer_icon_size">17dp</dimen>
 	<dimen name="title_text_margin">16dp</dimen>
 	<dimen name="title_back_btn_layout_width">39dp</dimen>
+	<dimen name="image_thumbnail_size">100dp</dimen>
+	<dimen name="image_thumbnail_spacing">1dp</dimen>
 </resources>
