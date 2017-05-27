@@ -6,6 +6,7 @@
     <string name="button_pushtotalk">按住录音</string>
     <string name="button_send">发送</string>
     <string name="attach_picture">图片</string>
+    <string name="attach_video">视频</string>
     <string name="attach_take_pic">拍照</string>
     <string name="attach_location">位置</string>
     <string name="attach_file">文件</string>
@@ -77,4 +78,11 @@
 	<string name="em_chat_I_focus">我正在看</string>
 	<string name="no_more">没有更多了</string>
 	<string name="loading_more">更多加载中……</string>
+    <string name="video_footage">拍摄录像</string>
+	<string name="The_video_to_start">录像开始</string>
+    <string name="Whether_to_send">是否发送？</string>
+    <string name="Open_the_equipment_failure">打开设备失败!</string>
+    <string name="recording_video">录制视频</string>
+	<string name="temporary_does_not">暂不支持大于10M的视频</string>
+	<string name="recorder_video_processing">发送中...</string>
 </resources>

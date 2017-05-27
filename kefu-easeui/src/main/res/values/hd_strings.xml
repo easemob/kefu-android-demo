@@ -7,6 +7,7 @@
     <string name="button_send">Send</string>
     <string name="attach_picture">Image</string>
     <string name="attach_take_pic">Capture</string>
+    <string name="attach_video">Video</string>
     <string name="attach_location">Location</string>
     <string name="attach_file">File</string>
     <string name="move_up_to_cancel">Finger up to cancel sending</string>
@@ -78,4 +79,11 @@
 	<string name="em_chat_I_focus">I focus on</string>
 	<string name="no_more">No more.</string>
 	<string name="loading_more">Loading more……</string>
+    <string name="video_footage">Video record</string>
+	<string name="The_video_to_start">The video to start</string>
+    <string name="Whether_to_send">Are you sure to send?</string>
+    <string name="Open_the_equipment_failure">Open the equipment failure!</string>
+    <string name="recording_video">Record video</string>
+	<string name="temporary_does_not">Not support larger than 10M video</string>
+	<string name="recorder_video_processing">processing...</string>
 </resources>

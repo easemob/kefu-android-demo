@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 22
-        versionCode 4
-        versionName "1.0.6"
+        versionCode 5
+        versionName "1.0.7"
     }
     buildTypes {
         release {
@@ -34,6 +34,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-//            compile project(':kefu-sdk')
+  //  compile project(':kefu-sdk')
 }
 //apply from: 'bintray.gradle'

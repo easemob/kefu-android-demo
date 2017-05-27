@@ -30,4 +30,6 @@
 	<color name="emoji_send_btn_disable_bg_color">#D8D8D8</color>
 	<color name="emoji_send_btn_enable_bg_color">#b81616</color>
 	<color name="comment_text_color">#2b2b2b</color>
+	<color name="grid_state_pressed">#1Affffff</color>
+	<color name="grid_state_focused">#80000000</color>
 </resources>

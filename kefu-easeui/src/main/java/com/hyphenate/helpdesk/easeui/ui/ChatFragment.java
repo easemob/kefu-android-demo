@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +55,7 @@ import com.hyphenate.helpdesk.model.VisitorInfo;
 import com.hyphenate.util.PathUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
@@ -66,10 +69,10 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     protected static final String TAG = ChatFragment.class.getSimpleName();
     protected static final int REQUEST_CODE_CAMERA = 1;
     protected static final int REQUEST_CODE_LOCAL = 2;
+    private static final int REQUEST_CODE_SELECT_VIDEO = 3;
 
     public static final int REQUEST_CODE_EVAL = 5;
     public static final int REQUEST_CODE_SELECT_FILE = 6;
-
     /**
      * 传入fragment的参数
      */
@@ -93,12 +96,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     protected static final int ITEM_TAKE_PICTURE = 1;
     protected static final int ITEM_PICTURE = 2;
-    protected static final int ITEM_FILE = 3;
+    protected static final int ITEM_VIDEO = 3;
+    protected static final int ITEM_FILE = 4;
 
-    protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture, R.string.attach_file};
-    protected int[] itemdrawables = {R.drawable.hd_chat_takepic_selector, R.drawable.hd_chat_image_selector, R.drawable.hd_chat_file_selector};
+    protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture, R.string.attach_video, R.string.attach_file};
+    protected int[] itemdrawables = {R.drawable.hd_chat_takepic_selector, R.drawable.hd_chat_image_selector, R.drawable.hd_chat_video_selector, R.drawable.hd_chat_file_selector};
 
-    protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_FILE};
+    protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_VIDEO, ITEM_FILE};
     private boolean isMessageListInited;
     protected MyMenuItemClickListener extendMenuItemClickListener;
     private VisitorInfo visitorInfo;
@@ -378,6 +382,21 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                         sendFileByUri(uri);
                     }
                 }
+            } else if (requestCode == REQUEST_CODE_SELECT_VIDEO) {
+                if (data != null) {
+                    int duration = data.getIntExtra("dur", 0);
+                    String videoPath = data.getStringExtra("path");
+                    File file = new File(PathUtil.getInstance().getImagePath(), "thvideo" + System.currentTimeMillis());
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
+                        ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.close();
+                        sendVideoMessage(videoPath, file.getAbsolutePath(), duration);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -437,6 +456,10 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                     break;
                 case ITEM_PICTURE:
                     selectPicFromLocal(); // 图库选择图片
+                    break;
+                case ITEM_VIDEO:
+                    Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
                     break;
                 case ITEM_FILE:
                     //一般文件
@@ -730,6 +753,12 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress, String toChatUsername){
         Message message = Message.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
+        attachMessageAttrs(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
+    }
+
+    protected void sendVideoMessage(String videoPath, String thumbPath, int videoLength) {
+        Message message = Message.createVideoSendMessage(videoPath, thumbPath, videoLength, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
