@@ -48,9 +48,9 @@ public class EmojiconMenu extends EmojiconMenuBase{
 
     private void init(Context context, AttributeSet attrs){
         LayoutInflater.from(context).inflate(R.layout.hd_widget_emojicon, this);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EmojiconMenu);
-        emojiconColumns = ta.getInt(R.styleable.EmojiconMenu_emojiconColumns, defaultColumns);
-        bigEmojiconColumns = ta.getInt(R.styleable.EmojiconMenu_bigEmojiconRows, defaultBigColumns);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.HDEmojiconMenu);
+        emojiconColumns = ta.getInt(R.styleable.HDEmojiconMenu_hdEmojiconColumns, defaultColumns);
+        bigEmojiconColumns = ta.getInt(R.styleable.HDEmojiconMenu_hdBigEmojiconRows, defaultBigColumns);
         ta.recycle();
 
         pagerView = (EmojiconPagerView) findViewById(R.id.pager_view);
