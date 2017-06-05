@@ -25,9 +25,9 @@
         <!--<attr name="ctsListInitialLetterColor" format="color"/>-->
     <!--</declare-styleable>-->
     
-    <declare-styleable name="EmojiconMenu">
-       	<attr name="bigEmojiconRows" format="integer"/>
-       	<attr name="emojiconColumns" format="integer"/>
+    <declare-styleable name="HDEmojiconMenu">
+       	<attr name="hdBigEmojiconRows" format="integer"/>
+       	<attr name="hdEmojiconColumns" format="integer"/>
     </declare-styleable>
     
     <declare-styleable name="EaseChatExtendMenu">

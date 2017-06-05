@@ -69,7 +69,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		// The ImageFetcher takes care of loading images into our ImageView
 		// children asynchronously
 		mImageResizer = new ImageResizer(getActivity(), mImageThumbSize);
-		mImageResizer.setLoadingImage(R.drawable.em_empty_photo);
+		mImageResizer.setLoadingImage(R.drawable.hd_empty_photo);
 		mImageResizer.addImageCache(getActivity().getSupportFragmentManager(),
 				cacheParams);
 	}
@@ -260,7 +260,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 
 				holder.tvDur.setText(DateUtils.toTime(entty.duration));
 				holder.tvSize.setText(TextFormater.getDataSize(entty.size));
-				holder.imageView.setImageResource(R.drawable.em_empty_photo);
+				holder.imageView.setImageResource(R.drawable.hd_empty_photo);
 				mImageResizer.loadImage(entty.filePath, holder.imageView);
 			}
 			return convertView;
