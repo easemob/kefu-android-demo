@@ -107,7 +107,7 @@ public class ChatRowTransferToKefu extends ChatRow {
 //
 //            }
 //        });
-        ChatClient.getInstance().getChat().sendMessage(cmdMessage);
+        ChatClient.getInstance().chatManager().sendMessage(cmdMessage);
 
 
     }

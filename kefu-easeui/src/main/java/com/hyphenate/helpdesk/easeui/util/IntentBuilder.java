@@ -20,6 +20,7 @@ public class IntentBuilder {
     private QueueIdentityInfo queueIdentityInfo;
     private boolean showUserNick;
     private VisitorInfo visitorInfo;
+    private String titleName;
     private Bundle bundle;
 
     public IntentBuilder(Context context) {
@@ -56,6 +57,11 @@ public class IntentBuilder {
         return this;
     }
 
+    public IntentBuilder setTitleName(String titleName){
+        this.titleName = titleName;
+        return this;
+    }
+
     public IntentBuilder setBundle(Bundle bundle) {
         this.bundle = bundle;
         return this;
@@ -75,6 +81,10 @@ public class IntentBuilder {
 
         if (agentIdentityInfo != null) {
             intent.putExtra(Config.EXTRA_AGENT_INFO, agentIdentityInfo);
+        }
+
+        if (titleName != null){
+            intent.putExtra(Config.EXTRA_TITLE_NAME, titleName);
         }
 
         if (queueIdentityInfo != null) {

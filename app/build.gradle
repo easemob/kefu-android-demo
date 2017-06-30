@@ -8,8 +8,8 @@ android {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 18
-        versionName "1.8"
+        versionCode 19
+        versionName "1.9"
 
         ndk {
             //选择要添加的对应cpu类型的.so库
@@ -46,7 +46,6 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile project(':kefu-easeui')
     compile project(':bottomnavigation')
-
     compile 'com.jude:easyrecyclerview:4.0.6'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
     // network retrofit - squareup
@@ -56,7 +55,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.2'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.wefika:flowlayout:0.4.0'
-
     //qcode 只为演示用，APP中可以去掉
     compile 'cn.yipianfengye.android:zxing-library:2.1'
+    compile 'com.umeng.analytics:analytics:6.1.1'
 }

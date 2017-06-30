@@ -153,7 +153,7 @@ public class ChatRowImage extends ChatRowFile{
 
                                     @Override
                                     public void run() {
-                                        ChatClient.getInstance().getChat().downloadThumbnail(message);
+                                        ChatClient.getInstance().chatManager().downloadThumbnail(message);
                                     }
                                 }).start();
                             }

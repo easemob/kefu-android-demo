@@ -93,7 +93,7 @@ public class UIProvider {
             settingsProvider = new DefaultSettingsProvider();
         }
 
-        ChatClient.getInstance().getChat().addMessageListener(new ChatManager.MessageListener() {
+        ChatClient.getInstance().chatManager().addMessageListener(new ChatManager.MessageListener() {
             @Override
             public void onMessage(List<Message> msgs) {
                 if (!EasyUtils.isAppRunningForeground(context)){

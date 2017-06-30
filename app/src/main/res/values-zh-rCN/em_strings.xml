@@ -19,6 +19,7 @@
     <string name="is_contact_customer">正在联系客服，请稍等...</string>
     <string name="is_contact_customer_failure_seconed">联系客服失败:</string>
     <string name="shopping">商城</string>
+    <string name="conversation">会话</string>
     <string name="setting">设置</string>
     <string name="qrcode">扫描</string>
     <string name="qrcode_success">二维码扫描成功</string>

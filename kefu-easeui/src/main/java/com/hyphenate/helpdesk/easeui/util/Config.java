@@ -12,6 +12,8 @@ public final class Config {
 
     public static final String EXTRA_SHOW_NICK = "extra_show_nick";
 
+    public static final String EXTRA_TITLE_NAME = "extra_title_name";
+
     public static final String EXTRA_BUNDLE = "extra_bundle";
 
 

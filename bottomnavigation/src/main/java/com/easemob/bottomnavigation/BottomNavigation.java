@@ -11,6 +11,7 @@ public class BottomNavigation extends RelativeLayout {
     private RadioButton mRadioButton1;
     private RadioButton mRadioButton2;
     private RadioButton mRadioButton3;
+    private RadioButton mRadioButton4;
 
 
     public BottomNavigation(Context context) {
@@ -33,6 +34,7 @@ public class BottomNavigation extends RelativeLayout {
         mRadioButton1 = (RadioButton) view.findViewById(R.id.rb1);
         mRadioButton2 = (RadioButton) view.findViewById(R.id.rb2);
         mRadioButton3 = (RadioButton) view.findViewById(R.id.rb3);
+        mRadioButton4 = (RadioButton) view.findViewById(R.id.rb4);
         mRadioButton1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +53,12 @@ public class BottomNavigation extends RelativeLayout {
                 mSelectionListener.onValueSelected(2);
             }
         });
+        mRadioButton4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSelectionListener.onValueSelected(3);
+            }
+        });
     }
     public void setBottomNavigationSelectedListener(OnBottomNavigationSelectedListener l) {
         this.mSelectionListener = l;
@@ -66,6 +74,9 @@ public class BottomNavigation extends RelativeLayout {
                 break;
             case 2:
                 mRadioButton3.setChecked(true);
+                break;
+            case 3:
+                mRadioButton4.setChecked(true);
                 break;
         }
     }

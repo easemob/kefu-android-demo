@@ -149,7 +149,7 @@ public class ChatRowVideo extends ChatRowFile {
                     } else {
                         if (message.getStatus() == Message.Status.SUCCESS) {
                             if (CommonUtils.isNetWorkConnected(activity)) {
-                                ChatClient.getInstance().getChat().downloadThumbnail(message);
+                                ChatClient.getInstance().chatManager().downloadThumbnail(message);
                             }
                         }
 

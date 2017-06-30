@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.ClipboardManager;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.ChatClient;
@@ -108,6 +110,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     private VisitorInfo visitorInfo;
     private AgentIdentityInfo agentIdentityInfo;
     private QueueIdentityInfo queueIdentityInfo;
+    private String titleName;
+    protected TextView tvTipWaitCount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,6 +131,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         //指定客服
         agentIdentityInfo = fragmentArgs.getParcelable(Config.EXTRA_AGENT_INFO);
         visitorInfo = fragmentArgs.getParcelable(Config.EXTRA_VISITOR_INFO);
+
+        titleName = fragmentArgs.getString(Config.EXTRA_TITLE_NAME);
         //在父类中调用了initView和setUpView两个方法
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null){
@@ -144,6 +150,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
             }
         });
+        ChatClient.getInstance().chatManager().addAgentInputListener(agentInputListener);
     }
 
     /**
@@ -155,7 +162,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         messageList = (MessageList) getView().findViewById(R.id.message_list);
         messageList.setShowUserNick(showUserNick);
         listView = messageList.getListView();
-
+        tvTipWaitCount = (TextView) getView().findViewById(R.id.tv_tip_waitcount);
         extendMenuItemClickListener = new MyMenuItemClickListener();
         inputMenu = (EaseChatInputMenu) getView().findViewById(R.id.input_menu);
         registerExtendMenuItem();
@@ -190,15 +197,63 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        ChatClient.getInstance().chatManager().addVisitorWaitListener(new ChatManager.VisitorWaitListener() {
+            @Override
+            public void waitCount(final int num) {
+                if (getActivity() == null){
+                    return;
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (num > 0){
+                            tvTipWaitCount.setVisibility(View.VISIBLE);
+                            tvTipWaitCount.setText(getString(R.string.current_wait_count, num));
+                        }else{
+                            tvTipWaitCount.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
     }
+
+    ChatManager.AgentInputListener agentInputListener = new ChatManager.AgentInputListener() {
+        @Override
+        public void onInputState(final String input) {
+            if (getActivity() == null){
+                return;
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (input != null) {
+                        titleBar.setTitle(input);
+                    } else {
+                        if (!TextUtils.isEmpty(titleName)) {
+                            titleBar.setTitle(titleName);
+                        } else {
+                            titleBar.setTitle(toChatUsername);
+                        }
+                    }
+                }
+            });
+
+        }
+    };
 
     /**
      * 设置属性，监听等
      */
     @Override
     protected void setUpView() {
+        if (!TextUtils.isEmpty(titleName)) {
+            titleBar.setTitle(titleName);
+        } else {
+            titleBar.setTitle(toChatUsername);
+        }
 
-        titleBar.setTitle(toChatUsername);
         titleBar.setRightImageResource(R.drawable.hd_mm_title_remove);
 
         onConversationInit();
@@ -229,6 +284,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     public void onDestroyView() {
         super.onDestroyView();
         ChatClient.getInstance().chatManager().unBind();
+        ChatClient.getInstance().chatManager().removeAgentInputListener(agentInputListener);
     }
 
     /**
@@ -242,7 +298,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     protected void onConversationInit() {
         // 获取当前conversation对象
-        conversation = ChatClient.getInstance().getChat().getConversation(toChatUsername);
+        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername);
         if (conversation != null) {
             // 把此会话的未读数置为0
             conversation.markAllMessagesAsRead();
@@ -298,7 +354,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                         if (!confirmed) {
                             return;
                         }
-                        ChatClient.getInstance().getChat().reSendMessage(message);
+                        ChatClient.getInstance().chatManager().reSendMessage(message);
                     }
                 }, true).show();
             }
@@ -458,8 +514,18 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                     selectPicFromLocal(); // 图库选择图片
                     break;
                 case ITEM_VIDEO:
-                    Intent intent = new Intent(getActivity(), ImageGridActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                    PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(ChatFragment.this, new String[]{Manifest.permission.CAMERA}, new PermissionsResultAction() {
+                        @Override
+                        public void onGranted() {
+                            selectVideoFromLocal();
+                        }
+
+                        @Override
+                        public void onDenied(String permission) {
+
+                        }
+                    });
+
                     break;
                 case ITEM_FILE:
                     //一般文件
@@ -471,6 +537,11 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             }
         }
 
+    }
+
+    private void selectVideoFromLocal() {
+        Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
     }
 
     /**
@@ -583,9 +654,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 + System.currentTimeMillis() + ".jpg");
         cameraFilePath = cameraFile.getAbsolutePath();
         cameraFile.getParentFile().mkdirs();
-        startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
-                REQUEST_CODE_CAMERA);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
+        } else {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), "com.easemob.helpdeskdemo.fileprovider", cameraFile));
+        }
+        startActivityForResult(intent, REQUEST_CODE_CAMERA);
     }
 
     /**

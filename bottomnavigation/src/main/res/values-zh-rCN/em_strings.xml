@@ -2,5 +2,6 @@
 <resources>
     <string name="bottom_nav_shop">商城</string>
     <string name="bottom_nav_leavemessages">留言</string>
+    <string name="bottom_nav_chat">会话</string>
     <string name="bottom_nav_setting">设置</string>
 </resources>

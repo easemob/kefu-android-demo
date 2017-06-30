@@ -87,7 +87,7 @@ public class ChatRowOrder extends ChatRow {
         message.setMessageStatusCallback(new Callback() {
             @Override
             public void onSuccess() {
-                ChatClient.getInstance().getChat().getConversation(message.getTo()).removeMessage(message.getMsgId());
+                ChatClient.getInstance().chatManager().getConversation(message.getTo()).removeMessage(message.getMsgId());
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -119,7 +119,7 @@ public class ChatRowOrder extends ChatRow {
                     return;
                 }
 
-                ChatClient.getInstance().getChat().reSendMessage(message);
+                ChatClient.getInstance().chatManager().reSendMessage(message);
             }
         });
 

@@ -104,7 +104,7 @@ public class ShowBigImageActivity extends BaseActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.setMessage(str1);
         pd.show();
-        Message msg = ChatClient.getInstance().getChat().getMessage(msgId);
+        Message msg = ChatClient.getInstance().chatManager().getMessage(msgId);
         EMImageMessageBody imgBody = (EMImageMessageBody) msg.getBody();
         final String localPath = imgBody.getLocalUrl();
         final File localFile = new File(localPath);
@@ -185,7 +185,7 @@ public class ShowBigImageActivity extends BaseActivity {
             }
         };
         msg.setMessageStatusCallback(callback);
-        ChatClient.getInstance().getChat().downloadAttachment(msg);
+        ChatClient.getInstance().chatManager().downloadAttachment(msg);
     }
 
     @Override

@@ -21,6 +21,7 @@
     <string name="is_contact_customer_failure_seconed">Contact customer service failure:</string>
     <string name="shopping">Store</string>
     <string name="setting">Setting</string>
+    <string name="conversation">Conversation</string>
     <string name="qrcode">QR Code</string>
     <string name="qrcode_success">QrCode scanning success</string>
     <string name="qrcode_invalid">QrCode Invalid</string>

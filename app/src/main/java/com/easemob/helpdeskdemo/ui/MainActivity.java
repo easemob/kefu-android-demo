@@ -46,6 +46,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     private Fragment shopFragment;
     private Fragment settingFragment;
     private Fragment ticketListFragment;
+    private Fragment conversationsFragment;
     private Fragment[] fragments;
     private int currentTabIndex = 0;
     private MyConnectionListener connectionListener = null;
@@ -73,22 +74,26 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
             shopFragment = getSupportFragmentManager().findFragmentByTag(shopFragment.getClass().getName());
             settingFragment = getSupportFragmentManager().findFragmentByTag(settingFragment.getClass().getName());
             ticketListFragment = getSupportFragmentManager().findFragmentByTag(ticketListFragment.getClass().getName());
-            fragments = new Fragment[]{shopFragment, ticketListFragment, settingFragment};
-            getSupportFragmentManager().beginTransaction().hide(shopFragment).hide(settingFragment).hide(ticketListFragment)
+            conversationsFragment = getSupportFragmentManager().findFragmentByTag(conversationsFragment.getClass().getName());
+            fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
+            getSupportFragmentManager().beginTransaction().hide(shopFragment).hide(settingFragment).hide(ticketListFragment).hide(conversationsFragment)
                     .show(fragments[currentTabIndex]).commit();
 
         } else {
             shopFragment = new ShopFragment();
             settingFragment = new SettingFragment();
             ticketListFragment = new TicketListFragment();
-            fragments = new Fragment[]{shopFragment, ticketListFragment, settingFragment};
+            conversationsFragment = new ConversationListFragment();
+            fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
             // 把shopFragment设为选中状态
             FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
             trx.add(R.id.fragment_container, shopFragment, shopFragment.getClass().getName())
                     .add(R.id.fragment_container, ticketListFragment, ticketListFragment.getClass().getName())
                     .add(R.id.fragment_container, settingFragment, settingFragment.getClass().getName())
+                    .add(R.id.fragment_container, conversationsFragment, conversationsFragment.getClass().getName())
                     .hide(settingFragment)
                     .hide(ticketListFragment)
+                    .hide(conversationsFragment)
                     .hide(shopFragment).show(fragments[currentTabIndex]);
             trx.commit();
         }
@@ -217,7 +222,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     @Override
     protected void onStop() {
         super.onStop();
-        ChatClient.getInstance().getChat().removeMessageListener(messageListener);
+        ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
         DemoHelper.getInstance().popActivity(this);
 
     }
@@ -235,6 +240,10 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
                     if (EasyUtils.isAppRunningForeground(MainActivity.this)){
                         DemoHelper.getInstance().getNotifier().onNewMesg(msgs);
+                    }
+
+                    if (conversationsFragment != null){
+                        ((ConversationListFragment)conversationsFragment).refresh();
                     }
                 }
             });
