@@ -2,5 +2,6 @@
 <resources>
     <string name="bottom_nav_shop">Shop</string>
     <string name="bottom_nav_leavemessages">Note</string>
+    <string name="bottom_nav_chat">Chat</string>
     <string name="bottom_nav_setting">Setting</string>
 </resources>

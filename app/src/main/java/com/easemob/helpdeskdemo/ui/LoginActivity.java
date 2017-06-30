@@ -26,6 +26,7 @@ import com.easemob.helpdeskdemo.MessageHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.Conversation;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
@@ -190,13 +191,19 @@ public class LoginActivity extends DemoBaseActivity {
 				}
 				Bundle bundle = new Bundle();
 				bundle.putInt(Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex);
-
+			 //设置点击通知栏跳转事件
+				Conversation conversation = ChatClient.getInstance().chatManager().getConversation(Preferences.getInstance().getCustomerAccount());
+				String titleName = null;
+				if (conversation.getOfficialAccount() != null){
+					titleName = conversation.getOfficialAccount().getName();
+				}
 				// 进入主页面
 				Intent intent = new IntentBuilder(LoginActivity.this)
 						.setTargetClass(ChatActivity.class)
 						.setVisitorInfo(MessageHelper.createVisitorInfo())
 						.setServiceIMNumber(Preferences.getInstance().getCustomerAccount())
 						.setScheduleQueue(MessageHelper.createQueueIdentity(queueName))
+						.setTitleName(titleName)
 //						.setScheduleAgent(MessageHelper.createAgentIdentity("ceshiok1@qq.com"))
 						.setShowUserNick(true)
 						.setBundle(bundle)

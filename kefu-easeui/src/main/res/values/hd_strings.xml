@@ -86,4 +86,5 @@
     <string name="recording_video">Record video</string>
 	<string name="temporary_does_not">Not support larger than 10M video</string>
 	<string name="recorder_video_processing">processing...</string>
+    <string name="current_wait_count">current wait count is %d</string>
 </resources>

@@ -100,7 +100,7 @@ public class ChatRowRobotMenu extends ChatRow{
                     @Override
                     public void onClick(View v) {
                         Message sendMessage = Message.createTxtSendMessage(content, message.getFrom());
-                        ChatClient.getInstance().getChat().sendMessage(sendMessage);
+                        ChatClient.getInstance().chatManager().sendMessage(sendMessage);
                     }
                 });
                 LinearLayout.LayoutParams llLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);

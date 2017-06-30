@@ -287,7 +287,7 @@ public class Notifier {
      */
     public void viberateAndPlayTone(Message message) {
         if(message != null){
-            if(ChatClient.getInstance().getChat().isSilentMessage(message)){
+            if(ChatClient.getInstance().chatManager().isSilentMessage(message)){
                 return;
             }
         }

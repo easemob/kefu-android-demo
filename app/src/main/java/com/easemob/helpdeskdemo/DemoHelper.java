@@ -8,19 +8,23 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdeskdemo.receiver.CallReceiver;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.ui.VideoCallActivity;
+import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
+import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.Notifier;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
-import com.hyphenate.helpdesk.easeui.util.UserUtil;
+import com.hyphenate.helpdesk.model.AgentInfo;
 import com.hyphenate.helpdesk.util.Log;
 
 import org.json.JSONObject;
@@ -64,13 +68,16 @@ public class DemoHelper {
         ChatClient.Options options = new ChatClient.Options();
         options.setAppkey(Preferences.getInstance().getAppKey());
         options.setTenantId(Preferences.getInstance().getTenantId());
+        options.showAgentInputState().showVisitorWaitCount();
 
+        //增加GCM推送，对于国外的APP可能比较需要
+//        options.setGCMNumber("****");
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
         //在华为手机上当APP被kill时使用华为推送进行消息提示, SDK已支持,可选
         options.setHuaweiPushAppId("10663060");
 
-        //options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
+//        options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
 
@@ -97,7 +104,33 @@ public class DemoHelper {
             public void setNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView) {
                 if (message.direct() == Message.Direct.RECEIVE) {
                     //设置接收方的昵称和头像
-                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+//                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+                    AgentInfo agentInfo = com.hyphenate.helpdesk.model.MessageHelper.getAgentInfo(message);
+                    if (usernickView != null){
+                        usernickView.setText(message.getFrom());
+                        if (agentInfo != null){
+                            if (!TextUtils.isEmpty(agentInfo.getNickname())) {
+                                usernickView.setText(agentInfo.getNickname());
+                            }
+                        }
+                    }
+                    if (userAvatarView != null){
+                        userAvatarView.setImageResource(com.hyphenate.helpdesk.R.drawable.hd_default_avatar);
+                        if (agentInfo != null){
+                            if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
+                                String strUrl = agentInfo.getAvatar();
+                                // 设置客服头像
+                                if (!TextUtils.isEmpty(strUrl)) {
+                                    if (!strUrl.startsWith("http")) {
+                                        strUrl = "http:" + strUrl;
+                                    }
+                                    //正常的string路径
+                                    Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).transform(new GlideCircleTransform(context)).into(userAvatarView);
+                                }
+                            }
+                        }
+
+                    }
                 } else {
                     //此处设置当前登录用户的头像，
                     if (userAvatarView != null){
@@ -147,11 +180,19 @@ public class DemoHelper {
                     intent = new Intent(context, VideoCallActivity.class);
                 }else{
                     //设置点击通知栏跳转事件
+                    Conversation conversation = ChatClient.getInstance().chatManager().getConversation(message.getFrom());
+                    String titleName = null;
+                    if (conversation.getOfficialAccount() != null){
+                        titleName = conversation.getOfficialAccount().getName();
+                    }
                     intent = new IntentBuilder(context)
                             .setTargetClass(ChatActivity.class)
-                            .setServiceIMNumber(message.getFrom())
+                            .setServiceIMNumber(conversation.conversationId())
+                            .setVisitorInfo(MessageHelper.createVisitorInfo())
+                            .setTitleName(titleName)
                             .setShowUserNick(true)
                             .build();
+
                 }
                 return intent;
             }

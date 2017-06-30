@@ -140,7 +140,7 @@ public class ShowVideoActivity extends BaseActivity {
                 });
             }
         };
-        ChatClient.getInstance().getChat().downloadFile(remoteUrl, localFilePath, header, callback);
+        ChatClient.getInstance().chatManager().downloadFile(remoteUrl, localFilePath, header, callback);
     }
 
     @Override

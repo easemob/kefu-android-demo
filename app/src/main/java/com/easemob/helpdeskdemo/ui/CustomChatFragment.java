@@ -96,8 +96,9 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 showAlertDialog();
             }
         });
-
     }
+
+
 
     private void showAlertDialog() {
         FragmentTransaction mFragTransaction = getActivity().getSupportFragmentManager().beginTransaction();

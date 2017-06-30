@@ -85,4 +85,5 @@
     <string name="recording_video">录制视频</string>
 	<string name="temporary_does_not">暂不支持大于10M的视频</string>
 	<string name="recorder_video_processing">发送中...</string>
+    <string name="current_wait_count">当前排队人数为%d</string>
 </resources>

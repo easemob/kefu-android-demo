@@ -25,7 +25,7 @@ public class ShowNormalFileActivity extends BaseActivity {
 
         final String msgId = getIntent().getStringExtra("messageId");
 
-        Message message = ChatClient.getInstance().getChat().getMessage(msgId);
+        Message message = ChatClient.getInstance().chatManager().getMessage(msgId);
         if (message == null){
             finish();
             return;
@@ -73,7 +73,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             }
         });
 
-        ChatClient.getInstance().getChat().downloadAttachment(message);
+        ChatClient.getInstance().chatManager().downloadAttachment(message);
 
     }
 }

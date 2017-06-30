@@ -22,6 +22,15 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
 
+    <!-- GCM required, remember replace "com.easemob.helpdeskdemo" to your own package -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.easemob.helpdeskdemo.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.easemob.helpdeskdemo.permission.C2D_MESSAGE" />
+
     <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
     <permission
         android:name="com.easemob.helpdeskdemo.permission.MIPUSH_RECEIVE"
@@ -123,7 +132,7 @@
         <!-- umeng appkey，可忽略 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="53912a3156240b01a7075ed1" />
+            android:value="593902922ae85b248d000f27" />
         <!-- 百度地图所需的service -->
         <service
             android:name="com.baidu.location.f"
@@ -133,6 +142,35 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+
+
+        <!-- gcm start -->
+        <receiver
+            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.hyphenate.chatuidemo" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.hyphenate.chat.EMGCMListenerService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receiver.GCMPushBroadCast"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hyphenate.sdk.push" />
+
+                <category android:name="com.easemob.helpdeskdemo" />
+            </intent-filter>
+        </receiver>
+        <!-- gcm end -->
+
 
         <!-- 声明小米所需的Receiver-->
         <!-- mi push -->
@@ -190,6 +228,16 @@
             android:name="com.huawei.android.pushagent.PushService"
             android:process=":pushservice" >
         </service>
+
+        <provider
+            android:authorities="com.easemob.helpdeskdemo.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
 
     </application>
 

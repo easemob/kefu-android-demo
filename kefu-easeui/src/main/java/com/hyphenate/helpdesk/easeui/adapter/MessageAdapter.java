@@ -86,7 +86,7 @@ public class MessageAdapter extends BaseAdapter {
 		this.context = context;
 		this.listView = listView;
 		toChatUsername = username;
-		this.conversation = ChatClient.getInstance().getChat().getConversation(username);
+		this.conversation = ChatClient.getInstance().chatManager().getConversation(username);
 
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displayMetrics = new DisplayMetrics();

@@ -60,7 +60,7 @@ public class MessageList extends RelativeLayout {
     public void init(String toChatUsername, CustomChatRowProvider customChatRowProvider) {
         this.toChatUsername = toChatUsername;
 
-        conversation = ChatClient.getInstance().getChat().getConversation(toChatUsername);
+        conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername);
         messageAdapter = new MessageAdapter(context, toChatUsername, listView);
         messageAdapter.setShowAvatar(showAvatar);
         messageAdapter.setShowUserNick(showUserNick);

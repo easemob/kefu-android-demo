@@ -44,6 +44,19 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@android:color/transparent"
+            android:drawableTop="@drawable/bottom_nav_chat_selector"
+            android:gravity="center"
+            android:text="@string/bottom_nav_chat"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textColor="@drawable/bottom_nav_text_color_selector" />
+
+        <RadioButton
+            android:id="@+id/rb4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@android:color/transparent"
             android:drawableTop="@drawable/bottom_nav_setting_selector"
             android:gravity="center"
             android:text="@string/bottom_nav_setting"
