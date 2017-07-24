@@ -90,8 +90,8 @@ public class DemoHelper {
 	 * @param context
 	 *            application context
 	 */
-	public void init(Context context) {
-		if (EaseUI.getInstance().init(context)) {
+	public void init(Context context, long tenantId) {
+		if (EaseUI.getInstance().init(context, tenantId)) {
 		    appContext = context;
             //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
             KefuChatManager.getInstance().setMipushConfig("2882303761517507836", "5631750729836");

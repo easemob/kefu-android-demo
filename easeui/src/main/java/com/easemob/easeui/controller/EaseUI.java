@@ -96,7 +96,7 @@ public final class EaseUI {
      * @param context
      * @return
      */
-    public synchronized boolean init(Context context){
+    public synchronized boolean init(Context context, long tenantId){
         if(sdkInited){
             return true;
         }
@@ -117,7 +117,7 @@ public final class EaseUI {
             return false;
         }
         // 初始化环信SDK,一定要先调用init()
-        KefuChat.getInstance().init(context);
+        KefuChat.getInstance().initWithOptions(context, new KefuChat.Options().setTenantId(tenantId).showAgentInputState().showVisitorWaitCount());
 //        KefuChat.getInstance().setKefuServerAddress("http://sandbox.kefu.easemob.com");
         initChatOptions();
         if(settingsProvider == null){

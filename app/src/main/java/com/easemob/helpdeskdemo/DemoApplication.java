@@ -36,7 +36,7 @@ public class DemoApplication extends Application {
 		String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
         KefuChat.getInstance().setAppkey(appkey);
 		// init demo helper
-		DemoHelper.getInstance().init(applicationContext);
+		DemoHelper.getInstance().init(applicationContext, HelpDeskPreferenceUtils.getInstance(this).getSettingTenantId());
 	}
 
 	public static DemoApplication getInstance() {

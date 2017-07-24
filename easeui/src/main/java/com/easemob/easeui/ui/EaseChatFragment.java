@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.EMChatRoomChangeListener;
@@ -113,6 +114,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
     private EMChatRoomChangeListener chatRoomChangeListener;
     private boolean isMessageListInited;
     protected MyItemClickListener extendMenuItemClickListener;
+    protected TextView tvTipWaitCount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,7 +147,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
 //            messageList.setShowUserNick(true);
         messageList.setShowUserNick(showUserNick);
         listView = messageList.getListView();
-
+        tvTipWaitCount = (TextView) getView().findViewById(R.id.tv_tip_waitcount);
         extendMenuItemClickListener = new MyItemClickListener();
         inputMenu = (EaseChatInputMenu) getView().findViewById(R.id.input_menu);
         registerExtendMenuItem();
@@ -185,7 +187,49 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        KefuChatManager.getInstance().addVisitorWaitListener(visitorWaitListener);
+        KefuChatManager.getInstance().addAgentInputListener(agentInputListener);
     }
+
+    KefuChatManager.VisitorWaitListener visitorWaitListener = new KefuChatManager.VisitorWaitListener() {
+        @Override
+        public void waitCount(final int num) {
+            if (getActivity() == null){
+                return;
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (num > 0){
+                        tvTipWaitCount.setVisibility(View.VISIBLE);
+                        tvTipWaitCount.setText(getString(R.string.current_wait_count, num));
+                    }else{
+                        tvTipWaitCount.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
+    };
+
+    KefuChatManager.AgentInputListener agentInputListener = new KefuChatManager.AgentInputListener() {
+        @Override
+        public void onInputState(final String input) {
+            if (getActivity() == null) {
+                return;
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (input != null) {
+                        titleBar.setTitle("正在输入中...");
+                    } else {
+                        titleBar.setTitle(toChatUsername);
+                    }
+                }
+            });
+
+        }
+    };
 
     /**
      * 设置属性，监听等
@@ -448,6 +492,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMEventListene
         if(chatType == EaseConstant.CHATTYPE_CHATROOM){
             KefuChatManager.getInstance().leaveChatRoom(toChatUsername);
         }
+        KefuChatManager.getInstance().removeVisitorWaitListener(visitorWaitListener);
+        KefuChatManager.getInstance().removeAgentInputListener(agentInputListener);
         
         if(chatRoomChangeListener != null){
             KefuChatManager.getInstance().removeChatRoomChangeListener(chatRoomChangeListener);
