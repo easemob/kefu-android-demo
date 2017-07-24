@@ -134,6 +134,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 						}
 						tvTenantId.setText(newTenantId);
 						HelpDeskPreferenceUtils.getInstance(getActivity()).setSettingTenantId(longTenantId);
+						KefuChat.getInstance().changeTenantId(longTenantId);
 					}catch (NumberFormatException e){}
 					break;
 				case REQUEST_CODE_PROJECT_ID:

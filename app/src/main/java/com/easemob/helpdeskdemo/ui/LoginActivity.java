@@ -164,6 +164,7 @@ public class LoginActivity extends BaseActivity {
 		if (!progressDialog.isShowing()) {
 			progressDialog.show();
 		}
+
 		// login huanxin server
 		KefuChatManager.getInstance().login(uname, upwd, new EMCallBack() {
 			@Override

@@ -37,4 +37,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
+    <TextView
+        android:id="@+id/tv_tip_waitcount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_above="@id/input_menu"
+        android:background="@android:color/darker_gray"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>
