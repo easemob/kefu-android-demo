@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+Properties prop = new Properties()
+prop.load(new FileInputStream(file("signing.properties")))
+
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -17,9 +21,27 @@ android {
             //还可以添加 'armeabi', 'x86'
         }
     }
+
+    signingConfigs{
+        release{
+            storeFile file(prop['KEY_FILE'])
+            storePassword prop['STORE_PASSWORD']
+            keyAlias prop['KEY_ALIAS']
+            keyPassword prop['KEY_PASSWORD']
+        }
+    }
+
     buildTypes {
+        debug {
+            //apk签名
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
+            //apk签名
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

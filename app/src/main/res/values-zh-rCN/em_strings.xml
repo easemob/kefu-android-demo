@@ -76,7 +76,7 @@
     <string name="login_user_noti">请先登录</string>
     <string name="comment_suc">评论成功</string>
     <string name="comment_fail">评论失败</string>
-    <string name="file_uploading">文件下载中...</string>
+    <string name="file_uploading">文件上传中...</string>
     <string name="comment_content_not_null">评论内容不能为空</string>
     <string name="please_wait_noti">请等待...</string>
     <string name="send_suc">发送成功</string>

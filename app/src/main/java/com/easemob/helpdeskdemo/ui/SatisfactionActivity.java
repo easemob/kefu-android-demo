@@ -14,45 +14,91 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.R;
+import com.easemob.helpdeskdemo.ui.adapter.TagAdapter;
+import com.easemob.helpdeskdemo.widget.flow.FlowTagLayout;
+import com.easemob.helpdeskdemo.widget.flow.OnTagSelectListener;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.model.EvaluationInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SatisfactionActivity extends BaseActivity {
 
-    private String msgId = "";
-    private RatingBar ratingBar = null;
-    private Button btnSubmit = null;
     private EditText etContent = null;
+    private TextView tvLevelName = null;
     private ProgressDialog pd = null;
+    private FlowTagLayout mFlowTagLayout;
+    private TagAdapter<EvaluationInfo.TagInfo> tagAdapter;
+    private EvaluationInfo evaluationInfo;
+    private volatile EvaluationInfo.Degree currentDegree;
+    private List<EvaluationInfo.TagInfo> selectedTags = Collections.synchronizedList(new ArrayList<EvaluationInfo.TagInfo>());
+    private Message currentMessage;
+
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.em_activity_satisfaction);
-        msgId = getIntent().getStringExtra("msgId");
+        String msgId = getIntent().getStringExtra("msgId");
         initView();
+        currentMessage = ChatClient.getInstance().chatManager().getMessage(msgId);
+        evaluationInfo = MessageHelper.getEvalRequest(currentMessage);
+        currentDegree = evaluationInfo.getDegree(5);
+        refreshLevelName();
+        refreshFlowLayout();
+
 
     }
 
+    private void refreshLevelName(){
+        if (!TextUtils.isEmpty(currentDegree.getName())){
+            tvLevelName.setText(currentDegree.getName());
+        }else{
+            tvLevelName.setText("");
+        }
+
+    }
+
+    private void refreshFlowLayout(){
+        if (currentDegree != null && currentDegree.getAppraiseTag() != null && !currentDegree.getAppraiseTag().isEmpty()){
+            mFlowTagLayout.setVisibility(View.VISIBLE);
+            selectedTags.clear();
+            tagAdapter.clearAndAndAll(currentDegree.getAppraiseTag());
+
+        }else{
+            mFlowTagLayout.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+
     private void initView() {
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar1);
-        btnSubmit = (Button) findViewById(R.id.submit);
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar1);
+        Button btnSubmit = (Button) findViewById(R.id.submit);
         etContent = (EditText) findViewById(R.id.edittext);
+        tvLevelName = (TextView) findViewById(R.id.tv_level_name);
+        mFlowTagLayout = (FlowTagLayout) findViewById(R.id.id_flowlayout);
+        mFlowTagLayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_MULTI);
+        mFlowTagLayout.setAdapter(tagAdapter = new TagAdapter<>(this));
         btnSubmit.setOnClickListener(new MyClickListener());
         ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 
@@ -61,18 +107,40 @@ public class SatisfactionActivity extends BaseActivity {
                 if (rating < 1.0f) {
                     ratingBar.setRating(1.0f);
                 }
+                currentDegree = evaluationInfo.getDegree((int) rating);
+                refreshLevelName();
+                refreshFlowLayout();
             }
         });
+        mFlowTagLayout.setOnTagSelectListener(new OnTagSelectListener() {
+            @Override
+            public void onItemSelect(FlowTagLayout parent, List<Integer> selectedList) {
+                selectedTags.clear();
+                if (selectedList != null && !selectedList.isEmpty()){
+                    for (int i : selectedList){
+                        selectedTags.add((EvaluationInfo.TagInfo) parent.getAdapter().getItem(i));
+                    }
+                }
+            }
+        });
+
     }
 
     class MyClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
+            if (currentDegree != null && currentDegree.getAppraiseTag() != null && !currentDegree.getAppraiseTag().isEmpty()){
+                if (selectedTags == null || selectedTags.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "最少选择一个标签！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             pd = new ProgressDialog(SatisfactionActivity.this);
             pd.setMessage(getResources().getString(R.string.em_tip_wating));
             pd.show();
-            MessageHelper.sendEvalMessage(msgId, String.valueOf(ratingBar.getSecondaryProgress()), etContent.getText().toString(), new Callback() {
+            MessageHelper.sendEvalMessage(currentMessage, etContent.getText().toString(), currentDegree, selectedTags, new Callback() {
                 @Override
                 public void onSuccess() {
                     runOnUiThread(new Runnable() {
@@ -110,42 +178,6 @@ public class SatisfactionActivity extends BaseActivity {
             });
         }
 
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-
-        // 添加点击Edittext 以外的区域，收起键盘
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (isShouldHideInput(v, ev)) {
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (inputManager != null) {
-                    inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-
-            return super.dispatchTouchEvent(ev);
-        }
-        // 必不可少，否则所有组件都不会有TouchEvent了
-        if (getWindow().superDispatchTouchEvent(ev)) {
-            return true;
-        }
-        return onTouchEvent(ev);
-    }
-
-    private boolean isShouldHideInput(View v, MotionEvent event) {
-        if (v != null && (v instanceof EditText)) {
-            int[] leftTop = {0, 0};
-            // 获取输入框当前的location位置
-            v.getLocationInWindow(leftTop);
-            int left = leftTop[0];
-            int top = leftTop[1];
-            int bottom = top + v.getHeight();
-            int right = left + v.getWidth();
-            return !(event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom);
-        }
-        return false;
     }
 
     @Override

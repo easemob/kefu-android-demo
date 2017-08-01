@@ -304,4 +304,10 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 	public void setAudioFinishRecorderListener(AudioFinishRecorderListener listener) {
 		mListener = listener;
 	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		mAudioManager.setOnAudioStateListener(null);
+		super.onDetachedFromWindow();
+	}
 }
