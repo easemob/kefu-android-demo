@@ -24,6 +24,7 @@ import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.OfficialAccount;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.util.DateUtils;
@@ -113,10 +114,7 @@ public class ConversationListFragment extends Fragment {
 
 			if (lastMessage != null){
 				if (lastMessage.getType() == Message.Type.TXT){
-					EMTextMessageBody body = (EMTextMessageBody)lastMessage.getBody();
-					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), body.getMessage()));
-				}else if (lastMessage.getType() == Message.Type.IMAGE){
-					viewHolder.tvMessage.setText("[图片]");
+					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), getTextMessageTitle(lastMessage)));
 				}else if (lastMessage.getType() == Message.Type.VOICE){
 					viewHolder.tvMessage.setText("[语音]");
 				}else if (lastMessage.getType() == Message.Type.VIDEO){
@@ -178,11 +176,48 @@ public class ConversationListFragment extends Fragment {
 				}
 			}
 		}
-
-
-
 	}
 
+	public String getTextMessageTitle(Message message){
+		if (com.hyphenate.helpdesk.model.MessageHelper.getEvalRequest(message) != null){
+			return "[满意度邀请]";
+		}
+		if (com.hyphenate.helpdesk.model.MessageHelper.getOrderInfo(message) != null){
+			return "[订单消息]";
+		}
+		if (com.hyphenate.helpdesk.model.MessageHelper.getVisitorTrack(message) != null){
+			return "[轨迹消息]";
+		}
+		if (checkFormChatRow(message)){
+			return "[表单消息]";
+		}
+		if (com.hyphenate.helpdesk.model.MessageHelper.isArticlesMessage(message)){
+			return "[图文混排消息]";
+		}
+		if (com.hyphenate.helpdesk.model.MessageHelper.getRobotMenu(message) != null){
+			return "[机器人菜单消息]";
+		}
+		if (com.hyphenate.helpdesk.model.MessageHelper.getToCustomServiceInfo(message) != null){
+			return "[转人工消息]";
+		}
+
+		EMTextMessageBody body = (EMTextMessageBody)message.getBody();
+		return body.getMessage();
+	}
+
+	public boolean checkFormChatRow(Message message){
+		if (message.getStringAttribute("type", null) != null){
+			try {
+				String type = message.getStringAttribute("type");
+				if (type.equals("html/form")){
+					return true;
+				}
+			} catch (HyphenateException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 
 
 }

@@ -18,6 +18,7 @@ import com.hyphenate.helpdesk.easeui.Constant;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
+import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowArticle;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowBigExpression;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowFile;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowImage;
@@ -57,6 +58,10 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_RECV_ROBOT_MENU =13;
 	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 14;
 	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 15;
+	private static final int MESSAGE_TYPE_RECV_ARTICLES = 16;
+	private static final int MESSAGE_TYPE_SENT_ARTICLES = 17;
+
+
 
 	private static final int MESSAGE_TYPE_COUNT = 16;
 	
@@ -222,10 +227,12 @@ public class MessageAdapter extends BaseAdapter {
 				//转人工消息
 				return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU
 						: MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU;
-			}
-		    if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
+			} else if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
 		        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EXPRESSION : MESSAGE_TYPE_SENT_EXPRESSION;
-		    }
+		    } else if(MessageHelper.isArticlesMessage(message)){
+				return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ARTICLES : MESSAGE_TYPE_SENT_ARTICLES;
+			}
+
 			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 		}
 		if (message.getType() == Message.Type.IMAGE) {
@@ -254,11 +261,13 @@ public class MessageAdapter extends BaseAdapter {
         case TXT:
 			if (MessageHelper.getRobotMenu(message) != null) {
 				return new ChatRowRobotMenu(context, message, position, this);
+			}else if(MessageHelper.isArticlesMessage(message)) {
+				chatRow = new ChatRowArticle(context, message, position, this);
 			}else if(MessageHelper.getToCustomServiceInfo(message) != null){
 				return new ChatRowTransferToKefu(context, message, position, this);
 			}else if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
                 chatRow = new ChatRowBigExpression(context, message, position, this);
-            }else{
+            }else {
                 chatRow = new ChatRowText(context, message, position, this);
             }
             break;

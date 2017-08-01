@@ -64,6 +64,11 @@
 }
 
 
+-keepclassmembers class * extends android.webkit.WebChromeClient{
+		public void openFileChooser(...);
+}
+
+
 # easemob 3.x
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**

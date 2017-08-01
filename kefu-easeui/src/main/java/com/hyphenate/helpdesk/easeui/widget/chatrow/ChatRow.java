@@ -305,6 +305,12 @@ public abstract class ChatRow extends LinearLayout {
 
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        message.setMessageStatusCallback(null);
+    }
+
     /**
      * 填充layout
      */

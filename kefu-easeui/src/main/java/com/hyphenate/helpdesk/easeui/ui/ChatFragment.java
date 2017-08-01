@@ -197,27 +197,29 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        ChatClient.getInstance().chatManager().addVisitorWaitListener(new ChatManager.VisitorWaitListener() {
-            @Override
-            public void waitCount(final int num) {
-                if (getActivity() == null){
-                    return;
-                }
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (num > 0){
-                            tvTipWaitCount.setVisibility(View.VISIBLE);
-                            tvTipWaitCount.setText(getString(R.string.current_wait_count, num));
-                        }else{
-                            tvTipWaitCount.setVisibility(View.GONE);
-                        }
-                    }
-                });
-            }
-        });
+        ChatClient.getInstance().chatManager().addVisitorWaitListener(visitorWaitListener);
 
     }
+
+    ChatManager.VisitorWaitListener visitorWaitListener = new ChatManager.VisitorWaitListener() {
+	    @Override
+	    public void waitCount(final int num) {
+		    if (getActivity() == null){
+			    return;
+		    }
+		    getActivity().runOnUiThread(new Runnable() {
+			    @Override
+			    public void run() {
+				    if (num > 0){
+					    tvTipWaitCount.setVisibility(View.VISIBLE);
+					    tvTipWaitCount.setText(getString(R.string.current_wait_count, num));
+				    }else{
+					    tvTipWaitCount.setVisibility(View.GONE);
+				    }
+			    }
+		    });
+	    }
+    };
 
     ChatManager.AgentInputListener agentInputListener = new ChatManager.AgentInputListener() {
         @Override
@@ -285,6 +287,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         super.onDestroyView();
         ChatClient.getInstance().chatManager().unBind();
         ChatClient.getInstance().chatManager().removeAgentInputListener(agentInputListener);
+        ChatClient.getInstance().chatManager().removeVisitorWaitListener(visitorWaitListener);
     }
 
     /**
@@ -658,7 +661,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
         } else {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), "com.easemob.helpdeskdemo.fileprovider", cameraFile));
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".fileprovider", cameraFile));
         }
         startActivityForResult(intent, REQUEST_CODE_CAMERA);
     }

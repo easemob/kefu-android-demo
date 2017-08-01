@@ -10,7 +10,7 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
-        android:background="@color/sub_page_title_bg_color"
+        android:background="@color/title_bg_color"
         android:gravity="center_vertical" >
 
         <include layout="@layout/em_commom_back_btn"
@@ -103,7 +103,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dip"
+                android:layout_marginBottom="10dip"
                 android:layout_marginTop="30dip" >
 
                 <RatingBar
@@ -118,6 +118,24 @@
                     android:stepSize="1.0" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/tv_level_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fa9c64"
+                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <com.easemob.helpdeskdemo.widget.flow.FlowTagLayout
+                android:id="@+id/id_flowlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+
             <EditText
                 android:id="@+id/edittext"
                 android:layout_width="match_parent"
@@ -126,7 +144,7 @@
                 android:background="@drawable/em_shape_input_bg"
                 android:gravity="top|left"
                 android:hint="@string/hint_leave_message"
-                android:minLines="3"
+                android:minLines="2"
                 android:textColor="@android:color/black"
                 android:textColorHint="@color/gray_pressed"
                 android:textSize="16sp" />
