@@ -156,4 +156,32 @@
     <string name="em_example4_text_description">November sales: 10</string>
     <string name="em_notice_sending">Sending</string>
     <string name="order_number">Order number</string>
+    <string name="tip_multi_video_calling">Many people in the video call...</string>
+	<string name="message_type_voice">[Voice]</string>
+    <string name="message_type_video">[Video]</string>
+    <string name="message_type_location">[Location]</string>
+    <string name="message_type_file">[File]</string>
+    <string name="message_type_eval_request">[Eval Request]</string>
+    <string name="message_type_order_info">[Order Info]</string>
+    <string name="message_type_visitor_track">[Visitor Track]</string>
+    <string name="message_type_form">[Form]</string>
+    <string name="message_type_articles">[Articles]</string>
+    <string name="message_type_robot">[Robot Menu]</string>
+    <string name="message_type_tocs">[To Custom Service]</string>
+	<string name="no_selected_tag_noti">Please select one tag！</string>
+    <string name="video_call_pause">VIDEO_PAUSE</string>
+    <string name="video_call_resume">VIDEO_RESUME</string>
+    <string name="video_call_voice_pause">VOICE_PAUSE</string>
+    <string name="voice_call_voice_resume">VOICE_RESUME</string>
+    <string name="chatrow_eval_btn_text">Evaluation</string>
+    <string name="noti_text_expression">[Expression]</string>
+    <string name="test_track_title1">test_track1</string>
+    <string name="test_track_title2">test_track2</string>
+    <string name="test_order_title1">test_order1</string>
+    <string name="test_order_title2">test_order2</string>
+	<string name="chat_row_form_title">Click to input form message.</string>
+    <string name="chat_row_satisfaction_content">Please make evaluation to my service!</string>
+    <string name="network_error_notice">Network has error, please retry!</string>
+    <string name="tag">TAG</string>
+>>>>>>> dev
 </resources>

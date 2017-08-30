@@ -19,7 +19,6 @@ import android.view.View;
 
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * 如果不继承BaseActivity而继承默认的Activity需要在onResume添加如下代码:
@@ -38,8 +37,6 @@ public class DemoBaseActivity extends BaseActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//umeng
-		MobclickAgent.onResume(this);
 		UIProvider.getInstance().pushActivity(this);
 	}
 	
@@ -47,8 +44,6 @@ public class DemoBaseActivity extends BaseActivity{
 	protected void onPause() {
 		super.onPause();
 		UIProvider.getInstance().popActivity(this);
-		//umeng
-		MobclickAgent.onPause(this);
 	}
 	/**
 	 * 通过xml查找相应的ID，通用方法

@@ -88,16 +88,6 @@
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:background="@drawable/hd_default_avatar"
             android:scaleType="fitXY"/>
-        
-       <!--  <TextView
-            android:id="@+id/tv_userid"
-            android:visibility="gone"
-            style="@style/chat_text_name_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@id/iv_userhead"
-            android:text="xxx" /> -->
 
     </LinearLayout>
 

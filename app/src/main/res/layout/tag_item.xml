@@ -14,7 +14,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:text="TAG标签"
+        android:text="@string/tag"
         android:textColor="@color/normal_text_color" />
 
 </LinearLayout>

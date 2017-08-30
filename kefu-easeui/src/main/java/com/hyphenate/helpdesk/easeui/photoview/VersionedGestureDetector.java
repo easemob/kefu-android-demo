@@ -154,6 +154,8 @@ abstract class VersionedGestureDetector {
 					}
 					break;
 				}
+				default:
+					break;
 			}
 
 			return true;
@@ -210,6 +212,8 @@ abstract class VersionedGestureDetector {
 						mLastTouchX = ev.getX(newPointerIndex);
 						mLastTouchY = ev.getY(newPointerIndex);
 					}
+					break;
+				default:
 					break;
 			}
 

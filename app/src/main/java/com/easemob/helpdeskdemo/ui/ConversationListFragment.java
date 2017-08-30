@@ -116,13 +116,13 @@ public class ConversationListFragment extends Fragment {
 				if (lastMessage.getType() == Message.Type.TXT){
 					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), getTextMessageTitle(lastMessage)));
 				}else if (lastMessage.getType() == Message.Type.VOICE){
-					viewHolder.tvMessage.setText("[语音]");
+					viewHolder.tvMessage.setText(R.string.message_type_voice);
 				}else if (lastMessage.getType() == Message.Type.VIDEO){
-					viewHolder.tvMessage.setText("[视频]");
+					viewHolder.tvMessage.setText(R.string.message_type_video);
 				}else if (lastMessage.getType() == Message.Type.LOCATION){
-					viewHolder.tvMessage.setText("[位置]");
+					viewHolder.tvMessage.setText(R.string.message_type_location);
 				}else if (lastMessage.getType() == Message.Type.FILE){
-					viewHolder.tvMessage.setText("[文件]");
+					viewHolder.tvMessage.setText(R.string.message_type_file);
 				}
 				viewHolder.tvTime.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
 
@@ -180,25 +180,25 @@ public class ConversationListFragment extends Fragment {
 
 	public String getTextMessageTitle(Message message){
 		if (com.hyphenate.helpdesk.model.MessageHelper.getEvalRequest(message) != null){
-			return "[满意度邀请]";
+			return getString(R.string.message_type_eval_request);
 		}
 		if (com.hyphenate.helpdesk.model.MessageHelper.getOrderInfo(message) != null){
-			return "[订单消息]";
+			return getString(R.string.message_type_order_info);
 		}
 		if (com.hyphenate.helpdesk.model.MessageHelper.getVisitorTrack(message) != null){
-			return "[轨迹消息]";
+			return getString(R.string.message_type_visitor_track);
 		}
 		if (checkFormChatRow(message)){
-			return "[表单消息]";
+			return getString(R.string.message_type_form);
 		}
 		if (com.hyphenate.helpdesk.model.MessageHelper.isArticlesMessage(message)){
-			return "[图文混排消息]";
+			return getString(R.string.message_type_articles);
 		}
 		if (com.hyphenate.helpdesk.model.MessageHelper.getRobotMenu(message) != null){
-			return "[机器人菜单消息]";
+			return getString(R.string.message_type_robot);
 		}
 		if (com.hyphenate.helpdesk.model.MessageHelper.getToCustomServiceInfo(message) != null){
-			return "[转人工消息]";
+			return getString(R.string.message_type_tocs);
 		}
 
 		EMTextMessageBody body = (EMTextMessageBody)message.getBody();

@@ -40,19 +40,21 @@ public class MessageHelper {
 		VisitorTrack track = ContentFactory.createVisitorTrack(null);
 		switch(index) {
 		case 3:
-			track.title("test_track1")
+			track.title(context.getString(R.string.test_track_title1))
                  .price("￥5400")
                  .desc(context.getString(R.string.em_example3_text))
                  .imageUrl(IMAGE_URL_3)
                  .itemUrl("http://www.baidu.com");
 			break;
 		case 4:
-			track.title("test_track2")
+			track.title(context.getString(R.string.test_track_title2))
 					.price("￥3915000")
 					.desc(context.getString(R.string.em_example4_text))
             .     imageUrl(IMAGE_URL_4)
                  .itemUrl("http://www.baidu.com");
 			break;
+			default:
+				break;
 		}
 		return track;
 	}
@@ -61,7 +63,7 @@ public class MessageHelper {
 		OrderInfo info = ContentFactory.createOrderInfo(null);
 		switch(index) {
 		case 1:
-			info.title("test_order1")
+			info.title(context.getString(R.string.test_order_title1))
 			    .orderTitle(String.format("%s：7890",context.getString(R.string.order_number)))
 			    .price("￥8000")
 			    .desc(context.getString(R.string.em_example1_text))
@@ -69,14 +71,15 @@ public class MessageHelper {
 			    .itemUrl("http://www.baidu.com");
 			break;
 		case 2:
-			info.title("test_order2")
+			info.title(context.getString(R.string.test_order_title2))
 				.orderTitle(String.format("%s：7890",context.getString(R.string.order_number)))
 		        .price("￥158000")
 		        .desc(context.getString(R.string.em_example2_text))
 		        .imageUrl(IMAGE_URL_2)
 		        .itemUrl("http://www.baidu.com");
 			break;
-
+			default:
+				break;
 		}
 		return info;
 		

@@ -85,6 +85,11 @@
     <string name="Open_the_equipment_failure">Open the equipment failure!</string>
     <string name="recording_video">Record video</string>
 	<string name="temporary_does_not">Not support larger than 10M video</string>
-	<string name="recorder_video_processing">processing...</string>
+	<string name="recorder_video_processing">processing…</string>
     <string name="current_wait_count">current wait count is %d</string>
+	<string name="video_record_error">Recording error has occurred. Stopping the recording</string>
+	<string name="date_month">month</string>
+    <string name="date_day">day</string>
+	<string name="chat_row_article_view_all">CLick to view full article</string>
+	<string name="chat_row_new_picture_title">I am focus at it.</string>
 </resources>

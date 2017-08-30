@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/root_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
+
+    <com.easemob.helpdeskdemo.widget.CustomVideoContainer
+        android:id="@+id/multi_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </com.easemob.helpdeskdemo.widget.CustomVideoContainer>
+
+    <com.easemob.helpdeskdemo.widget.BottomRelativeLayout
+        android:id="@+id/bottom_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ImageButton
+        android:id="@+id/ib_minimize"
+        android:layout_width="26dip"
+        android:layout_height="26dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="20dp"
+        android:background="@null"
+        android:src="@drawable/minimize"
+        />
+
+</RelativeLayout>

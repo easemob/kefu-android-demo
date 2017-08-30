@@ -208,7 +208,7 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGe
 	@SuppressWarnings("deprecation")
 	public final void cleanup() {
 		if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-			if (null != mImageView) {
+			if (null != mImageView && mImageView.get() != null) {
 				mImageView.get().getViewTreeObserver().removeOnGlobalLayoutListener(this);
 			}
 
@@ -227,7 +227,9 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGe
 
 		} else {
 			if (null != mImageView) {
-				mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				if (mImageView.get() != null){
+					mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				}
 			}
 
 			if (null != mViewTreeObserver && mViewTreeObserver.isAlive()) {
@@ -459,6 +461,8 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, VersionedGe
 					}
 				}
 				break;
+				default:
+					break;
 			}
 
 			// Check to see if the user double tapped

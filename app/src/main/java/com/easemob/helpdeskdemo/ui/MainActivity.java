@@ -58,12 +58,18 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
+            try {
+                if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    intent.setData(Uri.parse("package:" + packageName));
+                    startActivity(intent);
+                }
+            } catch (Exception ignored) {
+                //锤子手机会报找不到这个Activity
+                //android.content.ActivityNotFoundException: No Activity found to handle Intent { act=android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS dat=package:com.easemob.helpdeskdemo }
             }
+
         }
 
         setContentView(R.layout.em_activity_main);

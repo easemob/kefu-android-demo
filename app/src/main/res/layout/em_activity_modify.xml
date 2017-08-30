@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/rl_back"
             android:layout_centerVertical="true"
-            android:text="Text"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/title_text_size"/>
     </RelativeLayout>

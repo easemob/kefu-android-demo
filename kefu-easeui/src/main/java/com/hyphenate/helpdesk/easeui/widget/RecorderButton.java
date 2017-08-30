@@ -102,6 +102,8 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                     }
 
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -187,6 +189,8 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                 }
                 reset();
                 break;
+            default:
+                break;
         }
         return super.onTouchEvent(event);
     }
@@ -242,6 +246,8 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                     setBackgroundResource(R.drawable.hd_btn_recorder_recording);
                     setText(R.string.release_to_cancel);
                     mDialogManager.wantToCancel();
+                    break;
+                default:
                     break;
             }
         }

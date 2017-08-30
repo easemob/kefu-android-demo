@@ -72,12 +72,6 @@ public class Notifier {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         packageName = appContext.getApplicationInfo().packageName;
-        if (Locale.getDefault().getLanguage().equals("zh")) {
-            msgs = msg_ch;
-        } else {
-            msgs = msg_eng;
-        }
-
         audioManager = (AudioManager) appContext.getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) appContext.getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -135,6 +129,9 @@ public class Notifier {
     }
 
     public synchronized void onNewMesg(List<Message> messages) {
+        if (messages == null || messages.isEmpty()){
+            return;
+        }
         if(ChatClient.getInstance().chatManager().isSilentMessage(messages.get(messages.size()-1))){
             return;
         }
@@ -179,6 +176,11 @@ public class Notifier {
      */
     protected void sendNotification(Message message, boolean isForeground, boolean numIncrease) {
         String username = message.getFrom();
+        if (Locale.getDefault().getLanguage().contains("zh")) {
+            msgs = msg_ch;
+        } else {
+            msgs = msg_eng;
+        }
         try {
             String notifyText = username + " ";
             switch (message.getType()) {
@@ -199,6 +201,8 @@ public class Notifier {
                     break;
                 case FILE:
                     notifyText += msgs[5];
+                    break;
+                default:
                     break;
             }
 

@@ -242,6 +242,10 @@ public class BaiduMapActivity extends BaseActivity {
     }
 
     public void sendLocation(View view) {
+        if (lastLocation == null){
+            Toast.makeText(this, R.string.unable_to_get_loaction, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = this.getIntent();
         intent.putExtra("latitude", lastLocation.getLatitude());
         intent.putExtra("longitude", lastLocation.getLongitude());

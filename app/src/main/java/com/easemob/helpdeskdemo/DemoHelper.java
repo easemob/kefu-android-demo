@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdeskdemo.receiver.CallReceiver;
-import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.ui.VideoCallActivity;
+import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
@@ -74,10 +74,8 @@ public class DemoHelper {
 //        options.setGCMNumber("****");
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
-        //在华为手机上当APP被kill时使用华为推送进行消息提示, SDK已支持,可选
-        options.setHuaweiPushAppId("10663060");
 
-//        options.setKefuServerAddress("http://sandbox.kefu.easemob.com");
+//        options.setKefuServerAddress("https://sandbox.kefu.easemob.com");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
 
@@ -162,7 +160,7 @@ public class DemoHelper {
                 // 设置状态栏的消息提示，可以根据message的类型做相应提示
                 String ticker = CommonUtils.getMessageDigest(message, context);
                 if (message.getType() == Message.Type.TXT) {
-                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
+                    ticker = ticker.replaceAll("\\[.{2,3}\\]", context.getString(R.string.noti_text_expression));
                 }
                 return message.getFrom() + ": " + ticker;
             }

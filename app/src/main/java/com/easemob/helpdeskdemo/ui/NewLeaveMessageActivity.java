@@ -1,23 +1,20 @@
 package com.easemob.helpdeskdemo.ui;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
@@ -164,6 +161,8 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
                 }
                 contentText.requestFocus();
                 commitLeaveMessage();
+                break;
+            default:
                 break;
         }
     }

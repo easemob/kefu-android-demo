@@ -134,6 +134,8 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
                     case MSG_LOAD_ERROR:
                         fragment.loadDataError();
                         break;
+                    default:
+                        break;
                 }
 
 

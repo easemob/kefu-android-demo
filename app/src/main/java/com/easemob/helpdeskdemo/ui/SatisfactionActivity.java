@@ -132,7 +132,7 @@ public class SatisfactionActivity extends BaseActivity {
         public void onClick(View v) {
             if (currentDegree != null && currentDegree.getAppraiseTag() != null && !currentDegree.getAppraiseTag().isEmpty()){
                 if (selectedTags == null || selectedTags.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "最少选择一个标签！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.no_selected_tag_noti, Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,6 +80,8 @@ public class ShopFragment extends Fragment implements OnClickListener {
 		case R.id.ib_shop_imagefour:
 			intent.putExtra(Constant.INTENT_CODE_IMG_SELECTED_KEY, Constant.INTENT_CODE_IMG_SELECTED_4);
 			break;
+			default:
+				break;
 		}
 		startActivity(intent);
 	}

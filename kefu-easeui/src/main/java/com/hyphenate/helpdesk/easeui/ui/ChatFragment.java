@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -69,6 +71,7 @@ import java.util.List;
 public class ChatFragment extends BaseFragment implements ChatManager.MessageListener {
 
     protected static final String TAG = ChatFragment.class.getSimpleName();
+    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     protected static final int REQUEST_CODE_CAMERA = 1;
     protected static final int REQUEST_CODE_LOCAL = 2;
     private static final int REQUEST_CODE_SELECT_VIDEO = 3;
@@ -112,6 +115,21 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     private QueueIdentityInfo queueIdentityInfo;
     private String titleName;
     protected TextView tvTipWaitCount;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            boolean isSupportedHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            if (isSupportedHidden) {
+                ft.hide(this);
+            } else {
+                ft.show(this);
+            }
+            ft.commit();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -640,6 +658,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
         if (cameraFilePath != null){
             outState.putString("cameraFile", cameraFilePath);
         }
@@ -653,18 +672,24 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
-        File cameraFile = new File(PathUtil.getInstance().getImagePath(), ChatClient.getInstance().getCurrentUserName()
-                + System.currentTimeMillis() + ".jpg");
-        cameraFilePath = cameraFile.getAbsolutePath();
-        cameraFile.getParentFile().mkdirs();
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
-        } else {
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".fileprovider", cameraFile));
+        try{
+            File cameraFile = new File(PathUtil.getInstance().getImagePath(), ChatClient.getInstance().getCurrentUserName()
+                    + System.currentTimeMillis() + ".jpg");
+            cameraFilePath = cameraFile.getAbsolutePath();
+            if (!cameraFile.getParentFile().exists()){
+                cameraFile.getParentFile().mkdirs();
+            }
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
+            } else {
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".fileprovider", cameraFile));
+            }
+            startActivityForResult(intent, REQUEST_CODE_CAMERA);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        startActivityForResult(intent, REQUEST_CODE_CAMERA);
     }
 
     /**
@@ -799,6 +824,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         Message message = Message.createTxtSendMessage(content, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
     protected void sendVoiceMessage(String filePath, int length) {
@@ -808,6 +834,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         Message message = Message.createVoiceSendMessage(filePath, length, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
     protected void sendImageMessage(String imagePath) {
@@ -815,31 +842,35 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             return;
         }
         File imageFile = new File(imagePath);
-        if (imageFile == null || !imageFile.exists()){
+        if (!imageFile.exists()){
             return;
         }
 
         Message message = Message.createImageSendMessage(imagePath, false, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
     protected void sendFileMessage(String filePath) {
         Message message = Message.createFileSendMessage(filePath, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress, String toChatUsername){
         Message message = Message.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
     protected void sendVideoMessage(String videoPath, String thumbPath, int videoLength) {
         Message message = Message.createVideoSendMessage(videoPath, thumbPath, videoLength, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLast();
     }
 
 

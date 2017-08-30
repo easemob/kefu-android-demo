@@ -188,6 +188,8 @@ public class LoginActivity extends DemoBaseActivity {
 					case Constant.MESSAGE_TO_PRE_SALES:
 						queueName = "shouqian";
 						break;
+					default:
+						break;
 				}
 				Bundle bundle = new Bundle();
 				bundle.putInt(Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex);

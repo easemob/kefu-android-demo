@@ -73,6 +73,11 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
      */
     public abstract void setInputMessage(CharSequence txtContent);
 
+	/**
+	 * 是否正在录制语音
+     */
+    public abstract boolean isRecording();
+
     /**
      * 隐藏软键盘
      */
