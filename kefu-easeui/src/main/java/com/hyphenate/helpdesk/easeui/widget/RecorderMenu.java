@@ -90,6 +90,8 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 						reset();
 					}
 					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -219,6 +221,8 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 						}
 						reset();
 						break;
+					default:
+						break;
 				}
 
 				return false;
@@ -289,6 +293,8 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 					setBackgroundResource(R.drawable.hd_btn_recorder_recording);
 					mRecordText.setText(R.string.release_to_cancel);
 					mRecordBtn.setBackgroundResource(R.drawable.hd_record_menu_mic_cancel);
+					break;
+				default:
 					break;
 			}
 		}

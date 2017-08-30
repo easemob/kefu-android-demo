@@ -33,7 +33,6 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="客服102"
                 android:textColor="@color/comment_text_color"
                 android:textSize="@dimen/comment_text_size"
                 />
@@ -42,7 +41,6 @@
                 android:id="@+id/timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2016/6/21"
                 android:textColor="@color/comment_text_color"
                 android:textSize="@dimen/comment_text_size"
                 android:layout_alignParentRight="true"
@@ -58,7 +56,6 @@
             android:textSize="@dimen/comment_text_size"
             android:layout_marginTop="11dp"
             android:layout_marginBottom="20dp"
-            android:text="本条文案是聊天内容,本条文案是聊天内容,哈哈哈的就是这样,恩没错哦!"
             />
         <com.wefika.flowlayout.FlowLayout
             android:id="@+id/flowLayout"

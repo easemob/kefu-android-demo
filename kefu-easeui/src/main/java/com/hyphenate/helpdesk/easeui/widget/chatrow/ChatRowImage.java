@@ -20,9 +20,14 @@ import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
+import com.hyphenate.helpdesk.easeui.util.Utils;
+import com.hyphenate.util.DensityUtil;
+import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.ImageUtils;
 
 import java.io.File;
+
+import static android.icu.lang.UCharacter.JoiningGroup.E;
 
 public class ChatRowImage extends ChatRowFile{
 
@@ -118,17 +123,18 @@ public class ChatRowImage extends ChatRowFile{
             iv.setImageBitmap(bitmap);
             return true;
         } else {
+            final int width = DensityUtil.dip2px(getContext(), 70);
             new AsyncTask<Object, Void, Bitmap>() {
 
                 @Override
                 protected Bitmap doInBackground(Object... args) {
                     File file = new File(thumbernailPath);
                     if (file.exists()) {
-                        return ImageUtils.decodeScaleImage(thumbernailPath, 160, 160);
+                        return ImageUtils.decodeScaleImage(thumbernailPath, width, width);
                     } else {
                         if (message.direct() == Message.Direct.SEND) {
                             if (localFullSizePath != null && new File(localFullSizePath).exists()) {
-                                return ImageUtils.decodeScaleImage(localFullSizePath, 160, 160);
+                                return ImageUtils.decodeScaleImage(localFullSizePath, width, width);
                             } else {
                                 return null;
                             }

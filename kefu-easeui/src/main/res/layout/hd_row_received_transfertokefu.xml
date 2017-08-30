@@ -61,7 +61,8 @@
             android:textSize="16sp"
             android:background="@drawable/hd_bg_button_satisfaction"
             android:textColor="@android:color/black"
-            android:text="@string/transfertocs" /></RelativeLayout>
+            android:text="@string/transfertocs" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_userid"

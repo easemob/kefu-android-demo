@@ -15,8 +15,8 @@
     <string name="text_kuaidi">你们发的是什么快递?</string>
     <string name="unable_to_get_loaction">不能获取您的位置!</string>
     <string name="cant_find_pictures">找不到图片</string>
-    <string name="system_is_regist">系统正在自动为您注册用户...</string>
-    <string name="is_contact_customer">正在联系客服，请稍等...</string>
+    <string name="system_is_regist">系统正在自动为您注册用户…</string>
+    <string name="is_contact_customer">正在联系客服，请稍等…</string>
     <string name="is_contact_customer_failure_seconed">联系客服失败:</string>
     <string name="shopping">商城</string>
     <string name="conversation">会话</string>
@@ -47,14 +47,14 @@
     <string name="leave_theme">主题:</string>
     <string name="leave_detail">详细信息</string>
     <string name="leave_content">输入留言</string>
-    <string name="leave_sending">正在发送中...</string>
+    <string name="leave_sending">正在发送中…</string>
 
     <string name="delete_message">删除消息</string>
     <string name="copy_message">复制消息</string>
     <string name="delete_voice">删除语音</string>
     <string name="delete">删除</string>
-    <string name="Making_sure_your_location">正在确定你的位置...</string>
-    <string name="em_tip_wating">请稍等...</string>
+    <string name="Making_sure_your_location">正在确定你的位置…</string>
+    <string name="em_tip_wating">请稍等…</string>
     <string name="em_tip_request_fail">请求失败</string>
 
     <string name="title_satifisfaction_eval">满意度评价</string>
@@ -76,9 +76,9 @@
     <string name="login_user_noti">请先登录</string>
     <string name="comment_suc">评论成功</string>
     <string name="comment_fail">评论失败</string>
-    <string name="file_uploading">文件上传中...</string>
+    <string name="file_uploading">文件上传中…</string>
     <string name="comment_content_not_null">评论内容不能为空</string>
-    <string name="please_wait_noti">请等待...</string>
+    <string name="please_wait_noti">请等待…</string>
     <string name="send_suc">发送成功</string>
     <string name="app_key_cannot_be_empty">appkey不能为空, 设置失败!</string>
     <string name="app_key_format_wrong">appkey格式不正确，设置失败!</string>
@@ -103,7 +103,7 @@
     <!-- New Comment start -->
     <string name="new_comment_title">写评论</string>
     <string name="new_comment_send">发送</string>
-    <string name="new_comment_hint">写评论...</string>
+    <string name="new_comment_hint">写评论…</string>
     <string name="new_comment_attach">添加附件</string>
     <string name="new_comment_talk">按住录音</string>
     <!-- New Leave Msg end -->
@@ -117,8 +117,8 @@
     <string name="not_connect_to_server">尚未连接至服务器，请稍后重试</string>
 
     <string name="Are_connected_to_each_other">正在连接对方……</string>
-    <string name="have_connected_with">已经和对方建立连接，等待对方接受……</string>
-    <string name="In_the_call">视频通话中……</string>
+    <string name="have_connected_with">已经和对方建立连接，等待对方接受…</string>
+    <string name="In_the_call">视频通话中…</string>
     <string name="network_unavailable">网络连接不可用，请检查网络</string>
     <string name="network_unstable">网络不稳定</string> 
     <string name="no_call_data">没有通话数据</string>
@@ -133,8 +133,8 @@
     <string name="Has_been_cancelled">已取消</string>
     <string name="Refused">已拒绝</string>
     <string name="call_version_inconsistent">通话协议版本不一致</string>
-    <string name="hanging_up">挂断中……</string>
-    <string name="answering">接受中...</string>
+    <string name="hanging_up">挂断中…</string>
+    <string name="answering">接受中…</string>
     <!-- call end -->
     <string name="setting_name">名字:</string>
     <string name="setting_org">组织:</string>
@@ -156,6 +156,34 @@
     <string name="em_example3_text_description">11月销量: 435</string>
     <string name="em_example4_text">卡地亚的一块手表</string>
     <string name="em_example4_text_description">11月销量:  10</string>
-    <string name="em_notice_sending">发送中...</string>
+    <string name="em_notice_sending">发送中…</string>
     <string name="order_number">订单号</string>
+    <string name="tip_multi_video_calling">多人视频通话中…</string>
+	<string name="message_type_voice">[语音]</string>
+    <string name="message_type_video">[视频]</string>
+    <string name="message_type_location">[位置]</string>
+    <string name="message_type_file">[文件]</string>
+    <string name="message_type_eval_request">[满意度邀请]</string>
+    <string name="message_type_order_info">[订单消息]</string>
+    <string name="message_type_visitor_track">[轨迹消息]</string>
+    <string name="message_type_form">[表单消息]</string>
+    <string name="message_type_articles">[图文混排消息]</string>
+    <string name="message_type_robot">[机器人菜单消息]</string>
+    <string name="message_type_tocs">[转人工消息]</string>
+    <string name="no_selected_tag_noti">最少选择一个标签！</string>
+    <string name="video_call_pause">视频暂停</string>
+    <string name="video_call_resume">视频继续</string>
+    <string name="video_call_voice_pause">音频暂停</string>
+    <string name="voice_call_voice_resume">音频继续</string>
+    <string name="chatrow_eval_btn_text">立即评价</string>
+    <string name="noti_text_expression">[表情]</string>
+    <string name="test_track_title1">轨迹消息1</string>
+    <string name="test_track_title2">轨迹消息2</string>
+    <string name="test_order_title1">订单消息1</string>
+    <string name="test_order_title2">订单消息2</string>
+	<string name="chat_row_form_title">点击填写表单</string>
+    <string name="chat_row_satisfaction_content">请对我的服务做出评价</string>
+	<string name="network_error_notice">网络错误,点击重试</string>
+    <string name="tag">TAG标签</string>
+>>>>>>> dev
 </resources>

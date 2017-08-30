@@ -233,6 +233,8 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                     switchRecordBtnStatus();
                 }
                 break;
+            default:
+                break;
         }
     }
 

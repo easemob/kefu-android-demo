@@ -23,7 +23,6 @@ import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chat.Message;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
@@ -31,9 +30,6 @@ import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener {
 
@@ -179,30 +175,10 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
 
 
     private void startVideoCall(){
-
-        if(!ChatClient.getInstance().isConnected()){
-            Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
-            return;
-        }
         inputMenu.hideExtendMenuContainer();
 
-        Message message = Message.createTxtSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
-        JSONObject jsonInvit = new JSONObject();
-        try {
-            JSONObject jsonMsg = new JSONObject();
-            jsonMsg.put("msg", getString(R.string.em_chat_invite_video_call));
-            String appKeyStr[] = ChatClient.getInstance().getAppKey().split("#");
-            jsonMsg.put("orgName", appKeyStr[0]);
-            jsonMsg.put("appName", appKeyStr[1]);
-            jsonMsg.put("userName", ChatClient.getInstance().getCurrentUserName());
-            jsonMsg.put("resource", "mobile");
-            jsonInvit.put("liveStreamInvitation", jsonMsg);
-            message.setAttribute("msgtype", jsonInvit);
-            message.setAttribute("type", "rtcmedia/video");
-            ChatClient.getInstance().chatManager().sendMessage(message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Message message = Message.createVideoInviteSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
 
@@ -272,22 +248,6 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         messageList.refreshSelectLast();
     }
 
-    public boolean checkFormChatRow(Message message){
-        if (message.getStringAttribute("type", null) != null){
-            try {
-                String type = message.getStringAttribute("type");
-                if (type.equals("html/form")){
-                    return true;
-                }
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
-    }
-
-
     /**
      * chat row provider
      */
@@ -313,7 +273,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ORDER : MESSAGE_TYPE_SENT_ORDER;
                 }else if (MessageHelper.getVisitorTrack(message) != null){
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRACK : MESSAGE_TYPE_SENT_TRACK;
-                }else if (checkFormChatRow(message)){
+                }else if (MessageHelper.isFormMessage(message)){
                     return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_FORM : MESSAGE_TYPE_SENT_FORM;
                 }
             }
@@ -332,7 +292,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     return new ChatRowOrder(getActivity(), message, position, adapter);
                 }else if (MessageHelper.getVisitorTrack(message) != null) {
                     return new ChatRowTrack(getActivity(), message, position, adapter);
-                }else if (checkFormChatRow(message)){
+                }else if (MessageHelper.isFormMessage(message)){
                     return new ChatRowForm(getActivity(), message, position, adapter);
                 }
             }

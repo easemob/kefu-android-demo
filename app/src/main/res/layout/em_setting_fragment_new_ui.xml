@@ -65,7 +65,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="experience channel"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -105,7 +104,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="sipsoft"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -145,7 +143,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="sandbox"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -185,7 +182,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="855074"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -225,7 +221,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="855074"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -265,7 +260,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="855074"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>
@@ -305,7 +299,6 @@
 				android:gravity="end"
 				android:layout_centerVertical="true"
 				android:maxLines="1"
-				android:text="855074"
 				android:textColor="#FF4C4C4C"
 				android:textSize="14sp"/>
 		</RelativeLayout>

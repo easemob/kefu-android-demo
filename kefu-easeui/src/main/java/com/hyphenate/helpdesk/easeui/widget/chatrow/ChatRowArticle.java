@@ -20,7 +20,10 @@ import com.hyphenate.util.DensityUtil;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -32,15 +35,6 @@ public class ChatRowArticle extends ChatRow {
 	private MsgArticles msgArticles = null;
 
 	private LinearLayout artticlesContainer;
-
-	private ImageView mainImage;
-
-	private TextView mainText;
-
-	private LinearLayout mainTextLayout;
-
-	private RelativeLayout mainLayout;
-
 
 	public ChatRowArticle(final Context context, Message message, int position, BaseAdapter adapter) {
 		super(context, message, position, adapter);
@@ -67,10 +61,7 @@ public class ChatRowArticle extends ChatRow {
 	@Override
 	protected void onFindViewById() {
 		artticlesContainer = (LinearLayout) findViewById(R.id.articlesContainer);
-		mainLayout = (RelativeLayout) findViewById(R.id.rl_main);
-		mainImage = (ImageView) findViewById(R.id.iv_main);
-		mainText = (TextView) findViewById(R.id.tv_main);
-		mainTextLayout = (LinearLayout) findViewById(R.id.ll_main_text);
+
 	}
 
 	@Override
@@ -95,29 +86,51 @@ public class ChatRowArticle extends ChatRow {
 		if (msgArticles == null || msgArticles.getArticles() == null)
 			return;
 
-		if (msgArticles.getArticles().size() > 0) {
+		if (msgArticles.getArticles().size() == 1) {
 			final MsgArticles.ArticlesBean bean = msgArticles.getArticles().get(0);
-			if (bean.getTitle() != null && bean.getTitle().length() > 0) {
-				mainText.setText(bean.getTitle());
-				mainTextLayout.setVisibility(VISIBLE);
+			View view = inflater.inflate(R.layout.hd_row_article_single_main, null);
+
+			if (view == null) {
+				return;
 			}
-			Glide.with(getContext()).load(bean.getThumbUrl()).error(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mainImage);
-			mainLayout.setOnClickListener(new OnClickListener() {
+
+			if (bean.getTitle() != null) {
+				((TextView) view.findViewById(R.id.article_main_title)).setText(bean.getTitle());
+			}
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date(bean.getCreatedTime()));
+			if (getResources().getConfiguration().locale == Locale.SIMPLIFIED_CHINESE) {
+				((TextView) view.findViewById(R.id.article_create_time)).setText((calendar.get(Calendar.MONTH)+1) + context.getString(R.string.date_month)
+						+ (calendar.get(Calendar.DAY_OF_MONTH)) + context.getString(R.string.date_day));
+			} else {
+				((TextView) view.findViewById(R.id.article_create_time)).setText((calendar.get(Calendar.MONTH)+1) + ":"	+ (calendar.get(Calendar.DAY_OF_MONTH)));
+			}
+
+			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into((ImageView) view.findViewById(R.id.article_main_pic));
+
+			if (bean.getDigest() != null) {
+				((TextView) view.findViewById(R.id.article_main_digit)).setText(bean.getDigest());
+			}
+
+			(view.findViewById(R.id.ll_article_detail)).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(bean.getUrl()));
 					activity.startActivity(intent);
 				}
 			});
-		}
 
-		if (msgArticles.getArticles().size() > 1) {
+			artticlesContainer.addView(view);
+
+		} else if (msgArticles.getArticles().size() > 1) {
+			artticlesContainer.addView(createArticles(msgArticles.getArticles().get(0), true));
 			for (int i = 1; i < msgArticles.getArticles().size(); i++) {
 				View divide = new View(context);
 				ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(context, 1));
 				divide.setBackgroundColor(context.getResources().getColor(R.color.articles_divider_color));
 				artticlesContainer.addView(divide, layoutParams);
-				artticlesContainer.addView(createArticles(msgArticles.getArticles().get(i), i == 0));
+				artticlesContainer.addView(createArticles(msgArticles.getArticles().get(i), false));
 			}
 		}
 	}
@@ -125,44 +138,67 @@ public class ChatRowArticle extends ChatRow {
 
 	private View createArticles(final MsgArticles.ArticlesBean bean, Boolean isFirst) {
 
-		RelativeLayout view = new RelativeLayout(context);
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		view.setLayoutParams(lp);
-		int lppadding = DensityUtil.dip2px(context, 10);
-		view.setPadding(0, lppadding, 0, lppadding);
+		RelativeLayout view;
 
-		ImageView imageView = new ImageView(context);
-		final int imageViewId = new Random().nextInt();
-		imageView.setId(imageViewId);
-		RelativeLayout.LayoutParams ivLp = new RelativeLayout.LayoutParams(DensityUtil.dip2px(context, 48), DensityUtil.dip2px(context, 48));
-		ivLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
-		imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+		if (isFirst) {
+			view = (RelativeLayout)inflater.inflate(R.layout.hd_row_article_main, null);
+			RelativeLayout mainLayout = (RelativeLayout) view.findViewById(R.id.rl_main);
+			ImageView mainImage = (ImageView) view.findViewById(R.id.iv_main);
+			TextView mainText = (TextView) view.findViewById(R.id.tv_main);
+			LinearLayout mainTextLayout = (LinearLayout) view.findViewById(R.id.ll_main_text);
 
-		Glide.with(getContext()).load(bean.getThumbUrl()).error(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(imageView);
-		view.addView(imageView, ivLp);
-
-		TextView textView = new TextView(context);
-		textView.setPadding(0, 0, DensityUtil.dip2px(context, 10), 0);
-		textView.setTextColor(context.getResources().getColor(R.color.article_row_text_color));
-		textView.setMaxLines(3);
-		textView.setTextSize(17);
-		textView.setEllipsize(TextUtils.TruncateAt.END);
-
-		RelativeLayout.LayoutParams tvLp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		tvLp.addRule(RelativeLayout.LEFT_OF, imageViewId);
-
-		textView.setText(bean.getDigest());
-		view.addView(textView, tvLp);
-
-
-		view.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(bean.getUrl()));
-				activity.startActivity(intent);
+			if (bean.getTitle() != null && bean.getTitle().length() > 0) {
+				mainText.setText(bean.getTitle());
+				mainTextLayout.setVisibility(VISIBLE);
 			}
-		});
+			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into(mainImage);
+			mainLayout.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(bean.getUrl()));
+					activity.startActivity(intent);
+				}
+			});
 
+		} else {
+			view = new RelativeLayout(context);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			view.setLayoutParams(lp);
+			int lppadding = DensityUtil.dip2px(context, 10);
+			view.setPadding(0, lppadding, 0, lppadding);
+
+			ImageView imageView = new ImageView(context);
+			final int imageViewId = new Random().nextInt();
+			imageView.setId(imageViewId);
+			RelativeLayout.LayoutParams ivLp = new RelativeLayout.LayoutParams(DensityUtil.dip2px(context, 48), DensityUtil.dip2px(context, 48));
+			ivLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into(imageView);
+			view.addView(imageView, ivLp);
+
+			TextView textView = new TextView(context);
+			textView.setPadding(0, 0, DensityUtil.dip2px(context, 10), 0);
+			textView.setTextColor(context.getResources().getColor(R.color.article_row_text_color));
+			textView.setMaxLines(3);
+			textView.setTextSize(17);
+			textView.setEllipsize(TextUtils.TruncateAt.END);
+
+			RelativeLayout.LayoutParams tvLp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			tvLp.addRule(RelativeLayout.LEFT_OF, imageViewId);
+
+			textView.setText(bean.getDigest());
+			view.addView(textView, tvLp);
+
+
+			view.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(bean.getUrl()));
+					activity.startActivity(intent);
+				}
+			});
+		}
 
 		return view;
 	}

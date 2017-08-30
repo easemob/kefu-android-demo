@@ -31,11 +31,15 @@ public class ChatActivity extends BaseActivity {
         //IM服务号
         toChatUsername = getIntent().getExtras().getString(Config.EXTRA_SERVICE_IM_NUMBER);
         //可以直接new ChatFragment使用
-        chatFragment = new CustomChatFragment();
-        //传入参数
-        chatFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
-        sendOrderOrTrack();
+        String chatFragmentTAG = "chatFragment";
+        chatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(chatFragmentTAG);
+        if (chatFragment == null){
+            chatFragment = new CustomChatFragment();
+            //传入参数
+            chatFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment, chatFragmentTAG).commit();
+            sendOrderOrTrack();
+        }
     }
 
 
@@ -55,6 +59,8 @@ public class ChatActivity extends BaseActivity {
                 case Constant.INTENT_CODE_IMG_SELECTED_3:
                 case Constant.INTENT_CODE_IMG_SELECTED_4:
                     sendTrackMessage(selectedIndex);
+                    break;
+                default:
                     break;
             }
         }
@@ -135,4 +141,5 @@ public class ChatActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
 }

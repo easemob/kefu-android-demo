@@ -394,7 +394,8 @@ public abstract class ImageWorker {
 				case MESSAGE_CLEAR:
 					clearCacheInternal();
 					break;
-
+				default:
+					break;
 			}
 			return null;
 		}

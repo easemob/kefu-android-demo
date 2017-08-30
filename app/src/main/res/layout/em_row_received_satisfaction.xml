@@ -47,7 +47,7 @@
                 android:lineSpacingExtra="2dp"
                 android:minHeight="38dp"
                 android:maxWidth="225.0dip"
-                android:text="请对我的服务做出评价"
+                android:text="@string/chat_row_satisfaction_content"
                 android:textColor="#ff000000"
                 android:textSize="15sp" />
 
@@ -67,7 +67,8 @@
                 android:paddingRight="50dip"
                 android:textSize="16sp"
                 android:background="@drawable/hd_bg_button_satisfaction"
-                android:text="评价" /></RelativeLayout>
+                android:text="@string/chatrow_eval_btn_text" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_userid"

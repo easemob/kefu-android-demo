@@ -422,6 +422,8 @@ public class RecorderVideoActivity extends BaseActivity implements
 					mCamera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
 					frontCamera = 0;
 					break;
+				default:
+					break;
 			}
 			try {
 				mCamera.lock();
@@ -514,7 +516,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		EMLog.e("video", "recording onError:");
 		stopRecording();
 		Toast.makeText(this,
-				"Recording error has occurred. Stopping the recording",
+				R.string.video_record_error,
 				Toast.LENGTH_SHORT).show();
 
 	}

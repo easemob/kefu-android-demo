@@ -84,6 +84,11 @@
     <string name="Open_the_equipment_failure">打开设备失败!</string>
     <string name="recording_video">录制视频</string>
 	<string name="temporary_does_not">暂不支持大于10M的视频</string>
-	<string name="recorder_video_processing">发送中...</string>
+	<string name="recorder_video_processing">发送中…</string>
     <string name="current_wait_count">当前排队人数为%d</string>
+	<string name="video_record_error">录音时出现错误，停止录音。</string>
+	<string name="date_month">月</string>
+    <string name="date_day">日</string>
+	<string name="chat_row_article_view_all">阅读全文</string>
+	<string name="chat_row_new_picture_title">我正在看:</string>
 </resources>

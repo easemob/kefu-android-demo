@@ -57,7 +57,7 @@
             android:layout_toRightOf="@id/bubble"
             android:layout_alignTop="@id/bubble"
             android:gravity="center"
-            android:text="3&apos;&apos;" />
+            />
 
         <ImageView
             android:id="@+id/iv_unread_voice"

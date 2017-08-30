@@ -59,7 +59,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
-                android:text="AppKey  "
+                android:text="@string/appkey"
                 android:textColor="#000000"
                 android:textSize="17sp"/>
 
@@ -73,7 +73,6 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="sipsoft#sandbox"
                 android:textColor="#9B9B9B"
                 android:textSize="17sp"/>
 

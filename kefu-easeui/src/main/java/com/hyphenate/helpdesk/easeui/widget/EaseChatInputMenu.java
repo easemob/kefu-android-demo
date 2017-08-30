@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class EaseChatInputMenu extends LinearLayout {
     FrameLayout primaryMenuContainer, emojiconMenuContainer;
-    protected EaseChatPrimaryMenu chatPrimaryMenu;
+    protected EaseChatPrimaryMenuBase chatPrimaryMenu;
     protected EmojiconMenuBase emojiconMenu;
     protected ExtendMenu chatExtendMenu;
     protected FrameLayout chatExtendMenuContainer;
@@ -81,7 +81,7 @@ public class EaseChatInputMenu extends LinearLayout {
         }
         // 主按钮菜单栏,没有定义用默认的
         if (chatPrimaryMenu == null) {
-            chatPrimaryMenu = (EaseChatPrimaryMenu) layoutInflater.inflate(R.layout.hd_layout_chat_primary_menu,
+            chatPrimaryMenu = (EaseChatPrimaryMenuBase) layoutInflater.inflate(R.layout.hd_layout_chat_primary_menu,
                     null);
         }
         primaryMenuContainer.addView(chatPrimaryMenu);
@@ -126,7 +126,7 @@ public class EaseChatInputMenu extends LinearLayout {
      *
      * @param customPrimaryMenu
      */
-    public void setCustomPrimaryMenu(EaseChatPrimaryMenu customPrimaryMenu) {
+    public void setCustomPrimaryMenu(EaseChatPrimaryMenuBase customPrimaryMenu) {
         this.chatPrimaryMenu = customPrimaryMenu;
     }
 

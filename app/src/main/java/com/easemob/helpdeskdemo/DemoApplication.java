@@ -15,6 +15,7 @@ package com.easemob.helpdeskdemo;
 
 import android.app.Application;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 public class DemoApplication extends Application {
@@ -27,6 +28,8 @@ public class DemoApplication extends Application {
 
         //通过二维码扫描关联，只为测试用，APP中可以去掉
         ZXingLibrary.initDisplayOpinion(this);
+        //注册Bugly Crash统计，用户可忽略
+        CrashReport.initCrashReport(getApplicationContext(), "900012496", false);
     }
 
 }

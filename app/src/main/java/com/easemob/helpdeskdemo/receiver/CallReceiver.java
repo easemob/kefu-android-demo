@@ -25,9 +25,6 @@ public class CallReceiver extends BroadcastReceiver {
         String type = intent.getStringExtra("type");
         //call to
         String to = intent.getStringExtra("to");
-        if (!to.equals(ChatClient.getInstance().getCurrentUserName())){
-            return;
-        }
 
         if ("video".equals(type)){// video call
             context.startActivity(new Intent(context, VideoCallActivity.class)
