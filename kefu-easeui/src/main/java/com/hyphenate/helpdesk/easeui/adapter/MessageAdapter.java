@@ -59,11 +59,10 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 14;
 	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 15;
 	private static final int MESSAGE_TYPE_RECV_ARTICLES = 16;
-	private static final int MESSAGE_TYPE_SENT_ARTICLES = 17;
 
 
 
-	private static final int MESSAGE_TYPE_COUNT = 16;
+	private static final int MESSAGE_TYPE_COUNT = 17;
 	
 	
 	// reference to conversation object in chatsdk
@@ -230,14 +229,13 @@ public class MessageAdapter extends BaseAdapter {
 			} else if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
 		        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EXPRESSION : MESSAGE_TYPE_SENT_EXPRESSION;
 		    } else if(MessageHelper.isArticlesMessage(message)){
-				return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ARTICLES : MESSAGE_TYPE_SENT_ARTICLES;
+				return MESSAGE_TYPE_RECV_ARTICLES;
 			}
 
 			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 		}
 		if (message.getType() == Message.Type.IMAGE) {
 			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_IMAGE : MESSAGE_TYPE_SENT_IMAGE;
-
 		}
 		if (message.getType() == Message.Type.VOICE) {
 			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_VOICE : MESSAGE_TYPE_SENT_VOICE;
