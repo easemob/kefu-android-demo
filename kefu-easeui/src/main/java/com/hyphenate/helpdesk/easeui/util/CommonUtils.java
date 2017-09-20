@@ -55,14 +55,14 @@ public class CommonUtils {
         return path;
     }
     public static String getMessageDigest(Message message, Context context) {
-        String digest = "";
+        String digest;
         switch (message.getType()) {
             case LOCATION: // 位置消息
                 if (message.direct() == Message.Direct.RECEIVE) {
                     //从sdk中提到了ui中，使用更简单不犯错的获取string方法
 //	              digest = EasyUtils.getAppResourceString(context, "location_recv");
                     digest = getString(context, R.string.location_recv);
-                    digest = String.format(digest, message.getFrom());
+                    digest = String.format(digest, message.from());
                     return digest;
                 } else {
 //	              digest = EasyUtils.getAppResourceString(context, "location_prefix");
@@ -79,17 +79,21 @@ public class CommonUtils {
                 digest = getString(context, R.string.video);
                 break;
             case TXT: // 文本消息
-                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                if (MessageHelper.getRobotMenu(message) != null){
-                    digest = getString(context, R.string.robot_menu);
-                }else if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)) {
-                    if (!TextUtils.isEmpty(txtBody.getMessage())) {
+                EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
+                switch (MessageHelper.getMessageExtType(message)) {
+                    case RobotMenuMsg:
+                        digest = getString(context, R.string.robot_menu);
+                        break;
+                    case BigExpressionMsg:
+                        if (!TextUtils.isEmpty(txtBody.getMessage())) {
+                            digest = txtBody.getMessage();
+                        } else {
+                            digest = getString(context, R.string.dynamic_expression);
+                        }
+                        break;
+                    default:
                         digest = txtBody.getMessage();
-                    } else {
-                        digest = getString(context, R.string.dynamic_expression);
-                    }
-                } else {
-                    digest = txtBody.getMessage();
+                        break;
                 }
                 break;
             case FILE: //普通文件消息

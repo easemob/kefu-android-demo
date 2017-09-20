@@ -44,10 +44,10 @@ public abstract class ImageWorker {
 
 	/**
 	 * Load an image specified by the data parameter into an ImageView (override
-	 * {@link ImageWorker#processBitmap(Object)} to define the processing logic). A memory and
-	 * disk cache will be used if an {@link ImageCache} has been added using
-	 * {@link ImageWorker#addImageCache(android.support.v4.app.FragmentManager, ImageCache.ImageCacheParams)}. If the
-	 * image is found in the memory cache, it is set immediately, otherwise an {@link AsyncTask}
+	 * { ImageWorker#processBitmap(Object)} to define the processing logic). A memory and
+	 * disk cache will be used if an { ImageCache} has been added using
+	 * { ImageWorker#addImageCache(android.support.v4.app.FragmentManager, ImageCache.ImageCacheParams)}. If the
+	 * image is found in the memory cache, it is set immediately, otherwise an { AsyncTask}
 	 * will be created to asynchronously load the bitmap.
 	 *
 	 * @param data The URL of the image to download.

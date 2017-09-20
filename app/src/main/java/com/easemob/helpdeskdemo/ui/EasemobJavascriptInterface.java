@@ -39,6 +39,6 @@ public class EasemobJavascriptInterface {
 
     @JavascriptInterface
     public String imToken(){
-        return ChatClient.getInstance().getAccessToken();
+        return ChatClient.getInstance().accessToken();
     }
 }

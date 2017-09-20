@@ -48,7 +48,7 @@ public class FileUploadManager {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
-                                .addHeader("Authorization", "Bearer " + ChatClient.getInstance().getAccessToken())
+                                .addHeader("Authorization", "Bearer " + ChatClient.getInstance().accessToken())
                                 .addHeader("restrict-access", "true")
                                 .build();
                         return chain.proceed(request);

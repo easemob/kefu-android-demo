@@ -30,10 +30,8 @@ public class ChatRowRobotMenu extends ChatRow{
 
     @Override
     protected void onInflatView() {
-        if (MessageHelper.getRobotMenu(message) != null) {
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_menu
-                    : R.layout.hd_row_sent_message, this);
-        }
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_menu
+                : R.layout.hd_row_sent_message, this);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class ChatRowRobotMenu extends ChatRow{
 
                     @Override
                     public void onClick(View v) {
-                        Message sendMessage = Message.createTxtSendMessage(content, message.getFrom());
+                        Message sendMessage = Message.createTxtSendMessage(content, message.from());
                         //存在上下文的机器人菜单消息
                         sendMessage.addContent(ContentFactory.createRobotMenuIdInfo(null).setMenuId(menuId));
                         ChatClient.getInstance().chatManager().sendMessage(sendMessage);
@@ -99,7 +97,7 @@ public class ChatRowRobotMenu extends ChatRow{
 
                     @Override
                     public void onClick(View v) {
-                        Message sendMessage = Message.createTxtSendMessage(content, message.getFrom());
+                        Message sendMessage = Message.createTxtSendMessage(content, message.from());
                         ChatClient.getInstance().chatManager().sendMessage(sendMessage);
                     }
                 });

@@ -54,6 +54,8 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public static final int MESSAGE_TYPE_RECV_TRACK = 8;
     public static final int MESSAGE_TYPE_SENT_FORM = 9;
     public static final int MESSAGE_TYPE_RECV_FORM = 10;
+    //message type 最大值
+    public static final int MESSAGE_TYPE_COUNT = 11;
 
 
     @Override
@@ -130,7 +132,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public boolean onMessageBubbleClick(Message message) {
         //消息框点击事件,return true
         if (message.getType() == Message.Type.LOCATION) {
-            EMLocationMessageBody locBody = (EMLocationMessageBody) message.getBody();
+            EMLocationMessageBody locBody = (EMLocationMessageBody) message.body();
             Intent intent = new Intent(getActivity(), BaiduMapActivity.class);
             intent.putExtra("latitude", locBody.getLatitude());
             intent.putExtra("longitude", locBody.getLongitude());
@@ -193,9 +195,9 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         //demo 这里不覆盖基类已经注册的item, item点击listener沿用基类的
         super.registerExtendMenuItem();
         //增加扩展的item
-        inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call, extendMenuItemClickListener);
     }
 
     @Override
@@ -204,16 +206,16 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         if (requestCode == REQUEST_CODE_CONTEXT_MENU) {
             switch (resultCode) {
                 case ContextMenuActivity.RESULT_CODE_COPY: // 复制消息
-                    String string = ((EMTextMessageBody) contextMenuMessage.getBody()).getMessage();
+                    String string = ((EMTextMessageBody) contextMenuMessage.body()).getMessage();
                     clipboard.setText(string);
                     break;
                 case ContextMenuActivity.RESULT_CODE_DELETE: // 删除消息
                     if (contextMenuMessage.getType() == Message.Type.VOICE){
-                        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) contextMenuMessage.getBody();
+                        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) contextMenuMessage.body();
                         String voicePath = voiceBody.getLocalUrl();
                         MediaManager.release(voicePath);
                     }
-                    conversation.removeMessage(contextMenuMessage.getMsgId());
+                    conversation.removeMessage(contextMenuMessage.messageId());
                     messageList.refresh();
                     break;
                 default:
@@ -258,7 +260,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             //地图 和 满意度 发送接收 共4种
             //订单 和 轨迹 发送接收共4种
             // form 发送接收2种
-            return 11;
+            return MESSAGE_TYPE_COUNT;
         }
 
         @Override
@@ -267,14 +269,15 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             if (message.getType() == Message.Type.LOCATION){
                 return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_MAP : MESSAGE_TYPE_SENT_MAP;
             }else if (message.getType() == Message.Type.TXT){
-                if (MessageHelper.getEvalRequest(message) != null){
-                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EVAL : MESSAGE_TYPE_SENT_EVAL;
-                }else if (MessageHelper.getOrderInfo(message) != null){
-                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ORDER : MESSAGE_TYPE_SENT_ORDER;
-                }else if (MessageHelper.getVisitorTrack(message) != null){
-                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRACK : MESSAGE_TYPE_SENT_TRACK;
-                }else if (MessageHelper.isFormMessage(message)){
-                    return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_FORM : MESSAGE_TYPE_SENT_FORM;
+                switch (MessageHelper.getMessageExtType(message)) {
+                    case EvaluationMsg:
+                        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EVAL : MESSAGE_TYPE_SENT_EVAL;
+                    case OrderMsg:
+                        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_ORDER : MESSAGE_TYPE_SENT_ORDER;
+                    case TrackMsg:
+                        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRACK : MESSAGE_TYPE_SENT_TRACK;
+                    case FormMsg:
+                        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_FORM : MESSAGE_TYPE_SENT_FORM;
                 }
             }
 
@@ -286,20 +289,19 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             if (message.getType() == Message.Type.LOCATION) {
                 return new ChatRowLocation(getActivity(), message, position, adapter);
             } else if (message.getType() == Message.Type.TXT) {
-                if (MessageHelper.getEvalRequest(message) != null) {
-                    return new ChatRowEvaluation(getActivity(), message, position, adapter);
-                } else if (MessageHelper.getOrderInfo(message) != null) {
-                    return new ChatRowOrder(getActivity(), message, position, adapter);
-                }else if (MessageHelper.getVisitorTrack(message) != null) {
-                    return new ChatRowTrack(getActivity(), message, position, adapter);
-                }else if (MessageHelper.isFormMessage(message)){
-                    return new ChatRowForm(getActivity(), message, position, adapter);
+                switch (MessageHelper.getMessageExtType(message)) {
+                    case EvaluationMsg:
+                        return new ChatRowEvaluation(getActivity(), message, position, adapter);
+                    case OrderMsg:
+                        return new ChatRowOrder(getActivity(), message, position, adapter);
+                    case TrackMsg:
+                        return new ChatRowTrack(getActivity(), message, position, adapter);
+                    case FormMsg:
+                        return new ChatRowForm(getActivity(), message, position, adapter);
                 }
             }
             return null;
         }
     }
-
-
 
 }

@@ -13,13 +13,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
-import com.hyphenate.helpdesk.easeui.domain.ArtcleEntity;
+import com.hyphenate.helpdesk.model.ArticlesInfo;
+import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.util.DensityUtil;
-
-import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -28,8 +26,6 @@ import java.util.Random;
  */
 
 public class ChatRowArticle extends ChatRow {
-
-	private ArtcleEntity msgArticles = null;
 
 	private LinearLayout artticlesContainer;
 
@@ -57,17 +53,10 @@ public class ChatRowArticle extends ChatRow {
 		userAvatarView.setVisibility(GONE);
 		usernickView.setVisibility(GONE);
 
-		JSONObject jsonArticle = null;
-		try {
-			jsonArticle = message.getJSONObjectAttribute("msgtype");
-			if (jsonArticle != null) {
-				Gson gson = new Gson();
-				msgArticles = gson.fromJson(jsonArticle.toString(), ArtcleEntity.class);
-			}
+		ArticlesInfo msgArticles;
 
-			addViews();
-
-		} catch (Exception e) {
+		if ((msgArticles = MessageHelper.getArticlesMessage(message)) != null) {
+			addViews(msgArticles);
 		}
 	}
 
@@ -76,14 +65,14 @@ public class ChatRowArticle extends ChatRow {
 	}
 
 
-	private void addViews() {
+	private void addViews(ArticlesInfo msgArticles) {
 		artticlesContainer.removeAllViews();
 
 		if (msgArticles == null || msgArticles.getArticles() == null)
 			return;
 
 		if (msgArticles.getArticles().size() == 1) {
-			final ArtcleEntity.ArticlesBean bean = msgArticles.getArticles().get(0);
+			final ArticlesInfo.ArticleItem bean = msgArticles.getArticles().get(0);
 			View view = inflater.inflate(R.layout.hd_row_article_single_main, null);
 
 			if (view == null) {
@@ -126,7 +115,7 @@ public class ChatRowArticle extends ChatRow {
 	}
 
 
-	private View createArticles(final ArtcleEntity.ArticlesBean bean, Boolean isFirst) {
+	private View createArticles(final ArticlesInfo.ArticleItem bean, Boolean isFirst) {
 
 		RelativeLayout view;
 

@@ -3,6 +3,7 @@ package com.hyphenate.helpdesk.easeui.widget;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,12 +165,14 @@ public class EaseChatInputMenu extends LinearLayout {
      *            item背景
      * @param itemId
      *            id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerExtendMenuItem(String name, int drawableRes, int itemId,
+    public void registerExtendMenuItem(String name, int drawableRes, int itemId, @IdRes int resId,
                                        ExtendMenu.EaseChatExtendMenuItemClickListener listener) {
-        chatExtendMenu.registerMenuItem(name, drawableRes, itemId, listener);
+        chatExtendMenu.registerMenuItem(name, drawableRes, itemId, resId, listener);
     }
 
     /**
@@ -181,12 +184,14 @@ public class EaseChatInputMenu extends LinearLayout {
      *            item背景
      * @param itemId
      *            id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerExtendMenuItem(int nameRes, int drawableRes, int itemId,
+    public void registerExtendMenuItem(int nameRes, int drawableRes, int itemId, @IdRes int resId,
                                        ExtendMenu.EaseChatExtendMenuItemClickListener listener) {
-        chatExtendMenu.registerMenuItem(nameRes, drawableRes, itemId, listener);
+        chatExtendMenu.registerMenuItem(nameRes, drawableRes, itemId, resId, listener);
     }
 
     protected void processChatMenu() {

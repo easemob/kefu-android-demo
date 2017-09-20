@@ -13,7 +13,7 @@ import com.hyphenate.helpdesk.model.VisitorTrack;
 /**
  * 对轨迹跟踪的消息操作 此类不是必须，只是为了演示和初始化一些数据
  */
-public class MessageHelper {
+public class DemoMessageHelper {
 
 	public static final String IMAGE_URL_1 = "http://o8ugkv090.bkt.clouddn.com/hd_one.png";
 	public static final String IMAGE_URL_2 = "http://o8ugkv090.bkt.clouddn.com/hd_two.png";
@@ -102,4 +102,5 @@ public class MessageHelper {
 		info.queueName(queueName);
 		return info;
 	}
+
 }

@@ -299,12 +299,16 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
 
     private void refleshEmojiSendBtn() {
         if (editText.getText().length() > 0 && !emojiSengBtnEnable) {
-            emojiSendBtn.setEnabled(true);
-            emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_enable_bg_color);
+            if (emojiSendBtn != null) {
+                emojiSendBtn.setEnabled(true);
+                emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_enable_bg_color);
+            }
             emojiSengBtnEnable = true;
         } else if(editText.getText().length() == 0 && emojiSengBtnEnable) {
-            emojiSendBtn.setEnabled(false);
-            emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_disable_bg_color);
+            if (emojiSendBtn != null) {
+                emojiSendBtn.setEnabled(false);
+                emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_disable_bg_color);
+            }
             emojiSengBtnEnable = false;
         }
 

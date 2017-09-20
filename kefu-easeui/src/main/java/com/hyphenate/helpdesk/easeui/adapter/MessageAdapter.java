@@ -14,7 +14,6 @@ import android.widget.ListView;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.Message;
-import com.hyphenate.helpdesk.easeui.Constant;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
@@ -108,7 +107,7 @@ public class MessageAdapter extends BaseAdapter {
 				Collections.sort(list, new Comparator<Message>() {
 					@Override
 					public int compare(Message lhs, Message rhs) {
-						return (int) (lhs.getMsgTime() - rhs.getMsgTime());
+						return (int) (lhs.messageTime() - rhs.messageTime());
 					}
 				});
 
@@ -217,22 +216,24 @@ public class MessageAdapter extends BaseAdapter {
 		}
 		
 		if (message.getType() == Message.Type.TXT) {
-			if (MessageHelper.getRobotMenu(message) != null) {
-				// 机器人 列表菜单
-				return MESSAGE_TYPE_RECV_ROBOT_MENU;
-			} else if(MessageHelper.getEvalRequest(message) != null){
-				return MESSAGE_TYPE_RECV_EVALUATION;
-			} else if(MessageHelper.getToCustomServiceInfo(message) != null){
-				//转人工消息
-				return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU
-						: MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU;
-			} else if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
-		        return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EXPRESSION : MESSAGE_TYPE_SENT_EXPRESSION;
-		    } else if(MessageHelper.isArticlesMessage(message)){
-				return MESSAGE_TYPE_RECV_ARTICLES;
+			switch (MessageHelper.getMessageExtType(message)) {
+				case RobotMenuMsg:
+					//机器人列表菜单
+					return MESSAGE_TYPE_RECV_ROBOT_MENU;
+				case ArticlesMsg:
+					//图文消息
+					return MESSAGE_TYPE_RECV_ARTICLES;
+				case ToCustomServiceMsg:
+					//转人工消息
+					return message.direct() == Message.Direct.RECEIVE ?
+							MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU : MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU;
+				case BigExpressionMsg:
+					//大表情消息
+					return message.direct() == Message.Direct.RECEIVE ?
+							MESSAGE_TYPE_RECV_EXPRESSION : MESSAGE_TYPE_SENT_EXPRESSION;
+				default:
+					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 			}
-
-			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 		}
 		if (message.getType() == Message.Type.IMAGE) {
 			return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_IMAGE : MESSAGE_TYPE_SENT_IMAGE;
@@ -257,17 +258,22 @@ public class MessageAdapter extends BaseAdapter {
         }
         switch (message.getType()) {
         case TXT:
-			if (MessageHelper.getRobotMenu(message) != null) {
-				return new ChatRowRobotMenu(context, message, position, this);
-			}else if(MessageHelper.isArticlesMessage(message)) {
-				chatRow = new ChatRowArticle(context, message, position, this);
-			}else if(MessageHelper.getToCustomServiceInfo(message) != null){
-				return new ChatRowTransferToKefu(context, message, position, this);
-			}else if(message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_BIG_EXPRESSION, false)){
-                chatRow = new ChatRowBigExpression(context, message, position, this);
-            }else {
-                chatRow = new ChatRowText(context, message, position, this);
-            }
+	        switch (MessageHelper.getMessageExtType(message)){
+		        case RobotMenuMsg:
+			        chatRow = new ChatRowRobotMenu(context, message, position, this);
+			        break;
+		        case ArticlesMsg:
+			        chatRow = new ChatRowArticle(context, message, position, this);
+			        break;
+		        case ToCustomServiceMsg:
+		        	chatRow = new ChatRowTransferToKefu(context, message, position, this);
+		        	break;
+		        case BigExpressionMsg:
+			        chatRow = new ChatRowBigExpression(context, message, position, this);
+			        break;
+		        default:
+			        chatRow = new ChatRowText(context, message, position, this);
+	        }
             break;
         case FILE:
             chatRow = new ChatRowFile(context, message, position, this);

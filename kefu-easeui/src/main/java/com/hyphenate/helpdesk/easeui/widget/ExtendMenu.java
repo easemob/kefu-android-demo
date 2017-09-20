@@ -3,6 +3,7 @@ package com.hyphenate.helpdesk.easeui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -66,14 +67,17 @@ public class ExtendMenu extends GridView {
      *            item背景
      * @param itemId
      *             id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerMenuItem(String name, int drawableRes, int itemId, EaseChatExtendMenuItemClickListener listener) {
+    public void registerMenuItem(String name, int drawableRes, int itemId, @IdRes int resId, EaseChatExtendMenuItemClickListener listener) {
         ChatMenuItemModel item = new ChatMenuItemModel();
         item.name = name;
         item.image = drawableRes;
         item.id = itemId;
+	    item.resId = resId;
         item.clickListener = listener;
         itemModels.add(item);
     }
@@ -87,11 +91,13 @@ public class ExtendMenu extends GridView {
      *            item背景
      * @param itemId
      *             id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerMenuItem(int nameRes, int drawableRes, int itemId, EaseChatExtendMenuItemClickListener listener) {
-        registerMenuItem(context.getString(nameRes), drawableRes, itemId, listener);
+    public void registerMenuItem(int nameRes, int drawableRes, int itemId, @IdRes int resId, EaseChatExtendMenuItemClickListener listener) {
+        registerMenuItem(context.getString(nameRes), drawableRes, itemId, resId, listener);
     }
 
 
@@ -113,6 +119,7 @@ public class ExtendMenu extends GridView {
             menuItem = (ChatMenuItem) convertView;
             menuItem.setImage(getItem(position).image);
             menuItem.setText(getItem(position).name);
+            menuItem.setId(getItem(position).resId);
             menuItem.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -140,6 +147,7 @@ public class ExtendMenu extends GridView {
         String name;
         int image;
         int id;
+	    @IdRes int resId;
         EaseChatExtendMenuItemClickListener clickListener;
     }
 

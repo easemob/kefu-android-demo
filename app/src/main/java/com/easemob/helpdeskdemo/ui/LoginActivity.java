@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.MessageHelper;
+import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
@@ -72,7 +72,7 @@ public class LoginActivity extends DemoBaseActivity {
 		progressDialog.show();
 		// createAccount to huanxin server
 		// if you have a account, this step will ignore
-		ChatClient.getInstance().createAccount(account, userPwd, new Callback() {
+		ChatClient.getInstance().register(account, userPwd, new Callback() {
 			@Override
 			public void onSuccess() {
 				Log.d(TAG, "demo register success");
@@ -196,17 +196,17 @@ public class LoginActivity extends DemoBaseActivity {
 			 //设置点击通知栏跳转事件
 				Conversation conversation = ChatClient.getInstance().chatManager().getConversation(Preferences.getInstance().getCustomerAccount());
 				String titleName = null;
-				if (conversation.getOfficialAccount() != null){
-					titleName = conversation.getOfficialAccount().getName();
+				if (conversation.officialAccount() != null){
+					titleName = conversation.officialAccount().getName();
 				}
 				// 进入主页面
 				Intent intent = new IntentBuilder(LoginActivity.this)
 						.setTargetClass(ChatActivity.class)
-						.setVisitorInfo(MessageHelper.createVisitorInfo())
+						.setVisitorInfo(DemoMessageHelper.createVisitorInfo())
 						.setServiceIMNumber(Preferences.getInstance().getCustomerAccount())
-						.setScheduleQueue(MessageHelper.createQueueIdentity(queueName))
+						.setScheduleQueue(DemoMessageHelper.createQueueIdentity(queueName))
 						.setTitleName(titleName)
-//						.setScheduleAgent(MessageHelper.createAgentIdentity("ceshiok1@qq.com"))
+//						.setScheduleAgent(DemoMessageHelper.createAgentIdentity("ceshiok1@qq.com"))
 						.setShowUserNick(true)
 						.setBundle(bundle)
 						.build();

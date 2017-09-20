@@ -79,6 +79,7 @@
     <string name="please_wait_noti">Please waiting for a moment.</string>
     <string name="send_suc">Send successful</string>
     <string name="app_key_cannot_be_empty">Appkey cannot be empty!</string>
+    <string name="cus_account_cannot_be_empty">Customer account cannot be empty!</string>
     <string name="app_key_format_wrong">Appkey format error!</string>
     <string name="app_key_modify_fail">Appkey modify fail!</string>
     <string name="short_cut_msg">Short cut message</string>

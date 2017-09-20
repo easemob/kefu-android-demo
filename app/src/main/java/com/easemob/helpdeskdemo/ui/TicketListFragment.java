@@ -20,10 +20,10 @@ import com.easemob.helpdeskdemo.interfaces.IListener;
 import com.easemob.helpdeskdemo.ui.adapter.TicketListAdapter;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.google.gson.Gson;
+import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.TicketEntity;
 import com.hyphenate.helpdesk.domain.TicketListResponse;
-import com.hyphenate.helpdesk.manager.TicketManager;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
@@ -198,7 +198,7 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
         String tenantId = Preferences.getInstance().getTenantId();
         String projectId = Preferences.getInstance().getProjectId();
 
-        TicketManager.getInstance().getTickets(projectId, target, nextPage, PER_PAGE_COUNT, new ValueCallBack<String>() {
+        ChatClient.getInstance().leaveMsgManager().getLeaveMsgs(projectId, target, nextPage, PER_PAGE_COUNT, new ValueCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 mCurPageNo = nextPage;
@@ -225,7 +225,7 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
         String target = Preferences.getInstance().getCustomerAccount();
         String projectId = Preferences.getInstance().getProjectId();
 
-        TicketManager.getInstance().getTickets(projectId, target, 0, PER_PAGE_COUNT, new ValueCallBack<String>() {
+        ChatClient.getInstance().leaveMsgManager().getLeaveMsgs(projectId, target, 0, PER_PAGE_COUNT, new ValueCallBack<String>() {
             @Override
             public void onSuccess(String value){
                 Gson gson = new Gson();

@@ -5,7 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.easemob.helpdeskdemo.Constant;
-import com.easemob.helpdeskdemo.MessageHelper;
+import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
@@ -74,7 +74,7 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendOrderMessage(int selectedIndex){
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
-        message.addContent(MessageHelper.createOrderInfo(this, selectedIndex));
+        message.addContent(DemoMessageHelper.createOrderInfo(this, selectedIndex));
         ChatClient.getInstance().chatManager().saveMessage(message);
     }
 
@@ -84,7 +84,7 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendTrackMessage(int selectedIndex) {
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
-        message.addContent(MessageHelper.createVisitorTrack(this, selectedIndex));
+        message.addContent(DemoMessageHelper.createVisitorTrack(this, selectedIndex));
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
@@ -129,7 +129,9 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        chatFragment.onBackPressed();
+        if (chatFragment != null) {
+            chatFragment.onBackPressed();
+        }
         if (CommonUtils.isSingleActivity(this)) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

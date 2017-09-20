@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="chat_menu_map"/>
+	<item type="id" name="chat_menu_leave_msg"/>
+	<item type="id" name="chat_menu_video_call"/>
+</resources>

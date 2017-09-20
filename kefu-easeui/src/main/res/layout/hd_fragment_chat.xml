@@ -12,6 +12,12 @@
         android:background="@color/title_bg_color"
         easemob:titleBarLeftImage="@drawable/hd_mm_title_back" />
 
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

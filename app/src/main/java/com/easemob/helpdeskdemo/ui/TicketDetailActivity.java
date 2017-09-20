@@ -31,7 +31,6 @@ import com.hyphenate.helpdesk.domain.CommentListResponse;
 import com.hyphenate.helpdesk.domain.TicketEntity;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
-import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.helpdesk.util.ISO8601DateFormat;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.DateUtils;
@@ -202,7 +201,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
         String tenantId = Preferences.getInstance().getTenantId();
         String projectId = Preferences.getInstance().getProjectId();
 
-        TicketManager.getInstance().getComments(projectId, ticketId, target, new ValueCallBack<String>(){
+        ChatClient.getInstance().leaveMsgManager().getLeaveMsgComments(projectId, ticketId, target, new ValueCallBack<String>(){
 
             @Override
             public void onSuccess(final String value) {
@@ -237,7 +236,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                     }
                 });
             }
-        });
+        }, 0, 100);
     }
 
     @Override

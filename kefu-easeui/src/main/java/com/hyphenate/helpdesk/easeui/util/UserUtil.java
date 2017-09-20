@@ -19,7 +19,7 @@ public class UserUtil {
     public static void setAgentNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView){
         AgentInfo agentInfo = MessageHelper.getAgentInfo(message);
         if (usernickView != null){
-            usernickView.setText(message.getFrom());
+            usernickView.setText(message.from());
             if (agentInfo != null){
                 if (!TextUtils.isEmpty(agentInfo.getNickname())) {
                     usernickView.setText(agentInfo.getNickname());

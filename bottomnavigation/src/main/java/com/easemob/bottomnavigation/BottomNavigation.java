@@ -78,6 +78,8 @@ public class BottomNavigation extends RelativeLayout {
             case 3:
                 mRadioButton4.setChecked(true);
                 break;
+            default:
+                break;
         }
     }
 

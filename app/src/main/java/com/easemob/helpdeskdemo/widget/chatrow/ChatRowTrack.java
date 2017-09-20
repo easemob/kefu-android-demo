@@ -25,7 +25,7 @@ public class ChatRowTrack extends ChatRow {
     TextView mTextViewDes;
     TextView mTextViewprice;
     TextView mChatTextView;
-
+    TextView mTrackTitle;
 
     public ChatRowTrack(Context context, Message message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
@@ -33,18 +33,18 @@ public class ChatRowTrack extends ChatRow {
 
     @Override
     protected void onInflatView() {
-        if (MessageHelper.getVisitorTrack(message) != null) {
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_message : R.layout.em_row_sent_track, this);
-        }
-
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_message : R.layout.em_row_sent_track, this);
     }
 
     @Override
     protected void onFindViewById() {
-        mTextViewDes = (TextView) findViewById(R.id.tv_description);
-        mTextViewprice = (TextView) findViewById(R.id.tv_price);
-        mImageView = (ImageView) findViewById(R.id.iv_picture);
-        mChatTextView = (TextView) findViewById(R.id.tv_chatcontent);
+        if (message.direct() == Message.Direct.SEND) {
+            mTextViewDes = (TextView) findViewById(R.id.tv_description);
+            mTextViewprice = (TextView) findViewById(R.id.tv_price);
+            mImageView = (ImageView) findViewById(R.id.iv_picture);
+            mChatTextView = (TextView) findViewById(R.id.tv_chatcontent);
+            mTrackTitle = (TextView) findViewById(R.id.tv_title);
+        }
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ChatRowTrack extends ChatRow {
 
     @Override
     protected void onSetUpView() {
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+        EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
         if (message.direct() == Message.Direct.RECEIVE) {
             //设置内容
             mChatTextView.setText(txtBody.getMessage());
@@ -73,6 +73,7 @@ public class ChatRowTrack extends ChatRow {
         if (visitorTrack == null) {
             return;
         }
+        mTrackTitle.setText(visitorTrack.getTitle());
         mTextViewDes.setText(visitorTrack.getDesc());
         mTextViewprice.setText(visitorTrack.getPrice());
         String imageUrl = visitorTrack.getImageUrl();

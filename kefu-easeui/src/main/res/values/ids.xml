@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="chat_menu_take_pic"/>
+	<item type="id" name="chat_menu_pic"/>
+	<item type="id" name="chat_menu_video"/>
+	<item type="id" name="chat_menu_file"/>
+</resources>

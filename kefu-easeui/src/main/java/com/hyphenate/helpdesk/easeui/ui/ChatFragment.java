@@ -108,6 +108,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     protected int[] itemdrawables = {R.drawable.hd_chat_takepic_selector, R.drawable.hd_chat_image_selector, R.drawable.hd_chat_video_selector, R.drawable.hd_chat_file_selector};
 
     protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_VIDEO, ITEM_FILE};
+    protected int[] itemResIds = {R.id.chat_menu_take_pic, R.id.chat_menu_pic, R.id.chat_menu_video, R.id.chat_menu_file};
     private boolean isMessageListInited;
     protected MyMenuItemClickListener extendMenuItemClickListener;
     private VisitorInfo visitorInfo;
@@ -156,7 +157,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         if (savedInstanceState != null){
             cameraFilePath = savedInstanceState.getString("cameraFilePath");
         }
-        ChatClient.getInstance().chatManager().bindChatUI(toChatUsername);
+        ChatClient.getInstance().chatManager().bindChat(toChatUsername);
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsResultAction() {
             @Override
             public void onGranted() {
@@ -169,6 +170,19 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             }
         });
         ChatClient.getInstance().chatManager().addAgentInputListener(agentInputListener);
+
+        // 为测试获取账号用，无实际意义
+        setUserNameView();
+    }
+
+    private void setUserNameView(){
+        if (ChatClient.getInstance().isLoggedInBefore()){
+            String currentUsername = ChatClient.getInstance().currentUserName();
+            TextView tvUname = (TextView) getView().findViewById(R.id.tv_username);
+            if (tvUname != null){
+                tvUname.setText(currentUsername);
+            }
+        }
     }
 
     /**
@@ -303,7 +317,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ChatClient.getInstance().chatManager().unBind();
+        ChatClient.getInstance().chatManager().unbindChat();
         ChatClient.getInstance().chatManager().removeAgentInputListener(agentInputListener);
         ChatClient.getInstance().chatManager().removeVisitorWaitListener(visitorWaitListener);
     }
@@ -313,7 +327,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      */
     protected void registerExtendMenuItem() {
         for (int i = 0; i < itemStrings.length; i++) {
-            inputMenu.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
+            inputMenu.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], itemResIds[i], extendMenuItemClickListener);
         }
     }
 
@@ -328,9 +342,9 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
                 String msgId = null;
                 if (msgs != null && msgs.size() > 0) {
-                    msgId = msgs.get(0).getMsgId();
+                    msgId = msgs.get(0).messageId();
                 }
-                conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
+                conversation.loadMessages(msgId, pagesize - msgCount);
             }
         }
 
@@ -375,7 +389,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                         if (!confirmed) {
                             return;
                         }
-                        ChatClient.getInstance().chatManager().reSendMessage(message);
+                        ChatClient.getInstance().chatManager().resendMessage(message);
                     }
                 }, true).show();
             }
@@ -407,10 +421,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
                     @Override
                     public void run() {
+                        if (getActivity() == null || getActivity().isFinishing()) {
+                            return;
+                        }
                         if (listView.getFirstVisiblePosition() == 0 && !isloading && haveMoreData) {
                             List<Message> messages = null;
                             try {
-                                messages = conversation.loadMoreMsgFromDB(messageList.getItem(0).getMsgId(),
+                                messages = conversation.loadMessages(messageList.getItem(0).messageId(),
                                         pagesize);
                             } catch (Exception e1) {
                                 swipeRefreshLayout.setRefreshing(false);
@@ -673,7 +690,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             return;
         }
         try{
-            File cameraFile = new File(PathUtil.getInstance().getImagePath(), ChatClient.getInstance().getCurrentUserName()
+            File cameraFile = new File(PathUtil.getInstance().getImagePath(), ChatClient.getInstance().currentUserName()
                     + System.currentTimeMillis() + ".jpg");
             cameraFilePath = cameraFile.getAbsolutePath();
             if (!cameraFile.getParentFile().exists()){
@@ -783,7 +800,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     public void onMessage(List<Message> msgs) {
         for (Message message : msgs) {
             String username = null;
-            username = message.getFrom();
+            username = message.from();
 
             // 如果是当前会话的消息，刷新聊天页面
             if (username != null && username.equals(toChatUsername)) {

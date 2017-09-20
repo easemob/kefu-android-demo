@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.easemob.helpdeskdemo.MessageHelper;
+import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.hyphenate.chat.ChatClient;
@@ -64,9 +64,9 @@ public class ConversationListFragment extends Fragment {
 				// 进入主页面
 				Intent intent = new IntentBuilder(getContext())
 						.setTargetClass(ChatActivity.class)
-						.setVisitorInfo(MessageHelper.createVisitorInfo())
+						.setVisitorInfo(DemoMessageHelper.createVisitorInfo())
 						.setServiceIMNumber(conversation.conversationId())
-						.setTitleName(conversation.getOfficialAccount().getName())
+						.setTitleName(conversation.officialAccount().getName())
 						.setShowUserNick(true)
 						.build();
 				startActivity(intent);
@@ -104,9 +104,9 @@ public class ConversationListFragment extends Fragment {
 			if (conversation == null){
 				return convertView;
 			}
-			if (conversation.getUnreadMsgCount() > 0){
+			if (conversation.unreadMessagesCount() > 0){
 				viewHolder.tvUnreadCount.setVisibility(View.VISIBLE);
-				viewHolder.tvUnreadCount.setText(String.valueOf(conversation.getUnreadMsgCount()));
+				viewHolder.tvUnreadCount.setText(String.valueOf(conversation.unreadMessagesCount()));
 			}else{
 				viewHolder.tvUnreadCount.setVisibility(View.GONE);
 			}
@@ -124,12 +124,12 @@ public class ConversationListFragment extends Fragment {
 				}else if (lastMessage.getType() == Message.Type.FILE){
 					viewHolder.tvMessage.setText(R.string.message_type_file);
 				}
-				viewHolder.tvTime.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+				viewHolder.tvTime.setText(DateUtils.getTimestampString(new Date(lastMessage.messageTime())));
 
 			}else{
 				viewHolder.tvMessage.setText("");
 			}
-			OfficialAccount officialAccount = conversation.getOfficialAccount();
+			OfficialAccount officialAccount = conversation.officialAccount();
 			if (officialAccount == null){
 				return convertView;
 			}
@@ -171,7 +171,7 @@ public class ConversationListFragment extends Fragment {
 			conversationList.clear();
 			for (String conversationId : allConversations.keySet()){
 				Conversation item = allConversations.get(conversationId);
-				if (item.getOfficialAccount() != null){
+				if (item.officialAccount() != null){
 					conversationList.add(item);
 				}
 			}
@@ -179,45 +179,25 @@ public class ConversationListFragment extends Fragment {
 	}
 
 	public String getTextMessageTitle(Message message){
-		if (com.hyphenate.helpdesk.model.MessageHelper.getEvalRequest(message) != null){
-			return getString(R.string.message_type_eval_request);
-		}
-		if (com.hyphenate.helpdesk.model.MessageHelper.getOrderInfo(message) != null){
-			return getString(R.string.message_type_order_info);
-		}
-		if (com.hyphenate.helpdesk.model.MessageHelper.getVisitorTrack(message) != null){
-			return getString(R.string.message_type_visitor_track);
-		}
-		if (checkFormChatRow(message)){
-			return getString(R.string.message_type_form);
-		}
-		if (com.hyphenate.helpdesk.model.MessageHelper.isArticlesMessage(message)){
-			return getString(R.string.message_type_articles);
-		}
-		if (com.hyphenate.helpdesk.model.MessageHelper.getRobotMenu(message) != null){
-			return getString(R.string.message_type_robot);
-		}
-		if (com.hyphenate.helpdesk.model.MessageHelper.getToCustomServiceInfo(message) != null){
-			return getString(R.string.message_type_tocs);
+		switch (com.hyphenate.helpdesk.model.MessageHelper.getMessageExtType(message)) {
+			case EvaluationMsg:
+				return getString(R.string.message_type_eval_request);
+			case OrderMsg:
+				return getString(R.string.message_type_order_info);
+			case TrackMsg:
+				return getString(R.string.message_type_visitor_track);
+			case FormMsg:
+				return getString(R.string.message_type_form);
+			case ArticlesMsg:
+				return getString(R.string.message_type_articles);
+			case RobotMenuMsg:
+				return getString(R.string.message_type_robot);
+			case ToCustomServiceMsg:
+				return getString(R.string.message_type_tocs);
 		}
 
-		EMTextMessageBody body = (EMTextMessageBody)message.getBody();
+		EMTextMessageBody body = (EMTextMessageBody)message.body();
 		return body.getMessage();
 	}
-
-	public boolean checkFormChatRow(Message message){
-		if (message.getStringAttribute("type", null) != null){
-			try {
-				String type = message.getStringAttribute("type");
-				if (type.equals("html/form")){
-					return true;
-				}
-			} catch (HyphenateException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-
 
 }

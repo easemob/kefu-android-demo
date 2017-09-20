@@ -52,7 +52,7 @@ public class ChatRowImage extends ChatRowFile{
 
     @Override
     protected void onSetUpView() {
-        imgBody = (EMImageMessageBody) message.getBody();
+        imgBody = (EMImageMessageBody) message.body();
         // 接收方向的消息
         if (message.direct() == Message.Direct.RECEIVE) {
             if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
@@ -101,7 +101,7 @@ public class ChatRowImage extends ChatRowFile{
             // The local full size pic does not exist yet.
             // ShowBigImage needs to download it from the server
             // first
-            intent.putExtra("messageId", message.getMsgId());
+            intent.putExtra("messageId", message.messageId());
             intent.putExtra("localUrl", imgBody.getLocalUrl());
         }
         context.startActivity(intent);
@@ -149,7 +149,7 @@ public class ChatRowImage extends ChatRowFile{
                         iv.setImageBitmap(image);
                         ImageCache.getInstance().put(thumbernailPath, image);
                     } else {
-                        EMImageMessageBody imageBody = (EMImageMessageBody) message.getBody();
+                        EMImageMessageBody imageBody = (EMImageMessageBody) message.body();
                         if (imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
                                 || imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
 

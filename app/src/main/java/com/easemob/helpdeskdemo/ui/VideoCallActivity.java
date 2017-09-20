@@ -93,7 +93,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 	private String getSelfNick(){
 		String nickName = Preferences.getInstance().getNickName();
 		if (TextUtils.isEmpty(nickName)){
-			nickName = ChatClient.getInstance().getCurrentUserName();
+			nickName = ChatClient.getInstance().currentUserName();
 		}
 		return nickName;
 	}
@@ -312,12 +312,17 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 
 	}
 
+	private boolean firstChanged = true;
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		ViewGroup.LayoutParams layoutParams = bottomRelativeLayout.getLayoutParams();
-		layoutParams.height = rootLayout.getHeight() - multiVideoView.getHeight();
-		bottomRelativeLayout.setLayoutParams(layoutParams);
+		if (firstChanged){
+			firstChanged = false;
+			ViewGroup.LayoutParams layoutParams = bottomRelativeLayout.getLayoutParams();
+			layoutParams.height = rootLayout.getHeight() - multiVideoView.getHeight();
+			bottomRelativeLayout.setLayoutParams(layoutParams);
+		}
 	}
 
 
@@ -434,6 +439,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 			}
 		});
 	}
+
 
 	public static class StreamItem {
 		 CustomVideoView videoView;

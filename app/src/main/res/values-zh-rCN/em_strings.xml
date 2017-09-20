@@ -81,6 +81,7 @@
     <string name="please_wait_noti">请等待…</string>
     <string name="send_suc">发送成功</string>
     <string name="app_key_cannot_be_empty">appkey不能为空, 设置失败!</string>
+    <string name="cus_account_cannot_be_empty">IM服务号不能为空, 设置失败!</string>
     <string name="app_key_format_wrong">appkey格式不正确，设置失败!</string>
     <string name="app_key_modify_fail">修改appkey失败!</string>
     <string name="short_cut_msg">常用语</string>
