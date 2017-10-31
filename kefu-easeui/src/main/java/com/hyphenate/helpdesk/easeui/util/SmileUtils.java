@@ -7,7 +7,7 @@ import android.text.style.ImageSpan;
 
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.emojicon.DefaultEmojiconDatas;
-import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 
 import java.io.File;
 import java.util.HashMap;

@@ -5,11 +5,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +61,17 @@ public class EmojiconMenu extends EmojiconMenuBase{
 
     }
 
-    public void init(List<EmojiconGroupEntity> groupEntities){
+    public synchronized void init(List<EmojiconGroupEntity> groupEntities){
         if(groupEntities == null || groupEntities.size() == 0){
             return;
         }
         for(EmojiconGroupEntity groupEntity : groupEntities){
             emojiconGroupList.add(groupEntity);
-            tabBar.addTab(groupEntity.getIcon());
+            if (TextUtils.isEmpty(groupEntity.getName())) {
+                tabBar.addTab(groupEntity.getIcon());
+            } else {
+                tabBar.addTab(groupEntity.getName());
+            }
         }
 
         pagerView.setPagerViewListener(new EmojiconPagerViewListener());
@@ -86,34 +92,41 @@ public class EmojiconMenu extends EmojiconMenuBase{
      * 添加表情组
      * @param groupEntity
      */
-    public void addEmojiconGroup(EmojiconGroupEntity groupEntity){
+    public synchronized void addEmojiconGroup(EmojiconGroupEntity groupEntity){
         emojiconGroupList.add(groupEntity);
         pagerView.addEmojiconGroup(groupEntity, true);
-        tabBar.addTab(groupEntity.getIcon());
+        if (TextUtils.isEmpty(groupEntity.getName())) {
+            tabBar.addTab(groupEntity.getIcon());
+        } else {
+            tabBar.addTab(groupEntity.getName());
+        }
     }
 
     /**
      * 添加一系列表情组
      * @param groupEntitieList
      */
-    public void addEmojiconGroup(List<EmojiconGroupEntity> groupEntitieList){
+    public synchronized void addEmojiconGroup(List<EmojiconGroupEntity> groupEntitieList){
         for(int i= 0; i < groupEntitieList.size(); i++){
             EmojiconGroupEntity groupEntity = groupEntitieList.get(i);
             emojiconGroupList.add(groupEntity);
             pagerView.addEmojiconGroup(groupEntity, i == groupEntitieList.size()-1 ? true : false);
-            tabBar.addTab(groupEntity.getIcon());
+            if (TextUtils.isEmpty(groupEntity.getName())) {
+                tabBar.addTab(groupEntity.getIcon());
+            } else {
+                tabBar.addTab(groupEntity.getName());
+            }
         }
 
     }
 
     /**
-     * 移除表情组
-     * @param position
+     * 移除全部表情组
      */
-    public void removeEmojiconGroup(int position){
-        emojiconGroupList.remove(position);
-        pagerView.removeEmojiconGroup(position);
-        tabBar.removeTab(position);
+    public synchronized void removeAllEmojiconGroup() {
+        emojiconGroupList.clear();
+        pagerView.removeAllEmojiconGroup();
+        tabBar.removeAllTab();
     }
 
     public void setTabBarVisibility(boolean isVisible){

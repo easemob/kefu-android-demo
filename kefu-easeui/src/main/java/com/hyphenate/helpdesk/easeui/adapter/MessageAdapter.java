@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,14 @@ import android.widget.ListView;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
+import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowArticle;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowBigExpression;
+import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowCustomEmoji;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowFile;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowImage;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowRobotMenu;
@@ -27,7 +30,9 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferToKefu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.util.EMLog;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,10 +63,12 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_SENT_TRANSFER_TO_KEFU = 14;
 	private static final int MESSAGE_TYPE_RECV_TRANSFER_TO_KEFU = 15;
 	private static final int MESSAGE_TYPE_RECV_ARTICLES = 16;
+	private static final int MESSAGE_TYPE_RECV_CUSTOMEMOJI = 17;
+	private static final int MESSAGE_TYPE_SENT_CUSTOMEMOJI = 18;
 
 
 
-	private static final int MESSAGE_TYPE_COUNT = 17;
+	private static final int MESSAGE_TYPE_COUNT = 19;
 	
 	
 	// reference to conversation object in chatsdk
@@ -231,6 +238,9 @@ public class MessageAdapter extends BaseAdapter {
 					//大表情消息
 					return message.direct() == Message.Direct.RECEIVE ?
 							MESSAGE_TYPE_RECV_EXPRESSION : MESSAGE_TYPE_SENT_EXPRESSION;
+				case CustomEmojiMsg:
+					return message.direct() == Message.Direct.RECEIVE ?
+							MESSAGE_TYPE_RECV_CUSTOMEMOJI : MESSAGE_TYPE_SENT_CUSTOMEMOJI;
 				default:
 					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 			}
@@ -270,6 +280,9 @@ public class MessageAdapter extends BaseAdapter {
 		        	break;
 		        case BigExpressionMsg:
 			        chatRow = new ChatRowBigExpression(context, message, position, this);
+			        break;
+		        case CustomEmojiMsg:
+			        chatRow = new ChatRowCustomEmoji(context, message, position, this);
 			        break;
 		        default:
 			        chatRow = new ChatRowText(context, message, position, this);

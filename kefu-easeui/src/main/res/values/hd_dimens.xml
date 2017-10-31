@@ -56,4 +56,5 @@
 	<dimen name="title_back_btn_layout_width">39dp</dimen>
 	<dimen name="image_thumbnail_size">100dp</dimen>
 	<dimen name="image_thumbnail_spacing">1dp</dimen>
+	<dimen name="custom_emoji_default_wh">100dp</dimen>
 </resources>

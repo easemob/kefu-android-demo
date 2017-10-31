@@ -13,6 +13,7 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.adapter.EmojiconGridAdapter;
 import com.hyphenate.helpdesk.easeui.adapter.EmojiconPagerAdapter;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,12 +179,9 @@ public class EmojiconPagerView extends ViewPager {
 
     /**
      * 移除表情组
-     * @param position
      */
-    public void removeEmojiconGroup(int position){
-        if(position > groupEntities.size() - 1){
-            return;
-        }
+    public void removeAllEmojiconGroup(){
+        viewpages.clear();
         if(pagerAdapter != null){
             pagerAdapter.notifyDataSetChanged();
         }

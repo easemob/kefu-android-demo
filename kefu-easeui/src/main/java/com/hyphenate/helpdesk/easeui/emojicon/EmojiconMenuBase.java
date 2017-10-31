@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.hyphenate.helpdesk.emojicon.Emojicon;
+
 public class EmojiconMenuBase extends LinearLayout {
     protected EaseEmojiconMenuListener listener;
 

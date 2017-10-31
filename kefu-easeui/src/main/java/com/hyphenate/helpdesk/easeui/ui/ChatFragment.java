@@ -39,7 +39,7 @@ import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.UIProvider;
-import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
@@ -53,6 +53,7 @@ import com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu.ChatInputMenuListe
 import com.hyphenate.helpdesk.easeui.widget.ExtendMenu.EaseChatExtendMenuItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
+import com.hyphenate.helpdesk.manager.EmojiconManager;
 import com.hyphenate.helpdesk.model.AgentIdentityInfo;
 import com.hyphenate.helpdesk.model.QueueIdentityInfo;
 import com.hyphenate.helpdesk.model.VisitorInfo;
@@ -68,7 +69,7 @@ import java.util.List;
  * app也可继承此fragment续写
  * 参数传入示例可查看demo里的ChatActivity
  */
-public class ChatFragment extends BaseFragment implements ChatManager.MessageListener {
+public class ChatFragment extends BaseFragment implements ChatManager.MessageListener, EmojiconManager.EmojiconManagerDelegate {
 
     protected static final String TAG = ChatFragment.class.getSimpleName();
     private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
@@ -130,6 +131,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             }
             ft.commit();
         }
+        ChatClient.getInstance().emojiconManager().addDelegate(this);
     }
 
     @Override
@@ -210,8 +212,15 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
             @Override
             public void onBigExpressionClicked(Emojicon emojicon) {
-                //发送大表情(动态表情) 暂不支持,后期支持后添加接口
-
+	            if (!TextUtils.isEmpty(emojicon.getBigIconRemotePath())) {
+                    sendCustomEmojiMessage(emojicon.getBigIconRemotePath());
+                } else if (!TextUtils.isEmpty(emojicon.getIconRemotePath())) {
+                    sendCustomEmojiMessage(emojicon.getIconRemotePath());
+                } else if (!TextUtils.isEmpty(emojicon.getBigIconPath())) {
+		            sendImageMessage(emojicon.getBigIconPath());
+	            } else if (!TextUtils.isEmpty(emojicon.getIconPath())) {
+                    sendImageMessage(emojicon.getIconPath());
+	            }
             }
 
             @Override
@@ -313,6 +322,11 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         setRefreshLayoutListener();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ChatClient.getInstance().emojiconManager().removeDelegate(this);
+    }
 
     @Override
     public void onDestroyView() {
@@ -520,6 +534,19 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     public void onBackPressed() {
         inputMenu.onBackPressed();
+    }
+
+    @Override
+    public void onEmojiconChanged() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), R.string.emoji_icon_update, Toast.LENGTH_SHORT).show();
+                if (inputMenu != null) {
+                    inputMenu.onEmojiconChanged();
+                }
+            }
+        });
     }
 
     /**
@@ -866,28 +893,40 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         Message message = Message.createImageSendMessage(imagePath, false, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
-        messageList.refreshSelectLast();
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
+    }
+
+    protected void sendCustomEmojiMessage(String imagePath) {
+        if (TextUtils.isEmpty(imagePath)){
+            return;
+        }
+
+        Message message = Message.createCustomEmojiSendMessage(imagePath, toChatUsername);
+        message.setMessageTime(System.currentTimeMillis());
+        attachMessageAttrs(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
     protected void sendFileMessage(String filePath) {
         Message message = Message.createFileSendMessage(filePath, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
-        messageList.refreshSelectLast();
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress, String toChatUsername){
         Message message = Message.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
-        messageList.refreshSelectLast();
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
     protected void sendVideoMessage(String videoPath, String thumbPath, int videoLength) {
         Message message = Message.createVideoSendMessage(videoPath, thumbPath, videoLength, toChatUsername);
         attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
-        messageList.refreshSelectLast();
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
 

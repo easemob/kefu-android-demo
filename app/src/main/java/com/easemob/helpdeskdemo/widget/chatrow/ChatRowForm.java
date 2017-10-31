@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 public class ChatRowForm extends ChatRow {
 
+    private TextView titleView;
     private TextView contentView;
     private String targetUrl;
 
@@ -43,7 +44,8 @@ public class ChatRowForm extends ChatRow {
 
     @Override
     protected void onFindViewById() {
-        contentView = (TextView) findViewById(R.id.tv_chatcontent);
+        titleView = (TextView) findViewById(R.id.tv_form_title);
+        contentView = (TextView) findViewById(R.id.tv_form_content);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class ChatRowForm extends ChatRow {
         if (message.direct() == Message.Direct.RECEIVE){
             FormInfo formInfo = MessageHelper.getFormMessage(message);
             targetUrl = formInfo.getTargetUrl();
+            titleView.setText(formInfo.getTitle());
             contentView.setText(formInfo.getDescription());
         }
         handleTextMessage();

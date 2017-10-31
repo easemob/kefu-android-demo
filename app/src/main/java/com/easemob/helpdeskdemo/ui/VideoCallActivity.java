@@ -119,7 +119,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 							openSpeakerOn();
 							bottomRelativeLayout.startChronometer();
 							bottomRelativeLayout.setCallStateText(getString(R.string.tip_multi_video_calling));
-							ChatClient.getInstance().callManager().acceptCall(new com.hyphenate.helpdesk.callback.Callback() {
+							ChatClient.getInstance().callManager().acceptCall(getSelfNick(), new com.hyphenate.helpdesk.callback.Callback() {
 								@Override
 								public void onSuccess() {
 									runOnUiThread(new Runnable() {

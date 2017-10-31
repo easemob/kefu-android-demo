@@ -92,4 +92,6 @@
     <string name="date_day">day</string>
 	<string name="chat_row_article_view_all">CLick to view full article</string>
 	<string name="chat_row_new_picture_title">I am focus at it.</string>
+	<string name="emojicon_text_default">Default</string>
+	<string name="emoji_icon_update">Emoji icon update.</string>
 </resources>

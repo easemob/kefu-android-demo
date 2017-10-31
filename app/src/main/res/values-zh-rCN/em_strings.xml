@@ -164,6 +164,7 @@
     <string name="message_type_video">[视频]</string>
     <string name="message_type_location">[位置]</string>
     <string name="message_type_file">[文件]</string>
+    <string name="message_type_image">[图片]</string>
     <string name="message_type_eval_request">[满意度邀请]</string>
     <string name="message_type_order_info">[订单消息]</string>
     <string name="message_type_visitor_track">[轨迹消息]</string>
@@ -171,6 +172,7 @@
     <string name="message_type_articles">[图文混排消息]</string>
     <string name="message_type_robot">[机器人菜单消息]</string>
     <string name="message_type_tocs">[转人工消息]</string>
+    <string name="message_type_custom_emoji">[自定义表情]</string>
     <string name="no_selected_tag_noti">最少选择一个标签！</string>
     <string name="video_call_pause">视频暂停</string>
     <string name="video_call_resume">视频继续</string>

@@ -11,7 +11,7 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.Constant;
 import com.hyphenate.helpdesk.easeui.UIProvider;
-import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 
 /**
  * 大表情(动态表情)

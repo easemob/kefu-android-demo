@@ -36,38 +36,51 @@
             android:background="@drawable/hd_chatfrom_bg"
             >
             <LinearLayout
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chat_row_form_title"
-                    android:layout_margin="5dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    />
-                <View style="@style/line_e3e9e9"/>
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_form_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:maxWidth="200dp"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:textColor="@android:color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_form_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:maxLines="3"
+                            android:ellipsize="end"
+                            android:maxWidth="200dp"
+                            android:textColor="@android:color/darker_gray"
+                            />
+                    </LinearLayout>
+
                     <ImageView
                         android:layout_margin="5dp"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/icon_form"/>
-                    <TextView
-                        android:id="@+id/tv_chatcontent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        />
                 </LinearLayout>
 
             </LinearLayout>

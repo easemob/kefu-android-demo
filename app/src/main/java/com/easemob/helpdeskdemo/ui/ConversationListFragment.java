@@ -24,7 +24,6 @@ import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.OfficialAccount;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.util.DateUtils;
@@ -123,6 +122,8 @@ public class ConversationListFragment extends Fragment {
 					viewHolder.tvMessage.setText(R.string.message_type_location);
 				}else if (lastMessage.getType() == Message.Type.FILE){
 					viewHolder.tvMessage.setText(R.string.message_type_file);
+				}else if (lastMessage.getType() == Message.Type.IMAGE){
+					viewHolder.tvMessage.setText(R.string.message_type_image);
 				}
 				viewHolder.tvTime.setText(DateUtils.getTimestampString(new Date(lastMessage.messageTime())));
 
@@ -194,6 +195,8 @@ public class ConversationListFragment extends Fragment {
 				return getString(R.string.message_type_robot);
 			case ToCustomServiceMsg:
 				return getString(R.string.message_type_tocs);
+			case CustomEmojiMsg:
+				return getString(R.string.message_type_custom_emoji);
 		}
 
 		EMTextMessageBody body = (EMTextMessageBody)message.body();

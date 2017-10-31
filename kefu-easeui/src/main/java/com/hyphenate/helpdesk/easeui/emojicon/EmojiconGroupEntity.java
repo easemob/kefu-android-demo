@@ -1,6 +1,9 @@
 package com.hyphenate.helpdesk.easeui.emojicon;
 
 
+import com.hyphenate.helpdesk.emojicon.Emojicon;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +43,9 @@ public class EmojiconGroupEntity {
     }
 
     public List<Emojicon> getEmojiconList() {
+        if (emojiconList == null) {
+            emojiconList = new ArrayList<>();
+        }
         return emojiconList;
     }
     public void setEmojiconList(List<Emojicon> emojiconList) {

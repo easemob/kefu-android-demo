@@ -28,6 +28,7 @@
     <com.hyphenate.helpdesk.easeui.emojicon.EmojiconScrollTabBar
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:paddingRight="60dp"
         android:id="@+id/tab_bar"
          />
     
