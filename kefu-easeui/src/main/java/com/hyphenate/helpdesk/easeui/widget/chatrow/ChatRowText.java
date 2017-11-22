@@ -35,7 +35,7 @@ public class ChatRowText extends ChatRow{
 
     @Override
     public void onSetUpView() {
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+        EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
         Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
         // 设置内容
         contentView.setText(span, TextView.BufferType.SPANNABLE);
@@ -47,7 +47,7 @@ public class ChatRowText extends ChatRow{
         boolean isShowProgress = UIProvider.getInstance().isShowProgress();
         if (message.direct() == Message.Direct.SEND) {
             setMessageSendCallback();
-            switch (message.getStatus()) {
+            switch (message.status()) {
                 case CREATE:
                     progressBar.setVisibility(View.GONE);
                     statusView.setVisibility(View.VISIBLE);

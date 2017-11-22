@@ -35,13 +35,13 @@ public class ChatRowLocation extends ChatRow {
 
     @Override
     protected void onSetUpView() {
-        locBody = (EMLocationMessageBody) message.getBody();
+        locBody = (EMLocationMessageBody) message.body();
         locationView.setText(locBody.getAddress());
 
         // deal with send message
         if (message.direct() == Message.Direct.SEND) {
             setMessageSendCallback();
-            switch (message.getStatus()) {
+            switch (message.status()) {
                 case CREATE:
                     progressBar.setVisibility(View.GONE);
                     statusView.setVisibility(View.VISIBLE);

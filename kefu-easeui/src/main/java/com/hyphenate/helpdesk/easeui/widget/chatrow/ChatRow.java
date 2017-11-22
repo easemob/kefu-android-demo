@@ -102,15 +102,15 @@ public abstract class ChatRow extends LinearLayout {
         TextView timestamp = (TextView) findViewById(R.id.timestamp);
         if (timestamp != null) {
             if (position == 0) {
-                timestamp.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
+                timestamp.setText(DateUtils.getTimestampString(new Date(message.messageTime())));
                 timestamp.setVisibility(View.VISIBLE);
             } else {
                 // 两条消息时间离得如果稍长，显示时间
                 Message prevMessage = (Message) adapter.getItem(position - 1);
-                if (prevMessage != null && DateUtils.isCloseEnough(message.getMsgTime(), prevMessage.getMsgTime())) {
+                if (prevMessage != null && DateUtils.isCloseEnough(message.messageTime(), prevMessage.messageTime())) {
                     timestamp.setVisibility(View.GONE);
                 } else {
-                    timestamp.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
+                    timestamp.setText(DateUtils.getTimestampString(new Date(message.messageTime())));
                     timestamp.setVisibility(View.VISIBLE);
                 }
             }
@@ -276,9 +276,9 @@ public abstract class ChatRow extends LinearLayout {
                 public void onClick(View v) {
                     if (itemClickListener != null) {
                         if (message.direct() == Message.Direct.SEND) {
-                            itemClickListener.onUserAvatarClick(ChatClient.getInstance().getCurrentUserName());
+                            itemClickListener.onUserAvatarClick(ChatClient.getInstance().currentUserName());
                         } else {
-                            itemClickListener.onUserAvatarClick(message.getFrom());
+                            itemClickListener.onUserAvatarClick(message.from());
                         }
                     }
                 }
@@ -291,8 +291,8 @@ public abstract class ChatRow extends LinearLayout {
     protected void updateView() {
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                if (message.getStatus() == Message.Status.FAIL) {
-                    if (message.getError() == Error.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                if (message.status() == Message.Status.FAIL) {
+                    if (message.error() == Error.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
                         Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();

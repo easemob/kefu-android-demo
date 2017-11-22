@@ -3,7 +3,6 @@ package com.hyphenate.helpdesk.easeui.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,14 +10,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.EMVideoMessageBody;
+import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.PathUtil;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 展示视频内容
@@ -40,26 +39,17 @@ public class ShowVideoActivity extends BaseActivity {
         setContentView(R.layout.hd_showvideo_activity);
         loadingLayout = (RelativeLayout) findViewById(R.id.loading_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        localFilePath = getIntent().getStringExtra("localpath");
-        String remotepath = getIntent().getStringExtra("remotepath");
-        String secret = getIntent().getStringExtra("secret");
-        Log.d(TAG, "show video view file:" + localFilePath
-                + " remotepath:" + remotepath + " secret:" + secret);
+        final Message message = getIntent().getParcelableExtra("msg");
+        EMVideoMessageBody messageBody = (EMVideoMessageBody)message.body();
+        localFilePath = messageBody.getLocalUrl();
         if (localFilePath != null && new File(localFilePath).exists()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(new File(localFilePath)),
                     "video/mp4");
             startActivity(intent);
             finish();
-        } else if (!TextUtils.isEmpty(remotepath) && !remotepath.equals("null")) {
-            Log.d(TAG, "download remote video file");
-            Map<String, String> maps = new HashMap<String, String>();
-            if (!TextUtils.isEmpty(secret)) {
-                maps.put("share-secret", secret);
-            }
-            downloadVideo(remotepath, maps);
         } else {
-
+            downloadVideo(message);
         }
     }
 
@@ -93,19 +83,9 @@ public class ShowVideoActivity extends BaseActivity {
     /**
      * 下载视频文件
      */
-    private void downloadVideo(final String remoteUrl,
-                               final Map<String, String> header) {
-
-        if (TextUtils.isEmpty(localFilePath)) {
-            localFilePath = getLocalFilePath(remoteUrl);
-        }
-        if (new File(localFilePath).exists()) {
-            showLocalVideo(localFilePath);
-            return;
-        }
+    private void downloadVideo(final Message message) {
         loadingLayout.setVisibility(View.VISIBLE);
-
-        Callback callback = new Callback() {
+	    message.setMessageStatusCallback(new Callback() {
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
@@ -132,15 +112,14 @@ public class ShowVideoActivity extends BaseActivity {
             public void onProgress(final int progress, String status) {
                 Log.d(TAG, "video progress:" + progress);
                 runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
                         progressBar.setProgress(progress);
                     }
                 });
             }
-        };
-        ChatClient.getInstance().chatManager().downloadFile(remoteUrl, localFilePath, header, callback);
+        });
+        ChatClient.getInstance().chatManager().downloadAttachment(message);
     }
 
     @Override

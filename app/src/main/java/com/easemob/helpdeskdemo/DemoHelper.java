@@ -25,6 +25,7 @@ import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.model.AgentInfo;
+import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.util.Log;
 
 import org.json.JSONObject;
@@ -75,13 +76,13 @@ public class DemoHelper {
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
 
-//        options.setKefuServerAddress("https://sandbox.kefu.easemob.com");
+//        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
+
+	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
+	    options.setConsoleLog(true);
+
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
-
-            //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
-            ChatClient.getInstance().setDebugMode(true);
-
             _uiProvider = UIProvider.getInstance();
             //初始化EaseUI
             _uiProvider.init(context);
@@ -103,9 +104,9 @@ public class DemoHelper {
                 if (message.direct() == Message.Direct.RECEIVE) {
                     //设置接收方的昵称和头像
 //                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
-                    AgentInfo agentInfo = com.hyphenate.helpdesk.model.MessageHelper.getAgentInfo(message);
+                    AgentInfo agentInfo = MessageHelper.getAgentInfo(message);
                     if (usernickView != null){
-                        usernickView.setText(message.getFrom());
+                        usernickView.setText(message.from());
                         if (agentInfo != null){
                             if (!TextUtils.isEmpty(agentInfo.getNickname())) {
                                 usernickView.setText(agentInfo.getNickname());
@@ -162,7 +163,7 @@ public class DemoHelper {
                 if (message.getType() == Message.Type.TXT) {
                     ticker = ticker.replaceAll("\\[.{2,3}\\]", context.getString(R.string.noti_text_expression));
                 }
-                return message.getFrom() + ": " + ticker;
+                return message.from() + ": " + ticker;
             }
 
             @Override
@@ -178,15 +179,15 @@ public class DemoHelper {
                     intent = new Intent(context, VideoCallActivity.class);
                 }else{
                     //设置点击通知栏跳转事件
-                    Conversation conversation = ChatClient.getInstance().chatManager().getConversation(message.getFrom());
+                    Conversation conversation = ChatClient.getInstance().chatManager().getConversation(message.from());
                     String titleName = null;
-                    if (conversation.getOfficialAccount() != null){
-                        titleName = conversation.getOfficialAccount().getName();
+                    if (conversation.officialAccount() != null){
+                        titleName = conversation.officialAccount().getName();
                     }
                     intent = new IntentBuilder(context)
                             .setTargetClass(ChatActivity.class)
                             .setServiceIMNumber(conversation.conversationId())
-                            .setVisitorInfo(MessageHelper.createVisitorInfo())
+                            .setVisitorInfo(DemoMessageHelper.createVisitorInfo())
                             .setTitleName(titleName)
                             .setShowUserNick(true)
                             .build();
@@ -286,10 +287,10 @@ public class DemoHelper {
             @Override
             public void onMessage(List<Message> msgs) {
                 for (Message message : msgs){
-                    Log.d(TAG, "onMessageReceived id : " + message.getMsgId());
+                    Log.d(TAG, "onMessageReceived id : " + message.messageId());
 //
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现
-                    if (message.isNotificationMessage()){
+                    if (MessageHelper.isNotificationMessage(message)){
                         // 检测是否为留言的通知消息
                         String eventName = getEventNameByNotification(message);
                         if (!TextUtils.isEmpty(eventName)){
@@ -312,7 +313,7 @@ public class DemoHelper {
                 for (Message message : msgs){
                     Log.d(TAG, "收到透传消息");
                     //获取消息body
-                    EMCmdMessageBody cmdMessageBody = (EMCmdMessageBody) message.getBody();
+                    EMCmdMessageBody cmdMessageBody = (EMCmdMessageBody) message.body();
                     String action = cmdMessageBody.action(); //获取自定义action
                     Log.d(TAG, String.format("透传消息: action:%s,message:%s", action, message.toString()));
                 }

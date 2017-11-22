@@ -47,7 +47,7 @@ public class ChatRowFile extends ChatRow{
 
     @Override
     protected void onSetUpView() {
-        fileMessageBody = (EMNormalFileMessageBody) message.getBody();
+        fileMessageBody = (EMNormalFileMessageBody) message.body();
         String filePath = fileMessageBody.getLocalUrl();
         fileNameView.setText(fileMessageBody.getFileName());
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
@@ -70,7 +70,7 @@ public class ChatRowFile extends ChatRow{
      */
     protected void handleSendMessage() {
         setMessageSendCallback();
-        switch (message.getStatus()) {
+        switch (message.status()) {
             case SUCCESS:
                 progressBar.setVisibility(View.GONE);
                 if(percentageView != null)
@@ -126,7 +126,7 @@ public class ChatRowFile extends ChatRow{
         } else {
             // 下载
 //            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));
-            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("messageId", message.getMsgId()));
+            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("messageId", message.messageId()));
         }
 
     }

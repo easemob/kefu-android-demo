@@ -17,6 +17,8 @@ import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
+import com.hyphenate.helpdesk.model.FormInfo;
+import com.hyphenate.helpdesk.model.MessageHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 
 public class ChatRowForm extends ChatRow {
 
+    private TextView titleView;
     private TextView contentView;
     private String targetUrl;
 
@@ -41,7 +44,8 @@ public class ChatRowForm extends ChatRow {
 
     @Override
     protected void onFindViewById() {
-        contentView = (TextView) findViewById(R.id.tv_chatcontent);
+        titleView = (TextView) findViewById(R.id.tv_form_title);
+        contentView = (TextView) findViewById(R.id.tv_form_content);
     }
 
     @Override
@@ -55,23 +59,16 @@ public class ChatRowForm extends ChatRow {
 
     @Override
     protected void onSetUpView() {
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+        EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
 
         Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
         // 设置内容
 //        contentView.setText(span, TextView.BufferType.SPANNABLE);
         if (message.direct() == Message.Direct.RECEIVE){
-            try {
-                JSONObject jsonMsgType = message.getJSONObjectAttribute("msgtype");
-                JSONObject jsonHtml = jsonMsgType.getJSONObject("html");
-                targetUrl = jsonHtml.getString("url");
-                String desc = jsonHtml.getString("desc");
-                contentView.setText(desc);
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            FormInfo formInfo = MessageHelper.getFormMessage(message);
+            targetUrl = formInfo.getTargetUrl();
+            titleView.setText(formInfo.getTitle());
+            contentView.setText(formInfo.getDescription());
         }
         handleTextMessage();
 
@@ -82,7 +79,7 @@ public class ChatRowForm extends ChatRow {
         boolean isShowProgress = UIProvider.getInstance().isShowProgress();
         if (message.direct() == Message.Direct.SEND) {
             setMessageSendCallback();
-            switch (message.getStatus()) {
+            switch (message.status()) {
                 case CREATE:
                     progressBar.setVisibility(View.GONE);
                     statusView.setVisibility(View.VISIBLE);

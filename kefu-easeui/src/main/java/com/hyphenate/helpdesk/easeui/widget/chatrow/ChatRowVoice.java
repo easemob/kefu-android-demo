@@ -55,7 +55,7 @@ public class ChatRowVoice extends ChatRowFile{
 
     @Override
     protected void onSetUpView() {
-        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
+        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.body();
         int len = voiceBody.getLength();
         if(len>0){
             voiceLengthView.setText(voiceBody.getLength() + "\"");
@@ -96,7 +96,7 @@ public class ChatRowVoice extends ChatRowFile{
 
     @Override
     protected void onBubbleClick() {
-        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
+        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.body();
         if (message.direct() == Message.Direct.SEND){
             playVoice(bubbleLayout, voiceBody.getLocalUrl(), true);
         }else{
@@ -158,7 +158,6 @@ public class ChatRowVoice extends ChatRowFile{
             ((MessageAdapter)adapter).animView.setBackgroundResource(R.drawable.hd_voice_from_icon);
             if (!message.isListened()){
                 readStatusView.setVisibility(View.GONE);
-                message.setListened(true);
                 ChatClient.getInstance().chatManager().setMessageListened(message);
             }
         }

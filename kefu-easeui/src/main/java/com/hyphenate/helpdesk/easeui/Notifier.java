@@ -159,7 +159,7 @@ public class Notifier {
         for(Message message : messages){
             if(!isForeground){
                 notificationNum++;
-                fromUsers.add(message.getFrom());
+                fromUsers.add(message.from());
             }
         }
         sendNotification(messages.get(messages.size()-1), isForeground, false);
@@ -175,7 +175,7 @@ public class Notifier {
      * @param message
      */
     protected void sendNotification(Message message, boolean isForeground, boolean numIncrease) {
-        String username = message.getFrom();
+        String username = message.from();
         if (Locale.getDefault().getLanguage().contains("zh")) {
             msgs = msg_ch;
         } else {
@@ -246,7 +246,7 @@ public class Notifier {
                 // prepare latest event info section
                 if(!isForeground){
                     notificationNum++;
-                    fromUsers.add(message.getFrom());
+                    fromUsers.add(message.from());
                 }
             }
 

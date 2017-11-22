@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hyphenate.chat.ChatClient;
-import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
@@ -30,11 +29,8 @@ public class ChatRowTransferToKefu extends ChatRow {
 
     @Override
     protected void onInflatView() {
-        if (MessageHelper.getToCustomServiceInfo(message) != null){
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_transfertokefu
-                    : R.layout.hd_row_sent_transfertokefu, this);
-        }
-
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.hd_row_received_transfertokefu
+                : R.layout.hd_row_sent_transfertokefu, this);
     }
 
     @Override
@@ -53,7 +49,7 @@ public class ChatRowTransferToKefu extends ChatRow {
     protected void onSetUpView() {
         final ToCustomServiceInfo toCustomServiceInfo;
         if ((toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message)) != null){
-            EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+            EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
             Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
             // 设置内容
             tvContent.setText(span, TextView.BufferType.SPANNABLE);
@@ -75,41 +71,8 @@ public class ChatRowTransferToKefu extends ChatRow {
         if (TextUtils.isEmpty(info.getId()) || TextUtils.isEmpty(info.getServiceSessionId())){
             return;
         }
-        Message cmdMessage = Message.createSendMessage(Message.Type.CMD);
-        cmdMessage.setTo(message.getFrom());
-        EMCmdMessageBody cmdMessageBody = new EMCmdMessageBody("TransferToKf");
-        cmdMessage.addBody(cmdMessageBody);
-        cmdMessage.addContent(info);
-//        cmdMessage.setMessageStatusCallback(new Callback() {
-//            @Override
-//            public void onSuccess() {
-//                activity.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(activity, "发送成功!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onError(int i, String s) {
-//                activity.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(activity, "发送失败!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//            }
-//
-//            @Override
-//            public void onProgress(int i, String s) {
-//
-//            }
-//        });
-        ChatClient.getInstance().chatManager().sendMessage(cmdMessage);
 
-
+        ChatClient.getInstance().chatManager().sendMessage(Message.createTranferToKefuMessage(message.from(), info));
     }
 
 

@@ -2,6 +2,7 @@ package com.hyphenate.helpdesk.easeui.emojicon;
 
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 
 public class DefaultEmojiconDatas {
 

@@ -9,6 +9,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.util.DensityUtil;
@@ -22,7 +23,7 @@ public class EmojiconScrollTabBar extends RelativeLayout{
     private HorizontalScrollView scrollView;
     private LinearLayout tabContainer;
     
-    private List<ImageView> tabList = new ArrayList<ImageView>();
+    private List<View> tabList = new ArrayList<>();
     private EaseScrollTabBarItemClickListener itemClickListener;
     
     private int tabWidth = 60;
@@ -47,7 +48,31 @@ public class EmojiconScrollTabBar extends RelativeLayout{
         scrollView = (HorizontalScrollView) findViewById(R.id.scroll_view);
         tabContainer = (LinearLayout) findViewById(R.id.tab_container);
     }
-    
+
+    /**
+     * 添加tab
+     * @param content
+     */
+    public void addTab(String content) {
+        View tabView = View.inflate(context, R.layout.hd_scroll_tab_text_item, null);
+        TextView textView = (TextView) tabView.findViewById(R.id.tv_text);
+        textView.setText(content);
+        LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, tabWidth), LayoutParams.MATCH_PARENT);
+        textView.setLayoutParams(imgParams);
+        tabContainer.addView(tabView);
+        tabList.add(textView);
+        final int position = tabList.size() -1;
+        textView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(itemClickListener != null){
+                    itemClickListener.onItemClick(position);
+                }
+            }
+        });
+    }
+
     /**
      * 添加tab
      * @param icon
@@ -80,7 +105,12 @@ public class EmojiconScrollTabBar extends RelativeLayout{
         tabContainer.removeViewAt(position);
         tabList.remove(position);
     }
-    
+
+    public void removeAllTab() {
+        tabContainer.removeAllViews();
+        tabList.clear();
+    }
+
     public void selectedTo(int position){
         scrollTo(position);
         for (int i = 0; i < tabList.size(); i++) {

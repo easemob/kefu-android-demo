@@ -31,7 +31,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             return;
         }
 
-        EMFileMessageBody messageBody = (EMFileMessageBody) message.getBody();
+        EMFileMessageBody messageBody = (EMFileMessageBody) message.body();
         file = new File(messageBody.getLocalUrl());
         message.setMessageStatusCallback(new Callback() {
             @Override

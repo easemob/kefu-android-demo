@@ -15,15 +15,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
-import com.google.gson.Gson;
+import com.hyphenate.helpdesk.model.ArticlesInfo;
+import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.util.DensityUtil;
 
-import org.json.JSONObject;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -32,25 +27,10 @@ import java.util.Random;
 
 public class ChatRowArticle extends ChatRow {
 
-	private MsgArticles msgArticles = null;
-
 	private LinearLayout artticlesContainer;
 
 	public ChatRowArticle(final Context context, Message message, int position, BaseAdapter adapter) {
 		super(context, message, position, adapter);
-		JSONObject jsonArticle = null;
-		try {
-			jsonArticle = message.getJSONObjectAttribute("msgtype");
-			if (jsonArticle != null) {
-				Gson gson = new Gson();
-				msgArticles = gson.fromJson(jsonArticle.toString(), MsgArticles.class);
-			}
-
-			addViews();
-
-		} catch (Exception e) {
-		}
-
 	}
 
 	@Override
@@ -70,11 +50,14 @@ public class ChatRowArticle extends ChatRow {
 
 	@Override
 	protected void onSetUpView() {
-		if (msgArticles == null || msgArticles.getArticles() == null) {
-			return;
-		}
 		userAvatarView.setVisibility(GONE);
 		usernickView.setVisibility(GONE);
+
+		ArticlesInfo msgArticles;
+
+		if ((msgArticles = MessageHelper.getArticlesMessage(message)) != null) {
+			addViews(msgArticles);
+		}
 	}
 
 	@Override
@@ -82,12 +65,14 @@ public class ChatRowArticle extends ChatRow {
 	}
 
 
-	private void addViews() {
+	private void addViews(ArticlesInfo msgArticles) {
+		artticlesContainer.removeAllViews();
+
 		if (msgArticles == null || msgArticles.getArticles() == null)
 			return;
 
 		if (msgArticles.getArticles().size() == 1) {
-			final MsgArticles.ArticlesBean bean = msgArticles.getArticles().get(0);
+			final ArticlesInfo.ArticleItem bean = msgArticles.getArticles().get(0);
 			View view = inflater.inflate(R.layout.hd_row_article_single_main, null);
 
 			if (view == null) {
@@ -98,19 +83,13 @@ public class ChatRowArticle extends ChatRow {
 				((TextView) view.findViewById(R.id.article_main_title)).setText(bean.getTitle());
 			}
 
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(new Date(bean.getCreatedTime()));
-			if (getResources().getConfiguration().locale == Locale.SIMPLIFIED_CHINESE) {
-				((TextView) view.findViewById(R.id.article_create_time)).setText((calendar.get(Calendar.MONTH)+1) + context.getString(R.string.date_month)
-						+ (calendar.get(Calendar.DAY_OF_MONTH)) + context.getString(R.string.date_day));
-			} else {
-				((TextView) view.findViewById(R.id.article_create_time)).setText((calendar.get(Calendar.MONTH)+1) + ":"	+ (calendar.get(Calendar.DAY_OF_MONTH)));
-			}
+			((TextView) view.findViewById(R.id.article_create_time)).setText(bean.getDate());
 
-			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into((ImageView) view.findViewById(R.id.article_main_pic));
 
-			if (bean.getDigest() != null) {
-				((TextView) view.findViewById(R.id.article_main_digit)).setText(bean.getDigest());
+			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into((ImageView) view.findViewById(R.id.article_main_pic));
+
+			if (bean.getDescription() != null) {
+				((TextView) view.findViewById(R.id.article_main_digit)).setText(bean.getDescription());
 			}
 
 			(view.findViewById(R.id.ll_article_detail)).setOnClickListener(new OnClickListener() {
@@ -136,7 +115,7 @@ public class ChatRowArticle extends ChatRow {
 	}
 
 
-	private View createArticles(final MsgArticles.ArticlesBean bean, Boolean isFirst) {
+	private View createArticles(final ArticlesInfo.ArticleItem bean, Boolean isFirst) {
 
 		RelativeLayout view;
 
@@ -151,7 +130,7 @@ public class ChatRowArticle extends ChatRow {
 				mainText.setText(bean.getTitle());
 				mainTextLayout.setVisibility(VISIBLE);
 			}
-			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into(mainImage);
+			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(mainImage);
 			mainLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -174,7 +153,7 @@ public class ChatRowArticle extends ChatRow {
 			ivLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-			Glide.with(getContext()).load(bean.getThumbUrl()).error(R.drawable.hd_img_missing).into(imageView);
+			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(imageView);
 			view.addView(imageView, ivLp);
 
 			TextView textView = new TextView(context);
@@ -187,7 +166,7 @@ public class ChatRowArticle extends ChatRow {
 			RelativeLayout.LayoutParams tvLp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 			tvLp.addRule(RelativeLayout.LEFT_OF, imageViewId);
 
-			textView.setText(bean.getDigest());
+			textView.setText(bean.getDescription());
 			view.addView(textView, tvLp);
 
 
@@ -203,74 +182,4 @@ public class ChatRowArticle extends ChatRow {
 		return view;
 	}
 
-
-
-	public static class MsgArticles {
-
-		private List<ArticlesBean> articles;
-
-		public List<ArticlesBean> getArticles() {
-			return articles;
-		}
-
-		public void setArticles(List<ArticlesBean> articles) {
-			this.articles = articles;
-		}
-
-		public static class ArticlesBean {
-			/**
-			 * title : 城市
-			 * digest : s&#39;derwer​​​​​​​
-			 * url : http://sandbox.kefu.easemob.com/v1/Tenants/28359/robot/article/html/bdd4d8d1-2eb9-40c5-95c8-21cd7723c61d
-			 * thumbUrl : http://sandbox.kefu.easemob.com/v1/Tenant/28359/MediaFiles/thumbnail-5509df90-956c-419a-a6a2-54206fb4a418
-			 * createdTime : 1499660562000
-			 */
-
-			private String title;
-			private String digest;
-			private String url;
-			private String thumbUrl;
-			private long createdTime;
-
-			public String getTitle() {
-				return title;
-			}
-
-			public void setTitle(String title) {
-				this.title = title;
-			}
-
-			public String getDigest() {
-				return digest;
-			}
-
-			public void setDigest(String digest) {
-				this.digest = digest;
-			}
-
-			public String getUrl() {
-				return url;
-			}
-
-			public void setUrl(String url) {
-				this.url = url;
-			}
-
-			public String getThumbUrl() {
-				return thumbUrl;
-			}
-
-			public void setThumbUrl(String thumbUrl) {
-				this.thumbUrl = thumbUrl;
-			}
-
-			public long getCreatedTime() {
-				return createdTime;
-			}
-
-			public void setCreatedTime(long createdTime) {
-				this.createdTime = createdTime;
-			}
-		}
-	}
 }

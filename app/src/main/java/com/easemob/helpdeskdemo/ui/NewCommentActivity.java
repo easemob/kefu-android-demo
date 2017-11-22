@@ -41,7 +41,6 @@ import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
 import com.hyphenate.helpdesk.easeui.widget.RecorderMenu;
-import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.util.DensityUtil;
 
 import org.json.JSONObject;
@@ -424,7 +423,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         pd.setMessage(getResources().getString(R.string.please_wait_noti));
         pd.show();
         String target = Preferences.getInstance().getCustomerAccount();
-        String userId = ChatClient.getInstance().getCurrentUserName();
+        String userId = ChatClient.getInstance().currentUserName();
         NewCommentBody newCommentBody = new NewCommentBody();
         newCommentBody.setContent(content);
         NewCommentBody.CreatorBean creatorBean = new NewCommentBody.CreatorBean();
@@ -437,7 +436,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
         newCommentBody.setAttachments(getAttachements(fileList));
         Gson gson = new Gson();
         String newCommentBodyJson = gson.toJson(newCommentBody);
-        TicketManager.getInstance().createComment(projectId, ticketId, target, newCommentBodyJson, new ValueCallBack<String>(){
+        ChatClient.getInstance().leaveMsgManager().createLeaveMsgComment(projectId, ticketId, target, newCommentBodyJson, new ValueCallBack<String>(){
 
             @Override
             public void onSuccess(String value) {

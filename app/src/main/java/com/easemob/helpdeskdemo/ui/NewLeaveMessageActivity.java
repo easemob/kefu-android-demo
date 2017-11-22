@@ -24,7 +24,6 @@ import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.NewTicketBody;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
-import com.hyphenate.helpdesk.manager.TicketManager;
 import com.hyphenate.helpdesk.util.Log;
 
 /**
@@ -211,7 +210,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
         String tenantId = Preferences.getInstance().getTenantId();
         String projectId = Preferences.getInstance().getProjectId();
         Gson gson = new Gson();
-        TicketManager.getInstance().createLeaveMessage(gson.toJson(ticketBody).toString(), projectId, target, new ValueCallBack<String>() {
+        ChatClient.getInstance().leaveMsgManager().createLeaveMsg(gson.toJson(ticketBody).toString(), projectId, target, new ValueCallBack<String>() {
 
             @Override
             public void onSuccess(final String value) {

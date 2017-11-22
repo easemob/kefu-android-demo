@@ -52,7 +52,7 @@ public class ChatRowVideo extends ChatRowFile {
 
     @Override
     protected void onSetUpView() {
-        EMVideoMessageBody videoBody = (EMVideoMessageBody) message.getBody();
+        EMVideoMessageBody videoBody = (EMVideoMessageBody) message.body();
         // final File image=new File(PathUtil.getInstance().getVideoPath(),
         // videoBody.getFileName());
         String localThumb = videoBody.getLocalThumb();
@@ -102,13 +102,10 @@ public class ChatRowVideo extends ChatRowFile {
 
     @Override
     protected void onBubbleClick() {
-        EMVideoMessageBody videoBody = (EMVideoMessageBody) message.getBody();
+        EMVideoMessageBody videoBody = (EMVideoMessageBody) message.body();
         Log.d(TAG, "video view is on click");
         Intent intent = new Intent(context, ShowVideoActivity.class);
-        intent.putExtra("localpath", videoBody.getLocalUrl());
-        intent.putExtra("secret", videoBody.getSecret());
-        intent.putExtra("remotepath", videoBody.getRemoteUrl());
-
+        intent.putExtra("msg", message);
         activity.startActivity(intent);
     }
 
@@ -147,7 +144,7 @@ public class ChatRowVideo extends ChatRowFile {
                         iv.setImageBitmap(result);
 
                     } else {
-                        if (message.getStatus() == Message.Status.SUCCESS) {
+                        if (message.status() == Message.Status.SUCCESS) {
                             if (CommonUtils.isNetWorkConnected(activity)) {
                                 ChatClient.getInstance().chatManager().downloadThumbnail(message);
                             }

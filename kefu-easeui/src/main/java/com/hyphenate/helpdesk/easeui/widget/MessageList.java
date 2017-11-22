@@ -4,6 +4,7 @@ package com.hyphenate.helpdesk.easeui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class MessageList extends RelativeLayout {
     protected boolean showAvatar;
     protected Drawable myBubbleBg;
     protected Drawable otherBuddleBg;
+    public static long defaultDelay = 200;
 
     public MessageList(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
@@ -99,6 +101,17 @@ public class MessageList extends RelativeLayout {
         if (messageAdapter != null) {
             messageAdapter.refreshSelectLast();
         }
+    }
+
+    public void refreshSelectLastDelay(long delay){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (messageAdapter != null) {
+                    messageAdapter.refreshSelectLast();
+                }
+            }
+        }, delay);
     }
 
     /**

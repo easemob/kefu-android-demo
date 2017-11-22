@@ -137,6 +137,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				case REQUEST_CODE_ACCOUNT:
 					String oldAccount = tvAccount.getText().toString();
 					String newAccount = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					if (TextUtils.isEmpty(newAccount.trim())) {
+						Toast.makeText(getActivity(), R.string.cus_account_cannot_be_empty, Toast.LENGTH_SHORT).show();
+						return;
+					}
 					if (oldAccount.equals(newAccount)) {
 						return;
 					}
@@ -163,7 +167,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					}
 					tvTenantId.setText(newTenantId);
 					Preferences.getInstance().setTenantId(newTenantId);
-					ChatClient.getInstance().setTenantId(newTenantId);
+					ChatClient.getInstance().changeTenantId(newTenantId);
 					break;
 				case REQUEST_CODE_PROJECT_ID:
 					String oldProjectId = tvProjectId.getText().toString();
@@ -204,7 +208,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 								if (!TextUtils.isEmpty(tenantId)){
 									tvTenantId.setText(tenantId);
 									Preferences.getInstance().setTenantId(tenantId);
-									ChatClient.getInstance().setTenantId(tenantId);
+									ChatClient.getInstance().changeTenantId(tenantId);
 								}
 								if (!TextUtils.isEmpty(imServiceNum)){
 									tvAccount.setText(imServiceNum);

@@ -93,7 +93,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 	private String getSelfNick(){
 		String nickName = Preferences.getInstance().getNickName();
 		if (TextUtils.isEmpty(nickName)){
-			nickName = ChatClient.getInstance().getCurrentUserName();
+			nickName = ChatClient.getInstance().currentUserName();
 		}
 		return nickName;
 	}
@@ -119,7 +119,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 							openSpeakerOn();
 							bottomRelativeLayout.startChronometer();
 							bottomRelativeLayout.setCallStateText(getString(R.string.tip_multi_video_calling));
-							ChatClient.getInstance().callManager().acceptCall(new com.hyphenate.helpdesk.callback.Callback() {
+							ChatClient.getInstance().callManager().acceptCall(getSelfNick(), new com.hyphenate.helpdesk.callback.Callback() {
 								@Override
 								public void onSuccess() {
 									runOnUiThread(new Runnable() {
@@ -312,12 +312,17 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 
 	}
 
+	private boolean firstChanged = true;
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		ViewGroup.LayoutParams layoutParams = bottomRelativeLayout.getLayoutParams();
-		layoutParams.height = rootLayout.getHeight() - multiVideoView.getHeight();
-		bottomRelativeLayout.setLayoutParams(layoutParams);
+		if (firstChanged){
+			firstChanged = false;
+			ViewGroup.LayoutParams layoutParams = bottomRelativeLayout.getLayoutParams();
+			layoutParams.height = rootLayout.getHeight() - multiVideoView.getHeight();
+			bottomRelativeLayout.setLayoutParams(layoutParams);
+		}
 	}
 
 
@@ -434,6 +439,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 			}
 		});
 	}
+
 
 	public static class StreamItem {
 		 CustomVideoView videoView;

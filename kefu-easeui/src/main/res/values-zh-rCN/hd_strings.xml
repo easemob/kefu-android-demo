@@ -91,4 +91,6 @@
     <string name="date_day">日</string>
 	<string name="chat_row_article_view_all">阅读全文</string>
 	<string name="chat_row_new_picture_title">我正在看:</string>
+    <string name="emojicon_text_default">默认</string>
+	<string name="emoji_icon_update">自定义表情已更新</string>
 </resources>

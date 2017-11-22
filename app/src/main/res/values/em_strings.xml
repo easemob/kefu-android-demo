@@ -79,6 +79,7 @@
     <string name="please_wait_noti">Please waiting for a moment.</string>
     <string name="send_suc">Send successful</string>
     <string name="app_key_cannot_be_empty">Appkey cannot be empty!</string>
+    <string name="cus_account_cannot_be_empty">Customer account cannot be empty!</string>
     <string name="app_key_format_wrong">Appkey format error!</string>
     <string name="app_key_modify_fail">Appkey modify fail!</string>
     <string name="short_cut_msg">Short cut message</string>
@@ -161,6 +162,7 @@
     <string name="message_type_video">[Video]</string>
     <string name="message_type_location">[Location]</string>
     <string name="message_type_file">[File]</string>
+    <string name="message_type_image">[Image]</string>
     <string name="message_type_eval_request">[Eval Request]</string>
     <string name="message_type_order_info">[Order Info]</string>
     <string name="message_type_visitor_track">[Visitor Track]</string>
@@ -168,6 +170,7 @@
     <string name="message_type_articles">[Articles]</string>
     <string name="message_type_robot">[Robot Menu]</string>
     <string name="message_type_tocs">[To Custom Service]</string>
+    <string name="message_type_custom_emoji">[Custom Emoji icon]</string>
 	<string name="no_selected_tag_noti">Please select one tag！</string>
     <string name="video_call_pause">VIDEO_PAUSE</string>
     <string name="video_call_resume">VIDEO_RESUME</string>

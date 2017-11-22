@@ -43,10 +43,10 @@ import java.util.List;
 
 public class MainActivity extends DemoBaseActivity implements OnBottomNavigationSelectedListener {
 
-    private Fragment shopFragment;
-    private Fragment settingFragment;
-    private Fragment ticketListFragment;
-    private Fragment conversationsFragment;
+    private Fragment shopFragment = null;
+    private Fragment settingFragment = null;
+    private Fragment ticketListFragment = null;
+    private Fragment conversationsFragment = null;
     private Fragment[] fragments;
     private int currentTabIndex = 0;
     private MyConnectionListener connectionListener = null;
@@ -73,36 +73,48 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         }
 
         setContentView(R.layout.em_activity_main);
+
+        FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
+
         if (savedInstanceState != null){
             currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
-        }
-        if (shopFragment != null){
+            //Activity被杀死的时候，有些情况Fragment不被销毁
             shopFragment = getSupportFragmentManager().findFragmentByTag(shopFragment.getClass().getName());
             settingFragment = getSupportFragmentManager().findFragmentByTag(settingFragment.getClass().getName());
             ticketListFragment = getSupportFragmentManager().findFragmentByTag(ticketListFragment.getClass().getName());
             conversationsFragment = getSupportFragmentManager().findFragmentByTag(conversationsFragment.getClass().getName());
-            fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
-            getSupportFragmentManager().beginTransaction().hide(shopFragment).hide(settingFragment).hide(ticketListFragment).hide(conversationsFragment)
-                    .show(fragments[currentTabIndex]).commit();
-
-        } else {
-            shopFragment = new ShopFragment();
-            settingFragment = new SettingFragment();
-            ticketListFragment = new TicketListFragment();
-            conversationsFragment = new ConversationListFragment();
-            fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
-            // 把shopFragment设为选中状态
-            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
-            trx.add(R.id.fragment_container, shopFragment, shopFragment.getClass().getName())
-                    .add(R.id.fragment_container, ticketListFragment, ticketListFragment.getClass().getName())
-                    .add(R.id.fragment_container, settingFragment, settingFragment.getClass().getName())
-                    .add(R.id.fragment_container, conversationsFragment, conversationsFragment.getClass().getName())
-                    .hide(settingFragment)
-                    .hide(ticketListFragment)
-                    .hide(conversationsFragment)
-                    .hide(shopFragment).show(fragments[currentTabIndex]);
-            trx.commit();
         }
+
+        if (shopFragment == null) {
+            shopFragment = new ShopFragment();
+            trx.add(R.id.fragment_container, shopFragment, shopFragment.getClass().getName());
+        }
+
+        if (ticketListFragment == null) {
+            ticketListFragment = new TicketListFragment();
+            trx.add(R.id.fragment_container, ticketListFragment, ticketListFragment.getClass().getName());
+        }
+
+        if (conversationsFragment == null) {
+            conversationsFragment = new ConversationListFragment();
+            trx.add(R.id.fragment_container, conversationsFragment, conversationsFragment.getClass().getName());
+        }
+
+        if (settingFragment == null) {
+            settingFragment = new SettingFragment();
+            trx.add(R.id.fragment_container, settingFragment, settingFragment.getClass().getName());
+        }
+
+        fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
+
+        // 把shopFragment设为选中状态
+        trx.hide(settingFragment)
+           .hide(ticketListFragment)
+           .hide(conversationsFragment)
+           .hide(shopFragment)
+           .show(fragments[currentTabIndex])
+           .commit();
+
         mBottomNav = $(R.id.bottom_navigation);
         mBottomNav.setBottomNavigationSelectedListener(this);
         //注册一个监听连接状态的listener

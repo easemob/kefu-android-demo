@@ -25,16 +25,13 @@ public class ChatRowEvaluation extends ChatRow{
 
     @Override
     protected void onInflatView() {
-        if (MessageHelper.getEvalRequest(message) != null) {
-            inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.em_row_received_satisfaction
-                    : R.layout.em_row_sent_satisfaction, this);
-        }
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.em_row_received_satisfaction
+                : R.layout.em_row_sent_satisfaction, this);
     }
 
     @Override
     protected void onFindViewById() {
         btnEval = (Button) findViewById(R.id.btn_eval);
-
     }
 
     @Override
@@ -52,7 +49,7 @@ public class ChatRowEvaluation extends ChatRow{
                     @Override
                     public void onClick(View v) {
                         ((Activity)context).startActivityForResult(new Intent(context, SatisfactionActivity.class)
-                                .putExtra("msgId", message.getMsgId()), CustomChatFragment.REQUEST_CODE_EVAL);
+                                .putExtra("msgId", message.messageId()), CustomChatFragment.REQUEST_CODE_EVAL);
                     }
                 });
 

@@ -105,7 +105,7 @@ public class ShowBigImageActivity extends BaseActivity {
         pd.setMessage(str1);
         pd.show();
         Message msg = ChatClient.getInstance().chatManager().getMessage(msgId);
-        EMImageMessageBody imgBody = (EMImageMessageBody) msg.getBody();
+        EMImageMessageBody imgBody = (EMImageMessageBody) msg.body();
         final String localPath = imgBody.getLocalUrl();
         final File localFile = new File(localPath);
         final Callback callback = new Callback() {

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.ChatClient;
-import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.util.EasyUtils;
 
 import java.util.ArrayList;

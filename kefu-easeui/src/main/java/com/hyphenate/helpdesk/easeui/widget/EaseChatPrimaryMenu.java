@@ -115,7 +115,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
         });
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     if (sendTextMsg()) return true;
                     return true;
                 }
@@ -299,12 +299,16 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
 
     private void refleshEmojiSendBtn() {
         if (editText.getText().length() > 0 && !emojiSengBtnEnable) {
-            emojiSendBtn.setEnabled(true);
-            emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_enable_bg_color);
+            if (emojiSendBtn != null) {
+                emojiSendBtn.setEnabled(true);
+                emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_enable_bg_color);
+            }
             emojiSengBtnEnable = true;
         } else if(editText.getText().length() == 0 && emojiSengBtnEnable) {
-            emojiSendBtn.setEnabled(false);
-            emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_disable_bg_color);
+            if (emojiSendBtn != null) {
+                emojiSendBtn.setEnabled(false);
+                emojiSendBtn.setBackgroundResource(R.color.emoji_send_btn_disable_bg_color);
+            }
             emojiSengBtnEnable = false;
         }
 

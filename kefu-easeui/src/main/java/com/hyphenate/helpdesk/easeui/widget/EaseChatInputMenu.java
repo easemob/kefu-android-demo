@@ -3,6 +3,7 @@ package com.hyphenate.helpdesk.easeui.widget;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +11,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.emojicon.DefaultEmojiconDatas;
-import com.hyphenate.helpdesk.easeui.emojicon.Emojicon;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.easeui.emojicon.EmojiconGroupEntity;
 import com.hyphenate.helpdesk.easeui.emojicon.EmojiconMenu;
 import com.hyphenate.helpdesk.easeui.emojicon.EmojiconMenuBase;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
+import com.hyphenate.helpdesk.manager.EmojiconManager.EmojiconPackage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +45,8 @@ public class EaseChatInputMenu extends LinearLayout {
     private Context context;
     private boolean inited;
 
+    List<EmojiconGroupEntity> localEmojiconGroupList = new ArrayList<>();
+
     public EaseChatInputMenu(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
     }
@@ -66,6 +71,7 @@ public class EaseChatInputMenu extends LinearLayout {
         // 扩展按钮栏
         chatExtendMenu = (ExtendMenu) findViewById(R.id.extend_menu);
         emojiSendBtn = (Button) findViewById(R.id.emoji_send_button);
+        ChatClient.getInstance().emojiconManager().reflesh();
     }
 
     /**
@@ -92,10 +98,14 @@ public class EaseChatInputMenu extends LinearLayout {
             emojiconMenu = (EmojiconMenu) layoutInflater.inflate(R.layout.hd_layout_emojicon_menu, null);
             if (emojiconGroupList == null) {
                 emojiconGroupList = new ArrayList<EmojiconGroupEntity>();
-                emojiconGroupList.add(new EmojiconGroupEntity(R.drawable.e_e_1, Arrays
-                        .asList(DefaultEmojiconDatas.getData())));
+                EmojiconGroupEntity emojiconGroupEntity = new EmojiconGroupEntity(R.drawable.e_e_1, Arrays
+                        .asList(DefaultEmojiconDatas.getData()));
+                emojiconGroupEntity.setName(context.getString(R.string.emojicon_text_default));
+                emojiconGroupList.add(emojiconGroupEntity);
             }
             ((EmojiconMenu) emojiconMenu).init(emojiconGroupList);
+            localEmojiconGroupList = emojiconGroupList;
+            initOnlineEmojiconGroupList();
         }
         emojiconMenuContainer.addView(emojiconMenu);
 
@@ -108,6 +118,26 @@ public class EaseChatInputMenu extends LinearLayout {
 
     public void init() {
         init(null);
+    }
+
+    public void onEmojiconChanged() {
+        hideExtendMenuContainer();
+        chatExtendMenuContainer.setEnabled(false);
+        ((EmojiconMenu) emojiconMenu).removeAllEmojiconGroup();
+        ((EmojiconMenu) emojiconMenu).addEmojiconGroup(localEmojiconGroupList);
+        initOnlineEmojiconGroupList();
+        chatExtendMenuContainer.setEnabled(true);
+    }
+
+    private synchronized void initOnlineEmojiconGroupList() {
+        List<EmojiconPackage> emojiconPackages = ChatClient.getInstance().emojiconManager().getEmojiPackagesList();
+        if (emojiconPackages.size() > 0) {
+            for (EmojiconPackage aPackage: emojiconPackages) {
+                EmojiconGroupEntity emojiconGroupEntity = new EmojiconGroupEntity(-1, ChatClient.getInstance().emojiconManager().getEmojiconList(aPackage), Emojicon.Type.BIG_EXPRESSION);
+                emojiconGroupEntity.setName(aPackage.packageName);
+                ((EmojiconMenu) emojiconMenu).addEmojiconGroup(emojiconGroupEntity);
+            }
+        }
     }
 
     /**
@@ -164,12 +194,14 @@ public class EaseChatInputMenu extends LinearLayout {
      *            item背景
      * @param itemId
      *            id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerExtendMenuItem(String name, int drawableRes, int itemId,
+    public void registerExtendMenuItem(String name, int drawableRes, int itemId, @IdRes int resId,
                                        ExtendMenu.EaseChatExtendMenuItemClickListener listener) {
-        chatExtendMenu.registerMenuItem(name, drawableRes, itemId, listener);
+        chatExtendMenu.registerMenuItem(name, drawableRes, itemId, resId, listener);
     }
 
     /**
@@ -181,12 +213,14 @@ public class EaseChatInputMenu extends LinearLayout {
      *            item背景
      * @param itemId
      *            id
+     * @param resId
+     *            resId
      * @param listener
      *            item点击事件
      */
-    public void registerExtendMenuItem(int nameRes, int drawableRes, int itemId,
+    public void registerExtendMenuItem(int nameRes, int drawableRes, int itemId, @IdRes int resId,
                                        ExtendMenu.EaseChatExtendMenuItemClickListener listener) {
-        chatExtendMenu.registerMenuItem(nameRes, drawableRes, itemId, listener);
+        chatExtendMenu.registerMenuItem(nameRes, drawableRes, itemId, resId, listener);
     }
 
     protected void processChatMenu() {

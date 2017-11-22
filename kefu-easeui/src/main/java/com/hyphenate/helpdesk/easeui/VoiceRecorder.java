@@ -57,7 +57,7 @@ public class VoiceRecorder {
             // file = File.createTempFile(PREFIX + userId, EXTENSION,
             // User.getVoicePath());
 
-            voiceFileName = getVoiceFileName(ChatClient.getInstance().getCurrentUserName());
+            voiceFileName = getVoiceFileName(ChatClient.getInstance().currentUserName());
             voiceFilePath = PathUtil.getInstance().getVoicePath() + "/" + voiceFileName;
             file = new File(voiceFilePath);
             recorder.setOutputFile(file.getAbsolutePath());

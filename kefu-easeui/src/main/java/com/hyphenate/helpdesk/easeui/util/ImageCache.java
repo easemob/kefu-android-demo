@@ -24,11 +24,11 @@ import java.util.Set;
 
 /**
  * This class memory caching of bitmaps in conjunction with the
- * {@link ImageWorker} class and its subclasses. Use
- * {@link ImageCache#getInstance(android.support.v4.app.FragmentManager, ImageCacheParams)}
+ * { ImageWorker} class and its subclasses. Use
+ * { ImageCache#getInstance(android.support.v4.app.FragmentManager, ImageCacheParams)}
  * to get an instance of this class, although usually a cache should be added
- * directly to an {@link ImageWorker} by calling
- * {@link ImageWorker#addImageCache(android.support.v4.app.FragmentManager, ImageCacheParams)}
+ * directly to an { ImageWorker} by calling
+ * { ImageWorker#addImageCache(android.support.v4.app.FragmentManager, ImageCacheParams)}
  * .
  */
 public class ImageCache {
@@ -293,7 +293,7 @@ public class ImageCache {
 		 * Sets the memory cache size based on a percentage of the max available
 		 * VM memory. Eg. setting percent to 0.2 would set the memory cache to
 		 * one fifth of the available memory. Throws
-		 * {@link IllegalArgumentException} if percent is < 0.01 or > .8.
+		 * {@link IllegalArgumentException} if percent is lt; 0.01 or gt; .8.
 		 * memCacheSize is stored in kilobytes instead of bytes as this will
 		 * eventually be passed to construct a LruCache which takes an int in
 		 * its constructor.

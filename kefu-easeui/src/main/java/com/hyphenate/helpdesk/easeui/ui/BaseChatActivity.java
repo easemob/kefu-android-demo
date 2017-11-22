@@ -24,7 +24,7 @@ public class BaseChatActivity extends BaseActivity {
         // 传入参数
         chatFragment.setArguments(intent.getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
-        ChatClient.getInstance().chatManager().bindChatUI(toChatUsername);
+        ChatClient.getInstance().chatManager().bindChat(toChatUsername);
     }
 
     @Override

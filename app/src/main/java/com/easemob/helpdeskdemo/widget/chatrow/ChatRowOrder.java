@@ -31,6 +31,7 @@ public class ChatRowOrder extends ChatRow {
     TextView mTextViewprice;
     Button mBtnSend;
     TextView mChatTextView;
+    TextView mOrderTitle;
 
     public ChatRowOrder(Context context, Message message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
@@ -44,11 +45,14 @@ public class ChatRowOrder extends ChatRow {
 
     @Override
     protected void onFindViewById() {
-        mTextViewDes = (TextView) findViewById(R.id.tv_description);
-        mTextViewprice = (TextView) findViewById(R.id.tv_price);
-        mImageView = (ImageView) findViewById(R.id.iv_picture);
-        mChatTextView = (TextView) findViewById(R.id.tv_chatcontent);
-        mBtnSend = (Button) findViewById(R.id.button_send);
+        if (message.direct() == Message.Direct.SEND) {
+            mTextViewDes = (TextView) findViewById(R.id.tv_description);
+            mTextViewprice = (TextView) findViewById(R.id.tv_price);
+            mImageView = (ImageView) findViewById(R.id.iv_picture);
+            mChatTextView = (TextView) findViewById(R.id.tv_chatcontent);
+            mBtnSend = (Button) findViewById(R.id.button_send);
+            mOrderTitle = (TextView) findViewById(R.id.tv_title);
+        }
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ChatRowOrder extends ChatRow {
 
     @Override
     protected void onSetUpView() {
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+        EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
         if (message.direct() == Message.Direct.RECEIVE) {
             //设置内容
             mChatTextView.setText(txtBody.getMessage());
@@ -79,6 +83,7 @@ public class ChatRowOrder extends ChatRow {
         }
         mTextViewDes.setText(orderInfo.getDesc());
         mTextViewprice.setText(orderInfo.getPrice());
+        mOrderTitle.setText(orderInfo.getTitle());
         String imageUrl = orderInfo.getImageUrl();
         if (!TextUtils.isEmpty(imageUrl)){
             Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mImageView);
@@ -87,7 +92,7 @@ public class ChatRowOrder extends ChatRow {
         message.setMessageStatusCallback(new Callback() {
             @Override
             public void onSuccess() {
-                ChatClient.getInstance().chatManager().getConversation(message.getTo()).removeMessage(message.getMsgId());
+                ChatClient.getInstance().chatManager().getConversation(message.to()).removeMessage(message.messageId());
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -114,12 +119,12 @@ public class ChatRowOrder extends ChatRow {
         mBtnSend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (message.getStatus() == Message.Status.INPROGRESS){
+                if (message.status() == Message.Status.INPROGRESS){
                     Toast.makeText(context, R.string.em_notice_sending, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                ChatClient.getInstance().chatManager().reSendMessage(message);
+                ChatClient.getInstance().chatManager().resendMessage(message);
             }
         });
 
