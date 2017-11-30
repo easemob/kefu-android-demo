@@ -23,8 +23,8 @@ public class GCMPushBroadCast extends BroadcastReceiver {
 
 	protected NotificationManager notificationManager = null;
 
-	protected static int notifyID = 0525; // start notification id
-	protected static int foregroundNotifyID = 0555;
+	protected static int notifyID = 525; // start notification id
+	protected static int foregroundNotifyID = 555;
 
 	public void sendNotification(Context context, String message, boolean isForeground){
 

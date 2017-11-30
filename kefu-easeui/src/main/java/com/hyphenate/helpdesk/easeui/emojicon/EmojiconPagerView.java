@@ -141,6 +141,7 @@ public class EmojiconPagerView extends ViewPager {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Emojicon emojicon = gridAdapter.getItem(position);
                     if(pagerViewListener != null){
+                        assert emojicon != null;
                         String emojiText = emojicon.getEmojiText();
                         if(emojiText != null && emojiText.equals(SmileUtils.DELETE_KEY)){
                             pagerViewListener.onDeleteImageClicked();
@@ -200,8 +201,7 @@ public class EmojiconPagerView extends ViewPager {
         if(emojiType == Emojicon.Type.BIG_EXPRESSION){
             itemSize = bigEmojiconColumns * bigEmojiconRows;
         }
-        int pageSize = totalSize % itemSize == 0 ? totalSize/itemSize : totalSize/itemSize + 1;
-        return pageSize;
+        return totalSize % itemSize == 0 ? totalSize/itemSize : totalSize/itemSize + 1;
     }
 
     private class EmojiPagerChangeListener implements OnPageChangeListener{

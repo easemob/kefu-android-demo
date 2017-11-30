@@ -41,9 +41,9 @@ public class Notifier {
             "%1个联系人发来%2条消息"
     };
 
-    protected static int notifyID = 0525; // start notification id
+    protected static int notifyID = 525; // start notification id
     protected int oldNotifyID = notifyID;
-    protected static int foregroundNotifyID = 0555;
+    protected static int foregroundNotifyID = 555;
 
     protected NotificationManager notificationManager = null;
 
@@ -169,6 +169,40 @@ public class Notifier {
         sendNotification(message, isForeground, true);
     }
 
+    public void sendNotification(String message) {
+            try {
+                PackageManager packageManager = appContext.getPackageManager();
+                // notification title
+                String contentTitle = (String) packageManager
+                        .getApplicationLabel(appContext.getApplicationInfo());
+                String packageName = appContext.getApplicationInfo().packageName;
+
+                Uri defaultSoundUri = RingtoneManager
+                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                Intent msgIntent = appContext.getPackageManager()
+                        .getLaunchIntentForPackage(packageName);
+                PendingIntent pendingIntent = PendingIntent.getActivity(appContext,
+                        notifyID, msgIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                // create and send notification
+                Notification notification = new NotificationCompat.Builder(appContext)
+                        .setSmallIcon(appContext.getApplicationInfo().icon)
+                        .setSound(defaultSoundUri)
+                        .setWhen(System.currentTimeMillis())
+                        .setAutoCancel(true)
+                        .setContentTitle(contentTitle)
+                        .setTicker(message)
+                        .setContentText(message)
+                        .setContentIntent(pendingIntent)
+                        .build();
+
+                notificationManager.notify(notifyID, notification);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
     /**
      * 发送通知栏提示
      * This can be override by subclass to provide customer implementation
@@ -207,10 +241,9 @@ public class Notifier {
             }
 
             PackageManager packageManager = appContext.getPackageManager();
-            String appname = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
 
             // notification titile
-            String contentTitle = appname;
+            String contentTitle = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
             if (notificationInfoProvider != null) {
                 String customNotifyText = notificationInfoProvider.getDisplayedText(message);
                 String customCotentTitle = notificationInfoProvider.getTitle(message);
@@ -343,7 +376,7 @@ public class Notifier {
                                     if (ringtone.isPlaying()) {
                                         ringtone.stop();
                                     }
-                                } catch (Exception e) {
+                                } catch (Exception ignored) {
                                 }
                             }
                         };

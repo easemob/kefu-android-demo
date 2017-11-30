@@ -1,6 +1,9 @@
 package com.easemob.helpdeskdemo.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -56,6 +59,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 	private BottomRelativeLayout bottomRelativeLayout;
 	protected AudioManager audioManager;
 	protected Ringtone ringtone;
+	private HeadsetReceiver headsetReceiver = new HeadsetReceiver();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,8 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 		final int MAKE_CALL_TIMEOUT = 60 * 1000;
 		handler.removeCallbacks(timeoutHangup);
 		handler.postDelayed(timeoutHangup, MAKE_CALL_TIMEOUT);
+
+		registerReceiver(headsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 	}
 
 	private String getSelfNick(){
@@ -96,6 +102,28 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 			nickName = ChatClient.getInstance().currentUserName();
 		}
 		return nickName;
+	}
+
+
+	class HeadsetReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			switch (action){
+				// 插入和拔出耳机会触发广播
+				case Intent.ACTION_HEADSET_PLUG:
+					int state = intent.getIntExtra("state", 0);
+					if (state == 1){
+						// 耳机已插入
+						closeSpeakerOn();
+					}else if (state == 0){
+						// 耳机已拔出
+						openSpeakerOn();
+					}
+					break;
+			}
+		}
 	}
 
 
@@ -454,6 +482,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 		if (ringtone != null && ringtone.isPlaying()){
 			ringtone.stop();
 		}
+		unregisterReceiver(headsetReceiver);
 		audioManager.setMode(AudioManager.MODE_NORMAL);
 		audioManager.setMicrophoneMute(false);
 		releaseHandler();

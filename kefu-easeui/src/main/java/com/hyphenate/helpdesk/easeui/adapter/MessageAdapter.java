@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.ListView;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
-import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
@@ -30,9 +28,7 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferToKefu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
-import com.hyphenate.util.EMLog;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -100,6 +96,7 @@ public class MessageAdapter extends BaseAdapter {
 
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displayMetrics = new DisplayMetrics();
+		assert wm != null;
 		wm.getDefaultDisplay().getMetrics(displayMetrics);
 		mMaxItemWidth = (int)(displayMetrics.widthPixels * 0.4f);
 		mMinItemWidth = (int)(displayMetrics.widthPixels * 0.15f);

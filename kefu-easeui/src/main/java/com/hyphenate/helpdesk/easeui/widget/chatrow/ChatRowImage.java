@@ -20,15 +20,10 @@ import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
-import com.hyphenate.helpdesk.easeui.util.Utils;
 import com.hyphenate.util.DensityUtil;
-import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.ImageUtils;
 
 import java.io.File;
-
-import static android.icu.lang.UCharacter.JoiningGroup.E;
-
 public class ChatRowImage extends ChatRowFile{
 
     protected ImageView imageView;

@@ -28,8 +28,10 @@ public class ChatActivity extends BaseActivity {
         super.onCreate(arg0);
         setContentView(R.layout.hd_activity_chat);
         instance = this;
-        //IM服务号
-        toChatUsername = getIntent().getExtras().getString(Config.EXTRA_SERVICE_IM_NUMBER);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null)
+            //IM服务号
+            toChatUsername = bundle.getString(Config.EXTRA_SERVICE_IM_NUMBER);
         //可以直接new ChatFragment使用
         String chatFragmentTAG = "chatFragment";
         chatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(chatFragmentTAG);

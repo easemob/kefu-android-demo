@@ -60,6 +60,7 @@ public class BaiduMapActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getAction();
             String st1 = getResources().getString(R.string.network_error);
+            assert s != null;
             if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
 
                 String st2 = getResources().getString(R.string.please_check);
@@ -232,7 +233,6 @@ public class BaiduMapActivity extends BaseActivity {
 
         public void onReceivePoi(BDLocation poiLocation) {
             if (poiLocation == null) {
-                return;
             }
         }
     }

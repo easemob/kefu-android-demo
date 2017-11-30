@@ -16,6 +16,7 @@ package com.easemob.helpdeskdemo.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -55,6 +56,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private TextView tvNick;
 	private TextView tvTenantId;
 	private TextView tvProjectId;
+	private TextView tvVersion;
 
 
 	private static final int REQUEST_CODE_APPKEY = 1;
@@ -78,13 +80,24 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		super.onActivityCreated(savedInstanceState);
 		initView();
 		initListener();
+		try {
+			tvVersion.setText("v" + ChatClient.getInstance().sdkVersion() + "(" + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode +")");
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 	private void initView() {
+		if (getView() == null){
+			return;
+		}
 		tvAppkey = (TextView) getView().findViewById(R.id.tv_setting_appkey);
 		tvAccount = (TextView) getView().findViewById(R.id.tv_setting_account);
 		tvNick = (TextView) getView().findViewById(R.id.tv_setting_nick);
 		tvTenantId = (TextView) getView().findViewById(R.id.tv_setting_tenant_id);
 		tvProjectId = (TextView) getView().findViewById(R.id.tv_setting_project_id);
+		tvVersion = (TextView) getView().findViewById(R.id.tv_version);
 
 		rlAppkey = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_appkey);
 		rlAccount = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_account);
@@ -250,7 +263,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			if (arrSpliteEqual.length > 1) {
 				mapRequest.put(arrSpliteEqual[0], arrSpliteEqual[1]);
 			} else {
-				if (arrSpliteEqual[0] != "") {
+				if (!TextUtils.isEmpty(arrSpliteEqual[0])) {
 					mapRequest.put(arrSpliteEqual[0], "");
 				}
 			}

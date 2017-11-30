@@ -1,5 +1,7 @@
 package com.easemob.helpdeskdemo.utils;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -122,7 +124,7 @@ public class CommonUtils {
         }
         /* 获取文件的后缀名*/
         String end=fName.substring(dotIndex,fName.length()).toLowerCase();
-        if(end=="")return type;
+        if(TextUtils.isEmpty(end))return type;
         //在MIME和文件类型的匹配表中找到对应的MIME类型。
         for(int i=0;i<MIME_MapTable.length;i++){ //MIME_MapTable??在这里你一定有疑问，这个MIME_MapTable是什么？
             if(end.equals(MIME_MapTable[i][0]))

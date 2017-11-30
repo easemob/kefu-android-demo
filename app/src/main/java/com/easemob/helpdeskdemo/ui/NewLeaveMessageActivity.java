@@ -112,6 +112,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     itemTheme.clearFocus();
                     return true;
@@ -176,10 +177,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
         if (itemEmail.getText().toString().length() == 0) {
             return true;
         }
-        if (itemTheme.getText().toString().length() == 0) {
-            return true;
-        }
-        return false;
+        return itemTheme.getText().toString().length() == 0;
     }
 
     private void commitLeaveMessage(){

@@ -12,20 +12,12 @@ import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.ui.ForwardWebViewActivity;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.FormInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-/**
- * Created by liyuzhao on 15/12/2016.
- */
 
 public class ChatRowForm extends ChatRow {
 

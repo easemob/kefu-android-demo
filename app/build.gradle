@@ -12,8 +12,9 @@ android {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 19
-        versionName "1.9"
+        versionCode 20
+        versionName "2.0"
+        multiDexEnabled true
 
         ndk {
             //选择要添加的对应cpu类型的.so库
@@ -80,4 +81,12 @@ dependencies {
     //qcode 只为演示用，APP中可以去掉
     compile 'cn.yipianfengye.android:zxing-library:2.1'
     compile 'com.tencent.bugly:crashreport:2.2.0'
+
+    compile 'com.android.support:multidex:1.0.1'
+    // Google firebase cloud messaging
+    compile 'com.google.firebase:firebase-core:11.4.2'
+    compile 'com.google.firebase:firebase-messaging:11.4.2'
 }
+
+// Google firebase cloud messaging ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'

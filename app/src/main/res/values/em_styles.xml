@@ -75,8 +75,8 @@
     <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
-    
-    <style name="nornal_style" parent="android:Theme.NoTitleBar"></style>
+
+    <style name="nornal_style" parent="android:Theme.NoTitleBar"/>
 
     <!--
     <style name="horizontal_slide2" parent="android:style/Theme.Holo.Light.NoActionBar">

@@ -59,6 +59,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             try {
+                assert pm != null;
                 if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
@@ -79,10 +80,12 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         if (savedInstanceState != null){
             currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
             //Activity被杀死的时候，有些情况Fragment不被销毁
-            shopFragment = getSupportFragmentManager().findFragmentByTag(shopFragment.getClass().getName());
-            settingFragment = getSupportFragmentManager().findFragmentByTag(settingFragment.getClass().getName());
-            ticketListFragment = getSupportFragmentManager().findFragmentByTag(ticketListFragment.getClass().getName());
-            conversationsFragment = getSupportFragmentManager().findFragmentByTag(conversationsFragment.getClass().getName());
+            if (shopFragment != null){
+                shopFragment = getSupportFragmentManager().findFragmentByTag(shopFragment.getClass().getName());
+                settingFragment = getSupportFragmentManager().findFragmentByTag(settingFragment.getClass().getName());
+                ticketListFragment = getSupportFragmentManager().findFragmentByTag(ticketListFragment.getClass().getName());
+                conversationsFragment = getSupportFragmentManager().findFragmentByTag(conversationsFragment.getClass().getName());
+            }
         }
 
         if (shopFragment == null) {

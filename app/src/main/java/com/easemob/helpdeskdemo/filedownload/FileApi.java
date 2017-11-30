@@ -69,7 +69,7 @@ public class FileApi {
      * 取消下载
      */
     public static void cancelLoading() {
-        if (call != null && call.isCanceled() == false) {
+        if (call != null && !call.isCanceled()) {
             call.cancel();
         }
     }

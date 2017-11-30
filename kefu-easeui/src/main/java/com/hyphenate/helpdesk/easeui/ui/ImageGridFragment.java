@@ -342,31 +342,33 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		super.onActivityResult(requestCode, resultCode, data);
 		if(resultCode==Activity.RESULT_OK)
 		{
-			if(requestCode==100)
-			{
-				Uri uri=data.getParcelableExtra("uri");
-				String[] projects = new String[] { MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media.DURATION };
-				Cursor cursor = getActivity().getContentResolver().query(
-						uri, projects, null,
-						null, null);
-				int duration=0;
-				String filePath=null;
-
-				if (cursor.moveToFirst()) {
-					// path：MediaStore.Audio.Media.DATA
-					filePath = cursor.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-					// duration：MediaStore.Audio.Media.DURATION
-					duration = cursor
-							.getInt(cursor
-									.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-					EMLog.d(TAG, "duration:"+duration);
-				}
-				if(cursor!=null)
-				{
-					cursor.close();
-					cursor=null;
+			if (requestCode == 100) {
+				Uri uri = data.getParcelableExtra("uri");
+				String[] projects = new String[]{MediaStore.Video.Media.DATA,
+						MediaStore.Video.Media.DURATION};
+				Cursor cursor = null;
+				String filePath = null;
+				int duration = 0;
+				try {
+					cursor = getActivity().getContentResolver().query(
+							uri, projects, null,
+							null, null);
+					if (cursor != null && cursor.moveToFirst()) {
+						// path：MediaStore.Audio.Media.DATA
+						filePath = cursor.getString(cursor
+								.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+						// duration：MediaStore.Audio.Media.DURATION
+						duration = cursor
+								.getInt(cursor
+										.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+						EMLog.d(TAG, "duration:" + duration);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (cursor != null) {
+						cursor.close();
+					}
 				}
 
 				getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", filePath).putExtra("dur", duration));

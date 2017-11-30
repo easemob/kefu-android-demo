@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.helpdesk.R;
-import com.hyphenate.helpdesk.easeui.Constant;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.util.Log;
@@ -26,7 +25,7 @@ public class CommonUtils {
     public static boolean isNetWorkConnected(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            NetworkInfo mNetworkInfo = mConnectivityManager != null ? mConnectivityManager.getActiveNetworkInfo() : null;
             if (mNetworkInfo != null) {
                 return mNetworkInfo.isAvailable() && mNetworkInfo.isConnected();
             }
@@ -110,7 +109,7 @@ public class CommonUtils {
 
     public static boolean isSingleActivity(Context ctx) {
         ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+        List<ActivityManager.RunningTaskInfo> tasks = activityManager != null ? activityManager.getRunningTasks(1) : null;
         return tasks.get(0).numRunning == 1;
     }
 }

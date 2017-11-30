@@ -205,6 +205,20 @@
         </receiver>
         <!-- mi push end -->
 
+        <!-- FCM required start -->
+        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMMSGService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMTokenRefreshService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- FCM required end -->
+
 
         <!--华为 HMS Config-->
         <meta-data
