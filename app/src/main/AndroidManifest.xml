@@ -28,6 +28,7 @@
 
     <!-- 音视频 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
 
     <!-- GCM required, remember replace "com.easemob.helpdeskdemo" to your own package -->
@@ -204,6 +205,20 @@
             </intent-filter>
         </receiver>
         <!-- mi push end -->
+
+        <!-- FCM required start -->
+        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMMSGService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMTokenRefreshService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- FCM required end -->
 
 
         <!--华为 HMS Config-->

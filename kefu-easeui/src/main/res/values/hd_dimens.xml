@@ -33,7 +33,7 @@
 
 	<dimen name="pop_list_width">120dp</dimen>
 	<dimen name="pop_list_height">48dp</dimen>
-	<dimen name="pop_menu_text_size">16dp</dimen>
+	<dimen name="pop_menu_text_size">16sp</dimen>
 
 	<dimen name="new_leave_success_icon_size">60dp</dimen>
 	<dimen name="new_leave_success_icon_margin_top">30dp</dimen>

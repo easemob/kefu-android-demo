@@ -42,6 +42,7 @@ public class ShopFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (getView() == null){return;}
 		getView().findViewById(R.id.ib_shop_imageone).setOnClickListener(this);
 		getView().findViewById(R.id.ib_shop_imagetwo).setOnClickListener(this);
 		getView().findViewById(R.id.ib_shop_imagethree).setOnClickListener(this);

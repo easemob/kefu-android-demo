@@ -180,9 +180,11 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     private void setUserNameView(){
         if (ChatClient.getInstance().isLoggedInBefore()){
             String currentUsername = ChatClient.getInstance().currentUserName();
-            TextView tvUname = (TextView) getView().findViewById(R.id.tv_username);
-            if (tvUname != null){
-                tvUname.setText(currentUsername);
+            if (getView() != null) {
+                TextView tvUname = (TextView) getView().findViewById(R.id.tv_username);
+                if (tvUname != null){
+                    tvUname.setText(currentUsername);
+                }
             }
         }
     }
@@ -556,6 +558,9 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
         @Override
         public void onExtendMenuItemClick(int itemId, View view) {
+            if (getActivity() == null){
+                return;
+            }
             if (chatFragmentListener != null) {
                 if (chatFragmentListener.onExtendMenuItemClick(itemId, view)) {
                     return;
@@ -681,12 +686,19 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }finally {
+                if (cursor != null){
+                    cursor.close();
+                }
             }
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             filePath = uri.getPath();
         }
+        if (filePath == null){
+            return;
+        }
         File file = new File(filePath);
-        if (file == null || !file.exists()) {
+        if (!file.exists()) {
             Toast.makeText(getActivity(), R.string.File_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }

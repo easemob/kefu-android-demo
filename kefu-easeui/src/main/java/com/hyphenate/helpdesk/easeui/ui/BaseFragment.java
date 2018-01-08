@@ -20,7 +20,8 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        titleBar = (TitleBar) getView().findViewById(R.id.title_bar);
+        if (getView() != null)
+            titleBar = (TitleBar) getView().findViewById(R.id.title_bar);
 
         initView();
         setUpView();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -108,8 +109,7 @@ public abstract class ImageWorker {
 	 */
 	public void addImageCache(FragmentManager fragmentManager,
 	                          ImageCache.ImageCacheParams cacheParams) {
-		ImageCache.ImageCacheParams mImageCacheParams = cacheParams;
-		mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
+		mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
 		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
 	}
 
@@ -232,7 +232,7 @@ public abstract class ImageWorker {
 				while (mPauseWork && !isCancelled()) {
 					try {
 						mPauseWorkLock.wait();
-					} catch (InterruptedException e) {}
+					} catch (InterruptedException ignored) {}
 				}
 			}
 
@@ -242,8 +242,7 @@ public abstract class ImageWorker {
 			// another thread and the ImageView that was originally bound to this task is still
 			// bound back to this task and our "exit early" flag is not set, then call the main
 			// process method (as implemented by a subclass)
-			if (bitmap == null && !isCancelled() && getAttachedImageView() != null
-					&& !mExitTasksEarly) {
+			if (!isCancelled() && getAttachedImageView() != null && !mExitTasksEarly) {
 				bitmap = processBitmap(mData);
 			}
 
@@ -351,7 +350,7 @@ public abstract class ImageWorker {
 			// Transition drawable with a transparent drawable and the final drawable
 			final TransitionDrawable td =
 					new TransitionDrawable(new Drawable[] {
-							new ColorDrawable(android.R.color.transparent),
+							new ColorDrawable(Color.parseColor("#00000000")),
 							drawable
 					});
 			// Set background to loading bitmap

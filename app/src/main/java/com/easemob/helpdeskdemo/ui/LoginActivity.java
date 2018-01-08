@@ -134,6 +134,9 @@ public class LoginActivity extends DemoBaseActivity {
 		progressDialog = getProgressDialog();
 		progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
 		if (!progressDialog.isShowing()) {
+			if (isFinishing()){
+				return;
+			}
 			progressDialog.show();
 		}
 		// login huanxin server

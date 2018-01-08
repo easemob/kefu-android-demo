@@ -148,6 +148,7 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 			@Override
 			public boolean onLongClick(View v) {
 				Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+				assert vibrator != null;
 				vibrator.vibrate(new long[]{5, 9, 5, 9, 5, 9}, -1);
 				mReady = true;
 				mAudioManager.prepareAudio();
@@ -247,14 +248,12 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 	private boolean wanttoCancel(int x, int y) {
 		WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displayMetrics = new DisplayMetrics();
+		assert windowManager != null;
 		windowManager.getDefaultDisplay().getMetrics(displayMetrics);
 		DISTANCE_X_CANCEL = displayMetrics.widthPixels / 5;
 		DISTANCE_Y_CANCEL = displayMetrics.heightPixels / 5;
 
-		if (x < -DISTANCE_X_CANCEL || x > DISTANCE_X_CANCEL) {
-			return true;
-		}
-		return y < -DISTANCE_Y_CANCEL || y > DISTANCE_Y_CANCEL;
+		return x < -DISTANCE_X_CANCEL || x > DISTANCE_X_CANCEL || y < -DISTANCE_Y_CANCEL || y > DISTANCE_Y_CANCEL;
 	}
 
 

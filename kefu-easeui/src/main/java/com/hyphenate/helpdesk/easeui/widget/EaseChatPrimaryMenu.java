@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.R;
 
 /**
@@ -103,6 +104,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
             @Override
             public void afterTextChanged(Editable s) {
                 refleshEmojiSendBtn();
+                ChatClient.getInstance().chatManager().postMessagePredict(s.toString());
             }
         });
         buttonPressToSpeak.setAudioFinishRecorderListener(new RecorderMenu.AudioFinishRecorderListener() {

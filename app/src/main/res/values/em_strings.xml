@@ -8,6 +8,7 @@
     <string name="attach_location">Location</string>
     <string name="attach_short_cut_message">Messages</string>
     <string name="attach_call_video">Call Video</string>
+    <string name="attach_evaluation">Evaluation</string>
     <string name="location_message">The location information</string>
     <string name="please_check">key validation error!Please on AndroidManifest.xml file check the key set</string>
     <string name="text_fahuo">How long you will be able to deliver?</string>
@@ -23,6 +24,7 @@
     <string name="setting">Setting</string>
     <string name="conversation">Conversation</string>
     <string name="qrcode">QR Code</string>
+    <string name="qrcode_permission_fail">Open Camera fail，please check permission！</string>
     <string name="qrcode_success">QrCode scanning success</string>
     <string name="qrcode_invalid">QrCode Invalid</string>
     <string name="qrcode_fail">QrCode scanning fail</string>
@@ -61,6 +63,7 @@
     <string name="nick_service">Service Nick</string>
     <string name="tip_eval">Please make evaluation to my service</string>
     <string name="hint_leave_message">Leave message</string>
+    <string name="hint_input_evaluation">input text evaluation</string>
     <string name="tip_btn_sumbit">Submit</string>
     <string name="tip_btn_evaluation">Evaluation</string>
 
@@ -186,5 +189,4 @@
     <string name="chat_row_satisfaction_content">Please make evaluation to my service!</string>
     <string name="network_error_notice">Network has error, please retry!</string>
     <string name="tag">TAG</string>
->>>>>>> dev
 </resources>

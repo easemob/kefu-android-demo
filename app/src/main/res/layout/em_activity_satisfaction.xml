@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/normal_bg_color"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/normal_bg_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/top_bar"
@@ -51,11 +50,10 @@
                     android:orientation="vertical" >
 
                     <com.hyphenate.helpdesk.easeui.widget.CircularImage
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="45dip"
                         android:layout_height="45dip"
                         android:visibility="gone"
-                        android:src="@drawable/hd_default_avatar" />
+                        android:src="@drawable/hd_default_avatar"/>
 
                     <TextView
                         android:layout_width="wrap_content"

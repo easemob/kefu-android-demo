@@ -3,4 +3,5 @@
 	<item type="id" name="chat_menu_map"/>
 	<item type="id" name="chat_menu_leave_msg"/>
 	<item type="id" name="chat_menu_video_call"/>
+	<item type="id" name="chat_menu_evaluation"/>
 </resources>

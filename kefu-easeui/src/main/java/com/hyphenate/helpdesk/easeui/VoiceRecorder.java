@@ -105,8 +105,8 @@ public class VoiceRecorder {
                 if (file != null && file.exists() && !file.isDirectory()) {
                     file.delete();
                 }
-            } catch (IllegalStateException e) {
-            } catch (RuntimeException e){}
+            } catch (IllegalStateException ignored) {
+            } catch (RuntimeException ignored){}
             isRecording = false;
         }
     }

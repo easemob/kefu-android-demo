@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 
+import java.util.Locale;
+
 public class ShopDetailsActivity extends DemoBaseActivity {
 	private RelativeLayout rl_tochat;
 	private RelativeLayout mImageButton;
@@ -73,9 +75,9 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 		String sImageView2;
 		String sImageView3;
 
-		sImageView1 = String.format("product_details_%d_a", index);
-		sImageView2 = String.format("product_details_%d_b", index);
-		sImageView3 = String.format("product_details_%d_c", index);
+		sImageView1 = String.format(Locale.getDefault(),"product_details_%d_a", index);
+		sImageView2 = String.format(Locale.getDefault(),"product_details_%d_b", index);
+		sImageView3 = String.format(Locale.getDefault(),"product_details_%d_c", index);
 
 		iImageView1 = getResources().getIdentifier(sImageView1, "drawable",getPackageName());
 		iImageView2 = getResources().getIdentifier(sImageView2, "drawable",getPackageName());

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,10 @@ public class ConversationListFragment extends Fragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (getView() == null){
+			return;
+		}
 		ListView mListView = (ListView) getView().findViewById(R.id.listview);
-
 		mListView.setAdapter(adapter = new ConversationAdapter(getContext(), 1, conversationList));
 		loadConversationList();
 		adapter.notifyDataSetChanged();
@@ -113,7 +116,7 @@ public class ConversationListFragment extends Fragment {
 
 			if (lastMessage != null){
 				if (lastMessage.getType() == Message.Type.TXT){
-					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), getTextMessageTitle(lastMessage)));
+					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), Html.fromHtml(getTextMessageTitle(lastMessage))));
 				}else if (lastMessage.getType() == Message.Type.VOICE){
 					viewHolder.tvMessage.setText(R.string.message_type_voice);
 				}else if (lastMessage.getType() == Message.Type.VIDEO){

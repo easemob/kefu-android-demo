@@ -143,6 +143,7 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 			public void run() {
 				InputMethodManager inputManager = (InputMethodManager) edittext.getContext().getSystemService(
 						Context.INPUT_METHOD_SERVICE);
+				assert inputManager != null;
 				inputManager.showSoftInput(edittext, 0);
 			}
 		}, 100);

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -152,11 +151,11 @@ public class FileDownloadActivity extends BaseActivity {
         } finally {
             try {
                 if (is != null) is.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
             try {
                 if (fos != null) fos.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
 

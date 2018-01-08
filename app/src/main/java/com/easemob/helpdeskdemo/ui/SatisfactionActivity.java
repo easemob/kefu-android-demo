@@ -70,7 +70,7 @@ public class SatisfactionActivity extends BaseActivity {
     }
 
     private void refreshLevelName(){
-        if (!TextUtils.isEmpty(currentDegree.getName())){
+        if (currentDegree != null && !TextUtils.isEmpty(currentDegree.getName())){
             tvLevelName.setText(currentDegree.getName());
         }else{
             tvLevelName.setText("");

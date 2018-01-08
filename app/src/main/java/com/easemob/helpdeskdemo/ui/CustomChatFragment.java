@@ -37,6 +37,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     private static final int ITEM_MAP = 11;
     private static final int ITEM_LEAVE_MSG = 12;//ITEM_SHORTCUT = 12;
     private static final int ITEM_VIDEO = 13;
+    private static final int ITEM_EVALUATION = 14;
 
     private static final int REQUEST_CODE_SELECT_MAP = 11;
     private static final int REQUEST_CODE_SHORTCUT = 12;
@@ -54,8 +55,10 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public static final int MESSAGE_TYPE_RECV_TRACK = 8;
     public static final int MESSAGE_TYPE_SENT_FORM = 9;
     public static final int MESSAGE_TYPE_RECV_FORM = 10;
+
+
     //message type 最大值
-    public static final int MESSAGE_TYPE_COUNT = 11;
+    public static final int MESSAGE_TYPE_COUNT = 13;
 
 
     @Override
@@ -164,6 +167,9 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             case ITEM_VIDEO:
                 startVideoCall();
                 break;
+            case ITEM_EVALUATION:
+                ChatClient.getInstance().chatManager().asyncSendInviteEvaluationMessage(toChatUsername, null);
+                break;
 //            case ITEM_FILE:
 //                //如果需要覆盖内部的,可以return true
 //                //demo中通过系统API选择文件,实际app中最好是做成qq那种选择发送文件
@@ -198,6 +204,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map, extendMenuItemClickListener);
         inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg, extendMenuItemClickListener);
         inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_evaluation, R.drawable.em_chat_evaluation_selector, ITEM_EVALUATION, R.id.chat_menu_evaluation, extendMenuItemClickListener);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.easemob.helpdeskdemo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -23,6 +24,7 @@ public class Preferences {
 		return instance;
 	}
 	
+	@SuppressLint("CommitPrefEdits")
 	public static void init(Context context){
 		instance = new Preferences();
 		instance.pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE );

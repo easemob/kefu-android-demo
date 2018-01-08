@@ -9,12 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.emojicon.Emojicon.Type;
-import com.hyphenate.helpdesk.easeui.util.SmileUtils;
-import com.hyphenate.helpdesk.manager.EmojiconManager;
 
 import java.io.File;
 import java.util.List;
@@ -42,6 +40,7 @@ public class EmojiconGridAdapter extends ArrayAdapter<Emojicon>{
         ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_expression);
         TextView textView = (TextView) convertView.findViewById(R.id.tv_name);
         Emojicon emojicon = getItem(position);
+        assert emojicon != null;
         if(textView != null && emojicon.getName() != null){
             textView.setText(emojicon.getName());
         }

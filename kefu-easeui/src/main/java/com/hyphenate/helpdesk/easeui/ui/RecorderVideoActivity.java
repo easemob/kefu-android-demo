@@ -76,6 +76,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		setContentView(R.layout.hd_recorder_activity);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		assert pm != null;
 		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
 				CLASS_LABEL);
 		mWakeLock.acquire();
@@ -109,6 +110,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		if (mWakeLock == null) {
 			// keep screen on
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			assert pm != null;
 			mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
 					CLASS_LABEL);
 			mWakeLock.acquire();
@@ -200,7 +202,9 @@ public class RecorderVideoActivity extends BaseActivity implements
 		super.onPause();
 
 		if (mWakeLock != null) {
-			mWakeLock.release();
+			try{
+				mWakeLock.release();
+			}catch (Exception e){}
 			mWakeLock = null;
 		}
 
@@ -302,9 +306,13 @@ public class RecorderVideoActivity extends BaseActivity implements
 			if(!initRecorder())
 				return false;
 		}
-		mediaRecorder.setOnInfoListener(this);
-		mediaRecorder.setOnErrorListener(this);
-		mediaRecorder.start();
+		try{
+			mediaRecorder.setOnInfoListener(this);
+			mediaRecorder.setOnErrorListener(this);
+			mediaRecorder.start();
+		}catch (Exception e){
+			return false;
+		}
 		return true;
 	}
 
@@ -395,7 +403,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 				mCamera.release();
 				mCamera = null;
 			}
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -426,6 +434,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 					break;
 			}
 			try {
+				assert mCamera != null;
 				mCamera.lock();
 				mCamera.setDisplayOrientation(90);
 				mCamera.setPreviewDisplay(mVideoView.getHolder());

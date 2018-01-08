@@ -143,7 +143,6 @@ public class EmojiconScrollTabBar extends RelativeLayout{
 
                     if(childRight > scrollRight){
                         scrollView.scrollTo(childRight - scrollRight,0);
-                        return;
                     }
                 }
             });

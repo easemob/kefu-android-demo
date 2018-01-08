@@ -69,7 +69,7 @@ public class DemoHelper {
         ChatClient.Options options = new ChatClient.Options();
         options.setAppkey(Preferences.getInstance().getAppKey());
         options.setTenantId(Preferences.getInstance().getTenantId());
-        options.showAgentInputState().showVisitorWaitCount();
+        options.showAgentInputState().showVisitorWaitCount().showMessagePredict();
 
         //增加GCM推送，对于国外的APP可能比较需要
 //        options.setGCMNumber("****");
@@ -114,7 +114,6 @@ public class DemoHelper {
                         }
                     }
                     if (userAvatarView != null){
-                        userAvatarView.setImageResource(com.hyphenate.helpdesk.R.drawable.hd_default_avatar);
                         if (agentInfo != null){
                             if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
                                 String strUrl = agentInfo.getAvatar();
@@ -125,10 +124,11 @@ public class DemoHelper {
                                     }
                                     //正常的string路径
                                     Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).transform(new GlideCircleTransform(context)).into(userAvatarView);
+                                    return;
                                 }
                             }
                         }
-
+                        userAvatarView.setImageResource(com.hyphenate.helpdesk.R.drawable.hd_default_avatar);
                     }
                 } else {
                     //此处设置当前登录用户的头像，
@@ -299,7 +299,7 @@ public class DemoHelper {
                                 JSONObject jsonTicket = null;
                                 try{
                                     jsonTicket = message.getJSONObjectAttribute("weichat").getJSONObject("event").getJSONObject("ticket");
-                                }catch (Exception e){}
+                                }catch (Exception ignored){}
                                 ListenerManager.getInstance().sendBroadCast(eventName, jsonTicket);
                             }
                         }
