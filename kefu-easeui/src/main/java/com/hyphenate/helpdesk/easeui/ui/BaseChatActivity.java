@@ -19,6 +19,7 @@ public class BaseChatActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         //IM服务号
+        assert bundle != null;
         toChatUsername = bundle.getString(Config.EXTRA_SERVICE_IM_NUMBER);
         chatFragment = new ChatFragment();
         // 传入参数

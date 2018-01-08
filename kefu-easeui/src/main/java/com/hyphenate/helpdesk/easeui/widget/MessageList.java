@@ -1,6 +1,7 @@
 package com.hyphenate.helpdesk.easeui.widget;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -76,7 +77,7 @@ public class MessageList extends RelativeLayout {
     }
 
     protected void parseStyle(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
+        @SuppressLint("CustomViewStyleable") TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
         showAvatar = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserAvatar, true);
         myBubbleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
         otherBuddleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);

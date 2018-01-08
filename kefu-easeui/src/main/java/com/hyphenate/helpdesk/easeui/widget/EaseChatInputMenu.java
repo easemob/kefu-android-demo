@@ -132,10 +132,12 @@ public class EaseChatInputMenu extends LinearLayout {
     private synchronized void initOnlineEmojiconGroupList() {
         List<EmojiconPackage> emojiconPackages = ChatClient.getInstance().emojiconManager().getEmojiPackagesList();
         if (emojiconPackages.size() > 0) {
-            for (EmojiconPackage aPackage: emojiconPackages) {
-                EmojiconGroupEntity emojiconGroupEntity = new EmojiconGroupEntity(-1, ChatClient.getInstance().emojiconManager().getEmojiconList(aPackage), Emojicon.Type.BIG_EXPRESSION);
-                emojiconGroupEntity.setName(aPackage.packageName);
-                ((EmojiconMenu) emojiconMenu).addEmojiconGroup(emojiconGroupEntity);
+            synchronized (emojiconPackages){
+                for (EmojiconPackage aPackage: emojiconPackages) {
+                    EmojiconGroupEntity emojiconGroupEntity = new EmojiconGroupEntity(-1, ChatClient.getInstance().emojiconManager().getEmojiconList(aPackage), Emojicon.Type.BIG_EXPRESSION);
+                    emojiconGroupEntity.setName(aPackage.packageName);
+                    ((EmojiconMenu) emojiconMenu).addEmojiconGroup(emojiconGroupEntity);
+                }
             }
         }
     }

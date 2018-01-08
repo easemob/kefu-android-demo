@@ -99,11 +99,10 @@ public class ImageCache {
 	 *            The cache parameters to initialize the cache
 	 */
 	private void init(ImageCacheParams cacheParams) {
-		ImageCacheParams mCacheParams = cacheParams;
 
 		// BEGIN_INCLUDE(init_memory_cache)
 		// Set up memory cache
-		if (mCacheParams.memoryCacheEnabled) {
+		if (cacheParams.memoryCacheEnabled) {
 //			if (BuildConfig.DEBUG) {
 //				Log.d(TAG, "Memory cache created (size = "
 //						+ mCacheParams.memCacheSize + ")");
@@ -133,7 +132,7 @@ public class ImageCache {
 			}
 
 			mMemoryCache = new LruCache<String, BitmapDrawable>(
-					mCacheParams.memCacheSize) {
+					cacheParams.memCacheSize) {
 
 				/**
 				 * Notify the removed entry that is no longer being cached
@@ -454,10 +453,7 @@ public class ImageCache {
 	 */
 	@TargetApi(VERSION_CODES.GINGERBREAD)
 	public static boolean isExternalStorageRemovable() {
-		if (Utils.hasGingerbread()) {
-			return Environment.isExternalStorageRemovable();
-		}
-		return true;
+		return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
 	}
 
 	/**

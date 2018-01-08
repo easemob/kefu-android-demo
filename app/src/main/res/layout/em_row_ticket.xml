@@ -25,7 +25,7 @@
                 android:ellipsize="end"
                 android:textColor="#FF2B2B2B"
                 android:maxLines="1"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:layout_weight="1.5"/>
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:textColor="#FF2B2B2B"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:maxLines="1"
                 android:gravity="right"
                 android:layout_weight="1"/>

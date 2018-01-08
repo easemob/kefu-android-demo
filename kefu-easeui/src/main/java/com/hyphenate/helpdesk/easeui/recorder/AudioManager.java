@@ -107,7 +107,7 @@ public class AudioManager {
         try {
             mMediaRecorder.stop();
             mMediaRecorder.release();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         mMediaRecorder = null;
     }

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1038044763444",
+    "firebase_url": "https://kefudemo2.firebaseio.com",
+    "project_id": "kefudemo2",
+    "storage_bucket": "kefudemo2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038044763444:android:4f43f05456fc3b89",
+        "android_client_info": {
+          "package_name": "com.easemob.helpdeskdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1038044763444-kf37oo1p1fp4h7oigvbjipnfle8ferje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.easemob.helpdeskdemo",
+            "certificate_hash": "97fdcd092f8403ac36644d0ed12e6f6fe6ce3b11"
+          }
+        },
+        {
+          "client_id": "1038044763444-q1p0s00q90kbqnmp8k6m0fledm2orle5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH2QNeYlEYCvVKG0lk2S8Hq2IWj6tcrIg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1038044763444-q1p0s00q90kbqnmp8k6m0fledm2orle5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -224,6 +225,9 @@ public class TicketListFragment extends Fragment implements SwipeRefreshLayout.O
     private void loadFirstDatas() {
         String target = Preferences.getInstance().getCustomerAccount();
         String projectId = Preferences.getInstance().getProjectId();
+        if (TextUtils.isEmpty(target) || TextUtils.isEmpty(projectId)){
+            return;
+        }
 
         ChatClient.getInstance().leaveMsgManager().getLeaveMsgs(projectId, target, 0, PER_PAGE_COUNT, new ValueCallBack<String>() {
             @Override

@@ -16,6 +16,8 @@ package com.easemob.helpdeskdemo.ui;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -33,13 +35,15 @@ import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
+//import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.bertsir.zbar.QrConfig;
+import cn.bertsir.zbar.QrManager;
 
 public class SettingFragment extends Fragment implements View.OnClickListener{
 
@@ -55,6 +59,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private TextView tvNick;
 	private TextView tvTenantId;
 	private TextView tvProjectId;
+	private TextView tvVersion;
 
 
 	private static final int REQUEST_CODE_APPKEY = 1;
@@ -62,8 +67,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_NICK = 3;
 	private static final int REQUEST_CODE_TENANT_ID = 4;
 	private static final int REQUEST_CODE_PROJECT_ID = 5;
-
-	private static final int REQUEST_CODE_QCODE = 6;
 
 	private Dialog dialog;
 
@@ -78,13 +81,24 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		super.onActivityCreated(savedInstanceState);
 		initView();
 		initListener();
+		try {
+			tvVersion.setText("v" + ChatClient.getInstance().sdkVersion() + "(" + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode +")");
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 	private void initView() {
+		if (getView() == null){
+			return;
+		}
 		tvAppkey = (TextView) getView().findViewById(R.id.tv_setting_appkey);
 		tvAccount = (TextView) getView().findViewById(R.id.tv_setting_account);
 		tvNick = (TextView) getView().findViewById(R.id.tv_setting_nick);
 		tvTenantId = (TextView) getView().findViewById(R.id.tv_setting_tenant_id);
 		tvProjectId = (TextView) getView().findViewById(R.id.tv_setting_project_id);
+		tvVersion = (TextView) getView().findViewById(R.id.tv_version);
 
 		rlAppkey = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_appkey);
 		rlAccount = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_account);
@@ -181,52 +195,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					tvProjectId.setText(newProjectId);
 					Preferences.getInstance().setSettingProjectId(newProjectId);
 					break;
-				case REQUEST_CODE_QCODE:
-					//处理扫描结果
-					if (null != data){
-						Bundle bundle = data.getExtras();
-						if (bundle == null){
-							return;
-						}
-						if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS){
-							String result = bundle.getString(CodeUtils.RESULT_STRING);
-							//http://m.easemob.com/download/app/cs_demo?appkey=zdxd#sq&tenantid=25115#projectId=23&imservicenum=ceshia
-							try{
-								Map<String, String> paramMap = urlParamParse(result);
-								String appkey = paramMap.get("appkey");
-								String imServiceNum = paramMap.get("imservicenum");
-								String tenantId = paramMap.get("tenantid");
-								String projectId = paramMap.get("projectid");
-								if (!TextUtils.isEmpty(appkey)){
-									tvAppkey.setText(appkey);
-									showCustomMessage(appkey);
-								}
-								if (!TextUtils.isEmpty(projectId)){
-									tvProjectId.setText(projectId);
-									Preferences.getInstance().setSettingProjectId(projectId);
-								}
-								if (!TextUtils.isEmpty(tenantId)){
-									tvTenantId.setText(tenantId);
-									Preferences.getInstance().setTenantId(tenantId);
-									ChatClient.getInstance().changeTenantId(tenantId);
-								}
-								if (!TextUtils.isEmpty(imServiceNum)){
-									tvAccount.setText(imServiceNum);
-									Preferences.getInstance().setCustomerAccount(imServiceNum);
-								}
-								if (!TextUtils.isEmpty(appkey) && !TextUtils.isEmpty(tenantId)){
-									Toast.makeText(getActivity(), getString(R.string.qrcode_success), Toast.LENGTH_SHORT).show();
-								}else{
-									Toast.makeText(getActivity(), getString(R.string.qrcode_invalid), Toast.LENGTH_SHORT).show();
-								}
-							}catch (Exception e){
-								Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
-							}
-						}else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED){
-							Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
-						}
-					}
-					break;
 				default:
 					break;
 			}
@@ -250,7 +218,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			if (arrSpliteEqual.length > 1) {
 				mapRequest.put(arrSpliteEqual[0], arrSpliteEqual[1]);
 			} else {
-				if (arrSpliteEqual[0] != "") {
+				if (!TextUtils.isEmpty(arrSpliteEqual[0])) {
 					mapRequest.put(arrSpliteEqual[0], "");
 				}
 			}
@@ -357,13 +325,73 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				startActivityForResult(intent, REQUEST_CODE_PROJECT_ID);
 				break;
 			case R.id.rl_qcode:
-				intent.setClass(getActivity(), CaptureActivity.class);
-				startActivityForResult(intent, REQUEST_CODE_QCODE);
+				QrConfig qrConfig = new QrConfig.Builder()
+						.setDesText("识别二维码") //扫描框下文字
+						.setShowDes(false)//是否显示扫描框下面文字
+						.setShowLight(true) //显示手电筒按钮
+						.setShowTitle(true)//显示Title
+						.setShowAlbum(false) //显示从相册选择按钮
+						.setCornerColor(Color.WHITE)//设置扫描框颜色
+						.setLineColor(Color.WHITE)//设置扫描线颜色
+						.setLineSpeed(QrConfig.LINE_MEDIUM)//设置扫描线速度
+						.setScanType(QrConfig.TYPE_QRCODE)//设置扫描框类型（二维码，条形码）
+						.setPlaySound(true)//是否扫描成功后bi~的声音
+						.setTitleText("扫描二维码")//设置Tilte文字
+						.setTitleBackgroudColor(getResources().getColor(R.color.title_bg_color))//设置状态栏颜色
+						.setTitleTextColor(Color.WHITE)//设置Title文字颜色
+						.create();
+				QrManager.getInstance().init(qrConfig).startScan(getActivity(), new QrManager.OnScanResultCallback() {
+					@Override
+					public void onScanSuccess(String result) {
+						dealWithQrcodeResult(result);
+					}
+
+					@Override
+					public void onScanFail(int errorCode) {
+						Toast.makeText(getActivity(), R.string.qrcode_permission_fail, Toast.LENGTH_SHORT).show();
+					}
+				});
 				break;
 			default:
 				break;
 		}
 
+	}
+
+
+	private void dealWithQrcodeResult(String result) {
+		//处理扫描结果
+		try {
+			Map<String, String> paramMap = urlParamParse(result);
+			String appkey = paramMap.get("appkey");
+			String imServiceNum = paramMap.get("imservicenum");
+			String tenantId = paramMap.get("tenantid");
+			String projectId = paramMap.get("projectid");
+			if (!TextUtils.isEmpty(appkey)) {
+				tvAppkey.setText(appkey);
+				showCustomMessage(appkey);
+			}
+			if (!TextUtils.isEmpty(projectId)) {
+				tvProjectId.setText(projectId);
+				Preferences.getInstance().setSettingProjectId(projectId);
+			}
+			if (!TextUtils.isEmpty(tenantId)) {
+				tvTenantId.setText(tenantId);
+				Preferences.getInstance().setTenantId(tenantId);
+				ChatClient.getInstance().changeTenantId(tenantId);
+			}
+			if (!TextUtils.isEmpty(imServiceNum)) {
+				tvAccount.setText(imServiceNum);
+				Preferences.getInstance().setCustomerAccount(imServiceNum);
+			}
+			if (!TextUtils.isEmpty(appkey) && !TextUtils.isEmpty(tenantId)) {
+				Toast.makeText(getActivity(), getString(R.string.qrcode_success), Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(getActivity(), getString(R.string.qrcode_invalid), Toast.LENGTH_SHORT).show();
+			}
+		} catch (Exception e) {
+			Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void closeDialog(){

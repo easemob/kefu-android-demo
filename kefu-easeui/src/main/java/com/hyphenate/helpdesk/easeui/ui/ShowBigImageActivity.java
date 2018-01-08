@@ -115,7 +115,7 @@ public class ShowBigImageActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (localFile != null && localFile.length() < 614400){
+                        if (localFile.length() < 614400){
                             bitmap = BitmapFactory.decodeFile(localPath);
                         }else{
                             DisplayMetrics metrics = new DisplayMetrics();

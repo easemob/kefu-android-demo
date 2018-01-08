@@ -180,6 +180,7 @@ public class BottomRelativeLayout extends LinearLayout {
 
 	private void initView(Context context){
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		assert inflater != null;
 		inflater.inflate(R.layout.call_bottom_layout, this);
 	}
 

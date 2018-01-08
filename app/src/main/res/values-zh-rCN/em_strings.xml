@@ -7,6 +7,7 @@
     <string name="attach_location">位置</string>
     <string name="attach_short_cut_message">常用语</string>
     <string name="attach_call_video">发起视频</string>
+    <string name="attach_evaluation">评价</string>
     <string name="location_message">发送位置</string>
     <string name="please_check">key检查出错!请在 AndroidManifest.xml 中检查key</string>
     <string name="text_fahuo">你们多久可以发货?</string>
@@ -25,6 +26,7 @@
     <string name="qrcode_success">二维码扫描成功</string>
     <string name="qrcode_invalid">二维码无效</string>
     <string name="qrcode_fail">二维码扫描失败</string>
+    <string name="qrcode_permission_fail">打开摄像头失败，请检查权限！</string>
     <string name="customernumber"> IM服务号</string>
     <string name="connect_customer"> 联系客服</string>
     <string name="feedback"> 意见反馈</string>
@@ -62,6 +64,7 @@
 
     <string name="tip_eval">请对我的服务做出评价</string>
     <string name="hint_leave_message">留言</string>
+    <string name="hint_input_evaluation">输入文字评价</string>
     <string name="tip_btn_sumbit">提交</string>
     <string name="tip_btn_evaluation">立即评价</string>
 
@@ -188,5 +191,4 @@
     <string name="chat_row_satisfaction_content">请对我的服务做出评价</string>
 	<string name="network_error_notice">网络错误,点击重试</string>
     <string name="tag">TAG标签</string>
->>>>>>> dev
 </resources>

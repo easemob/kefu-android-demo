@@ -48,8 +48,7 @@ public class LoadLocalBigImgTask extends AsyncTask<Void, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(Void... params) {
-        Bitmap bitmap = ImageUtils.decodeScaleImage(path, width, height);
-        return bitmap;
+        return ImageUtils.decodeScaleImage(path, width, height);
     }
 
     @Override

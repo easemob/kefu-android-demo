@@ -133,7 +133,6 @@
             android:layout_width="@dimen/size_avatar"
             android:layout_height="@dimen/size_avatar"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:background="@drawable/hd_default_avatar"
             android:scaleType="fitXY" />
 
     </LinearLayout>

@@ -53,7 +53,7 @@ public class ChatRowFile extends ChatRow{
         fileSizeView.setText(TextFormater.getDataSize(fileMessageBody.getFileSize()));
         if (message.direct() == Message.Direct.RECEIVE) { // 接收的消息
             File file = new File(filePath);
-            if (file != null && file.exists()) {
+            if (file.exists()) {
                 fileStateView.setText(R.string.Have_downloaded);
             } else {
                 fileStateView.setText(R.string.Did_not_download);
@@ -120,7 +120,7 @@ public class ChatRowFile extends ChatRow{
     protected void onBubbleClick() {
         String filePath = fileMessageBody.getLocalUrl();
         File file = new File(filePath);
-        if (file != null && file.exists()) {
+        if (file.exists()) {
             // 文件存在，直接打开
             FileUtils.openFile(file, (Activity) context);
         } else {

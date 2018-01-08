@@ -75,7 +75,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
     private String ticketId;
     private LinearLayout fileLayout;
     private ScrollView sFileLayout;
-    private List<FileEntity> fileList = Collections.synchronizedList(new ArrayList<FileEntity>());
+    private final List<FileEntity> fileList = Collections.synchronizedList(new ArrayList<FileEntity>());
     private LayoutInflater inflater;
     private InputMethodManager iMM;
 
@@ -342,19 +342,11 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
 
     private boolean isImage(String prefix) {
-        if (TextUtils.isEmpty(prefix)) {
-            return false;
-        }
-        return prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png")
-                || prefix.equalsIgnoreCase("bmp") || prefix.equalsIgnoreCase("gif")
-                || prefix.equalsIgnoreCase("jpeg") || prefix.equals("webp");
+        return !TextUtils.isEmpty(prefix) && (prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png") || prefix.equalsIgnoreCase("bmp") || prefix.equalsIgnoreCase("gif") || prefix.equalsIgnoreCase("jpeg") || prefix.equals("webp"));
     }
 
-    private boolean isAudio(String prefix){
-        if (TextUtils.isEmpty(prefix)){
-            return false;
-        }
-        return prefix.equalsIgnoreCase("amr") || prefix.equalsIgnoreCase("mp3");
+    private boolean isAudio(String prefix) {
+        return !TextUtils.isEmpty(prefix) && (prefix.equalsIgnoreCase("amr") || prefix.equalsIgnoreCase("mp3"));
     }
 
     private void uploadFile(String filePath) {
