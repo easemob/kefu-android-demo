@@ -167,7 +167,7 @@ public abstract class ChatRow extends LinearLayout {
      * 设置消息发送callback
      */
     protected void setMessageSendCallback() {
-        if (messageSendCallback == null) {
+        if (messageSendCallback == null && message.messageStatusCallback() == null) {
             messageSendCallback = new Callback() {
                 @Override
                 public void onSuccess() {
@@ -184,7 +184,7 @@ public abstract class ChatRow extends LinearLayout {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (percentageView != null && progress < 100){
+                            if (percentageView != null && progress < 100) {
                                 percentageView.setTag(progress);
                                 percentageView.setText(progress + "%");
                             }
@@ -193,9 +193,9 @@ public abstract class ChatRow extends LinearLayout {
                     });
                 }
             };
+
         }
         message.setMessageStatusCallback(messageSendCallback);
-
     }
 
     /**

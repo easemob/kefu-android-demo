@@ -3,7 +3,6 @@ package com.hyphenate.helpdesk.easeui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,8 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
@@ -86,13 +85,72 @@ public class MessageAdapter extends BaseAdapter {
 	public int mMinItemWidth;
 	public int mMaxItemWidth;
 
+	/**
+	 * 弱引用刷新UI
+	 */
+	private WeakHandler handler;
 
+	private static class WeakHandler extends android.os.Handler {
+		WeakReference<MessageAdapter> weakReference;
+
+		public WeakHandler(MessageAdapter adapter) {
+			this.weakReference = new WeakReference<MessageAdapter>(adapter);
+		}
+
+		private void refreshList() {
+			MessageAdapter messageAdapter = weakReference.get();
+			if (messageAdapter != null && messageAdapter.conversation != null) {
+				List<Message> list = messageAdapter.conversation.getAllMessages();
+				synchronized (list) {
+					Collections.sort(list);
+				}
+				messageAdapter.messages = list.toArray(new Message[list.size()]);
+				messageAdapter.conversation.markAllMessagesAsRead();
+				messageAdapter.notifyDataSetChanged();
+			}
+		}
+
+		private void selectLast() {
+			MessageAdapter messageAdapter = weakReference.get();
+			if (messageAdapter != null && messageAdapter.messages != null) {
+				if (messageAdapter.messages.length > 0) {
+					messageAdapter.listView.setSelection(messageAdapter.messages.length - 1);
+				}
+			}
+		}
+
+		private void seekTo(int position) {
+			MessageAdapter messageAdapter = weakReference.get();
+			if (messageAdapter != null && messageAdapter.listView != null) {
+				messageAdapter.listView.setSelection(position);
+			}
+		}
+
+		@Override
+		public void handleMessage(android.os.Message message) {
+			switch (message.what) {
+				case HANDLER_MESSAGE_REFRESH_LIST:
+					refreshList();
+					break;
+				case HANDLER_MESSAGE_SELECT_LAST:
+					selectLast();
+					break;
+				case HANDLER_MESSAGE_SEEK_TO:
+					int position = message.arg1;
+					seekTo(position);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
 	public MessageAdapter(Context context, String username, ListView listView) {
 		this.context = context;
 		this.listView = listView;
 		toChatUsername = username;
 		this.conversation = ChatClient.getInstance().chatManager().getConversation(username);
+		handler = new WeakHandler(this);
 
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -101,48 +159,6 @@ public class MessageAdapter extends BaseAdapter {
 		mMaxItemWidth = (int)(displayMetrics.widthPixels * 0.4f);
 		mMinItemWidth = (int)(displayMetrics.widthPixels * 0.15f);
 	}
-
-	Handler handler = new Handler() {
-		private void refreshList() {
-			// UI线程不能直接使用conversation.getAllMessages()
-			// 否则在UI刷新过程中，如果收到新的消息，会导致并发问题
-			if(conversation != null) {
-				List<Message> list = conversation.getAllMessages();
-				synchronized (list){
-					Collections.sort(list, new Comparator<Message>() {
-						@Override
-						public int compare(Message lhs, Message rhs) {
-							return (int) (lhs.messageTime() - rhs.messageTime());
-						}
-					});
-				}
-				messages = list.toArray(new Message[list.size()]);
-				conversation.markAllMessagesAsRead();
-				notifyDataSetChanged();
-			}
-		}
-		
-		@Override
-		public void handleMessage(android.os.Message message) {
-			switch (message.what) {
-			case HANDLER_MESSAGE_REFRESH_LIST:
-				refreshList();
-				break;
-			case HANDLER_MESSAGE_SELECT_LAST:
-                if (messages != null && messages.length > 0) {
-                    listView.setSelection(messages.length - 1);
-                }
-                break;
-            case HANDLER_MESSAGE_SEEK_TO:
-                int position = message.arg1;
-                listView.setSelection(position);
-                break;
-			default:
-				break;
-			}
-		}
-	};
-
 
 	/**
 	 * 刷新页面

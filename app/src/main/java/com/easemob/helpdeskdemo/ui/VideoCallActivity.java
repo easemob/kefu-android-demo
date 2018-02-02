@@ -311,6 +311,17 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 			}
 		});
 
+		bottomRelativeLayout.setSharedWindowOnClickListener(new BottomRelativeLayout.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(View buttonView, boolean isChecked) {
+				if (isChecked){
+					ChatClient.getInstance().callManager().publishWindow(VideoCallActivity.this, null);
+				}else{
+					ChatClient.getInstance().callManager().unPublishWindow(null);
+				}
+			}
+		});
+
 		multiVideoView.setOnMaxVideoChangeListener(new CustomVideoContainer.OnMaxVideoChangeListener() {
 			@Override
 			public void onChanged(boolean isMax) {
@@ -454,6 +465,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 
 	@Override
 	public void onCallEnd(int reason, String desc) {
+		EMLog.d(TAG,"onCallEnd-reason:" + reason + ",desc:" + desc);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -473,10 +485,10 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 	public void onNotice(CallManager.HMediaNoticeCode code, String arg1, String arg2, Object arg3) {
 		switch (code){
 			case HMediaNoticeOpenCameraFail:
-				EMLog.e(TAG, "onNotice:HMediaNoticeOpenCameraFail");
+				EMLog.d(TAG, "onNotice:HMediaNoticeOpenCameraFail");
 				break;
 			case HMediaNoticeOpenMicFail:
-				EMLog.e(TAG, "onNotice:HMediaNoticeOpenCameraFail");
+				EMLog.d(TAG, "onNotice:HMediaNoticeOpenCameraFail");
 				break;
 		}
 	}
@@ -542,4 +554,10 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 		}
 	}
 
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+	}
 }

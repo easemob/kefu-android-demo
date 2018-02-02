@@ -30,19 +30,23 @@ public class BottomRelativeLayout extends LinearLayout {
 	private View.OnClickListener answerOnClickListener;
 	private View.OnClickListener hangUpOnClickListener;
 	private View.OnClickListener switchCameraOnClickListener;
+
 	private OnCheckedChangeListener muteOnClickListener;
 	private OnCheckedChangeListener speakerOnClickListener;
 	private OnCheckedChangeListener localVideoOnClickListener;
+	private OnCheckedChangeListener sharedWindowOnClickListener;
 
 
 	private ImageView ivSwitchCamara;
 	private ImageView ivMute;
 	private ImageView ivSpeaker;
 	private ImageView ivLocalVideo;
+	private ImageView ivShareWindow;
 
 	private boolean isMuteState;
 	private boolean isHandsfreeState;
 	private boolean isLocalVideoOffState;
+	private boolean isSharingWindow;
 
 	private TextView tvAgentNick;
 	private TextView tvCallState;
@@ -87,6 +91,7 @@ public class BottomRelativeLayout extends LinearLayout {
 		ivMute = (ImageView) findViewById(R.id.iv_mute);
 		ivSpeaker = (ImageView) findViewById(R.id.iv_speaker);
 		ivLocalVideo = (ImageView) findViewById(R.id.iv_localvideo);
+		ivShareWindow = (ImageView) findViewById(R.id.iv_sharewindow);
 
 		tvAgentNick = (TextView) findViewById(R.id.tv_agent_nick);
 		tvCallState = (TextView) findViewById(R.id.tv_call_state);
@@ -161,6 +166,20 @@ public class BottomRelativeLayout extends LinearLayout {
 			}
 		});
 
+		ivShareWindow.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				isSharingWindow = !isSharingWindow;
+				if (isSharingWindow){
+					ivShareWindow.setImageResource(R.drawable.em_icon_local_recard_off);
+				}else{
+					ivShareWindow.setImageResource(R.drawable.em_icon_local_recard_on);
+				}
+				if (sharedWindowOnClickListener != null){
+					sharedWindowOnClickListener.onCheckedChanged(v, isSharingWindow);
+				}
+			}
+		});
 
 	}
 
@@ -206,6 +225,10 @@ public class BottomRelativeLayout extends LinearLayout {
 
 	public void setLocalVideoOnCheckedChangeListener(OnCheckedChangeListener listener){
 		localVideoOnClickListener = listener;
+	}
+
+	public void setSharedWindowOnClickListener(OnCheckedChangeListener listener){
+		this.sharedWindowOnClickListener = listener;
 	}
 
 	public void setCallStateText(CharSequence text){
