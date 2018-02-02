@@ -44,7 +44,7 @@ public class ChatRowText extends ChatRow{
         EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
 
         //解析html超链接
-        CharSequence htmpTxt = Html.fromHtml(txtBody.getMessage());
+        CharSequence htmpTxt = Html.fromHtml(txtBody.getMessage().replace("<", "&lt;"));
         //解析表情
         Spannable span = SmileUtils.getSmiledText(context, htmpTxt);
 

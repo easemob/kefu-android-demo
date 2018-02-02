@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
     >
 
     <RelativeLayout
@@ -133,6 +133,16 @@
                 android:focusableInTouchMode="false"
                 android:src="@drawable/em_icon_local_video_on"
                 />
+
+            <ImageView
+                android:id="@+id/iv_sharewindow"
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                android:src="@drawable/em_icon_local_recard_on"
+                />
+
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

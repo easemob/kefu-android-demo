@@ -702,11 +702,6 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             Toast.makeText(getActivity(), R.string.File_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
-        //大于10M不让发送
-        if (file.length() > 10 * 1024 * 1024) {
-            Toast.makeText(getActivity(), R.string.The_file_is_not_greater_than_10_m, Toast.LENGTH_SHORT).show();
-            return;
-        }
         sendFileMessage(filePath);
 
     }

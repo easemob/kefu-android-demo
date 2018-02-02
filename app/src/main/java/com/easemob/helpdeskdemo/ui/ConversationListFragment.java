@@ -112,11 +112,11 @@ public class ConversationListFragment extends Fragment {
 			}else{
 				viewHolder.tvUnreadCount.setVisibility(View.GONE);
 			}
-			Message lastMessage = conversation.getLastMessage();
+			Message lastMessage = conversation.latestMessage();
 
 			if (lastMessage != null){
 				if (lastMessage.getType() == Message.Type.TXT){
-					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), Html.fromHtml(getTextMessageTitle(lastMessage))));
+					viewHolder.tvMessage.setText(SmileUtils.getSmiledText(getContext(), Html.fromHtml(getTextMessageTitle(lastMessage).replace("<", "&lt;"))));
 				}else if (lastMessage.getType() == Message.Type.VOICE){
 					viewHolder.tvMessage.setText(R.string.message_type_voice);
 				}else if (lastMessage.getType() == Message.Type.VIDEO){
