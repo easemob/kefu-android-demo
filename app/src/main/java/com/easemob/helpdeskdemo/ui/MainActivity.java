@@ -30,6 +30,7 @@ import com.easemob.bottomnavigation.BottomNavigation;
 import com.easemob.bottomnavigation.OnBottomNavigationSelectedListener;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
+import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
@@ -80,32 +81,32 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         if (savedInstanceState != null){
             currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
             //Activity被杀死的时候，有些情况Fragment不被销毁
-            if (shopFragment != null){
-                shopFragment = getSupportFragmentManager().findFragmentByTag(shopFragment.getClass().getName());
-                settingFragment = getSupportFragmentManager().findFragmentByTag(settingFragment.getClass().getName());
-                ticketListFragment = getSupportFragmentManager().findFragmentByTag(ticketListFragment.getClass().getName());
-                conversationsFragment = getSupportFragmentManager().findFragmentByTag(conversationsFragment.getClass().getName());
+            if (shopFragment == null){
+                shopFragment = getSupportFragmentManager().findFragmentByTag("shopFragment");
+                settingFragment = getSupportFragmentManager().findFragmentByTag("settingFragment");
+                ticketListFragment = getSupportFragmentManager().findFragmentByTag("ticketListFragment");
+                conversationsFragment = getSupportFragmentManager().findFragmentByTag("conversationsFragment");
             }
         }
 
         if (shopFragment == null) {
             shopFragment = new ShopFragment();
-            trx.add(R.id.fragment_container, shopFragment, shopFragment.getClass().getName());
+            trx.add(R.id.fragment_container, shopFragment, "shopFragment");
         }
 
         if (ticketListFragment == null) {
             ticketListFragment = new TicketListFragment();
-            trx.add(R.id.fragment_container, ticketListFragment, ticketListFragment.getClass().getName());
+            trx.add(R.id.fragment_container, ticketListFragment, "ticketListFragment");
         }
 
         if (conversationsFragment == null) {
             conversationsFragment = new ConversationListFragment();
-            trx.add(R.id.fragment_container, conversationsFragment, conversationsFragment.getClass().getName());
+            trx.add(R.id.fragment_container, conversationsFragment, "conversationsFragment");
         }
 
         if (settingFragment == null) {
             settingFragment = new SettingFragment();
-            trx.add(R.id.fragment_container, settingFragment, settingFragment.getClass().getName());
+            trx.add(R.id.fragment_container, settingFragment, "settingFragment");
         }
 
         fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
@@ -118,6 +119,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
            .show(fragments[currentTabIndex])
            .commit();
 
+
         mBottomNav = $(R.id.bottom_navigation);
         mBottomNav.setBottomNavigationSelectedListener(this);
         //注册一个监听连接状态的listener
@@ -125,6 +127,10 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         ChatClient.getInstance().addConnectionListener(connectionListener);
         //6.0运行时权限处理，target api设成23时，demo这里做的比较简单，直接请求所有需要的运行时权限
         requestPermissions();
+
+
+        // 检查华为推送服务
+        HMSPushHelper.getInstance().connectHMS(this);
     }
 
     @TargetApi(23)

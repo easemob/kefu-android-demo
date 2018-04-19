@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 20
         versionName "2.0"
@@ -66,6 +66,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     compile 'com.android.support:support-v4:25.1.1'
     compile project(':kefu-easeui')
     compile project(':bottomnavigation')
@@ -84,6 +85,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.4.2'
     compile 'com.google.firebase:firebase-messaging:11.4.2'
     compile project(':zbarlibary')
+    compile project(':hmspush')
 }
 
 // Google firebase cloud messaging ADD THIS AT THE BOTTOM

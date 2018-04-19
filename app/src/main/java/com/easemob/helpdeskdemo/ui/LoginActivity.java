@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoMessageHelper;
+import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
@@ -180,6 +181,9 @@ public class LoginActivity extends DemoBaseActivity {
 			public void run() {
 				if (!LoginActivity.this.isFinishing())
 					progressDialog.dismiss();
+
+				// 获取华为 HMS 推送 token
+				HMSPushHelper.getInstance().getHMSPushToken();
 
 				//此处演示设置技能组,如果后台设置的技能组名称为[shouqian|shouhou],这样指定即分配到技能组中.
 				//为null则不按照技能组分配,同理可以设置直接指定客服scheduleAgent

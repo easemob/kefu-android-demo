@@ -1,2 +1,2 @@
-include ':app', ':kefu-easeui', ':bottomnavigation',':zbarlibary'
+include ':app', ':kefu-easeui', ':bottomnavigation',':zbarlibary', ':hmspush'
 
