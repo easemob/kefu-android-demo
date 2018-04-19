@@ -1,4 +1,6 @@
 
+如需旧版商城demo请跳转:[2.x商城Demo](https://github.com/easemob/kefu-android-demo/tree/master-2.x)
+
 ## 环信客服SDK (Android版)
 
 
@@ -44,7 +46,7 @@ android{
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //环信客服SDK
-    compile 'com.hyphenate:kefu-easeui-android:latest.release' //或者 compile 'com.hyphenate:kefu-easeui-android:1.0.8'
+    compile 'com.hyphenate:kefu-easeui-android:latest.release' //或者 compile 'com.hyphenate:kefu-easeui-android:1.0.2'
     //EaseUI中 头像获取用到了glide，请添加glide库
     compile 'com.github.bumptech.glide:glide:3.7.0' //其他版本也可以
     //EaseUI中，fragment用到了android-support-v4包
@@ -229,7 +231,7 @@ ChatClient.getInstance().addConnectionListener(new ChatClient.ConnectionListener
 #### 添加消息监听
 
 ```
-ChatClient.getInstance().chatManager().addMessageListener(new ChatManager.MessageListener() {
+ChatClient.getInstance().getChat().addMessageListener(new ChatManager.MessageListener() {
             @Override
             public void onMessage(List<Message> list) {
                 //收到普通消息
@@ -256,3 +258,4 @@ ChatClient.getInstance().chatManager().addMessageListener(new ChatManager.Messag
 ```
 
 #  其他更多属性请进入[官网文档](http://docs.easemob.com/cs/300visitoraccess/androidsdk)查询
+

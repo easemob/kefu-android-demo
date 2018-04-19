@@ -74,15 +74,21 @@
 -dontwarn  com.hyphenate.**
 
 # Huawei push
--keep class com.huawei.android.pushagent.** {*;}
--keep class com.huawei.android.pushselfshow.** {*;}
--keep class com.huawei.android.microkernel.** {*;}
--keep class com.baidu.mapapi.** {*;}
--keep class com.hianalytics.android.** {*;}
--dontwarn com.huawei.android.pushagent.**
--dontwarn com.huawei.android.pushselfshow.**
--dontwarn com.huawei.android.microkernel.**
--dontwarn com.github.mikephil.charting.data.**
+-ignorewarning
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hianalytics.android.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
+
+-keep class com.huawei.gamebox.plugin.gameservice.**{*;}
+
+-keep public class com.huawei.android.hms.agent.** extends android.app.Activity { public *; protected *; }
+-keep interface com.huawei.android.hms.agent.common.INoProguard {*;}
+-keep class * extends com.huawei.android.hms.agent.common.INoProguard {*;}
 
 
 

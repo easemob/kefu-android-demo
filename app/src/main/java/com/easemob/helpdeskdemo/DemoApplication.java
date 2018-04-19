@@ -22,6 +22,10 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+
+        //初始化华为HMS推送服务
+        HMSPushHelper.getInstance().initHMSAgent(this);
+
         Preferences.init(this);
         DemoHelper.getInstance().init(this);
 
