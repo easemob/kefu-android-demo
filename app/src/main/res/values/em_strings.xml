@@ -136,6 +136,10 @@
     <string name="call_version_inconsistent">Both call version are inconsistent</string>
     <string name="hanging_up">Hanging up..</string>
     <string name="answering">answering...</string>
+    <string name="tip_multi_video_calling">Multiple people video call...</string>
+
+    <string name="tip_video_calling">on the Calling...(%d)</string>
+    <string name="tip_video_in">received video call...</string>
 	<!-- call end -->
 
     <string name="setting_name">name:</string>
@@ -160,7 +164,7 @@
     <string name="em_example4_text_description">November sales: 10</string>
     <string name="em_notice_sending">Sending</string>
     <string name="order_number">Order number</string>
-    <string name="tip_multi_video_calling">Many people in the video call...</string>
+
 	<string name="message_type_voice">[Voice]</string>
     <string name="message_type_video">[Video]</string>
     <string name="message_type_location">[Location]</string>

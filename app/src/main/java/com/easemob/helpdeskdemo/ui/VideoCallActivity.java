@@ -30,7 +30,6 @@ import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 import com.superrtc.mediamanager.EMediaDefines;
 import com.superrtc.mediamanager.EMediaEntities;
-import com.superrtc.mediamanager.EMediaStream;
 
 import org.json.JSONObject;
 
@@ -432,7 +431,6 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 					if (videoView != null){
 						multiVideoView.removeVideoView(videoView);
 					}
-					ChatClient.getInstance().callManager().unSubscribe(streamItemList.get(0).stream, null);
 					streamItemMaps.remove(stream.memberName);
 					ChatClient.getInstance().callManager().setRemoteView(stream.streamId, null);
 				}else if (streamItemList.size() == 2){
@@ -440,14 +438,12 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 					StreamItem item1 = streamItemList.get(1);
 					if (item0.stream.streamId.equalsIgnoreCase(stream.streamId)){
 						item1.videoView = item0.videoView;
-						ChatClient.getInstance().callManager().unSubscribe(item0.stream, null);
 						ChatClient.getInstance().callManager().setRemoteView(item0.stream.streamId, null);
 						streamItemList.remove(item0);
 						item1.videoView.setLabel(item1.stream.memberName);
 						ChatClient.getInstance().callManager().setRemoteView(item1.stream.streamId, item1.videoView.getSurfaceView());
 					}else if (item1.stream.streamId.equalsIgnoreCase(stream.streamId)){
 						item0.videoView = item1.videoView;
-						ChatClient.getInstance().callManager().unSubscribe(item1.stream, null);
 						ChatClient.getInstance().callManager().setRemoteView(item1.stream.streamId, null);
 						streamItemList.remove(item1);
 						item0.videoView.setLabel(item0.stream.memberName);
@@ -496,7 +492,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 
 	public static class StreamItem {
 		 CustomVideoView videoView;
-		 EMediaStream stream;
+		 MediaStream stream;
 	}
 
 

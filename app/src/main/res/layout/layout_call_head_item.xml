@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jaouan.compoundlayout.RadioLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:duplicateParentState="false"
+        >
+
+        <com.easemob.helpdeskdemo.widget.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/em_logo_uidemo"
+            android:clickable="false"
+            android:focusable="false"
+            />
+
+        <TextView
+            android:id="@+id/tv_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxWidth="78dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:clickable="false"
+            android:focusable="false"
+            tools:text="王子安"
+            />
+    </LinearLayout>
+
+
+</com.jaouan.compoundlayout.RadioLayout>

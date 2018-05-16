@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdeskdemo.receiver.CallReceiver;
-import com.easemob.helpdeskdemo.ui.VideoCallActivity;
+import com.easemob.helpdeskdemo.ui.CallActivity;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
@@ -176,7 +176,7 @@ public class DemoHelper {
             public Intent getLaunchIntent(Message message) {
                 Intent intent;
                 if (isVideoCalling){
-                    intent = new Intent(context, VideoCallActivity.class);
+                    intent = new Intent(context, CallActivity.class);
                 }else{
                     //设置点击通知栏跳转事件
                     Conversation conversation = ChatClient.getInstance().chatManager().getConversation(message.from());
