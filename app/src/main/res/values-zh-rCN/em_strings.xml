@@ -139,6 +139,10 @@
     <string name="call_version_inconsistent">通话协议版本不一致</string>
     <string name="hanging_up">挂断中…</string>
     <string name="answering">接受中…</string>
+    <string name="tip_multi_video_calling">多人视频通话中…</string>
+
+    <string name="tip_video_calling">正在通话中...(%d)</string>
+    <string name="tip_video_in">收到视频通话...</string>
     <!-- call end -->
     <string name="setting_name">名字:</string>
     <string name="setting_org">组织:</string>
@@ -162,7 +166,7 @@
     <string name="em_example4_text_description">11月销量:  10</string>
     <string name="em_notice_sending">发送中…</string>
     <string name="order_number">订单号</string>
-    <string name="tip_multi_video_calling">多人视频通话中…</string>
+
 	<string name="message_type_voice">[语音]</string>
     <string name="message_type_video">[视频]</string>
     <string name="message_type_location">[位置]</string>

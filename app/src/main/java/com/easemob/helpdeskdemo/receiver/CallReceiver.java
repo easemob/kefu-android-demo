@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.easemob.helpdeskdemo.ui.VideoCallActivity;
+import com.easemob.helpdeskdemo.ui.CallActivity;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.util.EMLog;
 
@@ -27,7 +27,7 @@ public class CallReceiver extends BroadcastReceiver {
         String to = intent.getStringExtra("to");
 
         if ("video".equals(type)){// video call
-            context.startActivity(new Intent(context, VideoCallActivity.class)
+            context.startActivity(new Intent(context, CallActivity.class)
             .putExtra("username", from).putExtra("isComingCall", true)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }

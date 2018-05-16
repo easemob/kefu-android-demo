@@ -10,16 +10,17 @@ android {
 
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 22
-        versionCode 20
-        versionName "2.0"
+        versionCode 21
+        versionName "2.1"
         multiDexEnabled true
 
         ndk {
             //选择要添加的对应cpu类型的.so库
             abiFilters 'armeabi-v7a','arm64-v8a',"x86"
-            //还可以添加 'armeabi', 'x86','arm64-v8a',"x86"
+            //还可以添加 'armeabi', 'x86'
+
         }
     }
 
@@ -63,11 +64,17 @@ android {
 
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    compile 'com.github.jaouan:compoundlayout:1.0.1'
     compile project(':kefu-easeui')
     compile project(':bottomnavigation')
     compile 'com.jude:easyrecyclerview:4.0.6'

@@ -53,6 +53,14 @@
         android:label="@string/app_name"
         android:hardwareAccelerated="false"
         android:theme="@style/AppTheme">
+        <!--<activity android:name=".ui.TestDemoActivity"-->
+                  <!--android:screenOrientation="portrait"-->
+            <!--&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <!-- 导航页面 -->
         <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
                   android:screenOrientation="portrait"
@@ -133,7 +141,7 @@
             android:theme="@style/MyDialogStyle"
             />
         <!-- 视频通话 -->
-        <activity android:name=".ui.VideoCallActivity"
+        <activity android:name=".ui.CallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
