@@ -97,6 +97,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 showAlertDialog();
             }
         });
+//        ((Button)inputMenu.getButtonSend()).setBackgroundResource(R.color.top_bar_normal_bg);
     }
 
 

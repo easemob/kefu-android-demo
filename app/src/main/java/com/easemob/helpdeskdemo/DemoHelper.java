@@ -71,8 +71,8 @@ public class DemoHelper {
         options.setTenantId(Preferences.getInstance().getTenantId());
         options.showAgentInputState().showVisitorWaitCount().showMessagePredict();
 
-        //增加GCM推送，对于国外的APP可能比较需要
-//        options.setGCMNumber("****");
+        //增加FCM推送，对于国外的APP可能比较需要
+        options.setFCMNumber("1038044763444");
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
 

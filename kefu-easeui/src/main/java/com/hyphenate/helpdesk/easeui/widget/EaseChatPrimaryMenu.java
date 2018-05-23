@@ -34,6 +34,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
     private ImageView faceKeyboard;
     private Button buttonMore;
     private Button buttonLess;
+    private Button buttonSend;
     private RelativeLayout faceLayout;
     private Context context;
     private boolean emojiSengBtnEnable = false;
@@ -65,6 +66,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
         faceKeyboard = (ImageView) findViewById(R.id.iv_face_keyboard);
         buttonMore = (Button) findViewById(R.id.btn_more);
         buttonLess = (Button) findViewById(R.id.btn_less);
+        buttonSend = (Button) findViewById(R.id.btn_send);
         edittext_layout.setBackgroundResource(R.drawable.hd_input_bar_bg_normal);
 
         buttonSetModeVoice.setOnClickListener(this);
@@ -104,6 +106,11 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
             @Override
             public void afterTextChanged(Editable s) {
                 refleshEmojiSendBtn();
+                if (s.length() > 0){
+                    buttonSend.setVisibility(View.VISIBLE);
+                }else{
+                    buttonSend.setVisibility(View.GONE);
+                }
                 ChatClient.getInstance().chatManager().postMessagePredict(s.toString());
             }
         });
@@ -122,6 +129,12 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
                     return true;
                 }
                 return false;
+            }
+        });
+        buttonSend.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendTextMsg();
             }
         });
 
@@ -143,6 +156,11 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
 
     public boolean isRecording(){
         return buttonPressToSpeak.isRecording();
+    }
+
+    @Override
+    public View getButtonSend() {
+        return buttonSend;
     }
 
     /**

@@ -79,6 +79,12 @@ public abstract class EaseChatPrimaryMenuBase extends RelativeLayout {
     public abstract boolean isRecording();
 
     /**
+     * 获取发送按钮
+     * @return
+     */
+    public abstract View getButtonSend();
+
+    /**
      * 隐藏软键盘
      */
     public void hideKeyboard() {
