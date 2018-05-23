@@ -174,6 +174,10 @@ public class EaseChatInputMenu extends LinearLayout {
         return emojiconMenu;
     }
 
+    public View getButtonSend(){
+        return chatPrimaryMenu.getButtonSend();
+    }
+
     /**
      * 设置输入框内容
      *

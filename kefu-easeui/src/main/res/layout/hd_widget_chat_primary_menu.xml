@@ -93,28 +93,55 @@
 
             </RelativeLayout>
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="59dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            >
+            <FrameLayout
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                >
+                <Button
+                    android:id="@+id/btn_more"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:cropToPadding="true"
+                    android:background="@drawable/hd_type_select_btn_nor"
+                    android:visibility="visible"/>
 
-        <Button
-            android:id="@+id/btn_more"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="2dp"
-            android:cropToPadding="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/hd_type_select_btn_nor"
-            android:visibility="visible"/>
+                <Button
+                    android:id="@+id/btn_less"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:cropToPadding="true"
+                    android:background="@drawable/hd_type_less_btn_nor"
+                    android:visibility="gone"/>
 
-        <Button
-            android:id="@+id/btn_less"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="2dp"
-            android:cropToPadding="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/hd_type_less_btn_nor"
-            android:visibility="gone"/>
+            </FrameLayout>
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="49dp"
+                android:layout_height="30dp"
+                android:cropToPadding="true"
+                android:background="@color/emoji_send_btn_enable_bg_color"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/button_send"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+
 
     </LinearLayout>
 

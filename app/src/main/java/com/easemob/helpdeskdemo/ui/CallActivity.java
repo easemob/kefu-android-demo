@@ -329,7 +329,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 			return;
 		}
 		int index = -1;
-		for (int i = streamItemList.size() - 1; i >0; i--){
+		for (int i = streamItemList.size() - 1; i >=0; i--){
 			StreamItem item = streamItemList.get(i);
 			if (item.stream.streamId.equals(stream.streamId)){
 				index = i;
