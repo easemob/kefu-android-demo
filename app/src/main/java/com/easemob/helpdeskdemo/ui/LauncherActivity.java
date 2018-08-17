@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 
 
@@ -25,6 +26,7 @@ public class LauncherActivity extends Activity {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				Preferences.getInstance().setRemoteStatus(2);
 				startActivity(new Intent(LauncherActivity.this, MainActivity.class));
 				LauncherActivity.this.finish();
 			}

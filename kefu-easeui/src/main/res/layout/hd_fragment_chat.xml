@@ -3,51 +3,117 @@
     xmlns:easemob="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true" >
+    android:animateLayoutChanges="true"
+    >
 
-    <com.hyphenate.helpdesk.easeui.widget.TitleBar
-        android:id="@+id/title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:background="@color/title_bg_color"
-        easemob:titleBarLeftImage="@drawable/hd_mm_title_back" />
+  <com.hyphenate.helpdesk.easeui.widget.TitleBar
+      android:id="@+id/title_bar"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/title_height"
+      android:background="@color/title_bg_color"
+      easemob:titleBarLeftImage="@drawable/hd_mm_title_back"
+      />
 
+  <TextView
+      android:id="@+id/tv_username"
+      android:layout_width="1px"
+      android:layout_height="1px"
+      />
+  <RelativeLayout
+      android:id="@+id/rl_remote"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/title_bar"
+      android:background="#FFFFF4"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
+      android:visibility="gone"
+      >
     <TextView
-        android:id="@+id/tv_username"
-        android:layout_width="1px"
-        android:layout_height="1px"
+        android:id="@+id/tv_remote_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="正在使用远程控制..."
         />
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tv_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_remote_prompt"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/remote_btn_bg"
+        android:padding="2dp"
+        android:text="麦克风"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_speaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_remote_prompt"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/tv_mic"
+        android:background="@drawable/remote_btn_bg"
+        android:padding="2dp"
+        android:text="扬声器"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        />
+    <TextView
+        android:id="@+id/tv_stop_remote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_remote_prompt"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/remote_btn_bg"
+        android:padding="2dp"
+        android:text="停止"
+        android:textColor="@color/holo_red_light"
+        android:textSize="16sp"
+        />
+
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/input_menu"
+      android:layout_below="@id/rl_remote"
+      >
+
+    <com.hyphenate.helpdesk.easeui.widget.MessageList
+        android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/input_menu"
-        android:layout_below="@id/title_bar" >
-
-        <com.hyphenate.helpdesk.easeui.widget.MessageList
-            android:id="@+id/message_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </RelativeLayout>
-
-    <com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu
-        android:id="@+id/input_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-    <TextView
-        android:id="@+id/tv_tip_waitcount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:layout_above="@id/input_menu"
-        android:background="@android:color/darker_gray"
-        android:textSize="13sp"
-        android:textColor="@android:color/white"
-        android:visibility="gone"
         />
+
+  </RelativeLayout>
+
+  <com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu
+      android:id="@+id/input_menu"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      />
+  <TextView
+      android:id="@+id/tv_tip_waitcount"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/input_menu"
+      android:background="@android:color/darker_gray"
+      android:paddingBottom="3dp"
+      android:paddingLeft="20dp"
+      android:paddingTop="3dp"
+      android:textColor="@android:color/white"
+      android:textSize="13sp"
+      android:visibility="gone"
+      />
 
 </RelativeLayout>

@@ -8,6 +8,7 @@
     <string name="attach_location">Location</string>
     <string name="attach_short_cut_message">Messages</string>
     <string name="attach_call_video">Call Video</string>
+    <string name="attach_remote_assistance">remote assistance</string>
     <string name="attach_evaluation">Evaluation</string>
     <string name="location_message">The location information</string>
     <string name="please_check">key validation error!Please on AndroidManifest.xml file check the key set</string>

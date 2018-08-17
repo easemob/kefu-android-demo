@@ -2,6 +2,7 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,17 +13,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowEvaluation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
+import com.easemob.kefu_remote.conference.RemoteManager;
+import com.easemob.kefu_remote.conference.SRManager;
+import com.easemob.kefu_remote.control.CtrlManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.callback.RemoteControlCallBack;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
@@ -37,6 +43,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     private static final int ITEM_MAP = 11;
     private static final int ITEM_LEAVE_MSG = 12;//ITEM_SHORTCUT = 12;
     private static final int ITEM_VIDEO = 13;
+    private static final int ITEM_REMOTE = 131;
     private static final int ITEM_EVALUATION = 14;
 
     private static final int REQUEST_CODE_SELECT_MAP = 11;
@@ -56,33 +63,26 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public static final int MESSAGE_TYPE_SENT_FORM = 9;
     public static final int MESSAGE_TYPE_RECV_FORM = 10;
 
-
     //message type 最大值
     public static final int MESSAGE_TYPE_COUNT = 13;
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    protected void setUpView() {
+    @Override protected void setUpView() {
         //这是新添加的扩展点击事件
         setChatFragmentListener(this);
         super.setUpView();
         //可以在此处设置titleBar(标题栏)的属性
-//        titleBar.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+        //        titleBar.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         titleBar.setLeftImageResource(R.drawable.hd_icon_title_back);
         titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 if (CommonUtils.isSingleActivity(getActivity())) {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
@@ -91,22 +91,84 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             }
         });
         titleBar.setRightImageResource(R.drawable.hd_chat_delete_icon);
-        titleBar.setRightLayoutClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        titleBar.setRightLayoutClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
                 showAlertDialog();
             }
         });
-//        ((Button)inputMenu.getButtonSend()).setBackgroundResource(R.color.top_bar_normal_bg);
+        //        ((Button)inputMenu.getButtonSend()).setBackgroundResource(R.color.top_bar_normal_bg);
+
+        RemoteManager.getInstance().setRemoteListener(listener);
+        CtrlManager.getInstance().setStopCtrModeListener(new CtrlManager.StopCtrModeListener() {
+            @Override public void stopCtr() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        Preferences.getInstance().setRemoteStatus(0);
+                        tvRemotePrompt.setText("远程协助正在进行中。。。");
+                    }
+                });
+            }
+        });
+
+        if (Preferences.getInstance().getRemoteStatus() == 0 || Preferences.getInstance().getRemoteStatus() == 1) {
+            listener.executeMode(Preferences.getInstance().getRemoteStatus());
+        }
     }
 
-
+    RemoteManager.RemoteListener listener = new RemoteManager.RemoteListener() {
+        @Override public void executeMode(final int mode) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    rlRemote.setVisibility(View.VISIBLE);
+                    tvMic.setActivated(true);
+                    tvSpeaker.setActivated(false);
+                    if (mode == 0) {
+                        Preferences.getInstance().setRemoteStatus(0);
+                        tvRemotePrompt.setText("远程协助正在进行中。。。");
+                    } else if (mode == 1) {
+                        Preferences.getInstance().setRemoteStatus(1);
+                        tvRemotePrompt.setText("远程控制正在进行中。。。");
+                    } else if (mode == 2) {
+                        Preferences.getInstance().setRemoteStatus(2);
+                        rlRemote.setVisibility(View.GONE);
+                    }
+                    tvStopRemote.setOnClickListener(new View.OnClickListener() {
+                        @Override public void onClick(View v) {
+                            if (mode == 1) {
+                                CtrlManager.getInstance().stopCtrlMode();
+                            }
+                            RemoteManager.getInstance().exitConference();
+                            rlRemote.setVisibility(View.GONE);
+                            Preferences.getInstance().setRemoteStatus(2);
+                            RemoteManager.getInstance().unbindSR(getActivity());
+                        }
+                    });
+                    tvMic.setOnClickListener(new View.OnClickListener() {
+                        @Override public void onClick(View v) {
+                            RemoteManager.getInstance().voiceSwitch(tvMic);
+                        }
+                    });
+                    tvSpeaker.setOnClickListener(new View.OnClickListener() {
+                        @Override public void onClick(View v) {
+                            if (tvSpeaker.isActivated()) {
+                                RemoteManager.getInstance().closeSpeaker();
+                                tvSpeaker.setActivated(false);
+                            } else {
+                                RemoteManager.getInstance().openSpeaker();
+                                tvSpeaker.setActivated(true);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    };
 
     private void showAlertDialog() {
         FragmentTransaction mFragTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         String fragmentTag = "dialogFragment";
-        Fragment fragment =  getActivity().getSupportFragmentManager().findFragmentByTag(fragmentTag);
-        if(fragment!=null){
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(fragmentTag);
+        if (fragment != null) {
             //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
             mFragTransaction.remove(fragment);
         }
@@ -115,8 +177,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         dialogFragment.setContentText(getString(R.string.Whether_to_empty_all_chats));
         dialogFragment.setupLeftButton(null, null);
         dialogFragment.setupRightBtn(null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 ChatClient.getInstance().chatManager().clearConversation(toChatUsername);
                 messageList.refresh();
                 dialogFragment.dismiss();
@@ -126,14 +187,12 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         dialogFragment.show(mFragTransaction, fragmentTag);
     }
 
-    @Override
-    public void onAvatarClick(String username) {
+    @Override public void onAvatarClick(String username) {
         //头像点击事情
-//        startActivity(new Intent(getActivity(), ...class));
+        //        startActivity(new Intent(getActivity(), ...class));
     }
 
-    @Override
-    public boolean onMessageBubbleClick(Message message) {
+    @Override public boolean onMessageBubbleClick(Message message) {
         //消息框点击事件,return true
         if (message.getType() == Message.Type.LOCATION) {
             EMLocationMessageBody locBody = (EMLocationMessageBody) message.body();
@@ -147,34 +206,43 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         return false;
     }
 
-    @Override
-    public void onMessageBubbleLongClick(Message message) {
+    @Override public void onMessageBubbleLongClick(Message message) {
         //消息框长按
         startActivityForResult(new Intent(getActivity(), ContextMenuActivity.class).putExtra("message", message), REQUEST_CODE_CONTEXT_MENU);
     }
 
-    @Override
-    public boolean onExtendMenuItemClick(int itemId, View view) {
+    @Override public boolean onExtendMenuItemClick(int itemId, View view) {
         switch (itemId) {
             case ITEM_MAP: //地图
                 startActivityForResult(new Intent(getActivity(), BaiduMapActivity.class), REQUEST_CODE_SELECT_MAP);
                 break;
-	        case ITEM_LEAVE_MSG://ITEM_SHORTCUT:
-		        Intent intent = new Intent(getActivity(), NewLeaveMessageActivity.class);
-		        startActivity(intent);
-		        getActivity().finish();
+            case ITEM_LEAVE_MSG://ITEM_SHORTCUT:
+                Intent intent = new Intent(getActivity(), NewLeaveMessageActivity.class);
+                startActivity(intent);
+                getActivity().finish();
                 break;
 
             case ITEM_VIDEO:
-                startVideoCall();
+                String content = getString(R.string.em_chat_invite_video_call);
+                startVideoCall(content);
+                break;
+            case ITEM_REMOTE:
+                //startVideoCall("申请远程协助");
+                //ChatClient.getInstance().callManager().setRemoteControlCallBack(new RemoteControlCallBack() {
+                //    @Override public boolean startRemoteControl(String ticket) {
+                //        RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, ticket);
+                //        return true;
+                //    }
+                //});
+                RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, null);
                 break;
             case ITEM_EVALUATION:
                 ChatClient.getInstance().chatManager().asyncSendInviteEvaluationMessage(toChatUsername, null);
                 break;
-//            case ITEM_FILE:
-//                //如果需要覆盖内部的,可以return true
-//                //demo中通过系统API选择文件,实际app中最好是做成qq那种选择发送文件
-//                return true;
+            //            case ITEM_FILE:
+            //                //如果需要覆盖内部的,可以return true
+            //                //demo中通过系统API选择文件,实际app中最好是做成qq那种选择发送文件
+            //                return true;
             default:
                 break;
         }
@@ -182,34 +250,34 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         return false;
     }
 
-
-    private void startVideoCall(){
+    private void startVideoCall(String content) {
         inputMenu.hideExtendMenuContainer();
 
-        Message message = Message.createVideoInviteSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
+        Message message = Message.createVideoInviteSendMessage(content, toChatUsername);
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
-
-
-    @Override
-    public CustomChatRowProvider onSetCustomChatRowProvider() {
+    @Override public CustomChatRowProvider onSetCustomChatRowProvider() {
         return new DemoCustomChatRowProvider();
     }
 
-    @Override
-    protected void registerExtendMenuItem() {
+    @Override protected void registerExtendMenuItem() {
         //demo 这里不覆盖基类已经注册的item, item点击listener沿用基类的
         super.registerExtendMenuItem();
         //增加扩展的item
-        inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call, extendMenuItemClickListener);
-        inputMenu.registerExtendMenuItem(R.string.attach_evaluation, R.drawable.em_chat_evaluation_selector, ITEM_EVALUATION, R.id.chat_menu_evaluation, extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map,
+                extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg,
+                extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call,
+                extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_remote_assistance, R.drawable.em_chat_video_selector, ITEM_REMOTE, R.id.chat_menu_video_call,
+                extendMenuItemClickListener);
+        inputMenu.registerExtendMenuItem(R.string.attach_evaluation, R.drawable.em_chat_evaluation_selector, ITEM_EVALUATION,
+                R.id.chat_menu_evaluation, extendMenuItemClickListener);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CONTEXT_MENU) {
             switch (resultCode) {
@@ -218,7 +286,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     clipboard.setText(string);
                     break;
                 case ContextMenuActivity.RESULT_CODE_DELETE: // 删除消息
-                    if (contextMenuMessage.getType() == Message.Type.VOICE){
+                    if (contextMenuMessage.getType() == Message.Type.VOICE) {
                         EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) contextMenuMessage.body();
                         String voicePath = voiceBody.getLocalUrl();
                         MediaManager.release(voicePath);
@@ -248,13 +316,16 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 }
             } else if (requestCode == REQUEST_CODE_EVAL) {
                 messageList.refresh();
+            } else if (requestCode == SRManager.RECORD_REQUEST_CODE) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    SRManager.getInstance().initMediaProjection(resultCode, data);
+                    RemoteManager.getInstance().startScreenCapture();
+                }
             }
         }
-
     }
 
-    @Override
-    public void onMessageSent() {
+    @Override public void onMessageSent() {
         messageList.refreshSelectLast();
     }
 
@@ -263,20 +334,18 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
      */
     private final class DemoCustomChatRowProvider implements CustomChatRowProvider {
 
-        @Override
-        public int getCustomChatRowTypeCount() {
+        @Override public int getCustomChatRowTypeCount() {
             //地图 和 满意度 发送接收 共4种
             //订单 和 轨迹 发送接收共4种
             // form 发送接收2种
             return MESSAGE_TYPE_COUNT;
         }
 
-        @Override
-        public int getCustomChatRowType(Message message) {
+        @Override public int getCustomChatRowType(Message message) {
             //此处内部有用到,必须写否则可能会出现错位
-            if (message.getType() == Message.Type.LOCATION){
+            if (message.getType() == Message.Type.LOCATION) {
                 return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_MAP : MESSAGE_TYPE_SENT_MAP;
-            }else if (message.getType() == Message.Type.TXT){
+            } else if (message.getType() == Message.Type.TXT) {
                 switch (MessageHelper.getMessageExtType(message)) {
                     case EvaluationMsg:
                         return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_EVAL : MESSAGE_TYPE_SENT_EVAL;
@@ -292,8 +361,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             return -1;
         }
 
-        @Override
-        public ChatRow getCustomChatRow(Message message, int position, BaseAdapter adapter) {
+        @Override public ChatRow getCustomChatRow(Message message, int position, BaseAdapter adapter) {
             if (message.getType() == Message.Type.LOCATION) {
                 return new ChatRowLocation(getActivity(), message, position, adapter);
             } else if (message.getType() == Message.Type.TXT) {
@@ -312,4 +380,12 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         }
     }
 
+    @Override public void onStart() {
+        super.onStart();
+        RemoteManager.getInstance().addConferenceListener();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+    }
 }

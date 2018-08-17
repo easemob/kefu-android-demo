@@ -7,6 +7,7 @@
     <string name="attach_location">位置</string>
     <string name="attach_short_cut_message">常用语</string>
     <string name="attach_call_video">发起视频</string>
+    <string name="attach_remote_assistance">远程协助</string>
     <string name="attach_evaluation">评价</string>
     <string name="location_message">发送位置</string>
     <string name="please_check">key检查出错!请在 AndroidManifest.xml 中检查key</string>

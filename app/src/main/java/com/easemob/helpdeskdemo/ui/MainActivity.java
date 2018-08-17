@@ -32,6 +32,7 @@ import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.kefu_remote.conference.RemoteManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Message;
@@ -53,8 +54,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     private MyConnectionListener connectionListener = null;
     private BottomNavigation mBottomNav;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
@@ -71,17 +71,16 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
                 //锤子手机会报找不到这个Activity
                 //android.content.ActivityNotFoundException: No Activity found to handle Intent { act=android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS dat=package:com.easemob.helpdeskdemo }
             }
-
         }
 
         setContentView(R.layout.em_activity_main);
 
         FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
             //Activity被杀死的时候，有些情况Fragment不被销毁
-            if (shopFragment == null){
+            if (shopFragment == null) {
                 shopFragment = getSupportFragmentManager().findFragmentByTag("shopFragment");
                 settingFragment = getSupportFragmentManager().findFragmentByTag("settingFragment");
                 ticketListFragment = getSupportFragmentManager().findFragmentByTag("ticketListFragment");
@@ -109,16 +108,10 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
             trx.add(R.id.fragment_container, settingFragment, "settingFragment");
         }
 
-        fragments = new Fragment[]{shopFragment, ticketListFragment, conversationsFragment, settingFragment};
+        fragments = new Fragment[] { shopFragment, ticketListFragment, conversationsFragment, settingFragment };
 
         // 把shopFragment设为选中状态
-        trx.hide(settingFragment)
-           .hide(ticketListFragment)
-           .hide(conversationsFragment)
-           .hide(shopFragment)
-           .show(fragments[currentTabIndex])
-           .commit();
-
+        trx.hide(settingFragment).hide(ticketListFragment).hide(conversationsFragment).hide(shopFragment).show(fragments[currentTabIndex]).commit();
 
         mBottomNav = $(R.id.bottom_navigation);
         mBottomNav.setBottomNavigationSelectedListener(this);
@@ -128,38 +121,30 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         //6.0运行时权限处理，target api设成23时，demo这里做的比较简单，直接请求所有需要的运行时权限
         requestPermissions();
 
-
         // 检查华为推送服务
         HMSPushHelper.getInstance().connectHMS(this);
     }
 
-    @TargetApi(23)
-    private void requestPermissions() {
+    @TargetApi(23) private void requestPermissions() {
         PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
+            @Override public void onGranted() {
 
             }
 
-            @Override
-            public void onDenied(String permission) {
+            @Override public void onDenied(String permission) {
 
             }
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 
-
-    @Override
-    public void onValueSelected(int index) {
+    @Override public void onValueSelected(int index) {
         if (currentTabIndex != index) {
-            FragmentTransaction trx = getSupportFragmentManager()
-                    .beginTransaction();
+            FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
             trx.hide(fragments[currentTabIndex]);
             if (!fragments[index].isAdded()) {
                 trx.add(R.id.fragment_container, fragments[index]);
@@ -171,19 +156,17 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
     public class MyConnectionListener implements ChatClient.ConnectionListener {
 
-        @Override
-        public void onConnected() {
+        @Override public void onConnected() {
 
         }
 
-        @Override
-        public void onDisconnected(final int errorCode) {
-            if (errorCode == Error.USER_NOT_FOUND || errorCode == Error.USER_LOGIN_ANOTHER_DEVICE
+        @Override public void onDisconnected(final int errorCode) {
+            if (errorCode == Error.USER_NOT_FOUND
+                    || errorCode == Error.USER_LOGIN_ANOTHER_DEVICE
                     || errorCode == Error.USER_AUTHENTICATION_FAILED
                     || errorCode == Error.USER_REMOVED) {
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         //demo中为了演示当用户被删除或者修改密码后验证失败,跳出会话界面
                         //正常APP应该跳到登录界面或者其他操作
                         if (ChatActivity.instance != null) {
@@ -194,11 +177,9 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
                 });
             }
         }
-
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(false);
             return true;
@@ -219,78 +200,68 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         }
     }
 
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
+        RemoteManager.getInstance().unbindSR(MainActivity.this);
+        RemoteManager.getInstance().removeConferenceListener();
         if (connectionListener != null) {
             ChatClient.getInstance().removeConnectionListener(connectionListener);
         }
     }
 
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         DemoHelper.getInstance().pushActivity(this);
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("selectedIndex", currentTabIndex);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    @Override protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
         ChatClient.getInstance().chatManager().removeMessageListener(messageListener);
         DemoHelper.getInstance().popActivity(this);
-
     }
 
     ChatManager.MessageListener messageListener = new ChatManager.MessageListener() {
 
-        @Override
-        public void onMessage(final List<Message> msgs) {
+        @Override public void onMessage(final List<Message> msgs) {
 
             runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                @Override public void run() {
                     //未读数可以显示在UI上
-//                    int unreadMsgCount = ChatClient.getInstance().chatManager().getUnreadMsgsCount();
+                    //                    int unreadMsgCount = ChatClient.getInstance().chatManager().getUnreadMsgsCount();
 
-                    if (EasyUtils.isAppRunningForeground(MainActivity.this)){
+                    if (EasyUtils.isAppRunningForeground(MainActivity.this)) {
                         DemoHelper.getInstance().getNotifier().onNewMesg(msgs);
                     }
 
-                    if (conversationsFragment != null){
-                        ((ConversationListFragment)conversationsFragment).refresh();
+                    if (conversationsFragment != null) {
+                        ((ConversationListFragment) conversationsFragment).refresh();
                     }
                 }
             });
         }
 
-        @Override
-        public void onCmdMessage(List<Message> msgs) {
+        @Override public void onCmdMessage(List<Message> msgs) {
 
         }
 
-        @Override
-        public void onMessageStatusUpdate() {
+        @Override public void onMessageStatusUpdate() {
 
         }
 
-        @Override
-        public void onMessageSent() {
+        @Override public void onMessageSent() {
 
         }
     };
-
 }
 
