@@ -77,10 +77,10 @@ public class DemoHelper {
         options.setMipushConfig("2882303761517507836", "5631750729836");
 
 
-        //options.setKefuServerAddress("172.31.199.12:80");
-        //options.setIMServer("172.31.199.9");
-        //options.setIMPort(16717);
-        //options.setRestServer("172.31.199.9:80");
+        options.setKefuServerAddress("https://kefu.iflytek.com/mo/signin");
+        options.setIMServer("im1.iflytek.com");
+        options.setIMPort(16717);
+        options.setRestServer("a1.iflytek.com:80");
 
 //        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 

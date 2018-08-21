@@ -15,17 +15,17 @@ package com.easemob.helpdeskdemo;
 
 public class Constant {
 
-    public static final String DEFAULT_CUSTOMER_APPKEY = "1141161024115978#kefuchannelapp29593";
-    public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_012680";
-    public static final String DEFAULT_TENANT_ID = "29593";
+    //public static final String DEFAULT_CUSTOMER_APPKEY = "1141161024115978#kefuchannelapp29593";
+    //public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_012680";
+    //public static final String DEFAULT_TENANT_ID = "29593";
     public static final String DEFAULT_ACCOUNT_PWD = "123456";
     public static final String DEFAULT_PROJECT_ID = "306713";
     public static final String DEFAULT_NICK_NAME = "";
 
     //科大讯飞 私有云
-    //public static final String DEFAULT_CUSTOMER_APPKEY = "1102180312009368#kefuchannelapp28291";
-    //public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_367865";
-    //public static final String DEFAULT_TENANT_ID = "28291";
+    public static final String DEFAULT_CUSTOMER_APPKEY = "1100180329015108#kefuchannelapp28591";
+    public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_963549";
+    public static final String DEFAULT_TENANT_ID = "28591";
 
 
     public static final int MESSAGE_TO_DEFAULT = 0;

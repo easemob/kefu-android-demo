@@ -73,9 +73,17 @@ public class RemoteManager {
         this.fragment = fragment;
         bindSRServer();
 
-        username = (String) VMSPUtil.get("username", "Godl1");
-        //this.ticket = ticket.replace("&quot;", "\"");
-        this.ticket = testTicket();
+        try {
+            JSONObject object = new JSONObject(ticket);
+            username = (String) object.get("memName");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //username = (String) VMSPUtil.get("username", "Godl1");
+        this.ticket = ticket.replace("&quot;", "\"");
+        Log.i("info", "ticket0:" + ticket);
+        Log.i("info", "ticket1:" + testTicket());
         EMConferenceManager.getInstance().setVideoMaxKbps(600);
         EMConferenceManager.getInstance().setVideoMinKbps(150);
         EMConferenceManager.getInstance().setAudioMaxKbps(150);
@@ -133,12 +141,14 @@ public class RemoteManager {
      * 作为创建者创建并加入会议
      */
     private void startConference() {
-        EMConferenceManager.getInstance().joinConference(ticket, username, null, new EMCallbacks() {
+        EMStreamParam param = new EMStreamParam();
+        EMConferenceManager.getInstance().joinConference(ticket, username, param, new EMCallbacks() {
             @Override public void onDone(Object object) {
                 registerPhoneStateListener();
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override public void run() {
                         Toast.makeText(context, "Join conference success", Toast.LENGTH_SHORT).show();
+                        Log.i("info", "joinConference success");
                     }
                 });
                 shareDesktop();
@@ -148,6 +158,7 @@ public class RemoteManager {
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override public void run() {
                         Toast.makeText(context, "Join conference failed " + code + ", " + errorDesc, Toast.LENGTH_SHORT).show();
+                        Log.i("info", "joinConference failed");
                     }
                 });
                 if (code == -122) {
@@ -250,10 +261,11 @@ public class RemoteManager {
                 publishDesktopId = (String) value;
                 prepareScreenCapture();
                 listener.executeMode(0);
+                Log.i("info", "publish onDone----" + value);
             }
 
             @Override public void onError(int error, String errorMsg) {
-
+                Log.i("info", "publish onError");
             }
         });
     }
@@ -490,6 +502,7 @@ public class RemoteManager {
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override public void run() {
                         Toast.makeText(context, "streamId = " + streamId, Toast.LENGTH_SHORT).show();
+                        Log.i("info", "stream id---:" + streamId);
                     }
                 });
             }

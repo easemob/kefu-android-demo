@@ -108,9 +108,10 @@ public class EMConferenceManager {
             public void run() {
                 try {
                     Log.d(TAG, "Join conference");
-                    mediaSession = mediaManager.newSessionWithTicket(ticket, "{'extension':'member'}", sessionDelegate);
+                    mediaSession = mediaManager.newSessionWithTicket(ticket, "{\"identity\":\"visitor\"}", sessionDelegate);
 
                     mediaManager.setSession(mediaSession, username);
+                    param.extension = "{\"identity\":\"visitor\"}";
                     mediaManager.join(mediaSession, configWrap(param), new EMediaEntities.EMediaIdBlockType() {
                         @Override
                         public void onDone(Object uid, EMediaEntities.EMediaError error) {
@@ -178,6 +179,7 @@ public class EMConferenceManager {
      */
     public void publish(EMStreamParam param, final EMCallbacks callback) {
         Log.d(TAG, "Publish local stream");
+        param.extension = "{\"identity\":\"visitor\"}";
         mediaManager.publish(mediaSession, configWrap(param), new EMediaEntities.EMediaIdBlockType() {
             @Override
             public void onDone(Object uid, EMediaEntities.EMediaError error) {

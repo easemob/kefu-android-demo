@@ -227,14 +227,14 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 startVideoCall(content);
                 break;
             case ITEM_REMOTE:
-                //startVideoCall("申请远程协助");
-                //ChatClient.getInstance().callManager().setRemoteControlCallBack(new RemoteControlCallBack() {
-                //    @Override public boolean startRemoteControl(String ticket) {
-                //        RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, ticket);
-                //        return true;
-                //    }
-                //});
-                RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, null);
+                startVideoCall("申请远程协助");
+                ChatClient.getInstance().callManager().setRemoteControlCallBack(new RemoteControlCallBack() {
+                    @Override public boolean startRemoteControl(String ticket) {
+                        RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, ticket);
+                        return true;
+                    }
+                });
+                //RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, null);
                 break;
             case ITEM_EVALUATION:
                 ChatClient.getInstance().chatManager().asyncSendInviteEvaluationMessage(toChatUsername, null);
