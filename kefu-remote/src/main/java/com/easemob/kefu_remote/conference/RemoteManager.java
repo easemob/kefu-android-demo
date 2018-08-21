@@ -80,7 +80,7 @@ public class RemoteManager {
             e.printStackTrace();
         }
 
-        //username = (String) VMSPUtil.get("username", "Godl1");
+        username = (String) VMSPUtil.get("username", "Godl1");
         this.ticket = ticket.replace("&quot;", "\"");
         Log.i("info", "ticket0:" + ticket);
         Log.i("info", "ticket1:" + testTicket());
