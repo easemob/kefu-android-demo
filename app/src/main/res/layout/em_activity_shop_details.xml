@@ -68,7 +68,7 @@
     <RelativeLayout 
         android:id="@+id/rl_tochat"
         android:layout_alignParentBottom="true"
-        android:layout_height="@dimen/bottom_navi_height"
+        android:layout_height="80dp"
         android:background="@color/normal_bg_color"
         android:layout_width="match_parent">
         

@@ -255,7 +255,6 @@ import java.nio.ByteBuffer;
      */
     private class ImageAvailableListener implements ImageReader.OnImageAvailableListener {
         @Override public void onImageAvailable(ImageReader reader) {
-            Log.i("info","test123 onImageAvailable");
             Image image = reader.acquireLatestImage();
             long currTime = System.currentTimeMillis();
             //            VMLog.d("捕获图片有效回调 %d", currTime - oldTime);
