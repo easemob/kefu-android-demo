@@ -1,6 +1,7 @@
 package com.easemob.kefu_remote;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.easemob.kefu_remote.control.CtrlManager;
@@ -18,6 +19,17 @@ public class RemoteApp {
     private final String TAG = this.getClass().getSimpleName();
     private Context context;
     private static RemoteApp instance;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
+    public synchronized boolean getServiceStatus() {
+        return sharedPreferences.getBoolean("isBond", false);
+    }
+
+    public synchronized void setServiceStatus(boolean status) {
+        editor.putBoolean("isBond", status);
+        editor.commit();
+    }
 
     public RemoteApp() {
 
@@ -40,6 +52,8 @@ public class RemoteApp {
     public void initSDK(Context context) {
         this.context = context;
         EMediaManager.initGlobal(context);
+        sharedPreferences = context.getSharedPreferences("remote", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         EMConferenceManager.getInstance().addConferenceListener(new EMConferenceListener() {
             @Override public void onMemberJoined(EMConferenceMember member) {
                 Log.d(TAG, "onMemberJoined:" + member);

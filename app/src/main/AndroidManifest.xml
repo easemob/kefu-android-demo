@@ -183,7 +183,11 @@
         android:theme="@style/horizontal_slide"
         android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
 
-    <service android:name="com.easemob.kefu_remote.conference.SRService"/>
+    <service android:name="com.easemob.kefu_remote.conference.SRService">
+      <intent-filter android:priority="1000">
+        <action android:name="com.dbjtech.myservice" />
+      </intent-filter>
+    </service>
 
     <!--核心进程-->
     <service

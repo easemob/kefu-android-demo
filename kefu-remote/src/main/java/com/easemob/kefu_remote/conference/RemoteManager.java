@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.easemob.kefu_remote.RemoteApp;
 import com.easemob.kefu_remote.control.CtrlManager;
 import com.easemob.kefu_remote.sdk.EMCallbacks;
 import com.easemob.kefu_remote.sdk.EMConferenceListener;
@@ -142,9 +143,10 @@ public class RemoteManager {
      */
     private void startConference() {
         EMStreamParam param = new EMStreamParam();
+        param.setVideoOff(true);
         EMConferenceManager.getInstance().joinConference(ticket, username, param, new EMCallbacks() {
             @Override public void onDone(Object object) {
-                registerPhoneStateListener();
+                //registerPhoneStateListener();
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override public void run() {
                         Toast.makeText(context, "Join conference success", Toast.LENGTH_SHORT).show();
@@ -466,6 +468,7 @@ public class RemoteManager {
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override public void run() {
                         Toast.makeText(context, "Passive exit " + error + ", message" + message, Toast.LENGTH_SHORT).show();
+                        listener.executeMode(2);
                     }
                 });
             }
@@ -515,7 +518,7 @@ public class RemoteManager {
     }
 
     public void unbindSR(Context context) {
-        unregisterPhoneStateListener();
+        //unregisterPhoneStateListener();
         unbindSRServer(context);
     }
 
@@ -529,15 +532,21 @@ public class RemoteManager {
      * 绑定捕获屏幕服务
      */
     public void bindSRServer() {
-        Intent intent = new Intent(context, SRService.class);
-        context.bindService(intent, serviceConnection, context.BIND_AUTO_CREATE);
+        if (context != null) {
+            Intent intent = new Intent(context, SRService.class);
+            context.bindService(intent, serviceConnection, context.BIND_AUTO_CREATE);
+            RemoteApp.getInstance().setServiceStatus(false);
+        }
     }
 
     /**
      * 解除服务绑定
      */
     private void unbindSRServer(Context context) {
-        context.unbindService(serviceConnection);
+        if (!RemoteApp.getInstance().getServiceStatus()) {
+            context.unbindService(serviceConnection);
+            RemoteApp.getInstance().setServiceStatus(true);
+        }
     }
 
     /**

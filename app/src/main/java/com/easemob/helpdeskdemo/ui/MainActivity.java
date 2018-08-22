@@ -32,6 +32,7 @@ import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.kefu_remote.conference.RemoteManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Message;
@@ -201,6 +202,8 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        RemoteManager.getInstance().unbindSR(this);
+        RemoteManager.getInstance().removeConferenceListener();
         if (connectionListener != null) {
             ChatClient.getInstance().removeConnectionListener(connectionListener);
         }

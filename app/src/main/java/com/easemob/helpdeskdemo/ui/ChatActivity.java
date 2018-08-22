@@ -107,8 +107,6 @@ public class ChatActivity extends BaseActivity {
     @Override protected void onDestroy() {
         super.onDestroy();
         MediaManager.release();
-        RemoteManager.getInstance().unbindSR(this);
-        RemoteManager.getInstance().removeConferenceListener();
         instance = null;
     }
 

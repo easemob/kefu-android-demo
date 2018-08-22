@@ -18,7 +18,11 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Process;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 
 import com.easemob.kefu_remote.RemoteApp;
@@ -165,6 +169,15 @@ import java.nio.ByteBuffer;
                 mediaProjection.createVirtualDisplay(virtualDisplayName, width, height, density, flags, mediaRecorder.getSurface(), null, null);
     }
 
+    //static HandlerThread handlerThread = new HandlerThread("Desktop Thread", Process.THREAD_PRIORITY_URGENT_AUDIO);
+    //static Handler workderHandler = null;
+    //static{
+    //    handlerThread.start();
+    //    handlerThread.setPriority(Thread.MAX_PRIORITY);
+    //    workderHandler = new Handler(handlerThread.getLooper());
+    //}
+
+
     /**
      * 初始化读取屏幕截图 ImageReader
      */
@@ -242,6 +255,7 @@ import java.nio.ByteBuffer;
      */
     private class ImageAvailableListener implements ImageReader.OnImageAvailableListener {
         @Override public void onImageAvailable(ImageReader reader) {
+            Log.i("info","test123 onImageAvailable");
             Image image = reader.acquireLatestImage();
             long currTime = System.currentTimeMillis();
             //            VMLog.d("捕获图片有效回调 %d", currTime - oldTime);
