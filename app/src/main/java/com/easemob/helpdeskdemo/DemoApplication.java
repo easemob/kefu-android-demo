@@ -22,7 +22,6 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-
         //初始化华为HMS推送服务
         HMSPushHelper.getInstance().initHMSAgent(this);
 
@@ -32,5 +31,4 @@ public class DemoApplication extends Application {
         //注册Bugly Crash统计，用户可忽略
         CrashReport.initCrashReport(getApplicationContext(), "900012496", false);
     }
-
 }

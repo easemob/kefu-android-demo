@@ -7,7 +7,11 @@ import android.os.Bundle;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.kefu_remote.RemoteManager;
+import com.easemob.kefu_remote.control.CtrlManager;
+import com.hyphenate.chat.CallManager;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.MediaStream;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
@@ -23,19 +27,20 @@ public class ChatActivity extends BaseActivity {
 
     String toChatUsername;
 
-    @Override
-    protected void onCreate(Bundle arg0) {
+    @Override protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.hd_activity_chat);
         instance = this;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
-            //IM服务号
+        //IM服务号
+        {
             toChatUsername = bundle.getString(Config.EXTRA_SERVICE_IM_NUMBER);
+        }
         //可以直接new ChatFragment使用
         String chatFragmentTAG = "chatFragment";
         chatFragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(chatFragmentTAG);
-        if (chatFragment == null){
+        if (chatFragment == null) {
             chatFragment = new CustomChatFragment();
             //传入参数
             chatFragment.setArguments(getIntent().getExtras());
@@ -43,7 +48,6 @@ public class ChatActivity extends BaseActivity {
             sendOrderOrTrack();
         }
     }
-
 
     /**
      * 发送订单或轨迹消息
@@ -72,9 +76,8 @@ public class ChatActivity extends BaseActivity {
      * 发送订单消息
      *
      * 不发送则是saveMessage
-     * @param selectedIndex
      */
-    private void sendOrderMessage(int selectedIndex){
+    private void sendOrderMessage(int selectedIndex) {
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(DemoMessageHelper.createOrderInfo(this, selectedIndex));
         ChatClient.getInstance().chatManager().saveMessage(message);
@@ -82,7 +85,6 @@ public class ChatActivity extends BaseActivity {
 
     /**
      * 发送轨迹消息
-     * @param selectedIndex
      */
     private void sendTrackMessage(int selectedIndex) {
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
@@ -90,8 +92,8 @@ public class ChatActivity extends BaseActivity {
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
-    private String getMessageContent(int selectedIndex){
-        switch (selectedIndex){
+    private String getMessageContent(int selectedIndex) {
+        switch (selectedIndex) {
             case 1:
                 return getResources().getString(R.string.em_example1_text);
             case 2:
@@ -105,32 +107,27 @@ public class ChatActivity extends BaseActivity {
         return "";
     }
 
-
-
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
         MediaManager.release();
         instance = null;
+        RemoteManager.getInstance().unbindSRServer(ChatActivity.this);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+    @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         // 点击notification bar进入聊天页面，保证只有一个聊天页面
         String username = intent.getStringExtra(Config.EXTRA_SERVICE_IM_NUMBER);
-        if (toChatUsername.equals(username))
+        if (toChatUsername.equals(username)) {
             super.onNewIntent(intent);
-        else {
+        } else {
             finish();
             startActivity(intent);
         }
-
     }
 
-    @Override
-    public void onBackPressed() {
+    @Override public void onBackPressed() {
         if (chatFragment != null) {
             chatFragment.onBackPressed();
         }
@@ -141,9 +138,13 @@ public class ChatActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        RemoteManager.getInstance().startShareDeskTop(requestCode, resultCode, data);
+        //ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+    }
 }

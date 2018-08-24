@@ -1,2 +1,1 @@
-include ':app', ':kefu-easeui', ':bottomnavigation',':zbarlibary', ':hmspush'
-
+include ':app', ':kefu-easeui', ':bottomnavigation',':zbarlibary', ':hmspush', ':compoundlayout', ':kefu-remote'

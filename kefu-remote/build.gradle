@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion "25.0.0"
+
+
+  defaultConfig {
+    minSdkVersion 17
+    targetSdkVersion 22
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  sourceSets {
+    main() {
+      jniLibs.srcDirs = ['libs']
+    }
+  }
+}
+
+dependencies {
+  compile fileTree(include: ['*.jar'], dir: 'libs')
+  compile 'com.android.support:support-v4:25.1.0'
+  compile 'com.android.support.constraint:constraint-layout:1.1.2'
+  testCompile 'junit:junit:4.12'
+  androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile 'com.android.support:design:25.1.0'
+  // Tencent bugly bug统计工具
+  compile 'com.tencent.bugly:crashreport:2.6.6'
+  compile 'com.tencent.bugly:nativecrashreport:3.3.1'
+}

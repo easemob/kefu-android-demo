@@ -76,6 +76,12 @@ public class DemoHelper {
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
 
+
+        options.setKefuServerAddress("https://kefu.iflytek.com/mo/signin");
+        options.setIMServer("im1.iflytek.com");
+        options.setIMPort(16717);
+        options.setRestServer("a1.iflytek.com:80");
+
 //        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源

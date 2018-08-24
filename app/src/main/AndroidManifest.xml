@@ -3,265 +3,316 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.easemob.helpdeskdemo">
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+  <uses-feature android:name="android.hardware.camera"/>
+  <uses-feature android:name="android.hardware.camera.autofocus"/>
+  <uses-feature
+      android:glEsVersion="0x00020000"
+      android:required="true"/>
 
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+  <!-- 这个权限用于进行网络定位 -->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <!-- 这个权限用于访问GPS定位 -->
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <!-- 用于读取手机当前的状态 -->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <!-- 访问网络，网络定位需要上网 -->
+  <uses-permission android:name="android.permission.INTERNET"/>
 
-    <!-- 听筒和扬声器模式切换 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+  <!-- 听筒和扬声器模式切换 -->
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
-    <!-- 音视频 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+  <!-- 音视频 -->
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
 
-    <!-- GCM required, remember replace "com.easemob.helpdeskdemo" to your own package -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+  <uses-feature android:name="android.hardware.camera"/>
+  <uses-feature android:name="android.hardware.camera.autofocus"/>
+  <uses-feature
+      android:glEsVersion="0x00020000"
+      android:required="true"/>
 
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+  <uses-permission
+      android:name="android.permission.READ_LOGS"
+      tools:ignore="ProtectedPermissions"/>
 
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+  <!--模拟输入事件-->
+  <uses-permission
+      android:name="android.permission.INJECT_EVENTS"
+      tools:ignore="ProtectedPermissions"/>
 
-    <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
-    <permission
-        android:name="${applicationId}.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signatureOrSystem" />
-    <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
-    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
-    <application
-        android:name=".DemoApplication"
-        android:largeHeap="true"
-        android:icon="@drawable/em_logo_uidemo"
-        android:label="@string/app_name"
-        android:hardwareAccelerated="false"
-        android:theme="@style/AppTheme">
-        <!--<activity android:name=".ui.TestDemoActivity"-->
-                  <!--android:screenOrientation="portrait"-->
-            <!--&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-        <!-- 导航页面 -->
-        <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/horizontal_slide">
-                  <intent-filter>
-                      <action android:name="android.intent.action.MAIN" />
-                      <category android:name="android.intent.category.LAUNCHER" />
-                  </intent-filter>
-        </activity>
-        <!-- 主界面 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"
-            android:windowSoftInputMode="adjustPan"/>
-        <!-- 登陆 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.LoginActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"
-            android:windowSoftInputMode="adjustResize"/>
 
-        <!-- 聊天页面 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.ChatActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|navigation"
-            android:theme="@style/horizontal_slide"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <!-- 商品详情界面 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.ShopDetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide" />
-        <!-- 设置appkey界面 -->
-        <activity
-            android:name="com.easemob.helpdeskdemo.ui.ModifyActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"/>
+  <!-- GCM required, remember replace "com.easemob.helpdeskdemo" to your own package -->
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
-        <!-- 地图定位页面 -->
-        <activity android:name=".ui.BaiduMapActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"/>
-        <!-- 常用语页面 -->
-        <activity android:name=".ui.ShortCutMsgActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AnimBottomIn"
-            />
-        <activity android:name=".ui.ContextMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"
-            />
-        <!-- 满意度评价界面 -->
-        <activity android:name=".ui.SatisfactionActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"
+  <permission
+      android:name="${applicationId}.permission.C2D_MESSAGE"
+      android:protectionLevel="signature"/>
+
+  <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+
+  <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
+  <permission
+      android:name="${applicationId}.permission.MIPUSH_RECEIVE"
+      android:protectionLevel="signatureOrSystem"/>
+  <!-- 其中的com.easemob.helpdeskdemo需要换为自己的包名 -->
+  <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE"/>
+  <application
+      android:name=".DemoApplication"
+      android:hardwareAccelerated="false"
+      android:icon="@drawable/em_logo_uidemo"
+      android:label="@string/app_name"
+      android:largeHeap="true"
+      android:theme="@style/AppTheme">
+    <!--<activity android:name=".ui.TestDemoActivity"-->
+    <!--android:screenOrientation="portrait"-->
+    <!--&gt;-->
+    <!--<intent-filter>-->
+    <!--<action android:name="android.intent.action.MAIN" />-->
+    <!--<category android:name="android.intent.category.LAUNCHER" />-->
+    <!--</intent-filter>-->
+    <!--</activity>-->
+    <!-- 导航页面 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <!-- 主界面 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.MainActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustPan"/>
+    <!-- 登陆 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.LoginActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustResize"/>
+
+    <!-- 聊天页面 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.ChatActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|navigation"
+        android:launchMode="singleTop"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustResize|stateHidden"/>
+    <!-- 商品详情界面 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.ShopDetailsActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"/>
+    <!-- 设置appkey界面 -->
+    <activity
+        android:name="com.easemob.helpdeskdemo.ui.ModifyActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"/>
+
+    <!-- 地图定位页面 -->
+    <activity
+        android:name=".ui.BaiduMapActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"/>
+    <!-- 常用语页面 -->
+    <activity
+        android:name=".ui.ShortCutMsgActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/AnimBottomIn"
         />
-        <activity android:name=".ui.NewLeaveMessageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:theme="@style/horizontal_slide" />
-        <activity android:name=".ui.TicketDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"/>
-        <activity android:name=".ui.NewCommentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            />
-        <activity
-            android:name=".ui.FileDownloadActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide" />
-        <activity android:name=".ui.ForwardWebViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"
-            />
-        <!-- 视频通话 -->
-        <activity android:name=".ui.CallActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/horizontal_slide">
-        </activity>
+    <activity
+        android:name=".ui.ContextMenuActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/MyDialogStyle"
+        />
+    <!-- 满意度评价界面 -->
+    <activity
+        android:name=".ui.SatisfactionActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        />
+    <activity
+        android:name=".ui.NewLeaveMessageActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustResize|stateHidden"/>
+    <activity
+        android:name=".ui.TicketDetailActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"/>
+    <activity
+        android:name=".ui.NewCommentActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustResize|stateVisible"
+        />
+    <activity
+        android:name=".ui.FileDownloadActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"/>
+    <activity
+        android:name=".ui.ForwardWebViewActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/MyDialogStyle"
+        />
+    <!-- 视频通话 -->
+    <activity
+        android:name=".ui.CallActivity"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide">
+    </activity>
 
-        <!-- 百度地图所需的service -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-        </service>
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+    <activity
+        android:name="com.easemob.kefu_remote.conference.ConferenceActivity"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:theme="@style/horizontal_slide"
+        android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
 
+    <service android:name="com.easemob.kefu_remote.conference.SRService"/>
 
-        <!-- gcm start -->
-        <receiver
-            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+    <!--核心进程-->
+    <service
+        android:name="com.easemob.kefu_remote.CoreService"
+        android:enabled="true"
+        android:exported="false"/>
+    <service
+        android:name="com.easemob.kefu_remote.CoreService$CoreInnerService"
+        android:enabled="true"
+        android:exported="false"/>
 
-                <category android:name="com.hyphenate.chatuidemo" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.hyphenate.chat.EMGCMListenerService"
-            android:exported="false" />
-
-        <receiver
-            android:name=".receiver.GCMPushBroadCast"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.hyphenate.sdk.push" />
-
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-        <!-- gcm end -->
-
-
-        <!-- 声明小米所需的Receiver-->
-        <!-- mi push -->
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedService" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-
-        <receiver
-            android:name="com.hyphenate.chat.EMMipushReceiver"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
-        <!-- mi push end -->
-
-        <!-- FCM required start -->
-        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMMSGService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMTokenRefreshService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <!-- FCM required end -->
+    <!-- 百度地图所需的service -->
+    <service
+        android:name="com.baidu.location.f"
+        android:enabled="true"
+        android:process=":remote">
+    </service>
+    <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="3ecea51f560650b1ed8a4b99808f52e8"/>
 
 
-        <!--华为 HMS Config-->
-        <!-- 接入HMSSDK 需要注册的appid参数。value的值中“100257243”用实际申请的appid替换，来源于开发者联盟网站应用的权益详情。格式 android:value="appid=xxxxxx"-->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="appid=10663060" />
-        <!--接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播，
-                此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
-                参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer-->
-        <!--华为推送 start-->
-        <receiver android:name=".receiver.HMSPushReceiver">
-            <intent-filter>
-                <!-- 必须,用于接收 TOKEN -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
-                <!-- 必须，用于接收消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
-                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
-                <action android:name="com.huawei.android.push.intent.CLICK"/>
-                <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
-                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
-            </intent-filter>
-        </receiver>
-        <!-- huawei push end -->
+    <!-- gcm start -->
+    <receiver
+        android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
 
-        <provider
-            android:authorities="${applicationId}.fileprovider"
-            android:name="android.support.v4.content.FileProvider"
-            android:grantUriPermissions="true"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
+        <category android:name="com.hyphenate.chatuidemo"/>
+      </intent-filter>
+    </receiver>
 
-    </application>
+    <service
+        android:name="com.hyphenate.chat.EMGCMListenerService"
+        android:exported="false"/>
+
+    <receiver
+        android:name=".receiver.GCMPushBroadCast"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.hyphenate.sdk.push"/>
+
+        <category android:name="${applicationId}"/>
+      </intent-filter>
+    </receiver>
+    <!-- gcm end -->
+
+
+    <!-- 声明小米所需的Receiver-->
+    <!-- mi push -->
+    <service
+        android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+        android:enabled="true"
+        android:exported="true"
+        tools:ignore="ExportedService"/>
+    <service
+        android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+        android:enabled="true"/>
+
+    <receiver
+        android:name="com.hyphenate.chat.EMMipushReceiver"
+        android:exported="true"
+        tools:ignore="ExportedReceiver">
+      <intent-filter>
+        <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="com.xiaomi.mipush.ERROR"/>
+      </intent-filter>
+    </receiver>
+    <!-- mi push end -->
+
+    <!-- FCM required start -->
+    <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMMSGService">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+      </intent-filter>
+    </service>
+
+    <service android:name="com.easemob.helpdeskdemo.fcm.EMFCMTokenRefreshService">
+      <intent-filter>
+        <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+      </intent-filter>
+    </service>
+    <!-- FCM required end -->
+    <service android:name="com.easemob.kefu_remote.SRService">
+      <intent-filter android:priority="1000">
+        <action android:name="com.dbjtech.myservice" />
+      </intent-filter>
+    </service>
+
+    <!--华为 HMS Config-->
+    <!-- 接入HMSSDK 需要注册的appid参数。value的值中“100257243”用实际申请的appid替换，来源于开发者联盟网站应用的权益详情。格式 android:value="appid=xxxxxx"-->
+    <meta-data
+        android:name="com.huawei.hms.client.appid"
+        android:value="appid=10663060"/>
+    <!--接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播，
+            此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
+            参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer-->
+    <!--华为推送 start-->
+    <receiver android:name=".receiver.HMSPushReceiver">
+      <intent-filter>
+        <!-- 必须,用于接收 TOKEN -->
+        <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
+        <!-- 必须，用于接收消息 -->
+        <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+        <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
+        <action android:name="com.huawei.android.push.intent.CLICK"/>
+        <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
+        <action android:name="com.huawei.intent.action.PUSH_STATE"/>
+      </intent-filter>
+    </receiver>
+    <!-- huawei push end -->
+
+    <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="${applicationId}.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/file_paths"/>
+    </provider>
+
+  </application>
 
 </manifest>
