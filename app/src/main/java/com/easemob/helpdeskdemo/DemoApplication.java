@@ -15,7 +15,6 @@ package com.easemob.helpdeskdemo;
 
 import android.app.Application;
 
-import com.easemob.kefu_remote.RemoteApp;
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class DemoApplication extends Application {
@@ -28,9 +27,6 @@ public class DemoApplication extends Application {
 
         Preferences.init(this);
         DemoHelper.getInstance().init(this);
-
-        //初始化远程控制
-        RemoteApp.getInstance().initSDK(this);
 
         //注册Bugly Crash统计，用户可忽略
         CrashReport.initCrashReport(getApplicationContext(), "900012496", false);

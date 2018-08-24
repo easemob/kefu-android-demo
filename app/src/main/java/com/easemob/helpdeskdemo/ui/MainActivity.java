@@ -32,9 +32,11 @@ import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.kefu_remote.conference.RemoteManager;
+import com.easemob.kefu_remote.RemoteManager;
+import com.hyphenate.chat.CallManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
+import com.hyphenate.chat.MediaStream;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
@@ -53,6 +55,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     private int currentTabIndex = 0;
     private MyConnectionListener connectionListener = null;
     private BottomNavigation mBottomNav;
+    private CallManager.CallManagerDelegate delegate;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +126,32 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         // 检查华为推送服务
         HMSPushHelper.getInstance().connectHMS(this);
+
+
+        delegate = new CallManager.CallManagerDelegate() {
+            @Override public void onAddStream(MediaStream stream) {
+                RemoteManager.getInstance().subscribe(stream);
+            }
+
+            @Override public void onRemoveStream(MediaStream stream) {
+
+            }
+
+            @Override public void onUpdateStream(MediaStream stream) {
+                RemoteManager.getInstance().updateSubscribe(stream.streamId);
+            }
+
+            @Override public void onCallEnd(int reason, String desc) {
+                RemoteManager.getInstance().stoppedRemote();
+            }
+
+            @Override public void onNotice(CallManager.HMediaNoticeCode code, String arg1, String arg2, Object arg3) {
+                if (code == CallManager.HMediaNoticeCode.HMediaNoticeCtrolMsg) {
+                    RemoteManager.getInstance().parseCtrlMsg(arg1, arg2, arg3);
+                }
+            }
+        };
+        ChatClient.getInstance().callManager().addDelegate(delegate);
     }
 
     @TargetApi(23) private void requestPermissions() {
@@ -202,11 +231,10 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        RemoteManager.getInstance().unbindSR(this);
-        RemoteManager.getInstance().removeConferenceListener();
         if (connectionListener != null) {
             ChatClient.getInstance().removeConnectionListener(connectionListener);
         }
+        ChatClient.getInstance().callManager().removeDelegate(delegate);
     }
 
     @Override protected void onResume() {

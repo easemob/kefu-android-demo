@@ -3,7 +3,6 @@ package com.easemob.kefu_remote.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.easemob.kefu_remote.RemoteApp;
 import java.util.Map;
 
 public class VMSPUtil {
@@ -15,9 +14,6 @@ public class VMSPUtil {
     /**
      * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法
      */
-    public static void put(String key, Object object) {
-        put(RemoteApp.getInstance().getContext(), key, object);
-    }
 
     public static void put(Context context, String key, Object object) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
@@ -36,13 +32,6 @@ public class VMSPUtil {
             editor.putString(key, object.toString());
         }
         editor.commit();
-    }
-
-    /**
-     * 得到保存数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
-     */
-    public static Object get(String key, Object defaultObject) {
-        return get(RemoteApp.getInstance().getContext(), key, defaultObject);
     }
 
     /**
@@ -67,25 +56,11 @@ public class VMSPUtil {
     /**
      * 移除某个key值已经对应的值
      */
-    public static void remove(String key) {
-        remove(RemoteApp.getInstance().getContext(), key);
-    }
-
-    /**
-     * 移除某个key值已经对应的值
-     */
     public static void remove(Context context, String key) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(key);
         editor.commit();
-    }
-
-    /**
-     * 清除所有数据
-     */
-    public static void clear() {
-        clear(RemoteApp.getInstance().getContext());
     }
 
     /**
@@ -102,23 +77,9 @@ public class VMSPUtil {
     /**
      * 查询某个key是否已经存在
      */
-    public static boolean contains(String key) {
-        return contains(RemoteApp.getInstance().getContext(), key);
-    }
-
-    /**
-     * 查询某个key是否已经存在
-     */
     public static boolean contains(Context context, String key) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         return sp.contains(key);
-    }
-
-    /**
-     * 返回所有的键值对
-     */
-    public static Map<String, ?> getAll() {
-        return getAll(RemoteApp.getInstance().getContext());
     }
 
     /**

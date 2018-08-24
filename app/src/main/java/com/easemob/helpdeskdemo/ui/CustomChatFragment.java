@@ -2,7 +2,6 @@ package com.easemob.helpdeskdemo.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,9 +19,7 @@ import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
-import com.easemob.kefu_remote.conference.RemoteManager;
-import com.easemob.kefu_remote.conference.SRManager;
-import com.easemob.kefu_remote.control.CtrlManager;
+import com.easemob.kefu_remote.RemoteManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -99,17 +96,6 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         //        ((Button)inputMenu.getButtonSend()).setBackgroundResource(R.color.top_bar_normal_bg);
 
         RemoteManager.getInstance().setRemoteListener(listener);
-        CtrlManager.getInstance().setStopCtrModeListener(new CtrlManager.StopCtrModeListener() {
-            @Override public void stopCtr() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        Preferences.getInstance().setRemoteStatus(0);
-                        tvRemotePrompt.setText("远程协助正在进行中。。。");
-                    }
-                });
-            }
-        });
-
         if (Preferences.getInstance().getRemoteStatus() == 0 || Preferences.getInstance().getRemoteStatus() == 1) {
             listener.executeMode(Preferences.getInstance().getRemoteStatus());
         }
@@ -135,17 +121,22 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                     tvStopRemote.setOnClickListener(new View.OnClickListener() {
                         @Override public void onClick(View v) {
                             if (mode == 1) {
-                                CtrlManager.getInstance().stopCtrlMode();
+                                RemoteManager.getInstance().stopControl();
                             }
-                            RemoteManager.getInstance().exitConference();
+                            RemoteManager.getInstance().exitRemote();
                             rlRemote.setVisibility(View.GONE);
                             Preferences.getInstance().setRemoteStatus(2);
-                            RemoteManager.getInstance().unbindSR(getActivity());
                         }
                     });
                     tvMic.setOnClickListener(new View.OnClickListener() {
                         @Override public void onClick(View v) {
-                            RemoteManager.getInstance().voiceSwitch(tvMic);
+                            if (tvMic.isActivated()) {
+                                RemoteManager.getInstance().closeMic();
+                                tvMic.setActivated(false);
+                            } else {
+                                RemoteManager.getInstance().openMic();
+                                tvMic.setActivated(true);
+                            }
                         }
                     });
                     tvSpeaker.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +150,15 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                             }
                         }
                     });
+                }
+            });
+        }
+
+        @Override public void stopCtr() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    Preferences.getInstance().setRemoteStatus(0);
+                    tvRemotePrompt.setText("远程协助正在进行中。。。");
                 }
             });
         }
@@ -227,14 +227,12 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 startVideoCall(content);
                 break;
             case ITEM_REMOTE:
-                startVideoCall("申请远程协助");
+                startRemoteControl("申请远程协助");
                 ChatClient.getInstance().callManager().setRemoteControlCallBack(new RemoteControlCallBack() {
-                    @Override public boolean startRemoteControl(String ticket) {
-                        RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, ticket);
-                        return true;
+                    @Override public void shareDeskTop() {
+                        RemoteManager.getInstance().initRemoteOption(getActivity());
                     }
                 });
-                //RemoteManager.getInstance().init(getActivity(), CustomChatFragment.this, null);
                 break;
             case ITEM_EVALUATION:
                 ChatClient.getInstance().chatManager().asyncSendInviteEvaluationMessage(toChatUsername, null);
@@ -248,6 +246,13 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         }
         //不覆盖已有的点击事件
         return false;
+    }
+
+    private void startRemoteControl(String content) {
+        inputMenu.hideExtendMenuContainer();
+
+        Message message = Message.createRemoteControlSendMessage(content, toChatUsername);
+        ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
     private void startVideoCall(String content) {
@@ -316,11 +321,6 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 }
             } else if (requestCode == REQUEST_CODE_EVAL) {
                 messageList.refresh();
-            } else if (requestCode == SRManager.RECORD_REQUEST_CODE) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    SRManager.getInstance().initMediaProjection(resultCode, data);
-                    RemoteManager.getInstance().startScreenCapture();
-                }
             }
         }
     }
@@ -382,7 +382,6 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
 
     @Override public void onStart() {
         super.onStart();
-        RemoteManager.getInstance().addConferenceListener();
     }
 
     @Override public void onResume() {

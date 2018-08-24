@@ -11,8 +11,8 @@
         android:id="@+id/primary_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" /> -->
-
-    <FrameLayout
+    
+    <FrameLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/primary_menu_container"
@@ -34,7 +34,7 @@
             android:layout_marginTop="9dp"
             hyphenate:numColumns="4" />
 
-        <FrameLayout
+        <FrameLayout 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/emojicon_menu_container" />

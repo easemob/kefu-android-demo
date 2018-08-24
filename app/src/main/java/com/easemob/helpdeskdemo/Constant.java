@@ -23,8 +23,13 @@ public class Constant {
     public static final String DEFAULT_NICK_NAME = "";
 
     //科大讯飞 私有云
+    //public static final String DEFAULT_CUSTOMER_APPKEY = "1102180312009368#kefuchannelapp28291";
+    //public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_367865";
+    //public static final String DEFAULT_TENANT_ID = "28291";
+
+
     public static final String DEFAULT_CUSTOMER_APPKEY = "1100180329015108#kefuchannelapp28591";
-    public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_963549";
+    public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_268788";
     public static final String DEFAULT_TENANT_ID = "28591";
 
 

@@ -6,7 +6,7 @@ android {
 
 
   defaultConfig {
-    minSdkVersion 16
+    minSdkVersion 17
     targetSdkVersion 22
     versionCode 1
     versionName "1.0"
@@ -40,5 +40,4 @@ dependencies {
   // Tencent bugly bug统计工具
   compile 'com.tencent.bugly:crashreport:2.6.6'
   compile 'com.tencent.bugly:nativecrashreport:3.3.1'
-  //  compile 'com.easemob:kefu-sdk:1.1.7.final'
 }

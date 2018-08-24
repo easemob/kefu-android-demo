@@ -183,11 +183,7 @@
         android:theme="@style/horizontal_slide"
         android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"/>
 
-    <service android:name="com.easemob.kefu_remote.conference.SRService">
-      <intent-filter android:priority="1000">
-        <action android:name="com.dbjtech.myservice" />
-      </intent-filter>
-    </service>
+    <service android:name="com.easemob.kefu_remote.conference.SRService"/>
 
     <!--核心进程-->
     <service
@@ -278,7 +274,11 @@
       </intent-filter>
     </service>
     <!-- FCM required end -->
-
+    <service android:name="com.easemob.kefu_remote.SRService">
+      <intent-filter android:priority="1000">
+        <action android:name="com.dbjtech.myservice" />
+      </intent-filter>
+    </service>
 
     <!--华为 HMS Config-->
     <!-- 接入HMSSDK 需要注册的appid参数。value的值中“100257243”用实际申请的appid替换，来源于开发者联盟网站应用的权益详情。格式 android:value="appid=xxxxxx"-->

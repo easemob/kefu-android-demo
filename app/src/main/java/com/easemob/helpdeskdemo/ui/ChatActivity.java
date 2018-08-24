@@ -7,8 +7,11 @@ import android.os.Bundle;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.kefu_remote.conference.RemoteManager;
+import com.easemob.kefu_remote.RemoteManager;
+import com.easemob.kefu_remote.control.CtrlManager;
+import com.hyphenate.chat.CallManager;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.MediaStream;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
@@ -108,6 +111,7 @@ public class ChatActivity extends BaseActivity {
         super.onDestroy();
         MediaManager.release();
         instance = null;
+        RemoteManager.getInstance().unbindSRServer(ChatActivity.this);
     }
 
     @Override protected void onNewIntent(Intent intent) {
@@ -136,5 +140,11 @@ public class ChatActivity extends BaseActivity {
 
     @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        RemoteManager.getInstance().startShareDeskTop(requestCode, resultCode, data);
+        //ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
     }
 }

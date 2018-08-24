@@ -2,12 +2,14 @@ package com.easemob.kefu_remote.control;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-import com.easemob.kefu_remote.RemoteApp;
-import com.easemob.kefu_remote.conference.RemoteManager;
-import com.easemob.kefu_remote.sdk.EMConferenceManager;
+import com.easemob.kefu_remote.RemoteManager;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.callback.Callback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,20 +40,15 @@ public class CtrlManager {
     private final int MOUSE_SCROLL_DOWN = 8;
     private final int MOUSE_SCROLL_UP = 16;
 
-    private int CODE_RESPONSE = 128;
-    private int CODE_REJECT = -402;
-    private int CODE_BUSY = -403;
-    private int CODE_FAIL = -404;
-
     // 被控制
     private boolean isCtrl = false;
     // 按下
     private boolean isDown = false;
 
     private String remoteMemberId = "";
+    private Object objectId = null;
     private String streamId = "";
     private String ctrlId = "";
-    private Object objectId = null;
     private int preX, preY;
 
     private static CtrlManager instance;
@@ -68,17 +65,17 @@ public class CtrlManager {
     // 模拟控制线程
     private CtrlMotion ctrlMotion;
 
-    private CtrlManager() {
-        context = RemoteApp.getInstance().getContext();
+    private CtrlManager(Context context) {
+        this.context = context;
         initWindowManager();
         screenWidth = windowManager.getDefaultDisplay().getWidth();
         screenHeight = windowManager.getDefaultDisplay().getHeight();
         ctrlMotion = new CtrlMotion();
     }
 
-    public static CtrlManager getInstance() {
+    public static CtrlManager getInstance(Context context) {
         if (instance == null) {
-            instance = new CtrlManager();
+            instance = new CtrlManager(context);
         }
         return instance;
     }
@@ -184,7 +181,7 @@ public class CtrlManager {
 
         JSONObject resObject = new JSONObject();
         resObject.put("sn", sn);
-        sendCtrlMsg(remoteMemberId, CODE_RESPONSE, objectId, resObject.toString());
+        sendCtrlMsg(remoteMemberId, objectId, resObject.toString(), true);
     }
 
     /**
@@ -192,7 +189,7 @@ public class CtrlManager {
      */
     private void sendPingCtrl() {
         JSONObject jsonObject = new JSONObject();
-        sendCtrlMsg(remoteMemberId, CODE_RESPONSE, objectId, jsonObject.toString());
+        sendCtrlMsg(remoteMemberId, objectId, jsonObject.toString(), true);
     }
 
     /**
@@ -200,21 +197,33 @@ public class CtrlManager {
      */
     public void agreeRequestCtrl() {
         startCtrlMode();
-        sendCtrlMsg(remoteMemberId, CODE_RESPONSE, objectId, "");
+        sendCtrlMsg(remoteMemberId, objectId, "", true);
     }
 
     /**
      * 拒绝申请控制
      */
     public void rejectRequestCtrl() {
-        sendCtrlMsg(remoteMemberId, CODE_REJECT, objectId, "");
+        sendCtrlMsg(remoteMemberId, objectId, "", false);
     }
 
     /**
      * 回复控制消息
      */
-    private void sendCtrlMsg(String memberId, int code, Object objectId, String msg) {
-        EMConferenceManager.getInstance().sendCtrlMsgByMemberId(memberId, code, objectId, msg);
+    private void sendCtrlMsg(String memberId, Object object, String msg, boolean isAgree) {
+        ChatClient.getInstance().callManager().sendCustomWithRemoteMemberId(memberId, object, msg, isAgree, new Callback() {
+            @Override public void onSuccess() {
+
+            }
+
+            @Override public void onError(int code, String error) {
+
+            }
+
+            @Override public void onProgress(int progress, String status) {
+
+            }
+        });
     }
 
     /**
