@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.easemob.kefu_remote.RemoteManager;
@@ -62,14 +65,27 @@ public class CtrlManager {
     private int screenWidth;
     private int screenHeight;
 
+    // To calculate the status bar height
+    private View anchor;
+    private WindowManager.LayoutParams anchorParams;
+    private int statusBarHeight = 0;
+
     // 模拟控制线程
     private CtrlMotion ctrlMotion;
 
     private CtrlManager(Context context) {
         this.context = context;
         initWindowManager();
-        screenWidth = windowManager.getDefaultDisplay().getWidth();
-        screenHeight = windowManager.getDefaultDisplay().getHeight();
+
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            windowManager.getDefaultDisplay().getRealSize(point);
+        } else {
+            windowManager.getDefaultDisplay().getSize(point);
+        }
+        screenWidth = point.x;
+        screenHeight = point.y;
+
         ctrlMotion = new CtrlMotion();
     }
 
@@ -105,6 +121,35 @@ public class CtrlManager {
             mouseWidget.setParams(cursorParams);
             windowManager.addView(mouseWidget, cursorParams);
         }
+
+        // 添加一个单位像素的view到app的左上角，根据该view在手机整个屏幕中的位置来判断状态栏是否显示和状态栏的高度。
+        if (anchorParams == null) {
+            anchorParams = new WindowManager.LayoutParams();
+            anchorParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
+            anchorParams.format = PixelFormat.TRANSPARENT;
+            anchorParams.gravity = Gravity.LEFT | Gravity.TOP;
+            anchorParams.width = 1;
+            anchorParams.height = 1;
+            anchorParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+        }
+
+        if (anchor == null) {
+            anchor = new View(context);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(1, 1);
+            anchor.setLayoutParams(params);
+        }
+
+        windowManager.addView(anchor, anchorParams);
+        anchor.post(new Runnable() {
+            @Override
+            public void run() {
+                int[] params = new int[2];
+                anchor.getLocationOnScreen(params);
+                statusBarHeight = params[1];
+                Log.i("CtrlManager", "statusBarHeight: " + statusBarHeight);
+                windowManager.removeView(anchor);
+            }
+        });
     }
 
     /**
@@ -257,7 +302,7 @@ public class CtrlManager {
                 }
                 break;
             case ACTION_MOUSE_MOVE: // 鼠标移动
-                mouseWidget.updatePosition(x, y);
+                mouseWidget.updatePosition(x, y - statusBarHeight);
                 if (isDown) {
                     ctrlMotion.touchMove(x, y);
                 }
