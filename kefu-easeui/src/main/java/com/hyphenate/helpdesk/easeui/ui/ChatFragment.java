@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -35,11 +37,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.kefu_remote.RemoteManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.callback.RemoteControlCallBack;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
@@ -787,8 +791,8 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     }
 
     @Override public void onMessage(List<Message> msgs) {
-        for (Message message : msgs) {
-            String username = null;
+        for (final Message message : msgs) {
+            String username;
             username = message.from();
 
             // 如果是当前会话的消息，刷新聊天页面
@@ -796,11 +800,44 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 messageList.refreshSelectLast();
                 // 声音和震动提示有新消息
                 UIProvider.getInstance().getNotifier().viberateAndPlayTone(message);
+
+                String att = message.getStringAttribute("requestInvite", null);
+                if (att != null && "invite".equals(att)) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            showDialog(message.getUserName());
+                        }
+                    });
+                }
             } else {
                 // 如果消息不是和当前聊天ID的消息
                 UIProvider.getInstance().getNotifier().onNewMsg(message);
             }
         }
+    }
+
+    private void showDialog(final String username) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("申请远程请求");
+        builder.setMessage("对方向你发起远程请求，是否同意？");
+        builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                Message messages = Message.createRemoteControlSendMessage("申请远程协助", username);
+                ChatClient.getInstance().chatManager().sendMessage(messages);
+                ChatClient.getInstance().callManager().setRemoteControlCallBack(new RemoteControlCallBack() {
+                    @Override public void shareDeskTop() {
+                        RemoteManager.getInstance().initRemoteOption(getActivity());
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     @Override public void onCmdMessage(List<Message> msgs) {
