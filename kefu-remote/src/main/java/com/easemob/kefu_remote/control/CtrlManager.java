@@ -225,7 +225,7 @@ public class CtrlManager {
             } else if (event == EVENT_CTRL_END) {
                 stopCtrlMode();
                 listener.stopCtr();
-                stopDrawMode();
+//                 stopDrawMode();
             } else if (event == EVENT_CTRL_PING) {
                 sendPingCtrl();
             } else if (event == EVENT_ACTION) {
@@ -285,7 +285,7 @@ public class CtrlManager {
      */
     public void agreeRequestCtrl() {
         startCtrlMode();
-        startDrawMode();
+//         startDrawMode();
         sendCtrlMsg(remoteMemberId, objectId, "", true);
     }
 
