@@ -141,8 +141,7 @@ public class CtrlManager {
 
         windowManager.addView(anchor, anchorParams);
         anchor.post(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 int[] params = new int[2];
                 anchor.getLocationOnScreen(params);
                 statusBarHeight = params[1];
@@ -161,6 +160,49 @@ public class CtrlManager {
             initWindowManager();
             windowManager.removeView(mouseWidget);
             mouseWidget = null;
+        }
+    }
+
+    // 绘制面板
+    private CtrlDrawWidget drawWidget;
+    private WindowManager.LayoutParams drawParams;
+
+    /**
+     * 开始绘制模式
+     */
+    private void startDrawMode() {
+        if (!isCtrl) {
+            return;
+        }
+        initWindowManager();
+        if (drawWidget == null) {
+            drawWidget = new CtrlDrawWidget(context);
+            if (drawParams == null) {
+                drawParams = new WindowManager.LayoutParams();
+                // 设置窗口类型
+                drawParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+                // 设置悬浮窗透明
+                drawParams.format = PixelFormat.TRANSPARENT;
+                // 位置为左侧顶部
+                drawParams.gravity = Gravity.LEFT | Gravity.TOP;
+                // 设置宽高自适应
+                drawParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                drawParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+                // 设置窗口标志类型，其中 FLAG_NOT_FOCUSABLE 是放置当前悬浮窗拦截点击事件，造成桌面控件不可操作
+                drawParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+            }
+            windowManager.addView(drawWidget, drawParams);
+        }
+    }
+
+    /**
+     * 停止绘制模式
+     */
+    public void stopDrawMode() {
+        if (drawWidget != null) {
+            initWindowManager();
+            windowManager.removeView(drawWidget);
+            drawWidget = null;
         }
     }
 
@@ -183,6 +225,7 @@ public class CtrlManager {
             } else if (event == EVENT_CTRL_END) {
                 stopCtrlMode();
                 listener.stopCtr();
+                stopDrawMode();
             } else if (event == EVENT_CTRL_PING) {
                 sendPingCtrl();
             } else if (event == EVENT_ACTION) {
@@ -242,6 +285,7 @@ public class CtrlManager {
      */
     public void agreeRequestCtrl() {
         startCtrlMode();
+        startDrawMode();
         sendCtrlMsg(remoteMemberId, objectId, "", true);
     }
 

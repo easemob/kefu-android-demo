@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#54232323"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="8dp"
+      android:text="绘制板"
+      android:textAlignment="center"
+      />
+
+  <com.easemob.kefu_remote.control.CtrlDrawView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <ImageView
+      android:id="@+id/btn_close"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_margin="8dp"
+      android:background="@drawable/em_click_circle_translucent"
+      android:padding="4dp"
+      android:src="@drawable/ic_close_24dp"
+      />
+</RelativeLayout>
