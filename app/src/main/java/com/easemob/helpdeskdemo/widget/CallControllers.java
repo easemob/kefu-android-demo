@@ -19,7 +19,7 @@ import com.easemob.helpdeskdemo.R;
 public class CallControllers extends LinearLayout {
 
 	private ImageView ivSwitchCamera;
-	private ImageView ivMute;
+	private ImageView ivMic;
 	private ImageView ivSpeaker;
 	private ImageView ivLocalVideo;
 	private ImageView ivShareWindow;
@@ -53,7 +53,7 @@ public class CallControllers extends LinearLayout {
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 		ivSwitchCamera = (ImageView) findViewById(R.id.iv_switch_camera);
-		ivMute = (ImageView) findViewById(R.id.iv_mute);
+		ivMic = (ImageView) findViewById(R.id.iv_mic);
 		ivSpeaker = (ImageView) findViewById(R.id.iv_speaker);
 		ivLocalVideo = (ImageView) findViewById(R.id.iv_localvideo);
 		ivShareWindow = (ImageView) findViewById(R.id.iv_sharewindow);
@@ -68,7 +68,7 @@ public class CallControllers extends LinearLayout {
 			}
 		});
 
-		ivMute.setOnClickListener(new OnClickListener() {
+		ivMic.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (muteOnCheckedChangeListener != null){
@@ -76,9 +76,9 @@ public class CallControllers extends LinearLayout {
 					if (ret){
 						isMuteState = !isMuteState;
 						if (isMuteState){
-							ivMute.setImageResource(R.drawable.em_icon_call_mic_off);
+							ivMic.setImageResource(R.drawable.em_icon_call_mic_off);
 						}else{
-							ivMute.setImageResource(R.drawable.em_icon_call_mic_on);
+							ivMic.setImageResource(R.drawable.em_icon_call_mic_on);
 						}
 					}
 				}

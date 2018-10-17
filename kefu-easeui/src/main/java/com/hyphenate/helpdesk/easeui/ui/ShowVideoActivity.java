@@ -1,19 +1,19 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
+import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.PathUtil;
 
@@ -43,10 +43,7 @@ public class ShowVideoActivity extends BaseActivity {
         EMVideoMessageBody messageBody = (EMVideoMessageBody)message.body();
         localFilePath = messageBody.getLocalUrl();
         if (localFilePath != null && new File(localFilePath).exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(new File(localFilePath)),
-                    "video/mp4");
-            startActivity(intent);
+            showLocalVideo(localFilePath);
             finish();
         } else {
             downloadVideo(message);
@@ -72,10 +69,11 @@ public class ShowVideoActivity extends BaseActivity {
      * @param localPath 视频路径
      */
     private void showLocalVideo(String localPath) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(localPath)),
-                "video/mp4");
-        startActivity(intent);
+        try{
+            CommonUtils.openFileEx(new File(localPath), "video/mp4", this);
+        }catch (Exception e){
+            Toast.makeText(this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 

@@ -5,10 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" filepath="$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" />
       <module fileurl="file://$PROJECT_DIR$/hmspush/hmspush.iml" filepath="$PROJECT_DIR$/hmspush/hmspush.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hmspush/hmspush.iml" filepath="$PROJECT_DIR$/hmspush/hmspush.iml" />
       <module fileurl="file://$PROJECT_DIR$/kefu-android-demo.iml" filepath="$PROJECT_DIR$/kefu-android-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/kefu-easeui/kefu-easeui.iml" filepath="$PROJECT_DIR$/kefu-easeui/kefu-easeui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/zbarlibary/zbarlibary.iml" filepath="$PROJECT_DIR$/zbarlibary/zbarlibary.iml" />
       <module fileurl="file://$PROJECT_DIR$/zbarlibary/zbarlibary.iml" filepath="$PROJECT_DIR$/zbarlibary/zbarlibary.iml" />
     </modules>
   </component>

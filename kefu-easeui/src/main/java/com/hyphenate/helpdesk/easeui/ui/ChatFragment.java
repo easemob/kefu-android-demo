@@ -29,7 +29,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +39,6 @@ import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.UIProvider;
-import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
@@ -54,6 +52,7 @@ import com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu.ChatInputMenuListe
 import com.hyphenate.helpdesk.easeui.widget.ExtendMenu.EaseChatExtendMenuItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
+import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.manager.EmojiconManager;
 import com.hyphenate.helpdesk.model.AgentIdentityInfo;
 import com.hyphenate.helpdesk.model.QueueIdentityInfo;
@@ -736,7 +735,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
             } else {
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".fileprovider", cameraFile));
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".ease", cameraFile));
             }
             startActivityForResult(intent, REQUEST_CODE_CAMERA);
         }catch (Exception e){

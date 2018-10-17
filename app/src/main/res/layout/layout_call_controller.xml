@@ -16,7 +16,7 @@
         />
 
     <ImageView
-        android:id="@+id/iv_mute"
+        android:id="@+id/iv_mic"
         android:layout_width="56dip"
         android:layout_height="56dip"
         android:padding="2dp"

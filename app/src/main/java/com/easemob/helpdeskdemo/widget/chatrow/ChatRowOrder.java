@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.ui.ContextMenuActivity;
 import com.easemob.helpdeskdemo.ui.CustomChatFragment;
@@ -86,7 +87,8 @@ public class ChatRowOrder extends ChatRow {
         mOrderTitle.setText(orderInfo.getTitle());
         String imageUrl = orderInfo.getImageUrl();
         if (!TextUtils.isEmpty(imageUrl)){
-            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mImageView);
+            Glide.with(context).load(imageUrl).apply(RequestOptions.placeholderOf(com.hyphenate.helpdesk.R.drawable.hd_default_image).diskCacheStrategy(DiskCacheStrategy.ALL)).into(mImageView);
+//            Glide.with(context).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_image).into(mImageView);
         }
 
         message.setMessageStatusCallback(new Callback() {

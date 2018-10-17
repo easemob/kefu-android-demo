@@ -112,6 +112,7 @@ public class ChatActivity extends BaseActivity {
         super.onDestroy();
         MediaManager.release();
         instance = null;
+//        ChatClient.getInstance().chatManager().cancelVideoConferences(toChatUsername, null);
     }
 
     @Override
