@@ -1,11 +1,11 @@
 package com.hyphenate.helpdesk.easeui.widget.chatrow;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hyphenate.chat.EMNormalFileMessageBody;
 import com.hyphenate.chat.Message;
@@ -13,7 +13,7 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowNormalFileActivity;
-import com.hyphenate.util.FileUtils;
+import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.util.TextFormater;
 
 import java.io.File;
@@ -122,7 +122,8 @@ public class ChatRowFile extends ChatRow{
         File file = new File(filePath);
         if (file.exists()) {
             // 文件存在，直接打开
-            FileUtils.openFile(file, (Activity) context);
+//            FileUtils.openFile(file, (Activity) context);
+            openFile(file);
         } else {
             // 下载
 //            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));
@@ -130,4 +131,21 @@ public class ChatRowFile extends ChatRow{
         }
 
     }
+
+    private void openFile(File file) {
+        if (file != null && file.exists()) {
+            String suffix = "";
+            try {
+                String fileName = file.getName();
+                suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+            } catch (Exception e) {
+            }
+            try{
+                CommonUtils.openFileEx(file, CommonUtils.getMap(suffix), getContext());
+            }catch (Exception e){
+                Toast.makeText(getContext(), "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

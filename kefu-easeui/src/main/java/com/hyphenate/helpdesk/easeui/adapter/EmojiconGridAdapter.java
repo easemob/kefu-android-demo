@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.helpdesk.emojicon.Emojicon;
@@ -59,13 +60,17 @@ public class EmojiconGridAdapter extends ArrayAdapter<Emojicon>{
                     localBigIcon = new File(emojicon.getBigIconPath());
                 }
                 if (localIcon != null && localIcon.exists()) {
-                    Glide.with(getContext()).load(emojicon.getIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                    Glide.with(getContext()).load(emojicon.getIconPath()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                    Glide.with(getContext()).load(emojicon.getIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
                 } else if (localBigIcon != null && localBigIcon.exists()) {
-                    Glide.with(getContext()).load(emojicon.getBigIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                    Glide.with(getContext()).load(emojicon.getBigIconPath()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                    Glide.with(getContext()).load(emojicon.getBigIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
                 } else if (!TextUtils.isEmpty(emojicon.getIconRemotePath())) {
-                    Glide.with(getContext()).load(emojicon.getIconRemotePath()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                    Glide.with(getContext()).load(emojicon.getIconRemotePath()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                    Glide.with(getContext()).load(emojicon.getIconRemotePath()).placeholder(R.drawable.hd_default_expression).into(imageView);
                 } else if (!TextUtils.isEmpty(emojicon.getBigIconRemotePath())) {
-                    Glide.with(getContext()).load(emojicon.getBigIconRemotePath()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                    Glide.with(getContext()).load(emojicon.getBigIconRemotePath()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                    Glide.with(getContext()).load(emojicon.getBigIconRemotePath()).placeholder(R.drawable.hd_default_expression).into(imageView);
                 } else {
                     imageView.setImageResource(R.drawable.hd_default_expression);
                 }

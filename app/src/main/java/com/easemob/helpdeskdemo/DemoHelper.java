@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdeskdemo.receiver.CallReceiver;
 import com.easemob.helpdeskdemo.ui.CallActivity;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
-import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
@@ -72,7 +72,9 @@ public class DemoHelper {
         options.showAgentInputState().showVisitorWaitCount().showMessagePredict();
 
         //增加FCM推送，对于国外的APP可能比较需要
-        options.setFCMNumber("1038044763444");
+        options.setFCMNumber("570662061026");
+
+        options.setUseFCM(true);
         //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
         options.setMipushConfig("2882303761517507836", "5631750729836");
 
@@ -123,7 +125,8 @@ public class DemoHelper {
                                         strUrl = "http:" + strUrl;
                                     }
                                     //正常的string路径
-                                    Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).transform(new GlideCircleTransform(context)).into(userAvatarView);
+                                    Glide.with(context).load(strUrl).apply(RequestOptions.placeholderOf(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop()).into(userAvatarView);
+//                                    Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).transform(new GlideCircleTransform(context)).into(userAvatarView);
                                     return;
                                 }
                             }

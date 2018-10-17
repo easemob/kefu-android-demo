@@ -189,9 +189,9 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 			@Override
 			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
 				if (isChecked){
-					ChatClient.getInstance().callManager().resumeVoice();
-				}else{
 					ChatClient.getInstance().callManager().pauseVoice();
+				}else{
+					ChatClient.getInstance().callManager().resumeVoice();
 				}
 				return true;
 			}
@@ -309,11 +309,16 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 			addRadioButton(streamItem.stream.memberName, streamItem.nickName);
 		}
 		mStreamItemMaps.put(stream.memberName, streamItemList);
+//		if (streamItemList.size() > 1) {
+//			ChatClient.getInstance().callManager().updateSubscribe(streamItemList.get(0).stream.streamId, null, null);
+//		} else {
+//
+//		}
 		ChatClient.getInstance().callManager().subscribe(streamItem.stream, null, null);
-		if (mSelectedMemberName != null && mSelectedMemberName.equals(stream.memberName)){
-			if (!streamItemList.isEmpty()){
+		if (mSelectedMemberName != null && mSelectedMemberName.equals(stream.memberName)) {
+			if (!streamItemList.isEmpty()) {
 				setStreamToSurfaceView(streamItemList.get(streamItemList.size() - 1));
-			}else{
+			} else {
 				setStreamToSurfaceView(null);
 			}
 		}
@@ -468,7 +473,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		}
 
 		if (!lastStreamId.equals(item.stream.streamId)){
-			ChatClient.getInstance().callManager().updateSubscribe(item.stream.streamId, null, null);
+			ChatClient.getInstance().callManager().updateSubscribe(lastStreamId, null, null);
 			lastStreamId = item.stream.streamId;
 			ChatClient.getInstance().callManager().updateSubscribe(item.stream.streamId, mCurrentSurfaceView, null);
 		}

@@ -9,7 +9,7 @@ import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
-import com.hyphenate.util.FileUtils;
+import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 
 import java.io.File;
 
@@ -39,7 +39,8 @@ public class ShowNormalFileActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        FileUtils.openFile(file, ShowNormalFileActivity.this);
+//                        FileUtils.openFile(file, ShowNormalFileActivity.this);
+                        openFile(file);
                         finish();
                     }
                 });
@@ -75,5 +76,22 @@ public class ShowNormalFileActivity extends BaseActivity {
 
         ChatClient.getInstance().chatManager().downloadAttachment(message);
 
+    }
+
+
+    private void openFile(File file) {
+        if (file != null && file.exists()) {
+            String suffix = "";
+            try {
+                String fileName = file.getName();
+                suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+            } catch (Exception e) {
+            }
+            try{
+                CommonUtils.openFileEx(file, CommonUtils.getMap(suffix), ShowNormalFileActivity.this);
+            }catch (Exception e){
+                Toast.makeText(ShowNormalFileActivity.this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

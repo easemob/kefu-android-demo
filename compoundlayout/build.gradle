@@ -10,7 +10,6 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-
     }
 
     buildTypes {
@@ -23,6 +22,7 @@ android {
 }
 
 dependencies {
-    // 华为 HMS push sdk
-    compile 'com.huawei.android.hms:push:2.6.0.301'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
 }

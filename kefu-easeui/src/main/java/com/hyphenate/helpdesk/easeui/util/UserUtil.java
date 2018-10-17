@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.model.AgentInfo;
@@ -37,7 +38,8 @@ public class UserUtil {
                             strUrl = "http:" + strUrl;
                         }
                         //正常的string路径
-                        Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.hd_default_avatar).into(userAvatarView);
+//                        Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.hd_default_avatar).into(userAvatarView);
+                        Glide.with(context).load(strUrl).apply(RequestOptions.placeholderOf(R.drawable.hd_default_avatar).diskCacheStrategy(DiskCacheStrategy.ALL)).into(userAvatarView);
                     }
                 }
             }

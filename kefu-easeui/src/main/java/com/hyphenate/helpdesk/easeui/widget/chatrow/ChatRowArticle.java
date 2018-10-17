@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.model.ArticlesInfo;
@@ -86,7 +87,8 @@ public class ChatRowArticle extends ChatRow {
 			((TextView) view.findViewById(R.id.article_create_time)).setText(bean.getDate());
 
 
-			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into((ImageView) view.findViewById(R.id.article_main_pic));
+//			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into((ImageView) view.findViewById(R.id.article_main_pic));
+			Glide.with(getContext()).load(bean.getPicurl()).apply(RequestOptions.errorOf(R.drawable.hd_img_missing)).into((ImageView) view.findViewById(R.id.article_main_pic));
 
 			if (bean.getDescription() != null) {
 				((TextView) view.findViewById(R.id.article_main_digit)).setText(bean.getDescription());
@@ -130,7 +132,8 @@ public class ChatRowArticle extends ChatRow {
 				mainText.setText(bean.getTitle());
 				mainTextLayout.setVisibility(VISIBLE);
 			}
-			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(mainImage);
+//			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(mainImage);
+			Glide.with(getContext()).load(bean.getPicurl()).apply(RequestOptions.errorOf(R.drawable.hd_img_missing)).into(mainImage);
 			mainLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -153,7 +156,8 @@ public class ChatRowArticle extends ChatRow {
 			ivLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(imageView);
+//			Glide.with(getContext()).load(bean.getPicurl()).error(R.drawable.hd_img_missing).into(imageView);
+			Glide.with(getContext()).load(bean.getPicurl()).apply(RequestOptions.errorOf(R.drawable.hd_img_missing)).into(imageView);
 			view.addView(imageView, ivLp);
 
 			TextView textView = new TextView(context);

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
@@ -60,16 +61,20 @@ public class ChatRowCustomEmoji extends ChatRow {
 		if (!TextUtils.isEmpty(emojiconEntity.origin.remoteUrl)) {
 			File localOrigin = new File(emojiconEntity.origin.localUrl);
 			if (localOrigin.exists()) {
-				Glide.with(getContext()).load(emojiconEntity.origin.localUrl).placeholder(R.drawable.hd_default_image).into(imageView);
+				Glide.with(getContext()).load(emojiconEntity.origin.localUrl).apply(RequestOptions.placeholderOf(R.drawable.hd_default_image)).into(imageView);
+//				Glide.with(getContext()).load(emojiconEntity.origin.localUrl).placeholder(R.drawable.hd_default_image).into(imageView);
 			} else {
-				Glide.with(getContext()).load(emojiconEntity.origin.remoteUrl).placeholder(R.drawable.hd_default_image).into(imageView);
+				Glide.with(getContext()).load(emojiconEntity.origin.remoteUrl).apply(RequestOptions.placeholderOf(R.drawable.hd_default_image)).into(imageView);
+//				Glide.with(getContext()).load(emojiconEntity.origin.remoteUrl).placeholder(R.drawable.hd_default_image).into(imageView);
 			}
 		} else if (!TextUtils.isEmpty(emojiconEntity.thumbnail.remoteUrl)) {
 			File localThumb = new File(emojiconEntity.thumbnail.localUrl);
 			if (localThumb.exists()) {
-				Glide.with(getContext()).load(emojiconEntity.thumbnail.localUrl).placeholder(R.drawable.hd_default_image).into(imageView);
+				Glide.with(getContext()).load(emojiconEntity.thumbnail.localUrl).apply(RequestOptions.placeholderOf(R.drawable.hd_default_image)).into(imageView);
+//				Glide.with(getContext()).load(emojiconEntity.thumbnail.localUrl).placeholder(R.drawable.hd_default_image).into(imageView);
 			} else {
-				Glide.with(getContext()).load(emojiconEntity.thumbnail.remoteUrl).placeholder(R.drawable.hd_default_image).into(imageView);
+				Glide.with(getContext()).load(emojiconEntity.thumbnail.remoteUrl).apply(RequestOptions.placeholderOf(R.drawable.hd_default_image)).into(imageView);
+//				Glide.with(getContext()).load(emojiconEntity.thumbnail.remoteUrl).placeholder(R.drawable.hd_default_image).into(imageView);
 			}
 		} else {
 			EMLog.e(TAG, "emojiconEntity date wrong");

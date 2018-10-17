@@ -17,9 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.utils.GlideCircleTransform;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -142,7 +142,8 @@ public class ConversationListFragment extends Fragment {
 			if (imgUrl != null && imgUrl.startsWith("//")){
 				imgUrl = "http:" + imgUrl;
 			}
-			Glide.with(getContext()).load(imgUrl).error(R.drawable.hd_default_avatar).transform(new GlideCircleTransform(getContext())).into(viewHolder.ivAvatar);
+			Glide.with(getContext()).load(imgUrl).apply(RequestOptions.errorOf(R.drawable.hd_default_avatar).circleCrop()).into(viewHolder.ivAvatar);
+//			Glide.with(getContext()).load(imgUrl).error(R.drawable.hd_default_avatar).transform(new GlideCircleTransform(getContext())).into(viewHolder.ivAvatar);
 			return convertView;
 		}
 

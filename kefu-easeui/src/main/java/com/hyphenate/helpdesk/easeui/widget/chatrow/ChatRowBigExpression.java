@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.Constant;
@@ -48,9 +49,11 @@ public class ChatRowBigExpression extends ChatRowText{
         }
         if(emojicon != null){
             if(emojicon.getBigIcon() != 0){
-                Glide.with(activity).load(emojicon.getBigIcon()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                Glide.with(activity).load(emojicon.getBigIcon()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                Glide.with(activity).load(emojicon.getBigIcon()).placeholder(R.drawable.hd_default_expression).into(imageView);
             }else if(emojicon.getBigIconPath() != null){
-                Glide.with(activity).load(emojicon.getBigIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
+                Glide.with(activity).load(emojicon.getBigIconPath()).apply(RequestOptions.placeholderOf(R.drawable.hd_default_expression)).into(imageView);
+//                Glide.with(activity).load(emojicon.getBigIconPath()).placeholder(R.drawable.hd_default_expression).into(imageView);
             }else{
                 imageView.setImageResource(R.drawable.hd_default_expression);
             }
