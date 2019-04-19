@@ -39,4 +39,4 @@ dependencies {
 //    compile project(':kefu-sdk')
     compile 'com.easemob:kefu-sdk:1.1.9'
 }
-apply from: 'jcenter.gradle'
+//apply from: 'jcenter.gradle'
