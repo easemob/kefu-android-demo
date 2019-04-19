@@ -72,6 +72,9 @@
 # easemob 3.x
 -keep class com.hyphenate.** {*;}
 -dontwarn  com.hyphenate.**
+# 环信 push
+-dontwarn com.hyphenate.push.***
+-keep class com.hyphenate.push.*** {*;}
 
 # Huawei push
 -ignorewarning

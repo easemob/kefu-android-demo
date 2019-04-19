@@ -44,6 +44,7 @@ public class EaseChatInputMenu extends LinearLayout {
     private ChatInputMenuListener listener;
     private Context context;
     private boolean inited;
+    private boolean hasSendBtn = true;
 
     List<EmojiconGroupEntity> localEmojiconGroupList = new ArrayList<>();
 
@@ -71,8 +72,23 @@ public class EaseChatInputMenu extends LinearLayout {
         // 扩展按钮栏
         chatExtendMenu = (ExtendMenu) findViewById(R.id.extend_menu);
         emojiSendBtn = (Button) findViewById(R.id.emoji_send_button);
+        emojiSendBtn.setVisibility(View.INVISIBLE);
         ChatClient.getInstance().emojiconManager().reflesh();
     }
+
+    public void setHasSendButton(boolean hasSendBtn) {
+        this.hasSendBtn = hasSendBtn;
+        if (hasSendBtn) {
+            emojiSendBtn.setVisibility(View.INVISIBLE);
+        } else {
+            emojiSendBtn.setVisibility(View.VISIBLE);
+        }
+        if (chatPrimaryMenu instanceof EaseChatPrimaryMenu) {
+            ((EaseChatPrimaryMenu)chatPrimaryMenu).setHasSendButton(hasSendBtn);
+        }
+    }
+
+
 
     /**
      * init view 此方法需放在registerExtendMenuItem后面及setCustomEmojiconMenu，
@@ -310,13 +326,13 @@ public class EaseChatInputMenu extends LinearLayout {
                     chatExtendMenuContainer.setVisibility(View.VISIBLE);
                     chatExtendMenu.setVisibility(View.VISIBLE);
                     emojiconMenu.setVisibility(View.GONE);
-                    emojiSendBtn.setVisibility(GONE);
+//                    emojiSendBtn.setVisibility(GONE);
                 }
             }, 50);
         } else {
             if (emojiconMenu.getVisibility() == View.VISIBLE) {
                 emojiconMenu.setVisibility(View.GONE);
-                emojiSendBtn.setVisibility(GONE);
+//                emojiSendBtn.setVisibility(GONE);
                 chatExtendMenu.setVisibility(View.VISIBLE);
             } else {
                 chatExtendMenuContainer.setVisibility(View.GONE);
@@ -337,18 +353,18 @@ public class EaseChatInputMenu extends LinearLayout {
                     chatExtendMenuContainer.setVisibility(View.VISIBLE);
                     chatExtendMenu.setVisibility(View.GONE);
                     emojiconMenu.setVisibility(View.VISIBLE);
-                    emojiSendBtn.setVisibility(VISIBLE);
+//                    emojiSendBtn.setVisibility(VISIBLE);
                 }
             }, 50);
         } else {
             if (emojiconMenu.getVisibility() == View.VISIBLE) {
                 chatExtendMenuContainer.setVisibility(View.GONE);
                 emojiconMenu.setVisibility(View.GONE);
-                emojiSendBtn.setVisibility(GONE);
+//                emojiSendBtn.setVisibility(GONE);
             } else {
                 chatExtendMenu.setVisibility(View.GONE);
                 emojiconMenu.setVisibility(View.VISIBLE);
-                emojiSendBtn.setVisibility(VISIBLE);
+//                emojiSendBtn.setVisibility(VISIBLE);
             }
 
         }

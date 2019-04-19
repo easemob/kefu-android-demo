@@ -38,6 +38,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
     private RelativeLayout faceLayout;
     private Context context;
     private boolean emojiSengBtnEnable = false;
+    private boolean hasSendBtn;
 
     public EaseChatPrimaryMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -106,9 +107,13 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
             @Override
             public void afterTextChanged(Editable s) {
                 refleshEmojiSendBtn();
-                if (s.length() > 0){
-                    buttonSend.setVisibility(View.VISIBLE);
-                }else{
+                if (hasSendButton()) {
+                    if (s.length() > 0){
+                        buttonSend.setVisibility(View.VISIBLE);
+                    }else{
+                        buttonSend.setVisibility(View.GONE);
+                    }
+                } else {
                     buttonSend.setVisibility(View.GONE);
                 }
                 ChatClient.getInstance().chatManager().postMessagePredict(s.toString());
@@ -122,15 +127,7 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
                 }
             }
         });
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    if (sendTextMsg()) return true;
-                    return true;
-                }
-                return false;
-            }
-        });
+
         buttonSend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +135,28 @@ public class EaseChatPrimaryMenu extends EaseChatPrimaryMenuBase implements View
             }
         });
 
+    }
+
+    public boolean hasSendButton(){
+        return hasSendBtn;
+    }
+
+    public void setHasSendButton(boolean hasSendBtn) {
+        this.hasSendBtn = hasSendBtn;
+        if (!hasSendBtn) {
+            editText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        if (sendTextMsg()) return true;
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        } else {
+            editText.setSingleLine(false);
+        }
     }
 
     private boolean sendTextMsg() {

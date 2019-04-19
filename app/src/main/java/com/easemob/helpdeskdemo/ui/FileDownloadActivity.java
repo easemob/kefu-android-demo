@@ -1,7 +1,6 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,7 +12,6 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.filedownload.FileApi;
 import com.easemob.helpdeskdemo.filedownload.FileCallback;
-import com.easemob.helpdeskdemo.utils.CommonUtils;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.util.PathUtil;
 
@@ -168,20 +166,18 @@ public class FileDownloadActivity extends BaseActivity {
      * @param file
      */
     private void openFile(File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //设置intent的Action属性
-        intent.setAction(Intent.ACTION_VIEW);
-        //获取文件file的MIME类型
-        String type = CommonUtils.getMIMEType(file);
-        //设置intent的data和Type属性。
-        intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
-        //跳转
-        try {
-            startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
-            finish();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.file_cannot_be_opened, Toast.LENGTH_SHORT).show();
+        if (file != null && file.exists()) {
+            String suffix = "";
+            try {
+                String fileName = file.getName();
+                suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+            } catch (Exception e) {
+            }
+            try{
+                com.hyphenate.helpdesk.easeui.util.CommonUtils.openFileEx(file, com.hyphenate.helpdesk.easeui.util.CommonUtils.getMap(suffix), this);
+            }catch (Exception e){
+                Toast.makeText(this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

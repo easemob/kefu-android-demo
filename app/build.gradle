@@ -5,13 +5,13 @@ prop.load(new FileInputStream(file("signing.properties")))
 
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.2"
 
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 22
         versionName "2.2"
         multiDexEnabled true
@@ -94,6 +94,9 @@ dependencies {
     // Google firebase cloud messaging end
     compile project(':zbarlibary')
     compile project(':hmspush')
+
+    // meizu push
+    compile 'com.meizu.flyme.internet:push-internal:3.7.0@aar' //配置集成sdk
 }
 
 // Google firebase cloud messaging ADD THIS AT THE BOTTOM

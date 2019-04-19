@@ -27,6 +27,7 @@ import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.model.AgentInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.push.EMPushConfig;
 
 import org.json.JSONObject;
 
@@ -71,14 +72,17 @@ public class DemoHelper {
         options.setTenantId(Preferences.getInstance().getTenantId());
         options.showAgentInputState().showVisitorWaitCount().showMessagePredict();
 
-        //增加FCM推送，对于国外的APP可能比较需要
-        options.setFCMNumber("570662061026");
+        // 你需要设置自己申请的账号来使用三方推送功能，详见集成文档
+        EMPushConfig.Builder builder = new EMPushConfig.Builder(context);
+        builder.enableVivoPush() // 需要在AndroidManifest.xml中配置appId和appKey
+                .enableMeiZuPush("119943", "91163267c8784687804af6dd8e8fcf37")
+                .enableMiPush("2882303761517507836", "5631750729836")
+                .enableOppoPush("b08eb4a4b43f49799f45d136a5e2eabe", "52d5f8b887c14987bd306f6ffcd33044")
+                .enableHWPush() // 需要在AndroidManifest.xml中配置appId
+                .enableFCM("570662061026");
 
-        options.setUseFCM(true);
-        //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
-        options.setMipushConfig("2882303761517507836", "5631750729836");
-
-//        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
+        options.setPushConfig(builder.build());
+        //options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
 	    options.setConsoleLog(true);
