@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -123,6 +124,9 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		mCurrentSurfaceView = (CallSurfaceView) findViewById(R.id.call_surfaceview);
 		mBottomContainer = findViewById(R.id.bottom_container);
 		mCurrentSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+		int[] colors = {android.R.color.black};
+		Bitmap blackBitmap = Bitmap.createBitmap(colors, 1, 1, Bitmap.Config.ARGB_8888);
+		mCurrentSurfaceView.setCoverImage(blackBitmap);
 		mTvTitleTips = (TextView) findViewById(R.id.tv_title_tip);
 		mMembersContainer = (RadioLayoutGroup) findViewById(R.id.rlg_container);
 		mCallControllers = (CallControllers) findViewById(R.id.layout_controllers);

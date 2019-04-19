@@ -232,6 +232,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 sendVoiceMessage(filePath, time);
             }
         });
+        inputMenu.setHasSendButton(true);
 
         swipeRefreshLayout = messageList.getSwipeRefreshLayout();
         swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light,
@@ -241,7 +242,6 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ChatClient.getInstance().chatManager().addVisitorWaitListener(visitorWaitListener);
-
     }
 
     ChatManager.VisitorWaitListener visitorWaitListener = new ChatManager.VisitorWaitListener() {
@@ -250,6 +250,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 		    if (getActivity() == null){
 			    return;
 		    }
+//            EMLog.d(TAG, "waitCount--num:" + num);
 		    getActivity().runOnUiThread(new Runnable() {
 			    @Override
 			    public void run() {

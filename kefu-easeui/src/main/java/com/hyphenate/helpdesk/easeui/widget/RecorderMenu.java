@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
@@ -139,7 +140,12 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 		mRecordText = (TextView) findViewById(R.id.record_menu_text);
 		mRecordBtn = (ImageButton) findViewById(R.id.record_menu_image_btn);
 		setMotionEventSplittingEnabled(false);
-		String dir = PathUtil.getInstance().getVoicePath().getPath();
+		String dir = null;
+		try{
+			dir = PathUtil.getInstance().getVoicePath().getPath();
+		}catch (Exception e){
+			dir = Environment.getDownloadCacheDirectory().getPath();
+		}
 		mAudioManager = AudioManager.getInstance(dir);
 		mAudioManager.setOnAudioStateListener(this);
 		mHandler = new WeakHandler(mRecordBtn);
