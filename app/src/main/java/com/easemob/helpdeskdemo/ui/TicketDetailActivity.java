@@ -30,6 +30,7 @@ import com.hyphenate.helpdesk.domain.CommentListResponse;
 import com.hyphenate.helpdesk.domain.TicketEntity;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.ISO8601DateFormat;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.DateUtils;
@@ -193,7 +194,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
      */
     private void loadAllComments(String ticketId) {
         if (!ChatClient.getInstance().isLoggedInBefore()) {
-            Toast.makeText(getApplicationContext(), R.string.login_user_noti, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(this, R.string.login_user_noti);
             return;
         }
         String target = Preferences.getInstance().getCustomerAccount();
@@ -231,7 +232,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                     @Override
                     public void run() {
                         Log.e(TAG, "errorMsg:" + errorMsg);
-                        Toast.makeText(getApplicationContext(), R.string.comment_load_fail, Toast.LENGTH_SHORT).show();
+                        ToastHelper.show(getBaseContext(), R.string.comment_load_fail);
                     }
                 });
             }
@@ -448,7 +449,7 @@ public class TicketDetailActivity extends BaseActivity implements IListener {
                 try{
                     com.hyphenate.helpdesk.easeui.util.CommonUtils.openFileEx(file, com.hyphenate.helpdesk.easeui.util.CommonUtils.getMap(suffix), getBaseContext());
                 }catch (Exception e){
-                    Toast.makeText(getApplicationContext(), "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(getBaseContext(), "未安装能打开此文件的软件");
                 }
             }
         }

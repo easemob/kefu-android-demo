@@ -16,12 +16,12 @@ package com.easemob.helpdeskdemo;
 
 public class Constant {
 
-	public static final String DEFAULT_CUSTOMER_APPKEY = "1141161024115978#kefuchannelapp29593";
-	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_012680";
+	public static final String DEFAULT_CUSTOMER_APPKEY = "1400171218061390#kefuchannelapp387";
+	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_742962";
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";
 	public static final String DEFAULT_NICK_NAME = "";
-	public static final String DEFAULT_TENANT_ID = "29593";
-	public static final String DEFAULT_PROJECT_ID = "306713";
+	public static final String DEFAULT_TENANT_ID = "387";
+	public static final String DEFAULT_PROJECT_ID = "48350";
 
 	public static final int MESSAGE_TO_DEFAULT = 0;
 	public static final int MESSAGE_TO_PRE_SALES = 1;

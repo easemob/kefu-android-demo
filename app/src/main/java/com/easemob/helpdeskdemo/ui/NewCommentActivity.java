@@ -41,6 +41,7 @@ import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
 import com.hyphenate.helpdesk.easeui.widget.RecorderMenu;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.DensityUtil;
 
 import org.json.JSONObject;
@@ -216,7 +217,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
             case R.id.rl_new_comment_send:
                 String content = editText.getText().toString();
                 if (TextUtils.isEmpty(content) && fileList.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.comment_content_not_null, Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(this, R.string.comment_content_not_null);
                     return;
                 }
                 createComment(ticketId, content);
@@ -304,18 +305,14 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
             cursor = null;
 
             if (picturePath == null || picturePath.equals("null")) {
-                Toast toast = Toast.makeText(this, R.string.cant_find_pictures, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                ToastHelper.show(this, R.string.cant_find_pictures);
                 return;
             }
             uploadFile(picturePath);
         } else {
             File file = new File(selectedImage.getPath());
             if (!file.exists()) {
-                Toast toast = Toast.makeText(this, R.string.cant_find_pictures, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                ToastHelper.show(this, R.string.cant_find_pictures);
                 return;
             }
             uploadFile(file.getPath());
@@ -395,7 +392,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e(TAG, "Upload Error:" + t.getMessage());
                 closeDialog();
-                Toast.makeText(getApplicationContext(), R.string.file_upload_fail, Toast.LENGTH_SHORT).show();
+                ToastHelper.show(getBaseContext(), R.string.file_upload_fail);
             }
         });
 
@@ -405,7 +402,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
 
     private void createComment(final String ticketId, String content) {
         if (!ChatClient.getInstance().isLoggedInBefore()) {
-            Toast.makeText(getApplicationContext(), R.string.login_user_noti, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(this, R.string.login_user_noti);
             return;
         }
         if (pd == null) {
@@ -439,7 +436,7 @@ public class NewCommentActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void run() {
                         closeDialog();
-                        Toast.makeText(getApplicationContext(), R.string.comment_suc, Toast.LENGTH_SHORT).show();
+                        ToastHelper.show(getBaseContext(), R.string.comment_suc);
                         setResult(RESULT_OK, getIntent());
                         finish();
                     }

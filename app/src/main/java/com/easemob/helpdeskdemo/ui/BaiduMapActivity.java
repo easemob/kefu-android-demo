@@ -29,10 +29,12 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 
 public class BaiduMapActivity extends BaseActivity {
 
@@ -64,9 +66,9 @@ public class BaiduMapActivity extends BaseActivity {
             if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
 
                 String st2 = getResources().getString(R.string.please_check);
-                Toast.makeText(instance, st2, Toast.LENGTH_SHORT).show();
+                ToastHelper.show(instance, st2);
             } else if (s.equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
-                Toast.makeText(instance, st1, Toast.LENGTH_SHORT).show();
+                ToastHelper.show(instance, st1);
             }
         }
     }
@@ -243,7 +245,7 @@ public class BaiduMapActivity extends BaseActivity {
 
     public void sendLocation(View view) {
         if (lastLocation == null){
-            Toast.makeText(this, R.string.unable_to_get_loaction, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(this, R.string.unable_to_get_loaction);
             return;
         }
         Intent intent = this.getIntent();

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 
 /**
  * Created by liyuzhao on 15/12/2016.
@@ -26,7 +27,7 @@ public class EasemobJavascriptInterface {
     //webview中调用toast原生组件
     @JavascriptInterface
     public void showToast(String toast) {
-        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        ToastHelper.show(mContext, toast);
     }
 
     @JavascriptInterface
