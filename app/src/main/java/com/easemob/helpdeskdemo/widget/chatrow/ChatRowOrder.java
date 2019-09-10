@@ -21,6 +21,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.model.OrderInfo;
@@ -122,7 +123,7 @@ public class ChatRowOrder extends ChatRow {
             @Override
             public void onClick(View v) {
                 if (message.status() == Message.Status.INPROGRESS){
-                    Toast.makeText(context, R.string.em_notice_sending, Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(context, R.string.em_notice_sending);
                     return;
                 }
 

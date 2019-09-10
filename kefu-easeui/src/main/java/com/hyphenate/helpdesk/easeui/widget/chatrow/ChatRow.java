@@ -21,6 +21,7 @@ import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.util.UserUtil;
 import com.hyphenate.helpdesk.easeui.widget.MessageList;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.DateUtils;
 
 import java.util.Date;
@@ -293,9 +294,9 @@ public abstract class ChatRow extends LinearLayout {
             public void run() {
                 if (message.status() == Message.Status.FAIL) {
                     if (message.error() == Error.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                        Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
+                        ToastHelper.show(activity, R.string.send_fail);
                     } else {
-                        Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();
+                        ToastHelper.show(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast));
                     }
                 }
 

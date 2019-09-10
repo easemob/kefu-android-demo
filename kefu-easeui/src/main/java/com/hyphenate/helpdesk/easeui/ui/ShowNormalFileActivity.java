@@ -10,6 +10,7 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 
 import java.io.File;
 
@@ -55,7 +56,7 @@ public class ShowNormalFileActivity extends BaseActivity {
                             file.delete();
                         }
                         String str4 = getResources().getString(R.string.Failed_to_download_file);
-                        Toast.makeText(ShowNormalFileActivity.this, str4 + errorMsg, Toast.LENGTH_SHORT).show();
+                        ToastHelper.show(getBaseContext(), str4 + errorMsg);
                         finish();
                     }
                 });
@@ -90,7 +91,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             try{
                 CommonUtils.openFileEx(file, CommonUtils.getMap(suffix), ShowNormalFileActivity.this);
             }catch (Exception e){
-                Toast.makeText(ShowNormalFileActivity.this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+                ToastHelper.show(getBaseContext(), "未安装能打开此文件的软件");
             }
         }
     }

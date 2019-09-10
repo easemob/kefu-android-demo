@@ -26,6 +26,7 @@ import com.easemob.helpdeskdemo.widget.CustomVideoView;
 import com.hyphenate.chat.CallManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.MediaStream;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 import com.superrtc.mediamanager.EMediaDefines;
@@ -166,7 +167,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											Toast.makeText(getApplicationContext(), "Publish Failed:" + error, Toast.LENGTH_SHORT).show();
+											ToastHelper.show(getBaseContext(), "Publish Failed:" + error);
 										}
 									});
 

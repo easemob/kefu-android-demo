@@ -14,6 +14,7 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.PathUtil;
 
@@ -72,7 +73,7 @@ public class ShowVideoActivity extends BaseActivity {
         try{
             CommonUtils.openFileEx(new File(localPath), "video/mp4", this);
         }catch (Exception e){
-            Toast.makeText(this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+            ToastHelper.show(this, "未安装能打开此文件的软件");
         }
         finish();
     }
