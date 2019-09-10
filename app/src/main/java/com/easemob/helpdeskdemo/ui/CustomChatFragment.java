@@ -23,13 +23,19 @@ import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
+import com.hyphenate.helpdesk.easeui.widget.MessageList;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.util.EMLog;
+
+import org.json.JSONObject;
 
 public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener {
 
@@ -98,6 +104,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             }
         });
 //        ((Button)inputMenu.getButtonSend()).setBackgroundResource(R.color.top_bar_normal_bg);
+
     }
 
 
@@ -151,6 +158,19 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public void onMessageBubbleLongClick(Message message) {
         //消息框长按
         startActivityForResult(new Intent(getActivity(), ContextMenuActivity.class).putExtra("message", message), REQUEST_CODE_CONTEXT_MENU);
+    }
+
+    @Override
+    public  void onMessageItemClick(Message message, MessageList.ItemAction action)
+    {
+        switch (action) {
+            case ITEM_TO_NOTE:
+                Intent intent = new Intent(getActivity(), NewLeaveMessageActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -239,7 +259,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 if (locationAddress != null && !locationAddress.equals("")) {
                     sendLocationMessage(latitude, longitude, locationAddress, toChatUsername);
                 } else {
-                    Toast.makeText(getActivity(), R.string.unable_to_get_loaction, Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(getActivity(), R.string.unable_to_get_loaction);
                 }
             } else if (requestCode == REQUEST_CODE_SHORTCUT) {
                 String content = data.getStringExtra("content");

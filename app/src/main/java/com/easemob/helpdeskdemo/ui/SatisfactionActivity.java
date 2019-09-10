@@ -33,6 +33,7 @@ import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.model.EvaluationInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
 
@@ -132,7 +133,7 @@ public class SatisfactionActivity extends BaseActivity {
         public void onClick(View v) {
             if (currentDegree != null && currentDegree.getAppraiseTag() != null && !currentDegree.getAppraiseTag().isEmpty()){
                 if (selectedTags == null || selectedTags.isEmpty()){
-                    Toast.makeText(getApplicationContext(), R.string.no_selected_tag_noti, Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(getBaseContext(), R.string.no_selected_tag_noti);
                     return;
                 }
             }
@@ -150,7 +151,7 @@ public class SatisfactionActivity extends BaseActivity {
                             if (pd != null && pd.isShowing()) {
                                 pd.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), R.string.comment_suc, Toast.LENGTH_SHORT).show();
+                            ToastHelper.show(getBaseContext(), R.string.comment_suc);
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -166,7 +167,7 @@ public class SatisfactionActivity extends BaseActivity {
                             if (pd != null && pd.isShowing()) {
                                 pd.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), R.string.em_tip_request_fail, Toast.LENGTH_SHORT).show();
+                            ToastHelper.show(getBaseContext(), R.string.em_tip_request_fail);
                         }
                     });
                 }

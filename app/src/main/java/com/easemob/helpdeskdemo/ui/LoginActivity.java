@@ -31,6 +31,7 @@ import com.hyphenate.chat.Conversation;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 
 
 public class LoginActivity extends DemoBaseActivity {
@@ -94,15 +95,15 @@ public class LoginActivity extends DemoBaseActivity {
 							progressDialog.dismiss();
 						}
 						if (errorCode == Error.NETWORK_ERROR){
-							Toast.makeText(getApplicationContext(), R.string.network_unavailable, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getBaseContext(), R.string.network_unavailable);
 						}else if (errorCode == Error.USER_ALREADY_EXIST){
-							Toast.makeText(getApplicationContext(), R.string.user_already_exists, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getBaseContext(), R.string.user_already_exists);
 						}else if(errorCode == Error.USER_AUTHENTICATION_FAILED){
-							Toast.makeText(getApplicationContext(), R.string.no_register_authority, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getBaseContext(), R.string.no_register_authority);
 						} else if (errorCode == Error.USER_ILLEGAL_ARGUMENT){
-							Toast.makeText(getApplicationContext(), R.string.illegal_user_name, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getBaseContext(), R.string.illegal_user_name);
 						}else {
-							Toast.makeText(getApplicationContext(), R.string.register_user_fail, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getBaseContext(), R.string.register_user_fail);
 						}
 						finish();
 					}
@@ -160,9 +161,7 @@ public class LoginActivity extends DemoBaseActivity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						progressDialog.dismiss();
-						Toast.makeText(LoginActivity.this,
-								getResources().getString(R.string.is_contact_customer_failure_seconed),
-								Toast.LENGTH_SHORT).show();
+						ToastHelper.show(getBaseContext(), R.string.is_contact_customer_failure_seconed);
 						finish();
 					}
 				});

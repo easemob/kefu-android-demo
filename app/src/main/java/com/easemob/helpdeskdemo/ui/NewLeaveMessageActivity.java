@@ -24,6 +24,7 @@ import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.domain.NewTicketBody;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
 
 /**
@@ -156,7 +157,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.rl_send:
                 if (hasItemsNoValue()) {
-                    Toast.makeText(NewLeaveMessageActivity.this, R.string.new_leave_item_empty_value_toast, Toast.LENGTH_SHORT).show();
+                    ToastHelper.show(NewLeaveMessageActivity.this, R.string.new_leave_item_empty_value_toast);
                     return;
                 }
                 contentText.requestFocus();

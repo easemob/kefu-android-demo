@@ -35,6 +35,7 @@ import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 //import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -134,11 +135,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					String oldAppkey = tvAppkey.getText().toString();
 					String newAppkey = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
 					if (TextUtils.isEmpty(newAppkey.trim())) {
-						Toast.makeText(getActivity(), R.string.app_key_cannot_be_empty, Toast.LENGTH_SHORT).show();
+						ToastHelper.show(getActivity(), R.string.app_key_cannot_be_empty);
 						return;
 					}
 					if (!newAppkey.matches("^[0-9a-zA-Z-_#]+$")) {
-						Toast.makeText(getActivity(), R.string.app_key_format_wrong, Toast.LENGTH_SHORT).show();
+						ToastHelper.show(getActivity(), R.string.app_key_format_wrong);
 						return;
 					}
 
@@ -152,7 +153,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					String oldAccount = tvAccount.getText().toString();
 					String newAccount = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
 					if (TextUtils.isEmpty(newAccount.trim())) {
-						Toast.makeText(getActivity(), R.string.cus_account_cannot_be_empty, Toast.LENGTH_SHORT).show();
+						ToastHelper.show(getActivity(), R.string.cus_account_cannot_be_empty);
 						return;
 					}
 					if (oldAccount.equals(newAccount)) {
@@ -278,7 +279,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				try {
 					ChatClient.getInstance().changeAppKey(appkey);
 				} catch (HyphenateException e) {
-					Toast.makeText(getActivity(), R.string.app_key_modify_fail, Toast.LENGTH_SHORT).show();
+					ToastHelper.show(getActivity(), R.string.app_key_modify_fail);
 				}
 			}
 		});
@@ -348,7 +349,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 
 					@Override
 					public void onScanFail(int errorCode) {
-						Toast.makeText(getActivity(), R.string.qrcode_permission_fail, Toast.LENGTH_SHORT).show();
+						ToastHelper.show(getActivity(), R.string.qrcode_permission_fail);
 					}
 				});
 				break;
@@ -385,12 +386,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				Preferences.getInstance().setCustomerAccount(imServiceNum);
 			}
 			if (!TextUtils.isEmpty(appkey) && !TextUtils.isEmpty(tenantId)) {
-				Toast.makeText(getActivity(), getString(R.string.qrcode_success), Toast.LENGTH_SHORT).show();
+				ToastHelper.show(getActivity(), R.string.qrcode_success);
 			} else {
-				Toast.makeText(getActivity(), getString(R.string.qrcode_invalid), Toast.LENGTH_SHORT).show();
+				ToastHelper.show(getActivity(), R.string.qrcode_invalid);
 			}
 		} catch (Exception e) {
-			Toast.makeText(getActivity(), getString(R.string.qrcode_fail), Toast.LENGTH_SHORT).show();
+			ToastHelper.show(getActivity(), R.string.qrcode_fail);
 		}
 	}
 

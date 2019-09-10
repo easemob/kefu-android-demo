@@ -14,6 +14,7 @@ import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowNormalFileActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.TextFormater;
 
 import java.io.File;
@@ -143,7 +144,7 @@ public class ChatRowFile extends ChatRow{
             try{
                 CommonUtils.openFileEx(file, CommonUtils.getMap(suffix), getContext());
             }catch (Exception e){
-                Toast.makeText(getContext(), "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+                ToastHelper.show(getContext(), "未安装能打开此文件的软件");
             }
         }
     }

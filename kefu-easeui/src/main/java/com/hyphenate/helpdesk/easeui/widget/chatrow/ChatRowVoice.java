@@ -20,6 +20,7 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 
 import java.io.File;
 
@@ -104,7 +105,7 @@ public class ChatRowVoice extends ChatRowFile{
             if (file.exists()){
                 playVoice(bubbleLayout, voiceBody.getLocalUrl(), false);
             }else if (voiceBody.downloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING || voiceBody.downloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING){
-                Toast.makeText(activity, R.string.is_down_please_wait, Toast.LENGTH_SHORT).show();
+                ToastHelper.show(activity, R.string.is_down_please_wait);
             }else{
                 new AsyncTask<Void, Void, Void>(){
 

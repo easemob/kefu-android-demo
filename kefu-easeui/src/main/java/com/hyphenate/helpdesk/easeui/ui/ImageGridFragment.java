@@ -29,6 +29,7 @@ import com.hyphenate.helpdesk.easeui.util.ImageCache;
 import com.hyphenate.helpdesk.easeui.util.ImageResizer;
 import com.hyphenate.helpdesk.easeui.util.Utils;
 import com.hyphenate.helpdesk.easeui.widget.RecyclingImageView;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.DateUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.TextFormater;
@@ -182,7 +183,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 			// limit the size to 10M
 			if (vEntty.size > 1024 * 1024 * 10) {
 				String st = getResources().getString(R.string.temporary_does_not);
-				Toast.makeText(getActivity(), st, Toast.LENGTH_SHORT).show();
+				ToastHelper.show(getActivity(), st);
 				return;
 			}
 			Intent intent=getActivity().getIntent().putExtra("path", vEntty.filePath).putExtra("dur", vEntty.duration);

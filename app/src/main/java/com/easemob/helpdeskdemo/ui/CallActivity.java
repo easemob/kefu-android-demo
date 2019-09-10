@@ -34,6 +34,7 @@ import com.hyphenate.chat.CallManager;
 import com.hyphenate.chat.CallSurfaceView;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.MediaStream;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 import com.jaouan.compoundlayout.CompoundLayout;
@@ -124,9 +125,6 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		mCurrentSurfaceView = (CallSurfaceView) findViewById(R.id.call_surfaceview);
 		mBottomContainer = findViewById(R.id.bottom_container);
 		mCurrentSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
-		int[] colors = {android.R.color.black};
-		Bitmap blackBitmap = Bitmap.createBitmap(colors, 1, 1, Bitmap.Config.ARGB_8888);
-		mCurrentSurfaceView.setCoverImage(blackBitmap);
 		mTvTitleTips = (TextView) findViewById(R.id.tv_title_tip);
 		mMembersContainer = (RadioLayoutGroup) findViewById(R.id.rlg_container);
 		mCallControllers = (CallControllers) findViewById(R.id.layout_controllers);
@@ -513,6 +511,9 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 			case HMediaNoticeOpenMicFail:
 				EMLog.e(TAG, "onNotice:HMediaNoticeOpenMicFail");
 				break;
+			case HMediaNoticeTakeCameraPictureFailed:
+				ToastHelper.show(getBaseContext(), "截图失败！" + arg1);
+				break;
 		}
 
 	}
@@ -578,7 +579,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											Toast.makeText(getApplicationContext(), "Publish Failed:" + error, Toast.LENGTH_SHORT).show();
+											ToastHelper.show(getBaseContext(), "Publish Failed:" + error);
 										}
 									});
 								}

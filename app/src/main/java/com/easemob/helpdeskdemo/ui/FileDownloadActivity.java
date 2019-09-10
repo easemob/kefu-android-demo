@@ -13,6 +13,7 @@ import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.filedownload.FileApi;
 import com.easemob.helpdeskdemo.filedownload.FileCallback;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.PathUtil;
 
 import java.io.File;
@@ -79,7 +80,7 @@ public class FileDownloadActivity extends BaseActivity {
                     File file = saveFile(response);
                     if (file != null) {
                         if (fileType != null && fileType.equals("audio")){
-                            Toast.makeText(getApplicationContext(),R.string.audio_download_suc, Toast.LENGTH_SHORT).show();
+                            ToastHelper.show(getBaseContext(), R.string.audio_download_suc);
                             finish();
                         }else {
                             openFile(file);
@@ -114,7 +115,7 @@ public class FileDownloadActivity extends BaseActivity {
 
 
     private void showFailToast() {
-        Toast.makeText(getApplicationContext(), R.string.file_download_fail, Toast.LENGTH_SHORT).show();
+        ToastHelper.show(this, R.string.file_download_fail);
         File file = new File(PathUtil.getInstance().getFilePath(), localName);
         if (file.exists()) {
             file.delete();
@@ -176,7 +177,7 @@ public class FileDownloadActivity extends BaseActivity {
             try{
                 com.hyphenate.helpdesk.easeui.util.CommonUtils.openFileEx(file, com.hyphenate.helpdesk.easeui.util.CommonUtils.getMap(suffix), this);
             }catch (Exception e){
-                Toast.makeText(this, "未安装能打开此文件的软件", Toast.LENGTH_SHORT).show();
+                ToastHelper.show(this, "未安装能打开此文件的软件");
             }
         }
     }

@@ -157,6 +157,10 @@ public class MessageList extends RelativeLayout {
         return showUserNick;
     }
 
+    public enum ItemAction {
+        ITEM_TO_NOTE; //跳转到留言页面
+    }
+
     public interface MessageListItemClickListener{
         void onResendClick(Message message);
         /**
@@ -168,6 +172,7 @@ public class MessageList extends RelativeLayout {
         boolean onBubbleClick(Message message);
         void onBubbleLongClick(Message message);
         void onUserAvatarClick(String username);
+        void onMessageItemClick(Message message, ItemAction action);
     }
 
     /**
