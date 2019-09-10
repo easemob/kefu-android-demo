@@ -23,6 +23,7 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowFile;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowImage;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowRobotMenu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowText;
+import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferGuideMenu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferToKefu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
@@ -239,6 +240,7 @@ public class MessageAdapter extends BaseAdapter {
 		if (message.getType() == Message.Type.TXT) {
 			switch (MessageHelper.getMessageExtType(message)) {
 				case RobotMenuMsg:
+				case TransferGuideMenuMsg:
 					//机器人列表菜单
 					return MESSAGE_TYPE_RECV_ROBOT_MENU;
 				case ArticlesMsg:
@@ -283,6 +285,9 @@ public class MessageAdapter extends BaseAdapter {
         switch (message.getType()) {
         case TXT:
 	        switch (MessageHelper.getMessageExtType(message)){
+				case TransferGuideMenuMsg:
+					chatRow = new ChatRowTransferGuideMenu(context, message, position, this);
+					break;
 		        case RobotMenuMsg:
 			        chatRow = new ChatRowRobotMenu(context, message, position, this);
 			        break;

@@ -235,7 +235,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                         PackageManager pkm = getContext().getPackageManager();
                         boolean hasPermission = (PackageManager.PERMISSION_GRANTED == pkm.checkPermission("android.permission.RECORD_AUDIO", getContext().getPackageName()));
                         if (!hasPermission) {
-                            Toast.makeText(getContext(), R.string.Recording_without_permission, Toast.LENGTH_SHORT).show();
+                            ToastHelper.show(getContext(), R.string.Recording_without_permission);
                             return;
                         }
                     }

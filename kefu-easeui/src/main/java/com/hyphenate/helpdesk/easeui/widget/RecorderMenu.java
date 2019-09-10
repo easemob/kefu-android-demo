@@ -284,7 +284,7 @@ public class RecorderMenu extends RelativeLayout implements AudioManager.AudioSt
 						boolean hasPermission = (PackageManager.PERMISSION_GRANTED == pkm.checkPermission("android.permission.RECORD_AUDIO", getContext().getPackageName()));
 						if (!hasPermission) {
 							reset();
-							Toast.makeText(getContext(), R.string.Recording_without_permission, Toast.LENGTH_SHORT).show();
+							ToastHelper.show(getContext(), R.string.Recording_without_permission);
 							return;
 						}
 					}

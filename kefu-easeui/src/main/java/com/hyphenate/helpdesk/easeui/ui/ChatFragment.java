@@ -36,8 +36,11 @@ import android.widget.Toast;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.KefuConversationManager;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
@@ -52,16 +55,22 @@ import com.hyphenate.helpdesk.easeui.widget.EaseChatInputMenu.ChatInputMenuListe
 import com.hyphenate.helpdesk.easeui.widget.ExtendMenu.EaseChatExtendMenuItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.emojicon.Emojicon;
 import com.hyphenate.helpdesk.manager.EmojiconManager;
 import com.hyphenate.helpdesk.model.AgentIdentityInfo;
 import com.hyphenate.helpdesk.model.QueueIdentityInfo;
 import com.hyphenate.helpdesk.model.VisitorInfo;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 可以直接new出来使用的聊天对话页面fragment，
@@ -323,6 +332,33 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             }
         });
         setRefreshLayoutListener();
+
+        // test api
+        ChatClient.getInstance().chatManager().getTransferGuideMenu(toChatUsername, new ValueCallBack<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject value) {
+                EMLog.d(TAG, "onsuccess" + value.toString());
+                Message message = Message.createReceiveMessage(Message.Type.TXT);
+                message.setBody(new EMTextMessageBody("test guide"));
+                message.setMsgId(UUID.randomUUID().toString());
+                message.setStatus(Message.Status.SUCCESS);
+                message.setFrom(toChatUsername);
+                message.setMessageTime(System.currentTimeMillis());
+                try {
+                    message.setAttribute(Message.KEY_MSGTYPE, value.getJSONObject(Message.KEY_MSGTYPE));
+                    ChatClient.getInstance().chatManager().saveMessage(message);
+                    messageList.refreshSelectLast();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
     @Override
@@ -426,6 +462,14 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 }
                 return false;
             }
+
+            @Override
+            public void onMessageItemClick(Message message, MessageList.ItemAction action) {
+                contextMenuMessage = message;
+                if (chatFragmentListener != null) {
+                    chatFragmentListener.onMessageItemClick(message, action);
+                }
+            }
         });
     }
 
@@ -462,8 +506,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                             isloading = false;
 
                         } else {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.no_more_messages),
-                                    Toast.LENGTH_SHORT).show();
+                            ToastHelper.show(getActivity(), R.string.no_more_messages);
                         }
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -544,7 +587,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getActivity(), R.string.emoji_icon_update, Toast.LENGTH_SHORT).show();
+                ToastHelper.show(getActivity(), R.string.emoji_icon_update);
                 if (inputMenu != null) {
                     inputMenu.onEmojiconChanged();
                 }
@@ -648,18 +691,14 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             cursor = null;
 
             if (picturePath == null || picturePath.equals("null")) {
-                Toast toast = Toast.makeText(getActivity(), R.string.cant_find_pictures, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                ToastHelper.show(getActivity(), R.string.cant_find_pictures);
                 return;
             }
             sendImageMessage(picturePath);
         } else {
             File file = new File(selectedImage.getPath());
             if (!file.exists()) {
-                Toast toast = Toast.makeText(getActivity(), R.string.cant_find_pictures, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                ToastHelper.show(getActivity(), R.string.cant_find_pictures);
                 return;
 
             }
@@ -700,7 +739,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            Toast.makeText(getActivity(), R.string.File_does_not_exist, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(getActivity(), R.string.File_does_not_exist);
             return;
         }
         sendFileMessage(filePath);
@@ -721,7 +760,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      */
     protected void selectPicFromCamera() {
         if (!CommonUtils.isExitsSdcard()) {
-            Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(getActivity(), R.string.sd_card_does_not_exist);
             return;
         }
         try{
@@ -824,6 +863,11 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         boolean onExtendMenuItemClick(int itemId, View view);
 
         /**
+         * 菜单消息被点击有具体的跳转要求时执行下面的回调
+         */
+        void onMessageItemClick(Message message, MessageList.ItemAction action);
+
+        /**
          * 设置自定义chatrow提供者
          *
          * @return
@@ -870,7 +914,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     //=============================================
     protected void sendTextMessage(String content) {
         if (content != null && content.length() > 1500){
-            Toast.makeText(getContext(), R.string.message_content_beyond_limit, Toast.LENGTH_SHORT).show();
+            ToastHelper.show(getActivity(), R.string.message_content_beyond_limit);
             return;
         }
         Message message = Message.createTxtSendMessage(content, toChatUsername);

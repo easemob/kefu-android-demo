@@ -35,6 +35,7 @@ import android.widget.VideoView;
 
 import com.hyphenate.helpdesk.easeui.util.Utils;
 import com.hyphenate.helpdesk.R;
+import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 
@@ -223,7 +224,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		} else if (i == R.id.recorder_start) {// start recording
 			if (!startRecording())
 				return;
-			Toast.makeText(this, R.string.The_video_to_start, Toast.LENGTH_SHORT).show();
+			ToastHelper.show(this, R.string.The_video_to_start);
 			btn_switch.setVisibility(View.INVISIBLE);
 			btnStart.setVisibility(View.INVISIBLE);
 			btnStart.setEnabled(false);
@@ -524,9 +525,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 	public void onError(MediaRecorder mr, int what, int extra) {
 		EMLog.e("video", "recording onError:");
 		stopRecording();
-		Toast.makeText(this,
-				R.string.video_record_error,
-				Toast.LENGTH_SHORT).show();
+		ToastHelper.show(this, R.string.video_record_error);
 
 	}
 
