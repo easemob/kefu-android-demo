@@ -334,31 +334,31 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         setRefreshLayoutListener();
 
         // test api
-        ChatClient.getInstance().chatManager().getTransferGuideMenu(toChatUsername, new ValueCallBack<JSONObject>() {
-            @Override
-            public void onSuccess(JSONObject value) {
-                EMLog.d(TAG, "onsuccess" + value.toString());
-                Message message = Message.createReceiveMessage(Message.Type.TXT);
-                message.setBody(new EMTextMessageBody("test guide"));
-                message.setMsgId(UUID.randomUUID().toString());
-                message.setStatus(Message.Status.SUCCESS);
-                message.setFrom(toChatUsername);
-                message.setMessageTime(System.currentTimeMillis());
-                try {
-                    message.setAttribute(Message.KEY_MSGTYPE, value.getJSONObject(Message.KEY_MSGTYPE));
-                    ChatClient.getInstance().chatManager().saveMessage(message);
-                    messageList.refreshSelectLast();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            @Override
-            public void onError(int error, String errorMsg) {
-
-            }
-        });
+//        ChatClient.getInstance().chatManager().getTransferGuideMenu(toChatUsername, new ValueCallBack<JSONObject>() {
+//            @Override
+//            public void onSuccess(JSONObject value) {
+//                EMLog.d(TAG, "onsuccess" + value.toString());
+//                Message message = Message.createReceiveMessage(Message.Type.TXT);
+//                message.setBody(new EMTextMessageBody("test guide"));
+//                message.setMsgId(UUID.randomUUID().toString());
+//                message.setStatus(Message.Status.SUCCESS);
+//                message.setFrom(toChatUsername);
+//                message.setMessageTime(System.currentTimeMillis());
+//                try {
+//                    message.setAttribute(Message.KEY_MSGTYPE, value.getJSONObject(Message.KEY_MSGTYPE));
+//                    ChatClient.getInstance().chatManager().saveMessage(message);
+//                    messageList.refreshSelectLast();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onError(int error, String errorMsg) {
+//
+//            }
+//        });
     }
 
     @Override

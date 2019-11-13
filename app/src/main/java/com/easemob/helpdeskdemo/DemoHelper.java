@@ -19,6 +19,7 @@ import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.easeui.Notifier;
 import com.hyphenate.helpdesk.easeui.UIProvider;
@@ -310,8 +311,10 @@ public class DemoHelper {
                                 ListenerManager.getInstance().sendBroadCast(eventName, jsonTicket);
                             }
                         }
+                    } else if (message.isNeedToScore()){
+                        MessageHelper.createInviteCommentMsg(message, "");
+                        message.setIsNeedToScore(false);
                     }
-
                 }
             }
 

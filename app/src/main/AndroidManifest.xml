@@ -155,6 +155,9 @@
             android:launchMode="singleTask"
             android:theme="@style/horizontal_slide">
         </activity>
+        <activity android:name=".ui.RobotCommentTagsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
 
         <!-- 百度地图所需的service -->
         <service

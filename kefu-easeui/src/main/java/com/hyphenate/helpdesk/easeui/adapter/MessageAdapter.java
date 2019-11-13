@@ -23,11 +23,13 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowFile;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowImage;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowRobotMenu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowText;
+import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTextCommentInvite;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferGuideMenu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferToKefu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.util.EMLog;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -61,10 +63,11 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_RECV_ARTICLES = 16;
 	private static final int MESSAGE_TYPE_RECV_CUSTOMEMOJI = 17;
 	private static final int MESSAGE_TYPE_SENT_CUSTOMEMOJI = 18;
+	private static final int MESSAGE_TYPE_COMMENT_INVITE = 19;
 
 
 
-	private static final int MESSAGE_TYPE_COUNT = 19;
+	private static final int MESSAGE_TYPE_COUNT = 20;
 	
 	
 	// reference to conversation object in chatsdk
@@ -257,6 +260,8 @@ public class MessageAdapter extends BaseAdapter {
 				case CustomEmojiMsg:
 					return message.direct() == Message.Direct.RECEIVE ?
 							MESSAGE_TYPE_RECV_CUSTOMEMOJI : MESSAGE_TYPE_SENT_CUSTOMEMOJI;
+				case RobotCommentInviteMsg:
+					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_COMMENT_INVITE: MESSAGE_TYPE_COMMENT_INVITE; // ONLY HAVE RECEIVED TYPE
 				default:
 					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 			}
@@ -291,6 +296,9 @@ public class MessageAdapter extends BaseAdapter {
 		        case RobotMenuMsg:
 			        chatRow = new ChatRowRobotMenu(context, message, position, this);
 			        break;
+				case RobotCommentInviteMsg:
+					chatRow = new ChatRowTextCommentInvite(context, message, position, this);
+					break;
 		        case ArticlesMsg:
 			        chatRow = new ChatRowArticle(context, message, position, this);
 			        break;
