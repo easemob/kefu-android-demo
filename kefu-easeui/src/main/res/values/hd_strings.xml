@@ -94,4 +94,6 @@
 	<string name="chat_row_new_picture_title">I am focus at it.</string>
 	<string name="emojicon_text_default">Default</string>
 	<string name="emoji_icon_update">Emoji icon update.</string>
+    <string name="robot_resolved">Resolved</string>
+    <string name="robot_unsolved">Unsolved</string>
 </resources>

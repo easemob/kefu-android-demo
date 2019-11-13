@@ -93,4 +93,6 @@
 	<string name="chat_row_new_picture_title">我正在看:</string>
     <string name="emojicon_text_default">默认</string>
 	<string name="emoji_icon_update">自定义表情已更新</string>
+    <string name="robot_resolved">解决</string>
+    <string name="robot_unsolved">未解决</string>
 </resources>

@@ -195,4 +195,6 @@
     <string name="chat_row_satisfaction_content">请对我的服务做出评价</string>
 	<string name="network_error_notice">网络错误,点击重试</string>
     <string name="tag">TAG标签</string>
+    <string name="robot_comment_tags">机器人评价标签</string>
+    <string name="unsolved_reason">未解决原因</string>
 </resources>

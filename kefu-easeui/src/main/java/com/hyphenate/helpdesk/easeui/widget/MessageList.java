@@ -158,7 +158,9 @@ public class MessageList extends RelativeLayout {
     }
 
     public enum ItemAction {
-        ITEM_TO_NOTE; //跳转到留言页面
+        ITEM_TO_NOTE,//跳转到留言页面
+        ITEM_RESOLVED, //问题已经解决
+        ITEM_UNSOLVED //问题未解决
     }
 
     public interface MessageListItemClickListener{

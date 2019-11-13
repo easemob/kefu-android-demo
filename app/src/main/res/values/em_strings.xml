@@ -193,4 +193,6 @@
     <string name="chat_row_satisfaction_content">Please make evaluation to my service!</string>
     <string name="network_error_notice">Network has error, please retry!</string>
     <string name="tag">TAG</string>
+    <string name="robot_comment_tags">Robot Comment Tags</string>
+    <string name="unsolved_reason">unresolved reasons</string>
 </resources>

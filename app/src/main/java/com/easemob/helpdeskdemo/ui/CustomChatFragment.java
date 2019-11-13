@@ -18,7 +18,9 @@ import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
@@ -167,6 +169,31 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
             case ITEM_TO_NOTE:
                 Intent intent = new Intent(getActivity(), NewLeaveMessageActivity.class);
                 startActivity(intent);
+                break;
+            case ITEM_RESOLVED:
+                ChatManager.getInstance().postRobotQuality(message, true, null, new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        EMLog.d(TAG, "robot comment sucess");
+                        MessageHelper.createCommentSuccessMsg(message,"");
+                        messageList.refresh();
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        EMLog.e(TAG, "robot comment fail: " + i + "reason: " + s);
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
+
+                    }
+                });
+                break;
+            case ITEM_UNSOLVED:
+                Intent tagsIntent = new Intent(getActivity(), RobotCommentTagsActivity.class);
+                tagsIntent.putExtra("msgId", message.messageId());
+                startActivity(tagsIntent);
                 break;
             default:
                 break;
