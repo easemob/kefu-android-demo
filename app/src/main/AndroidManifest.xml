@@ -20,6 +20,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -50,6 +53,7 @@
 
     <!-- Oppo推送配置 start -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
     <!-- Oppo推送配置 end -->
 
     <!-- Mi推送配置 start -->
@@ -59,19 +63,33 @@
 
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
     <!-- Mi推送配置 end -->
+    <!--捕获屏幕所需权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:name=".DemoApplication"
         android:largeHeap="true"
         android:icon="@drawable/em_logo_uidemo"
         android:label="@string/app_name"
-        android:hardwareAccelerated="false"
+        android:requestLegacyExternalStorage="false"
         android:theme="@style/AppTheme">
 
         <!-- 适配android 9.0 -->
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- 导航页面 -->
         <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
-                  android:screenOrientation="portrait"
+                  android:screenOrientation="fullSensor"
                   android:theme="@style/horizontal_slide">
                   <intent-filter>
                       <action android:name="android.intent.action.MAIN" />
@@ -214,15 +232,25 @@
             </intent-filter>
         </receiver>
         <!-- MEIZU推送配置 end -->
+
         <!-- Oppo推送配置 start -->
         <service
-            android:name="com.coloros.mcssdk.PushService"
+            android:name="com.heytap.mcssdk.PushService"
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.heytap.mcssdk.AppPushService"
+            android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE">
+            <intent-filter>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
             </intent-filter>
         </service>
         <!-- Oppo推送配置 end -->
+
         <!-- Mi推送配置 start -->
         <service
             android:name="com.xiaomi.push.service.XMPushService"
@@ -292,6 +320,11 @@
             </intent-filter>
         </service>
         <!-- FCM required end -->
+
+        <!--捕获屏幕service-->
+        <service android:name=".ui.SRForegroundService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection"/>
 
 
         <!--华为 HMS Config-->

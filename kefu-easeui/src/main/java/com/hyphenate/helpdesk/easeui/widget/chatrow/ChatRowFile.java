@@ -1,7 +1,10 @@
 package com.hyphenate.helpdesk.easeui.widget.chatrow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.hyphenate.helpdesk.easeui.ui.ShowNormalFileActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.util.TextFormater;
+import com.hyphenate.util.UriUtils;
 
 import java.io.File;
 
@@ -119,12 +123,17 @@ public class ChatRowFile extends ChatRow{
 
     @Override
     protected void onBubbleClick() {
-        String filePath = fileMessageBody.getLocalUrl();
-        File file = new File(filePath);
-        if (file.exists()) {
+        Uri filePath = fileMessageBody.getLocalUri();
+        String fileLocalPath = UriUtils.getFilePath(getContext(), filePath);
+        File file = null;
+        if(!TextUtils.isEmpty(fileLocalPath)) {
+            file = new File(fileLocalPath);
+        }
+        if (file != null && file.exists()) {
             // 文件存在，直接打开
-//            FileUtils.openFile(file, (Activity) context);
             openFile(file);
+        } else if(UriUtils.isFileExistByUri(getContext(), filePath)) {
+            CommonUtils.openFile(filePath, UriUtils.getFileMimeType(getContext(), filePath), (Activity) getContext());
         } else {
             // 下载
 //            context.startActivity(new Intent(context, ShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));

@@ -232,6 +232,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         super.onResume();
         DemoHelper.getInstance().pushActivity(this);
         ChatClient.getInstance().chatManager().addMessageListener(messageListener);
+        DemoHelper.getInstance().showNotificationPermissionDialog();
     }
 
     @Override

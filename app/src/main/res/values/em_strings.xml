@@ -195,4 +195,5 @@
     <string name="tag">TAG</string>
     <string name="robot_comment_tags">Robot Comment Tags</string>
     <string name="unsolved_reason">unresolved reasons</string>
+    <string name="share_screen_ongoing">Shared screen running...</string>
 </resources>

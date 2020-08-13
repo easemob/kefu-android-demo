@@ -1,1 +1,1 @@
-include ':app', ':kefu-easeui', ':kefu-sdk', ':bottomnavigation', ':imsdkx',':zbarlibary', ':hmspush', ':compoundlayout'
+include ':app', ':kefu-easeui', ':bottomnavigation', ':imsdkx',':zbarlibary', ':hmspush', ':compoundlayout', ":player"
