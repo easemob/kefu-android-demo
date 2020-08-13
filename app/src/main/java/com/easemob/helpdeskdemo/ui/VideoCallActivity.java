@@ -1,5 +1,6 @@
 package com.easemob.helpdeskdemo.ui;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -31,15 +33,17 @@ import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 import com.superrtc.mediamanager.EMediaDefines;
 import com.superrtc.mediamanager.EMediaEntities;
+import com.superrtc.mediamanager.ScreenCaptureManager;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+// this class is not used?
 public class VideoCallActivity extends DemoBaseActivity implements CallManager.CallManagerDelegate {
 
 	private static final String TAG = "call";
@@ -193,6 +197,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 							streamItemMaps.clear();
 							multiVideoView.removeAllVideoViews();
 							ChatClient.getInstance().callManager().endCall();
+							stopForegroundService();
 							finish();
 						}
 					});
@@ -203,6 +208,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 						public void run() {
 							info("click hangup");
 							ChatClient.getInstance().callManager().endCall();
+							stopForegroundService();
 							handler.removeCallbacks(timeoutHangup);
 							handler.removeMessages(MSG_CALL_ANSWER);
 							handler.removeMessages(MSG_CALL_END);
@@ -318,6 +324,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 					ChatClient.getInstance().callManager().publishWindow(VideoCallActivity.this, null);
 				}else{
 					ChatClient.getInstance().callManager().unPublishWindow(null);
+					stopForegroundService();
 				}
 			}
 		});
@@ -473,6 +480,7 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 				streamItemMaps.clear();
 				multiVideoView.removeAllVideoViews();
 				ChatClient.getInstance().callManager().endCall();
+				stopForegroundService();
 				finish();
 			}
 		});
@@ -496,6 +504,15 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 		 MediaStream stream;
 	}
 
+	/**
+	 * 停止服务
+	 */
+	private void stopForegroundService() {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			Intent service = new Intent(this, SRForegroundService.class);
+			stopService(service);
+		}
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -555,6 +572,17 @@ public class VideoCallActivity extends DemoBaseActivity implements CallManager.C
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+		if (requestCode == ScreenCaptureManager.RECORD_REQUEST_CODE) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					Intent service = new Intent(this, SRForegroundService.class);
+					service.putExtra("code", resultCode);
+					service.putExtra("data", data);
+					startForegroundService(service);
+				}else {
+					ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+				}
+			}
+		}
 	}
 }

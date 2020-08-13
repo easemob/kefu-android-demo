@@ -13,18 +13,18 @@
  */
 package com.hyphenate.helpdesk.easeui.ui;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
@@ -32,12 +32,11 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.photoview.PhotoView;
-import com.hyphenate.helpdesk.easeui.util.LoadLocalBigImgTask;
-import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.ImageUtils;
+import com.hyphenate.util.UriUtils;
 
-import java.io.File;
+import java.io.IOException;
 
 /**
  * 下载显示大图
@@ -47,44 +46,30 @@ public class ShowBigImageActivity extends BaseActivity {
     private ProgressDialog pd;
     private PhotoView image;
     private int default_res = R.drawable.hd_default_image;
+    private String filename;
     private Bitmap bitmap;
     private boolean isDownloaded;
-    private ProgressBar loadLocalPb;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.hd_activity_show_big_image);
         super.onCreate(savedInstanceState);
 
         image = (PhotoView) findViewById(R.id.image);
-        loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
-        default_res = getIntent().getIntExtra("default_image", R.drawable.hd_default_image);
+        ProgressBar loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
+        default_res = getIntent().getIntExtra("default_image", R.drawable.hd_default_avatar);
         Uri uri = getIntent().getParcelableExtra("uri");
+        filename = getIntent().getExtras().getString("filename");
         String msgId = getIntent().getExtras().getString("messageId");
-        EMLog.d(TAG, "show big msgId:" + msgId);
+        EMLog.d(TAG, "show big msgId:" + msgId );
 
-        // show the image if it exist in local path
-        if (uri != null && new File(uri.getPath()).exists()) {
-            Log.d(TAG, "showbigimage file exists. directly show it");
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            // int screenWidth = metrics.widthPixels;
-            // int screenHeight =metrics.heightPixels;
-            bitmap = ImageCache.getInstance().get(uri.getPath());
-            if (bitmap == null) {
-                LoadLocalBigImgTask task = new LoadLocalBigImgTask(this, uri.getPath(), image, loadLocalPb, ImageUtils.SCALE_IMAGE_WIDTH,
-                        ImageUtils.SCALE_IMAGE_HEIGHT);
-                if (android.os.Build.VERSION.SDK_INT > 10) {
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    task.execute();
-                }
-            } else {
-                image.setImageBitmap(bitmap);
-            }
-        } else if (msgId != null) { //去服务器下载图片
+        //show the image if it exist in local path
+        if (UriUtils.isFileExistByUri(this, uri)) {
+            Glide.with(this).load(uri).into(image);
+        } else if(msgId != null) {
             downloadImage(msgId);
-        } else {
+        }else {
             image.setImageResource(default_res);
         }
 
@@ -96,94 +81,98 @@ public class ShowBigImageActivity extends BaseActivity {
         });
     }
 
-    private void downloadImage(final String msgId){
-        EMLog.e(TAG, "download with messageId:" + msgId);
+    /**
+     * download image
+     *
+     * @param msgId
+     */
+    @SuppressLint("NewApi")
+    private void downloadImage(final String msgId) {
+        EMLog.e(TAG, "download with messageId: " + msgId);
         String str1 = getResources().getString(R.string.Download_the_pictures);
         pd = new ProgressDialog(this);
         pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pd.setCanceledOnTouchOutside(false);
         pd.setMessage(str1);
         pd.show();
-        Message msg = ChatClient.getInstance().chatManager().getMessage(msgId);
-        EMImageMessageBody imgBody = (EMImageMessageBody) msg.body();
-        final String localPath = imgBody.getLocalUrl();
-        final File localFile = new File(localPath);
+
+        final Message msg = ChatClient.getInstance().chatManager().getMessage(msgId);
         final Callback callback = new Callback() {
-            @Override
             public void onSuccess() {
-                EMLog.d(TAG, "onSuccess");
+                EMLog.e(TAG, "onSuccess" );
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (localFile.length() < 614400){
-                            bitmap = BitmapFactory.decodeFile(localPath);
-                        }else{
+                        if(!isFinishing() && !isDestroyed()) {
                             DisplayMetrics metrics = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(metrics);
                             int screenWidth = metrics.widthPixels;
                             int screenHeight = metrics.heightPixels;
-                            bitmap = ImageUtils.decodeScaleImage(localPath, screenWidth, screenHeight);
-                        }
-                        if (bitmap == null) {
-                            image.setImageResource(default_res);
-                        } else {
-                            image.setImageBitmap(bitmap);
-                            ImageCache.getInstance().put(localPath, bitmap);
-                            isDownloaded = true;
-                        }
-                        if (isFinishing()){
-                            return;
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            if (isDestroyed()){
-                                return;
+
+                            Uri localUrlUri = ((EMImageMessageBody) msg.getBody()).getLocalUri();
+
+                            try {
+                                BitmapFactory.Options options = ImageUtils.getBitmapOptions(ShowBigImageActivity.this, localUrlUri);
+                                // use original size
+                                screenWidth = options.outWidth;
+                                screenHeight = options.outHeight;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                bitmap = ImageUtils.decodeScaleImage(ShowBigImageActivity.this, localUrlUri, screenWidth, screenHeight);
+                                if (bitmap == null) {
+                                    image.setImageResource(default_res);
+                                } else {
+                                    image.setImageBitmap(bitmap);
+                                    ImageCache.getInstance().put(localUrlUri.toString(), bitmap);
+                                    isDownloaded = true;
+                                }
+                                if (isFinishing() || isDestroyed()) {
+                                    return;
+                                }
+                                if (pd != null) {
+                                    pd.dismiss();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-
-                        if (pd != null) {
-                            pd.dismiss();
-                        }
-
-
                     }
                 });
-
-
             }
 
-            @Override
-            public void onError(int i, String error) {
-                EMLog.d(TAG, "offline file transfer error:" + error);
-                if (localFile.exists() && localFile.isFile()) {
-                    localFile.delete();
-                }
-                if (isFinishing()) {
-                    return;
-                }
+            public void onError(final int error, String message) {
+                EMLog.e(TAG, "offline file transfer error:" + message);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (ShowBigImageActivity.this.isFinishing() || ShowBigImageActivity.this.isDestroyed()) {
+                            return;
+                        }
                         image.setImageResource(default_res);
                         pd.dismiss();
                     }
                 });
             }
 
-            @Override
             public void onProgress(final int progress, String status) {
-                Log.d(TAG, "Progress: " + progress);
-                if (isFinishing()) {
-                    return;
-                }
+                EMLog.d(TAG, "Progress: " + progress);
                 final String str2 = getResources().getString(R.string.Download_the_pictures_new);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (ShowBigImageActivity.this.isFinishing() || ShowBigImageActivity.this.isDestroyed()) {
+                            return;
+                        }
                         pd.setMessage(str2 + progress + "%");
                     }
                 });
             }
         };
+
+
         msg.setMessageStatusCallback(callback);
         ChatClient.getInstance().chatManager().downloadAttachment(msg);
     }

@@ -78,7 +78,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		setContentView(R.layout.hd_recorder_activity);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		assert pm != null;
-		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+		mWakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				CLASS_LABEL);
 		mWakeLock.acquire();
 		initViews();
@@ -95,7 +95,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		btnStop.setOnClickListener(this);
 		mSurfaceHolder = mVideoView.getHolder();
 		mSurfaceHolder.addCallback(this);
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		chronometer = (Chronometer) findViewById(R.id.chronometer);
 	}
 
@@ -112,7 +112,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 			// keep screen on
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 			assert pm != null;
-			mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+			mWakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 					CLASS_LABEL);
 			mWakeLock.acquire();
 		}
@@ -130,7 +130,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 			mCamera.lock();
 			mSurfaceHolder = mVideoView.getHolder();
 			mSurfaceHolder.addCallback(this);
-			mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//			mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 			mCamera.setDisplayOrientation(90);
 
 		} catch (RuntimeException ex) {
@@ -468,6 +468,11 @@ public class RecorderVideoActivity extends BaseActivity implements
 							msc.disconnect();
 							progressDialog.dismiss();
 							setResult(RESULT_OK, getIntent().putExtra("uri", uri));
+							if(uri == null) {
+								setResult(RESULT_OK, getIntent().putExtra("path", path));
+							} else {
+								setResult(RESULT_OK, getIntent().putExtra("uri", uri));
+							}
 							finish();
 						}
 

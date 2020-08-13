@@ -1,16 +1,21 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMFileMessageBody;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
+import com.hyphenate.util.EMLog;
+import com.hyphenate.util.UriUtils;
 
 import java.io.File;
 
@@ -26,22 +31,22 @@ public class ShowNormalFileActivity extends BaseActivity {
 
         final String msgId = getIntent().getStringExtra("messageId");
 
-        Message message = ChatClient.getInstance().chatManager().getMessage(msgId);
+        final Message message = ChatClient.getInstance().chatManager().getMessage(msgId);
         if (message == null){
             finish();
             return;
         }
 
-        EMFileMessageBody messageBody = (EMFileMessageBody) message.body();
-        file = new File(messageBody.getLocalUrl());
         message.setMessageStatusCallback(new Callback() {
             @Override
             public void onSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        FileUtils.openFile(file, ShowNormalFileActivity.this);
-                        openFile(file);
+                        String filePath = getFilePath(message);
+                        if(!TextUtils.isEmpty(filePath)) {
+                            CommonUtils.openFile(new File(filePath), ShowNormalFileActivity.this);
+                        }
                         finish();
                     }
                 });
@@ -79,20 +84,8 @@ public class ShowNormalFileActivity extends BaseActivity {
 
     }
 
-
-    private void openFile(File file) {
-        if (file != null && file.exists()) {
-            String suffix = "";
-            try {
-                String fileName = file.getName();
-                suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-            } catch (Exception e) {
-            }
-            try{
-                CommonUtils.openFileEx(file, CommonUtils.getMap(suffix), ShowNormalFileActivity.this);
-            }catch (Exception e){
-                ToastHelper.show(getBaseContext(), "未安装能打开此文件的软件");
-            }
-        }
+    private String getFilePath(Message message) {
+        Uri localUrlUri = ((EMFileMessageBody) message.getBody()).getLocalUri();
+        return UriUtils.getFilePath(this, localUrlUri);
     }
 }

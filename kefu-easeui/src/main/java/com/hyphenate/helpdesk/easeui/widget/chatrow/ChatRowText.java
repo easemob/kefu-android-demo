@@ -20,6 +20,7 @@ import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 
+
 public class ChatRowText extends ChatRow{
 
     private TextView contentView;
@@ -44,9 +45,13 @@ public class ChatRowText extends ChatRow{
         EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
 
         //解析html超链接
-        CharSequence htmpTxt = Html.fromHtml(txtBody.getMessage().replace("<", "&lt;"));
+        String content = txtBody.getMessage().replace("\n","<br />");
+        //fromHtml method will ignore \n in string
+        CharSequence htmpTxt = Html.fromHtml(content.replace("<", "&lt;"), Html.FROM_HTML_MODE_LEGACY);
+
+        String new_content = htmpTxt.toString().replace("<br />", "\n");
         //解析表情
-        Spannable span = SmileUtils.getSmiledText(context, htmpTxt);
+        Spannable span = SmileUtils.getSmiledText(context, new_content);
 
         //给超链接添加响应
         URLSpan[] urlSpans = span.getSpans(0, htmpTxt.length(), URLSpan.class);

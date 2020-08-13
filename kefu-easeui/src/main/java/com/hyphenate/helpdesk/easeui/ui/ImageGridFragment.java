@@ -1,43 +1,54 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
+import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.hyphenate.helpdesk.BuildConfig;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.domain.VideoEntity;
 import com.hyphenate.helpdesk.easeui.util.ImageCache;
 import com.hyphenate.helpdesk.easeui.util.ImageResizer;
 import com.hyphenate.helpdesk.easeui.util.Utils;
 import com.hyphenate.helpdesk.easeui.widget.RecyclingImageView;
-import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
+
+import com.hyphenate.util.UriUtils;
+import com.hyphenate.util.VersionUtils;
 import com.hyphenate.util.DateUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.TextFormater;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ImageGridFragment extends Fragment implements OnItemClickListener {
 
-public class ImageGridFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 	private static final String TAG = "ImageGridFragment";
 	private int mImageThumbSize;
 	private int mImageThumbSpacing;
@@ -61,11 +72,11 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		mList=new ArrayList<VideoEntity>();
 		getVideoFile();
 		mAdapter = new ImageAdapter(getActivity());
-
+		
 		ImageCache.ImageCacheParams cacheParams=new ImageCache.ImageCacheParams();
 
 		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of
-		// app memory
+													// app memory
 
 		// The ImageFetcher takes care of loading images into our ImageView
 		// children asynchronously
@@ -73,11 +84,13 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		mImageResizer.setLoadingImage(R.drawable.hd_empty_photo);
 		mImageResizer.addImageCache(getActivity().getSupportFragmentManager(),
 				cacheParams);
+		
+		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
-	                         ViewGroup container, Bundle savedInstanceState) {
+			 ViewGroup container,  Bundle savedInstanceState) {
 		final View v = inflater.inflate(R.layout.hd_image_grid_fragment,
 				container, false);
 		final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
@@ -86,7 +99,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView absListView,
-			                                 int scrollState) {
+					int scrollState) {
 				// Pause fetcher to ensure smoother scrolling when flinging
 				if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
 					// Before Honeycomb pause image loading on scroll to help
@@ -101,7 +114,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 
 			@Override
 			public void onScroll(AbsListView absListView, int firstVisibleItem,
-			                     int visibleItemCount, int totalItemCount) {
+					int visibleItemCount, int totalItemCount) {
 			}
 		});
 
@@ -114,7 +127,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		// of each view so we get nice square thumbnails.
 		mGridView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
-					@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+					@TargetApi(VERSION_CODES.JELLY_BEAN)
 					@Override
 					public void onGlobalLayout() {
 						final int numColumns = (int) Math.floor(mGridView
@@ -124,32 +137,17 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 							final int columnWidth = (mGridView.getWidth() / numColumns)
 									- mImageThumbSpacing;
 							mAdapter.setItemHeight(columnWidth);
-//							if (BuildConfig.DEBUG) {
-//								Log.d(TAG,
-//										"onCreateView - numColumns set to "
-//												+ numColumns);
-//							}
-							if (Utils.hasJellyBean()) {
-								mGridView.getViewTreeObserver()
-										.removeOnGlobalLayoutListener(this);
-							} else {
-								mGridView.getViewTreeObserver()
-										.removeGlobalOnLayoutListener(this);
+							if (BuildConfig.DEBUG) {
+								Log.d(TAG,
+										"onCreateView - numColumns set to "
+												+ numColumns);
 							}
+							mGridView.getViewTreeObserver()
+									.removeOnGlobalLayoutListener(this);
 						}
 					}
 				});
 		return v;
-
-	}
-
-	@Override
-	protected void initView() {
-
-	}
-
-	@Override
-	protected void setUpView() {
 
 	}
 
@@ -169,24 +167,23 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, final int position, long id) {
-
+		
 		mImageResizer.setPauseWork(true);
-
+		
 		if(position==0)
 		{
-
+			
 			Intent intent=new Intent();
 			intent.setClass(getActivity(), RecorderVideoActivity.class);
 			startActivityForResult(intent, 100);
 		}else{
 			VideoEntity vEntty=mList.get(position-1);
-			// limit the size to 10M
-			if (vEntty.size > 1024 * 1024 * 10) {
-				String st = getResources().getString(R.string.temporary_does_not);
-				ToastHelper.show(getActivity(), st);
-				return;
+			Intent intent;
+			if(VersionUtils.isTargetQ(getContext())) {
+				intent=getActivity().getIntent().putExtra("uri", vEntty.uri.toString()).putExtra("dur", vEntty.duration);
+			}else {
+				intent=getActivity().getIntent().putExtra("path", vEntty.filePath).putExtra("dur", vEntty.duration);
 			}
-			Intent intent=getActivity().getIntent().putExtra("path", vEntty.filePath).putExtra("dur", vEntty.duration);
 			getActivity().setResult(Activity.RESULT_OK, intent);
 			getActivity().finish();
 		}
@@ -202,7 +199,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 			super();
 			mContext = context;
 			mImageViewLayoutParams = new RelativeLayout.LayoutParams(
-					AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT);
+					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		}
 
 		@Override
@@ -219,26 +216,26 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		public long getItemId(int position) {
 			return position ;
 		}
-
-
+ 
+ 
 		@Override
 		public View getView(int position, View convertView, ViewGroup container) {
-			ViewHolder holder=null;
-			if(convertView==null)
-			{
-				holder=new ViewHolder();
-				convertView=LayoutInflater.from(mContext).inflate(R.layout.hd_choose_griditem, container,false);
-				holder.imageView=(RecyclingImageView) convertView.findViewById(R.id.imageView);
-				holder.icon=(ImageView) convertView.findViewById(R.id.video_icon);
-				holder.tvDur=(TextView)convertView.findViewById(R.id.chatting_length_iv);
-				holder.tvSize=(TextView)convertView.findViewById(R.id.chatting_size_iv);
-				holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				holder.imageView.setLayoutParams(mImageViewLayoutParams);
-				convertView.setTag(holder);
-			}else{
-				holder=(ViewHolder) convertView.getTag();
-			}
-
+			 ViewHolder holder=null;
+			 if(convertView==null)
+			 {
+				 holder=new ViewHolder();
+				 convertView=LayoutInflater.from(mContext).inflate(R.layout.hd_choose_griditem, container,false);
+				 holder.imageView=(RecyclingImageView) convertView.findViewById(R.id.imageView);
+				 holder.icon=(ImageView) convertView.findViewById(R.id.video_icon);
+				 holder.tvDur=(TextView)convertView.findViewById(R.id.chatting_length_iv);
+				 holder.tvSize=(TextView)convertView.findViewById(R.id.chatting_size_iv);
+				 holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+				 holder.imageView.setLayoutParams(mImageViewLayoutParams);
+				 convertView.setTag(holder);
+			 }else{
+				 holder=(ViewHolder) convertView.getTag();
+			 }
+			 
 			// Check the height matches our calculated column width
 			if (holder.imageView.getLayoutParams().height != mItemHeight) {
 				holder.imageView.setLayoutParams(mImageViewLayoutParams);
@@ -258,7 +255,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 				holder.icon.setVisibility(View.VISIBLE);
 				VideoEntity entty=mList.get(position-1);
 				holder.tvDur.setVisibility(View.VISIBLE);
-
+				
 				holder.tvDur.setText(DateUtils.toTime(entty.duration));
 				holder.tvSize.setText(TextFormater.getDataSize(entty.size));
 				holder.imageView.setImageResource(R.drawable.hd_empty_photo);
@@ -271,7 +268,7 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		/**
 		 * Sets the item height. Useful for when we know the column width so the
 		 * height can be set to match.
-		 *
+		 * 
 		 * @param height
 		 */
 		public void setItemHeight(int height) {
@@ -280,25 +277,25 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 			}
 			mItemHeight = height;
 			mImageViewLayoutParams = new RelativeLayout.LayoutParams(
-					AbsListView.LayoutParams.MATCH_PARENT, mItemHeight);
+					LayoutParams.MATCH_PARENT, mItemHeight);
 			mImageResizer.setImageSize(height);
 			notifyDataSetChanged();
 		}
 
 		class ViewHolder{
-
+			
 			RecyclingImageView imageView;
 			ImageView icon;
 			TextView tvDur;
-			TextView tvSize;
-		}
+			TextView tvSize;		
+		}	 
 	}
 
 	private void getVideoFile()
 	{
 		ContentResolver mContentResolver=getActivity().getContentResolver();
 		Cursor cursor=mContentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null,MediaStore.Video.DEFAULT_SORT_ORDER);
-
+		
 		if (cursor != null && cursor.moveToFirst()) {
 			do {
 
@@ -310,8 +307,11 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 				String title = cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
 				// path：MediaStore.Audio.Media.DATA
-				String url = cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+				String url = null;
+				if(!VersionUtils.isTargetQ(getContext())) {
+					url = cursor.getString(cursor
+							.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+				}
 
 				// duration：MediaStore.Audio.Media.DURATION
 				int duration = cursor
@@ -322,12 +322,15 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 				int size = (int) cursor.getLong(cursor
 						.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
 
+				Uri uri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
+
 				VideoEntity entty = new VideoEntity();
 				entty.ID = id;
 				entty.title = title;
 				entty.filePath = url;
 				entty.duration = duration;
 				entty.size = size;
+				entty.uri = uri;
 				mList.add(entty);
 			} while (cursor.moveToNext());
 
@@ -343,40 +346,71 @@ public class ImageGridFragment extends BaseFragment implements AdapterView.OnIte
 		super.onActivityResult(requestCode, resultCode, data);
 		if(resultCode==Activity.RESULT_OK)
 		{
-			if (requestCode == 100) {
+			if(requestCode==100) {
 				Uri uri = data.getParcelableExtra("uri");
-				String[] projects = new String[]{MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media.DURATION};
-				Cursor cursor = null;
-				String filePath = null;
-				int duration = 0;
-				try {
-					cursor = getActivity().getContentResolver().query(
-							uri, projects, null,
-							null, null);
-					if (cursor != null && cursor.moveToFirst()) {
-						// path：MediaStore.Audio.Media.DATA
-						filePath = cursor.getString(cursor
-								.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-						// duration：MediaStore.Audio.Media.DURATION
-						duration = cursor
-								.getInt(cursor
-										.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
-						EMLog.d(TAG, "duration:" + duration);
+				if(uri != null) {
+					if(!VersionUtils.isTargetQ(getContext())) {
+						String[] projects = new String[] { MediaStore.Video.Media.DATA,
+								MediaStore.Video.Media.DURATION };
+						Cursor cursor = getActivity().getContentResolver().query(
+								uri, projects, null,
+								null, null);
+						int duration=0;
+						String filePath=null;
+
+						if (cursor.moveToFirst()) {
+							// path：MediaStore.Audio.Media.DATA
+							filePath = cursor.getString(cursor
+									.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+							// duration：MediaStore.Audio.Media.DURATION
+							duration = cursor
+									.getInt(cursor
+											.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+							EMLog.d(TAG, "duration:"+duration);
+						}
+						if(cursor!=null)
+						{
+							cursor.close();
+							cursor=null;
+						}
+						if(duration == 0) {
+							duration = UriUtils.getVideoOrAudioDuration(getActivity(), uri);
+						}
+						if(!TextUtils.isEmpty(filePath)) {
+							getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", filePath).putExtra("dur", duration));
+						}else {
+							getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("uri", uri.toString()).putExtra("dur", duration));
+						}
+					}else {
+						String filePath = UriUtils.getFilePath(getActivity(), uri);
+						int duration = UriUtils.getVideoOrAudioDuration(getActivity(), uri);
+						EMLog.d(TAG, "duration = "+duration);
+
+						if(!VersionUtils.isTargetQ(getContext()) && !TextUtils.isEmpty(filePath)) {
+							getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", filePath).putExtra("dur", duration));
+						}else {
+							getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("uri", uri.toString()).putExtra("dur", duration));
+						}
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if (cursor != null) {
-						cursor.close();
+
+				}else {
+					String path = data.getStringExtra("path");
+					int duration=0;
+					if(!TextUtils.isEmpty(path) && new File(path).exists()) {
+						File file = new File(path);
+						MediaPlayer player = new MediaPlayer();
+						try {
+							player.setDataSource(file.getPath());
+							player.prepare();
+							duration = player.getDuration();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
+					getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", path).putExtra("dur", duration));
 				}
-
-				getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra("path", filePath).putExtra("dur", duration));
 				getActivity().finish();
-
 			}
-		}
+		}	
 	}
-
 }

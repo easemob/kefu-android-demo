@@ -44,6 +44,11 @@
             android:theme="@style/horizontal_slide">
         </activity>
         <activity
+            android:name="com.hyphenate.helpdesk.easeui.ui.LocalVideoPlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".easeui.ui.BaseChatActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|navigation"
             android:screenOrientation="portrait"

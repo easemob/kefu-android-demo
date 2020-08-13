@@ -1,13 +1,26 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.hyphenate.EMError;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.Message;
@@ -16,7 +29,9 @@ import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
+import com.hyphenate.util.UriUtils;
 
 import java.io.File;
 
@@ -29,7 +44,7 @@ public class ShowVideoActivity extends BaseActivity {
 
     private RelativeLayout loadingLayout;
     private ProgressBar progressBar;
-    private String localFilePath;
+    private Uri localFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,43 +56,38 @@ public class ShowVideoActivity extends BaseActivity {
         loadingLayout = (RelativeLayout) findViewById(R.id.loading_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         final Message message = getIntent().getParcelableExtra("msg");
+
         EMVideoMessageBody messageBody = (EMVideoMessageBody)message.body();
-        localFilePath = messageBody.getLocalUrl();
-        if (localFilePath != null && new File(localFilePath).exists()) {
-            showLocalVideo(localFilePath);
+
+        localFilePath = messageBody.getLocalUri();
+        EMLog.d(TAG, "localFilePath = "+localFilePath);
+        EMLog.d(TAG, "local filename = "+messageBody.getFileName());
+
+        if(UriUtils.isFileExistByUri(this, localFilePath)) {
+            LocalVideoPlayerActivity.actionStart(this, localFilePath.toString());
             finish();
         } else {
+            EMLog.d(TAG, "download remote video file");
             downloadVideo(message);
         }
     }
 
-    public String getLocalFilePath(String remoteUrl) {
-        String localPath;
-        if (remoteUrl.contains("/")) {
-            localPath = PathUtil.getInstance().getVideoPath().getAbsolutePath()
-                    + "/" + remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1)
-                    + ".mp4";
-        } else {
-            localPath = PathUtil.getInstance().getVideoPath().getAbsolutePath()
-                    + "/" + remoteUrl + ".mp4";
-        }
-        return localPath;
-    }
 
-    /**
-     * 播放本地视频
-     *
-     * @param localPath 视频路径
-     */
-    private void showLocalVideo(String localPath) {
-        try{
-            CommonUtils.openFileEx(new File(localPath), "video/mp4", this);
-        }catch (Exception e){
-            ToastHelper.show(this, "未安装能打开此文件的软件");
+    private void showLocalVideo(final Message message) {
+        EMVideoMessageBody messageBody = (EMVideoMessageBody)message.body();
+
+        localFilePath = messageBody.getLocalUri();
+        EMLog.d(TAG, "localFilePath = "+localFilePath);
+        EMLog.d(TAG, "local filename = "+messageBody.getFileName());
+
+        if(UriUtils.isFileExistByUri(this, localFilePath)) {
+            LocalVideoPlayerActivity.actionStart(this, localFilePath.toString());
+        } else {
+            EMLog.e(TAG, "video file does not exist");
         }
+
         finish();
     }
-
 
     /**
      * 下载视频文件
@@ -93,7 +103,8 @@ public class ShowVideoActivity extends BaseActivity {
                     public void run() {
                         loadingLayout.setVisibility(View.GONE);
                         progressBar.setProgress(0);
-                        showLocalVideo(localFilePath);
+
+                        showLocalVideo(message);
                     }
                 });
             }
@@ -101,9 +112,15 @@ public class ShowVideoActivity extends BaseActivity {
             @Override
             public void onError(int code, String error) {
                 Log.e(TAG, "offline file transfer error:" + error);
-                File file = new File(localFilePath);
-                if (file.exists()) {
-                    file.delete();
+                Uri localFilePath = ((EMVideoMessageBody) message.getBody()).getLocalUri();
+                String filePath = UriUtils.getFilePath(ShowVideoActivity.this, localFilePath);
+                if(TextUtils.isEmpty(filePath)) {
+                    getContentResolver().delete(localFilePath, null, null);
+                }else {
+                    File file = new File(filePath);
+                    if (file.exists()) {
+                        file.delete();
+                    }
                 }
             }
 
@@ -125,6 +142,5 @@ public class ShowVideoActivity extends BaseActivity {
     public void onBackPressed() {
         finish();
     }
-
 
 }
