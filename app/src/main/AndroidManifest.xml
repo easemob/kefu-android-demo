@@ -89,7 +89,7 @@
 
         <!-- 导航页面 -->
         <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
-                  android:screenOrientation="portrait"
+                  android:screenOrientation="fullSensor"
                   android:theme="@style/horizontal_slide">
                   <intent-filter>
                       <action android:name="android.intent.action.MAIN" />

@@ -14,7 +14,6 @@
       <module fileurl="file://$PROJECT_DIR$/zbarlibary/kefu-android-demo-zbarlibary.iml" filepath="$PROJECT_DIR$/zbarlibary/kefu-android-demo-zbarlibary.iml" />
       <module fileurl="file://$PROJECT_DIR$/kefu-easeui/kefu-easeui.iml" filepath="$PROJECT_DIR$/kefu-easeui/kefu-easeui.iml" />
       <module fileurl="file://$PROJECT_DIR$/zbarlibary/kefu-kefu-android-demo-zbarlibary.iml" filepath="$PROJECT_DIR$/zbarlibary/kefu-kefu-android-demo-zbarlibary.iml" group="kefu-android-demo/zbarlibary" />
-      <module fileurl="file://$PROJECT_DIR$/kefu-sdk/kefu-sdk.iml" filepath="$PROJECT_DIR$/kefu-sdk/kefu-sdk.iml" group="kefu-android-demo/kefu-sdk" />
       <module fileurl="file://$PROJECT_DIR$/player/player.iml" filepath="$PROJECT_DIR$/player/player.iml" group="kefu-android-demo/player" />
       <module fileurl="file://$PROJECT_DIR$/zbarlibary/zbarlibary.iml" filepath="$PROJECT_DIR$/zbarlibary/zbarlibary.iml" />
     </modules>
