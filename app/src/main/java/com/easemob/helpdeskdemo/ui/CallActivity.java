@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -41,6 +42,7 @@ import com.jaouan.compoundlayout.CompoundLayout;
 import com.jaouan.compoundlayout.RadioLayout;
 import com.jaouan.compoundlayout.RadioLayoutGroup;
 import com.superrtc.mediamanager.EMediaEntities;
+import com.superrtc.mediamanager.ScreenCaptureManager;
 import com.superrtc.sdk.VideoView;
 
 import org.json.JSONObject;
@@ -230,6 +232,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 					ChatClient.getInstance().callManager().publishWindow(CallActivity.this, null);
 				}else{
 					ChatClient.getInstance().callManager().unPublishWindow(null);
+					stopForegroundService();
 				}
 				return true;
 			}
@@ -601,6 +604,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 							}
 							mChronometer.stop();
 							ChatClient.getInstance().callManager().endCall();
+							stopForegroundService();
 							finish();
 						}
 					});
@@ -611,6 +615,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 						public void run() {
 							info("click hangup");
 							ChatClient.getInstance().callManager().endCall();
+							stopForegroundService();
 							mHandler.removeCallbacks(timeoutHangup);
 							mHandler.removeMessages(MSG_CALL_ANSWER);
 							mHandler.removeMessages(MSG_CALL_END);
@@ -643,7 +648,15 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		super.onBackPressed();
 	}
 
-
+	/**
+	 * 停止服务
+	 */
+	private void stopForegroundService() {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			Intent service = new Intent(this, SRForegroundService.class);
+			stopService(service);
+		}
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -694,6 +707,17 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+		if (requestCode == ScreenCaptureManager.RECORD_REQUEST_CODE) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					Intent service = new Intent(this, SRForegroundService.class);
+					service.putExtra("code", resultCode);
+					service.putExtra("data", data);
+					startForegroundService(service);
+				}else {
+					ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+				}
+			}
+		}
 	}
 }

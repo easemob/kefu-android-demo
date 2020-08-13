@@ -18,6 +18,7 @@ import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
@@ -29,6 +30,9 @@ import com.hyphenate.helpdesk.model.AgentInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.push.EMPushConfig;
+import com.heytap.mcssdk.PushManager;
+import com.hyphenate.push.EMPushHelper;
+import com.hyphenate.push.EMPushType;
 
 import org.json.JSONObject;
 
@@ -87,6 +91,9 @@ public class DemoHelper {
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
 	    options.setConsoleLog(true);
+//	    options.setUse2channel(true);
+//        options.setAutoLogin(false);
+
 
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
@@ -375,5 +382,16 @@ public class DemoHelper {
 
     public Notifier getNotifier(){
         return _uiProvider.getNotifier();
+    }
+
+    /**
+     * 展示通知设置页面
+     */
+    public void showNotificationPermissionDialog() {
+        EMPushType pushType = EMPushHelper.getInstance().getPushType();
+        // oppo
+        if(pushType == EMPushType.OPPOPUSH && PushManager.isSupportPush(appContext)) {
+            PushManager.getInstance().requestNotificationPermission();
+        }
     }
 }

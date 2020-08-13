@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -63,6 +64,7 @@ import com.hyphenate.helpdesk.model.QueueIdentityInfo;
 import com.hyphenate.helpdesk.model.VisitorInfo;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
+import com.hyphenate.util.UriUtils;
 
 import org.json.JSONObject;
 
@@ -540,15 +542,34 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 if (data != null) {
                     int duration = data.getIntExtra("dur", 0);
                     String videoPath = data.getStringExtra("path");
-                    File file = new File(PathUtil.getInstance().getImagePath(), "thvideo" + System.currentTimeMillis());
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
-                        ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.close();
-                        sendVideoMessage(videoPath, file.getAbsolutePath(), duration);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String uriString = data.getStringExtra("uri");
+                    EMLog.d(TAG, "path = " + videoPath + " uriString = " + uriString);
+                    if (!TextUtils.isEmpty(videoPath)) {
+                        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis());
+                        try {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
+                            ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                            sendVideoMessage(videoPath, file.getAbsolutePath(), duration);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            EMLog.e(TAG, e.getMessage());
+                        }
+                    } else {
+                        Uri videoUri = UriUtils.getLocalUriFromString(uriString);
+                        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis());
+                        try {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            MediaMetadataRetriever media = new MediaMetadataRetriever();
+                            media.setDataSource(getContext(), videoUri);
+                            Bitmap frameAtTime = media.getFrameAtTime();
+                            frameAtTime.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                            sendVideoMessage(videoUri, file.getAbsolutePath(), duration);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -681,30 +702,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      * @param selectedImage
      */
     protected void sendPicByUri(Uri selectedImage) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            cursor = null;
-
-            if (picturePath == null || picturePath.equals("null")) {
-                ToastHelper.show(getActivity(), R.string.cant_find_pictures);
-                return;
-            }
-            sendImageMessage(picturePath);
-        } else {
-            File file = new File(selectedImage.getPath());
-            if (!file.exists()) {
-                ToastHelper.show(getActivity(), R.string.cant_find_pictures);
-                return;
-
-            }
-            sendImageMessage(file.getAbsolutePath());
-        }
-
+        sendImageMessage(selectedImage);
     }
 
     /**
@@ -713,37 +711,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      * @param uri
      */
     protected void sendFileByUri(Uri uri) {
-        String filePath = null;
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = null;
-
-            try {
-                cursor = getActivity().getContentResolver().query(uri, filePathColumn, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow("_data");
-                if (cursor.moveToFirst()) {
-                    filePath = cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-                if (cursor != null){
-                    cursor.close();
-                }
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            filePath = uri.getPath();
-        }
-        if (filePath == null){
-            return;
-        }
-        File file = new File(filePath);
-        if (!file.exists()) {
-            ToastHelper.show(getActivity(), R.string.File_does_not_exist);
-            return;
-        }
-        sendFileMessage(filePath);
-
+        sendFileMessage(uri);
     }
 
     @Override
@@ -775,7 +743,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
             } else {
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".ease", cameraFile));
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() +  ".fileProvider", cameraFile));
             }
             startActivityForResult(intent, REQUEST_CODE_CAMERA);
         }catch (Exception e){
@@ -948,6 +916,15 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
+    protected void sendImageMessage(Uri imageUri) {
+        Message message = Message.createImageSendMessage(imageUri, false, toChatUsername);
+        if (message != null) {
+            attachMessageAttrs(message);
+            ChatClient.getInstance().chatManager().sendMessage(message);
+            messageList.refreshSelectLastDelay(MessageList.defaultDelay);
+        }
+    }
+
     protected void sendCustomEmojiMessage(String imagePath) {
         if (TextUtils.isEmpty(imagePath)){
             return;
@@ -967,6 +944,13 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
+    protected void sendFileMessage(Uri fileUri) {
+        Message message = Message.createFileSendMessage(fileUri, toChatUsername);
+        attachMessageAttrs(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
+    }
+
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress, String toChatUsername){
         Message message = Message.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
         attachMessageAttrs(message);
@@ -981,6 +965,12 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
+    protected void sendVideoMessage(Uri videoUri, String thumbPath, int videoLength) {
+        Message message = Message.createVideoSendMessage(videoUri, thumbPath, videoLength, toChatUsername);
+        attachMessageAttrs(message);
+        ChatClient.getInstance().chatManager().sendMessage(message);
+        messageList.refreshSelectLastDelay(MessageList.defaultDelay);
+    }
 
     public void attachMessageAttrs(Message message){
         if (visitorInfo != null){

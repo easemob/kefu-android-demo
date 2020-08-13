@@ -1,17 +1,19 @@
 package com.hyphenate.helpdesk.easeui.widget.chatrow;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
@@ -19,15 +21,20 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
-import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.util.DensityUtil;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.ImageUtils;
+import com.hyphenate.util.UriUtils;
 
 import java.io.File;
+import java.io.IOException;
+
 public class ChatRowImage extends ChatRowFile{
 
     protected ImageView imageView;
     private EMImageMessageBody imgBody;
+    private static final String TAG = ChatRowImage.class.getSimpleName();
+
 
     public ChatRowImage(Context context, Message message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
@@ -58,20 +65,18 @@ public class ChatRowImage extends ChatRowFile{
                 progressBar.setVisibility(View.GONE);
                 percentageView.setVisibility(View.GONE);
                 imageView.setImageResource(R.drawable.hd_default_image);
-                String thumbPath = imgBody.thumbnailLocalPath();
-                if (!new File(thumbPath).exists()) {
-                    // 兼容旧版SDK收到的thumbnail
-                    thumbPath = CommonUtils.getThumbnailImagePath(imgBody.getLocalUrl());
-                }
-                showImageView(thumbPath, imageView, imgBody.getLocalUrl(), message);
+
+                Uri filePath = imgBody.getLocalUri();
+                Uri thumbnailUrl = imgBody.thumbnailLocalUri();
+                showImageView(thumbnailUrl, filePath, message);
             }
             return;
         }
 
-        String filePath = imgBody.getLocalUrl();
-        if (filePath != null) {
-            showImageView(CommonUtils.getThumbnailImagePath(filePath), imageView, filePath, message);
-        }
+        Uri filePath = imgBody.getLocalUri();
+        Uri thumbnailUrl = imgBody.thumbnailLocalUri();
+        showImageView(thumbnailUrl, filePath, message);
+
         handleSendMessage();
     }
 
@@ -88,16 +93,16 @@ public class ChatRowImage extends ChatRowFile{
     @Override
     protected void onBubbleClick() {
         Intent intent = new Intent(context, ShowBigImageActivity.class);
-        File file = new File(imgBody.getLocalUrl());
-        if (file.exists()) {
-            Uri uri = Uri.fromFile(file);
-            intent.putExtra("uri", uri);
-        } else {
+        Uri imgUri = imgBody.getLocalUri();
+        if(UriUtils.isFileExistByUri(getContext(), imgUri)) {
+            intent.putExtra("uri", imgUri);
+        } else{
             // The local full size pic does not exist yet.
             // ShowBigImage needs to download it from the server
             // first
-            intent.putExtra("messageId", message.messageId());
-            intent.putExtra("localUrl", imgBody.getLocalUrl());
+            String msgId = message.getMsgId();
+            intent.putExtra("messageId", msgId);
+            intent.putExtra("filename", imgBody.getFileName());
         }
         context.startActivity(intent);
     }
@@ -105,65 +110,71 @@ public class ChatRowImage extends ChatRowFile{
     /**
      * load image into image view
      *
-     * @param thumbernailPath
-     * @param iv
-     * @param localFullSizePath
-     * @return the image exists or not
      */
-    private boolean showImageView(final String thumbernailPath, final ImageView iv, final String localFullSizePath,final Message message) {
-        // first check if the thumbnail image already loaded into cache
-        Bitmap bitmap = ImageCache.getInstance().get(thumbernailPath);
+    @SuppressLint("StaticFieldLeak")
+    private void showImageView(final Uri thumbernailPath, final Uri localFullSizePath, final Message message) {
+        // first check if the thumbnail image already loaded into cache s
+        Bitmap bitmap = ImageCache.getInstance().get(thumbernailPath.toString());
+
         if (bitmap != null) {
             // thumbnail image is already loaded, reuse the drawable
-            iv.setImageBitmap(bitmap);
-            return true;
+            imageView.setImageBitmap(bitmap);
         } else {
             final int width = DensityUtil.dip2px(getContext(), 70);
             new AsyncTask<Object, Void, Bitmap>() {
 
                 @Override
                 protected Bitmap doInBackground(Object... args) {
-                    File file = new File(thumbernailPath);
-                    if (file.exists()) {
-                        return ImageUtils.decodeScaleImage(thumbernailPath, width, width);
+                    if (UriUtils.isFileExistByUri(context, thumbernailPath)) {
+                        return getCacheBitmap(thumbernailPath);
+                    } else if(UriUtils.isFileExistByUri(context, localFullSizePath)) {
+                        return getCacheBitmap(localFullSizePath);
                     } else {
                         if (message.direct() == Message.Direct.SEND) {
-                            if (localFullSizePath != null && new File(localFullSizePath).exists()) {
-                                return ImageUtils.decodeScaleImage(localFullSizePath, width, width);
-                            } else {
-                                return null;
+                            if (UriUtils.isFileExistByUri(context, localFullSizePath)) {
+                                String filePath = UriUtils.getFilePath(context, localFullSizePath);
+                                if(!TextUtils.isEmpty(filePath)) {
+                                    return ImageUtils.decodeScaleImage(filePath, width, width);
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    try {
+                                        return ImageUtils.decodeScaleImage(context, localFullSizePath, width, width);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        return null;
+                                    }
+                                }
                             }
-                        } else {
                             return null;
                         }
+                        return null;
                     }
                 }
 
                 protected void onPostExecute(Bitmap image) {
                     if (image != null) {
-                        iv.setImageBitmap(image);
-                        ImageCache.getInstance().put(thumbernailPath, image);
-                    } else {
-                        EMImageMessageBody imageBody = (EMImageMessageBody) message.body();
-                        if (imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING
-                                || imageBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-
-                        } else {
-                            if (CommonUtils.isNetWorkConnected(activity)) {
-                                new Thread(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        ChatClient.getInstance().chatManager().downloadThumbnail(message);
-                                    }
-                                }).start();
-                            }
-                        }
+                        EMLog.d("img", "bitmap width = "+image.getWidth() + " height = "+image.getHeight());
+                        imageView.setImageBitmap(image);
+                        ImageCache.getInstance().put(thumbernailPath.toString(), image);
                     }
                 }
-            }.execute();
 
-            return true;
+                private Bitmap getCacheBitmap(Uri fileUri) {
+                    String filePath = UriUtils.getFilePath(context, fileUri);
+                    EMLog.d(TAG, "fileUri = "+fileUri);
+                    if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
+                        return ImageUtils.decodeScaleImage(filePath, width, width);
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        try {
+                            return ImageUtils.decodeScaleImage(context, fileUri, width, width);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return null;
+                }
+            }.execute();
         }
     }
 
