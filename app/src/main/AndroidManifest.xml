@@ -73,9 +73,6 @@
         android:requestLegacyExternalStorage="false"
         android:theme="@style/AppTheme">
 
-        <!-- 适配android 9.0 -->
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-
         <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -89,7 +86,7 @@
 
         <!-- 导航页面 -->
         <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
-                  android:screenOrientation="fullSensor"
+                  android:screenOrientation="portrait"
                   android:theme="@style/horizontal_slide">
                   <intent-filter>
                       <action android:name="android.intent.action.MAIN" />

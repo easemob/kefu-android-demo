@@ -26,6 +26,7 @@ import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialogFragment;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.util.EMLog;
 
 /**
  * 发起留言界面
@@ -175,9 +176,9 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
         if (itemPhone.getText().toString().length() == 0) {
             return true;
         }
-        if (itemEmail.getText().toString().length() == 0) {
-            return true;
-        }
+//        if (itemEmail.getText().toString().length() == 0) {
+//            return true;
+//        }
         return itemTheme.getText().toString().length() == 0;
     }
 
@@ -238,7 +239,7 @@ public class NewLeaveMessageActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void run() {
                         closeDialog();
-                        Log.e(TAG, "error:" + error);
+                        EMLog.e(TAG, "error:" + error);
                         if (!NewLeaveMessageActivity.this.isFinishing()) {
                             showAlertDialog();
                         }

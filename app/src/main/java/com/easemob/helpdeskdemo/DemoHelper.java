@@ -94,6 +94,7 @@ public class DemoHelper {
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
+        options.setAppVersion("1.2.4");
 
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
