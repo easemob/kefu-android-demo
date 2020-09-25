@@ -62,6 +62,7 @@
     <string name="new_leave_msg_sub_fail_alert_content">Please recheck your network and submit it again!</string>
     <string name="new_leave_msg_alert_ok">OK</string>
 	<string name="new_leave_item_hint_text">Required</string>
+    <string name="new_leave_item_hint_optional">Optional</string>
     <string name="new_leave_item_empty_value_toast">Please input required item!</string>
 	<string name="chat_primary_text_hint">Please input message.</string>
 	<string name="ease_record_menu_too_short">Record time is too short.</string>

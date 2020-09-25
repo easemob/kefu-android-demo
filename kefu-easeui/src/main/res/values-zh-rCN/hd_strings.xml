@@ -61,6 +61,7 @@
     <string name="new_leave_msg_sub_fail_alert_content">请检查网络或重新提交</string>
     <string name="new_leave_msg_alert_ok">好的</string>
     <string name="new_leave_item_hint_text">必填</string>
+    <string name="new_leave_item_hint_optional">选填</string>
     <string name="new_leave_item_empty_value_toast">请输入必填项</string>
 	<string name="chat_primary_text_hint">输入信息</string>
 	<string name="ease_record_menu_too_short">时间过短</string>
