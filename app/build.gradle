@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.huawei.agconnect'
 
 Properties prop = new Properties()
 prop.load(new FileInputStream(file("signing.properties")))
@@ -100,7 +101,8 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.4.2'
     // Google firebase cloud messaging end
     compile project(':zbarlibary')
-    compile project(':hmspush')
+    // hms push
+    implementation 'com.huawei.hms:push:4.0.2.300'
 
     // meizu push
     compile 'com.meizu.flyme.internet:push-internal:3.7.0@aar' //配置集成sdk

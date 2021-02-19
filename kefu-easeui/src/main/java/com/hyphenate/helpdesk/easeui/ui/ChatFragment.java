@@ -37,6 +37,8 @@ import android.widget.Toast;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.KefuConversationManager;
 import com.hyphenate.chat.Message;
@@ -65,6 +67,7 @@ import com.hyphenate.helpdesk.model.VisitorInfo;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.UriUtils;
+import com.hyphenate.util.VersionUtils;
 
 import org.json.JSONObject;
 
@@ -544,32 +547,12 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
                     String videoPath = data.getStringExtra("path");
                     String uriString = data.getStringExtra("uri");
                     EMLog.d(TAG, "path = " + videoPath + " uriString = " + uriString);
-                    if (!TextUtils.isEmpty(videoPath)) {
-                        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis());
-                        try {
-                            FileOutputStream fos = new FileOutputStream(file);
-                            Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
-                            ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                            fos.close();
-                            sendVideoMessage(videoPath, file.getAbsolutePath(), duration);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            EMLog.e(TAG, e.getMessage());
-                        }
-                    } else {
+
+                    if(!TextUtils.isEmpty(videoPath)) {
+                        sendVideoMessage(Uri.parse(videoPath), duration);
+                    }else {
                         Uri videoUri = UriUtils.getLocalUriFromString(uriString);
-                        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis());
-                        try {
-                            FileOutputStream fos = new FileOutputStream(file);
-                            MediaMetadataRetriever media = new MediaMetadataRetriever();
-                            media.setDataSource(getContext(), videoUri);
-                            Bitmap frameAtTime = media.getFrameAtTime();
-                            frameAtTime.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                            fos.close();
-                            sendVideoMessage(videoUri, file.getAbsolutePath(), duration);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        sendVideoMessage(videoUri, duration);
                     }
                 }
             }
@@ -683,15 +666,15 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      * 选择文件
      */
     protected void selectFileFromLocal() {
-        Intent intent = null;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) { //19以后这个api不可用，demo这里简单处理成图库选择图片
-            intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        } else {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent();
+        if(VersionUtils.isTargetQ(getActivity())) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        }else {
+            intent.setAction(Intent.ACTION_GET_CONTENT);
         }
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+
         startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
     }
 
@@ -755,14 +738,19 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
      * 从图库获取图片
      */
     protected void selectPicFromLocal() {
-        Intent intent;
-        if (Build.VERSION.SDK_INT < 19) {
-            intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-
-        } else {
-            intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = null;
+        if(VersionUtils.isTargetQ(getActivity())) {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }else {
+            if (Build.VERSION.SDK_INT < 19) {
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+            } else {
+                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            }
         }
+        intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE_LOCAL);
     }
 
@@ -965,9 +953,12 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
 
-    protected void sendVideoMessage(Uri videoUri, String thumbPath, int videoLength) {
+    protected void sendVideoMessage(Uri videoUri, int videoLength) {
+        String thumbPath = getThumbPath(videoUri);
         Message message = Message.createVideoSendMessage(videoUri, thumbPath, videoLength, toChatUsername);
         attachMessageAttrs(message);
+
+        // send message
         ChatClient.getInstance().chatManager().sendMessage(message);
         messageList.refreshSelectLastDelay(MessageList.defaultDelay);
     }
@@ -982,7 +973,46 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         if (agentIdentityInfo != null){
             message.addContent(agentIdentityInfo);
         }
+    }
 
+    /**
+     * 获取视频封面
+     * @param videoUri
+     * @return
+     */
+    private String getThumbPath(Uri videoUri) {
+        if(!UriUtils.isFileExistByUri(getContext(), videoUri)) {
+            return "";
+        }
+        String filePath = UriUtils.getFilePath(getContext(), videoUri);
+        File file = new File(PathUtil.getInstance().getVideoPath(), "thvideo" + System.currentTimeMillis()+".jpeg");
+        boolean createSuccess = true;
+        if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(filePath, 3);
+                ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                EMLog.e(TAG, e.getMessage());
+                createSuccess = false;
+            }
+        }else {
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                MediaMetadataRetriever media = new MediaMetadataRetriever();
+                media.setDataSource(getContext(), videoUri);
+                Bitmap frameAtTime = media.getFrameAtTime();
+                frameAtTime.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                EMLog.e(TAG, e.getMessage());
+                createSuccess = false;
+            }
+        }
+        return createSuccess ? file.getAbsolutePath() : "";
     }
 
     @Override

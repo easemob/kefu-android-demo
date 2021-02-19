@@ -73,9 +73,6 @@
         android:requestLegacyExternalStorage="false"
         android:theme="@style/AppTheme">
 
-        <!-- 适配android 9.0 -->
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-
         <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -89,7 +86,7 @@
 
         <!-- 导航页面 -->
         <activity android:name="com.easemob.helpdeskdemo.ui.LauncherActivity"
-                  android:screenOrientation="fullSensor"
+                  android:screenOrientation="portrait"
                   android:theme="@style/horizontal_slide">
                   <intent-filter>
                       <action android:name="android.intent.action.MAIN" />
@@ -328,26 +325,12 @@
 
 
         <!--华为 HMS Config-->
-        <!-- 接入HMSSDK 需要注册的appid参数。value的值中“100257243”用实际申请的appid替换，来源于开发者联盟网站应用的权益详情。格式 android:value="appid=xxxxxx"-->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="appid=10663060" />
-        <!--接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播，
-                此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
-                参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer-->
-        <!--华为推送 start-->
-        <receiver android:name=".receiver.HMSPushReceiver">
+        <service android:name=".HMSPushService"
+            android:exported="false">
             <intent-filter>
-                <!-- 必须,用于接收 TOKEN -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
-                <!-- 必须，用于接收消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
-                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
-                <action android:name="com.huawei.android.push.intent.CLICK"/>
-                <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
-                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
-        </receiver>
+        </service>
         <!-- huawei push end -->
     </application>
 

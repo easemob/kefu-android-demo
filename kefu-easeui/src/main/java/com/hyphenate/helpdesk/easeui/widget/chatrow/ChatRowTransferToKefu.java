@@ -68,7 +68,8 @@ public class ChatRowTransferToKefu extends ChatRow {
     }
 
     private void sendToCustomServiceMessage(ToCustomServiceInfo info){
-        if (TextUtils.isEmpty(info.getId()) || TextUtils.isEmpty(info.getServiceSessionId())){
+        if (TextUtils.isEmpty(info.getTransferKFID())
+                &&  (TextUtils.isEmpty(info.getId()) || TextUtils.isEmpty(info.getServiceSessionId()))){
             return;
         }
 

@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.Message;
@@ -103,41 +104,16 @@ public class ShowBigImageActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(!isFinishing() && !isDestroyed()) {
-                            DisplayMetrics metrics = new DisplayMetrics();
-                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                            int screenWidth = metrics.widthPixels;
-                            int screenHeight = metrics.heightPixels;
-
+                        if (!isFinishing() && !isDestroyed()) {
+                            if (pd != null) {
+                                pd.dismiss();
+                            }
+                            isDownloaded = true;
                             Uri localUrlUri = ((EMImageMessageBody) msg.getBody()).getLocalUri();
-
-                            try {
-                                BitmapFactory.Options options = ImageUtils.getBitmapOptions(ShowBigImageActivity.this, localUrlUri);
-                                // use original size
-                                screenWidth = options.outWidth;
-                                screenHeight = options.outHeight;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-                                bitmap = ImageUtils.decodeScaleImage(ShowBigImageActivity.this, localUrlUri, screenWidth, screenHeight);
-                                if (bitmap == null) {
-                                    image.setImageResource(default_res);
-                                } else {
-                                    image.setImageBitmap(bitmap);
-                                    ImageCache.getInstance().put(localUrlUri.toString(), bitmap);
-                                    isDownloaded = true;
-                                }
-                                if (isFinishing() || isDestroyed()) {
-                                    return;
-                                }
-                                if (pd != null) {
-                                    pd.dismiss();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Glide.with(ShowBigImageActivity.this)
+                                    .load(localUrlUri)
+                                    .apply(new RequestOptions().error(default_res))
+                                    .into(image);
                         }
                     }
                 });

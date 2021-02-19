@@ -130,7 +130,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
 
         // 检查华为推送服务
-        HMSPushHelper.getInstance().connectHMS(this);
+        HMSPushHelper.getInstance().getHMSToken(this);
     }
 
     @TargetApi(23)
