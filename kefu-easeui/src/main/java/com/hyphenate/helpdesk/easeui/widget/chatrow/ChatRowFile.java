@@ -18,6 +18,7 @@ import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowNormalFileActivity;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.TextFormater;
 import com.hyphenate.util.UriUtils;
 
