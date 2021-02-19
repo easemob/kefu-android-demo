@@ -45,9 +45,14 @@ public class ChatRowText extends ChatRow{
         EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
 
         //解析html超链接
-        String content = txtBody.getMessage().replace("\n","<br />");
+        String content = txtBody.getMessage().replace("\n", "<br />");
         //fromHtml method will ignore \n in string
-        CharSequence htmpTxt = Html.fromHtml(content.replace("<", "&lt;"), Html.FROM_HTML_MODE_LEGACY);
+        CharSequence htmpTxt;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            htmpTxt = Html.fromHtml(content.replace("<", "&lt;"), Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            htmpTxt = Html.fromHtml(content.replace("<", "&lt;"));
+        }
 
         String new_content = htmpTxt.toString().replace("<br />", "\n");
         //解析表情

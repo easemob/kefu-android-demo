@@ -34,8 +34,6 @@ public class DemoApplication extends Application {
 
         // 请确保环信SDK相关方法运行在主进程，子进程不会初始化环信SDK（该逻辑在EaseUI.java中）
         if(isMainProcess(this)){
-            //初始化华为HMS推送服务
-            HMSPushHelper.getInstance().initHMSAgent(this);
             EMPushHelper.getInstance().setPushListener(new PushListener() {
                 @Override
                 public void onError(EMPushType pushType, long errorCode) {

@@ -74,16 +74,16 @@ artifacts {
 }
 
 
-//bintray {
-//    user = project.getProperty("BINTRAY_USER")
-//    key = project.getProperty("BINTRAY_KEY")
-//    configurations = ['archives']
-//    pkg {
-//        repo = "maven"
-//        name = easeuiProjectName //项目在jcenter的名字
-//        websiteUrl = siteUrl
-//        vcsUrl = gitUrl
-//        licenses = ["Apache-2.0"]
-//        publish = true
-//    }
-//}
+bintray {
+    user = project.getProperty("BINTRAY_USER")
+    key = project.getProperty("BINTRAY_KEY")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = easeuiProjectName //项目在jcenter的名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}

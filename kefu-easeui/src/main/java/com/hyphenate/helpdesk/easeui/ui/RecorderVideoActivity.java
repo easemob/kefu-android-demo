@@ -17,6 +17,7 @@ import android.media.MediaRecorder.OnInfoListener;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
@@ -46,6 +47,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static android.os.PowerManager.SCREEN_DIM_WAKE_LOCK;
+
 public class RecorderVideoActivity extends BaseActivity implements
 		OnClickListener, SurfaceHolder.Callback, OnErrorListener,
 		OnInfoListener {
@@ -58,7 +61,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 	private VideoView mVideoView;// to display video
 	String localPath = "";// path to save recorded video
 	private Camera mCamera;
-	private int previewWidth = 480;
+	private int previewWidth = 640;
 	private int previewHeight = 480;
 	private Chronometer chronometer;
 	private int frontCamera = 0; // 0 is back camera，1 is front camera
@@ -78,8 +81,12 @@ public class RecorderVideoActivity extends BaseActivity implements
 		setContentView(R.layout.hd_recorder_activity);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		assert pm != null;
-		mWakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-				CLASS_LABEL);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+			mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP, "myApp: RecorderActivity");
+		} else {
+			mWakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, "myApp: RecorderActivity");
+		}
+
 		mWakeLock.acquire();
 		initViews();
 	}
@@ -112,8 +119,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 			// keep screen on
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 			assert pm != null;
-			mWakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-					CLASS_LABEL);
+			mWakeLock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP, "myApp: RecorderActivity");
 			mWakeLock.acquire();
 		}
 	}
@@ -138,6 +144,41 @@ public class RecorderVideoActivity extends BaseActivity implements
 			return false;
 		}
 		return true;
+	}
+
+	private void setCameraParameter(Camera camera) {
+		if (camera == null) return;
+		Camera.Parameters parameters = camera.getParameters();
+		//获取相机支持的>=20fps的帧率，用于设置给MediaRecorder
+		//因为获取的数值是*1000的，所以要除以1000
+		List<int[]> previewFpsRange = parameters.getSupportedPreviewFpsRange();
+		for (int[] ints : previewFpsRange) {
+			if (ints[0] >= 20000) {
+				defaultVideoFrameRate = ints[0] / 1000;
+				break;
+			}
+		}
+		//设置聚焦模式
+		List<String> focusModes = parameters.getSupportedFocusModes();
+		if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+		} else if (focusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+		} else {
+			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+		}
+
+		//设置预览尺寸,因为预览的尺寸和最终是录制视频的尺寸无关，所以我们选取最大的数值
+		//通常最大的是手机的分辨率，这样可以让预览画面尽可能清晰并且尺寸不变形，前提是TextureView的尺寸是全屏或者接近全屏
+		// 取消设置预览尺寸，部分手机屏幕显示会变形
+//		List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+//		parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
+		//缩短Recording启动时间
+		parameters.setRecordingHint(true);
+		//是否支持影像稳定能力，支持则开启
+		if (parameters.isVideoStabilizationSupported())
+			parameters.setVideoStabilization(true);
+		camera.setParameters(parameters);
 	}
 
 	private void handleSurfaceChanged() {
@@ -289,6 +330,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		}
 		try {
 			mCamera.setPreviewDisplay(mSurfaceHolder);
+			setCameraParameter(mCamera);
 			mCamera.startPreview();
 			handleSurfaceChanged();
 		} catch (Exception e1) {

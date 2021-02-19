@@ -22,6 +22,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
+import com.hyphenate.chat.OfficialAccount;
 import com.hyphenate.helpdesk.easeui.Notifier;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -94,7 +95,7 @@ public class DemoHelper {
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
-        options.setAppVersion("1.2.4");
+        options.setAppVersion("1.2.5");
 
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
@@ -117,9 +118,9 @@ public class DemoHelper {
             @Override
             public void setNickAndAvatar(Context context, Message message, ImageView userAvatarView, TextView usernickView) {
                 if (message.direct() == Message.Direct.RECEIVE) {
-                    //设置接收方的昵称和头像
-//                    UserUtil.setAgentNickAndAvatar(context, message, userAvatarView, usernickView);
+                    //设置客服的昵称和头像
                     AgentInfo agentInfo = MessageHelper.getAgentInfo(message);
+                    OfficialAccount officialAccount = message.getOfficialAccount();
                     if (usernickView != null){
                         usernickView.setText(message.from());
                         if (agentInfo != null){
@@ -129,6 +130,23 @@ public class DemoHelper {
                         }
                     }
                     if (userAvatarView != null){
+                        userAvatarView.setImageResource(com.hyphenate.helpdesk.R.drawable.hd_default_avatar);
+
+                        // 如果设置了个人头像则优先于企业logo显示
+                        if (officialAccount != null) {
+                            if (!TextUtils.isEmpty(officialAccount.getImg())) {
+                                String imgUrl = officialAccount.getImg();
+                                // 设置客服头像
+                                if (!TextUtils.isEmpty(imgUrl)) {
+                                    if (!imgUrl.startsWith("http")) {
+                                        imgUrl = "http:" + imgUrl;
+                                    }
+                                    //正常的string路径
+                                    Glide.with(context).load(imgUrl).apply(RequestOptions.placeholderOf(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).diskCacheStrategy(DiskCacheStrategy.ALL)).into(userAvatarView);
+                                }
+                            }
+                        }
+
                         if (agentInfo != null){
                             if (!TextUtils.isEmpty(agentInfo.getAvatar())) {
                                 String strUrl = agentInfo.getAvatar();
@@ -139,12 +157,10 @@ public class DemoHelper {
                                     }
                                     //正常的string路径
                                     Glide.with(context).load(strUrl).apply(RequestOptions.placeholderOf(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop()).into(userAvatarView);
-//                                    Glide.with(context).load(strUrl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(com.hyphenate.helpdesk.R.drawable.hd_default_avatar).transform(new GlideCircleTransform(context)).into(userAvatarView);
                                     return;
                                 }
                             }
                         }
-                        userAvatarView.setImageResource(com.hyphenate.helpdesk.R.drawable.hd_default_avatar);
                     }
                 } else {
                     //此处设置当前登录用户的头像，
