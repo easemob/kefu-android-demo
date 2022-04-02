@@ -16,6 +16,12 @@ package com.easemob.helpdeskdemo;
 
 public class Constant {
 
+	// TODO 测试声网音视频使用
+	public static final String APP_ID = "74855635d3a64920b0c7ee3684f68a9f";
+	public static final String TOKEN = "00674855635d3a64920b0c7ee3684f68a9fIABqHpkqvI39mi+iZUqRo+Cc0b4NJ9KuW6CvWxa5cNIKiho6pkUAAAAAEAAg4mLWz2VGYgEAAQDKZUZi";
+	public static final String CHANNEL = "huanxin";
+	public static final int UID = 0;
+
 	public static final String DEFAULT_CUSTOMER_APPKEY = "1400171218061390#kefuchannelapp387";
 	public static final String DEFAULT_CUSTOMER_ACCOUNT = "kefuchannelimid_742962";
 	public static final String DEFAULT_ACCOUNT_PWD = "123456";

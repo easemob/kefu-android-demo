@@ -7,12 +7,11 @@
     android:layout_height="match_parent"
     >
 
-    <com.hyphenate.chat.CallSurfaceView
-        android:id="@+id/call_surfaceview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:gravity="center|center_horizontal|center_vertical"/>
+    <FrameLayout
+        android:background="@android:color/black"
+        android:id="@+id/fl_local"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     
     <RelativeLayout
         android:id="@+id/top_panel"
@@ -41,8 +40,7 @@
             android:layout_toLeftOf="@id/chronometer"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            tools:text="Bryan Ortega, Bryan Orteg...(13)"
-            />
+            tools:text="Bryan Ortega, Bryan Orteg...(13)" />
 
     </RelativeLayout>
 

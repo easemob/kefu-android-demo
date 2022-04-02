@@ -93,5 +93,8 @@
 -keep interface com.huawei.android.hms.agent.common.INoProguard {*;}
 -keep class * extends com.huawei.android.hms.agent.common.INoProguard {*;}
 
+# 声网
+-keep class io.agora.**{*;}
+
 
 

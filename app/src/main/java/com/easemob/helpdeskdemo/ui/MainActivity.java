@@ -38,6 +38,8 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
+import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.util.EMLog;
 import com.hyphenate.util.EasyUtils;
 
 import java.util.List;
@@ -131,6 +133,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         // 检查华为推送服务
         HMSPushHelper.getInstance().getHMSToken(this);
+
     }
 
     @TargetApi(23)

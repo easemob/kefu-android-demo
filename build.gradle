@@ -2,10 +2,11 @@
 
 buildscript {
     repositories {
-        jcenter()
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
-        maven {url 'http://developer.huawei.com/repo'}
+        mavenCentral()
+        maven {url 'https://dl.google.com/dl/android/maven2/'}
+        maven {url 'http://developer.huawei.com/repo/'}
         google()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -14,12 +15,14 @@ buildscript {
         // in the individual module build.gradle files
         //添加内容
 //        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        //classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 
         // Google Firebase cloud messaging
         classpath 'com.google.gms:google-services:3.1.1'
         classpath 'com.huawei.agconnect:agcp:1.2.1.301'
+        //io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.1"//0.5.1
     }
 }
 
@@ -28,13 +31,17 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
-        maven { url 'https://dl.google.com/dl/android/maven2/' }
+        mavenCentral()
+        maven {url 'https://dl.google.com/dl/android/maven2/'}
         maven {url 'http://developer.huawei.com/repo'}
+
         google()
+        jcenter()
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+apply plugin: 'io.codearte.nexus-staging'

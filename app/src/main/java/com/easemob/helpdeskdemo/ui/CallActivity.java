@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.Ringtone;
@@ -17,40 +16,43 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.easemob.helpdeskdemo.Preferences;
+import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.widget.CallControllers;
 import com.easemob.helpdeskdemo.widget.CircleImageView;
 import com.easemob.helpdeskdemo.widget.MyChronometer;
-import com.hyphenate.chat.CallManager;
-import com.hyphenate.chat.CallSurfaceView;
+import com.hyphenate.agora.AgoraStreamItem;
+import com.hyphenate.agora.IAgoraMessageNotify;
+import com.hyphenate.agora.IAgoraRtcEngineEventHandler;
+import com.hyphenate.agora.RtcStats;
+import com.hyphenate.agora.ZuoXiSendRequestObj;
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
-import com.hyphenate.chat.MediaStream;
-import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
-import com.hyphenate.helpdesk.util.Log;
-import com.hyphenate.util.EMLog;
+import com.hyphenate.helpdesk.easeui.agora.AgoraRtcEngine;
+import com.hyphenate.helpdesk.easeui.agora.ScreenSharingClient;
+import com.hyphenate.helpdesk.easeui.agora.VideoEncoderConfigurations;
 import com.jaouan.compoundlayout.CompoundLayout;
 import com.jaouan.compoundlayout.RadioLayout;
 import com.jaouan.compoundlayout.RadioLayoutGroup;
-import com.superrtc.mediamanager.EMediaEntities;
-import com.superrtc.mediamanager.ScreenCaptureManager;
-import com.superrtc.sdk.VideoView;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+
 
 /**
  * author liyuzhao
@@ -58,22 +60,22 @@ import java.util.Map;
  * date: 04/05/2018
  */
 
-public class CallActivity extends DemoBaseActivity implements CallManager.CallManagerDelegate {
+public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotify {
 
-	private static final String TAG = "call_activity";
+	private static final String TAG = CallActivity.class.getSimpleName();
 	private final int MSG_CALL_ANSWER = 2;
 	private final int MSG_CALL_END = 3;
+	private final int MSG_CALL_END_Back = 6;
 	private final int MSG_CALL_RELEASE_HANDLER = 4;
+	private final int MSG_CALL_ZUO_XI_SEND = 5;
 
 	private final int MAKE_CALL_TIMEOUT = 60 * 1000;// 未接听，1分钟后超时关闭
 
-	private Map<String, List<StreamItem>> mStreamItemMaps = new HashMap<>();
 	private Map<String, Integer> mMemberViewIds = new HashMap<>();
 
 	private AudioManager mAudioManager;
 	private Ringtone mRingtone;
 	private HeadsetReceiver mHeadsetReceiver = new HeadsetReceiver();
-	private CallSurfaceView mCurrentSurfaceView;
 	private TextView mTvTitleTips;
 	private RadioLayoutGroup mMembersContainer;
 	private View llAcceptContainer;
@@ -84,11 +86,16 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	private ImageView mIvHide;
 	private View mBottomContainer;
 	private boolean isHideControllerState;
-	private String mSelectedMemberName;
 	private LayoutInflater mInflater;
 	private com.easemob.helpdeskdemo.widget.MyChronometer mChronometer;
 	private CallControllers mCallControllers;
 
+	private FrameLayout fl_local;
+	private ZuoXiSendRequestObj mZuoXiSendRequestObj;
+	private AgoraRtcEngine mAgoraRtcEngine;
+
+	private boolean isSharing = false;
+	private ScreenSharingClient mSSClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +110,29 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 		setContentView(R.layout.activity_call_new);
+		fl_local = findViewById(R.id.fl_local);
+
 		mInflater = LayoutInflater.from(this);
-		String fromUsername = getIntent().getStringExtra("username");
+		mZuoXiSendRequestObj = getIntent().getParcelableExtra("zuoXiSendRequestObj");
+
+		if (mZuoXiSendRequestObj != null){
+			mZuoXis.put(mZuoXiSendRequestObj.getThreeUid(), mZuoXiSendRequestObj);
+		}else {
+			// 在其它页面调用方法，开启此页面，查看效果 startActivity(new Intent(this, CallActivity.class)
+			//                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			// TODO 临时Demo测试，需要指定：appId，token，channel，uid（可以默认给0，内不自动创建）
+			// TODO 在Constant类里指定 appId，token，channel
+			// TODO 采用此种方式不要点击挂断按钮，会有异常，此方式只是为了方便查看效果
+			mZuoXiSendRequestObj = new ZuoXiSendRequestObj();
+			mZuoXiSendRequestObj.setAppId(Constant.APP_ID);
+			mZuoXiSendRequestObj.setToken(Constant.TOKEN);
+			mZuoXiSendRequestObj.setChannel(Constant.CHANNEL);
+			mZuoXiSendRequestObj.setThreeUid(Constant.UID);
+		}
+
 		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		initViews();
 		initListeners();
-		ChatClient.getInstance().callManager().addDelegate(this);
 		Uri ringUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
 		mAudioManager.setMode(AudioManager.MODE_RINGTONE);
 		mAudioManager.setSpeakerphoneOn(true);
@@ -120,13 +144,173 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		mHandler.postDelayed(timeoutHangup, MAKE_CALL_TIMEOUT);
 		registerReceiver(mHeadsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 		mTvTitleTips.setText(getString(R.string.tip_video_in));
+		mStreams.clear();
+
+
+		AgoraMessage.newAgoraMessage().registerAgoraMessageNotify(getClass().getSimpleName(), this);
+
+		mAgoraRtcEngine = AgoraRtcEngine.builder()
+				.build(getApplicationContext(), mZuoXiSendRequestObj.getAppId(), new IAgoraRtcEngineEventHandler() {
+					@Override
+					public void onUserJoined(int uid, int elapsed) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								ZuoXiSendRequestObj obj = mZuoXis.get(uid);
+								mUids.put(uid, uid);
+								createZuoXiSurfaceView(uid);
+								if (obj != null){
+									if (!obj.isAddThreeUser()){
+										addAgoraRadioButton(obj.getNickName(), uid);
+									}else {
+										addAgoraRadioButton(getThreeName(obj), uid);
+									}
+								}else {
+									addAgoraRadioButton("", uid);
+								}
+							}
+						});
+					}
+
+					@Override
+					public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+					}
+
+					@Override
+					public void onLeaveChannel(RtcStats stats) {
+					}
+
+					@Override
+					public void onUserOffline(int uid, int reason) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								// 第三方离开通道
+								removeRadioButton(String.valueOf(uid));
+								mUids.remove(uid);
+								mZuoXis.remove(uid);
+								if (mUids.size() < 1){
+									// 关闭页面
+									mHandler.sendEmptyMessage(MSG_CALL_END);
+								}
+							}
+						});
+
+					}
+				});
+
+		// 屏幕分享
+		mSSClient = ScreenSharingClient.getInstance();
+		mSSClient.setListener(mListener);
+
 	}
 
+	/*private String appId = "74855635d3a64920b0c7ee3684f68a9f";
+	private String token = "00674855635d3a64920b0c7ee3684f68a9fIAAwgepHlJH86alB4UV1O/vdMZKtgs6S5XNt0Yr7cvMIkBo6pkUAAAAAEAAg4mLWC6VCYgEAAQAKpUJi";
+	private String channel = "huanxin";*/
+
+	private final ScreenSharingClient.IStateListener mListener = new ScreenSharingClient.IStateListener() {
+		@Override
+		public void onError(int error) {
+			Log.e(TAG, "Screen share service error happened: " + error);
+		}
+
+		@Override
+		public void onTokenWillExpire() {
+			Log.d(TAG, "Screen share service token will expire");
+			mSSClient.renewToken(null); // Replace the token with your valid token
+		}
+
+		@Override
+		public void onDialogStart() {
+			// 权限点击确认
+
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mAgoraRtcEngine.leaveChannel();
+					new Handler(getMainLooper()).postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							joinChannel(mZuoXiSendRequestObj);
+						}
+					}, 200);
+				}
+			});
+
+		}
+
+		@Override
+		public void onDialogDeniedError(int error) {
+			// 权限拒绝
+		}
+	};
+
+	// 访客端和座席端视频切换
+	final private CompoundLayout.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundLayout.OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(CompoundLayout compoundLayout, boolean isChecked) {
+			CircleImageView imageView = (CircleImageView) compoundLayout.findViewById(R.id.iv_avatar);
+			Integer uid = (Integer) compoundLayout.getTag();
+			if (isChecked){
+				if (imageView != null){
+					imageView.setBorderWidth(dp2px(2));
+				}
+				// 点击自己
+				if(uid == 0){
+					showZiJiAgoraSurfaceView();
+				}else {
+					// 显示座席端
+					showZuoXiAgoraSurfaceView(uid);
+				}
+			}else{
+				if (imageView != null){
+					for(AgoraStreamItem item : mStreams.values()){
+						if (uid != item.getUid()){
+							imageView.setBorderWidth(0);
+						}
+					}
+				}
+			}
+
+		}
+	};
+
+
+	private Map<Integer, Integer> mUids = new HashMap<>();
+
+	private AgoraStreamItem createZiJiSurfaceView(Integer uid){
+		AgoraStreamItem item;
+		if (!mStreams.containsKey(uid)){
+			SurfaceView surfaceView = mAgoraRtcEngine.createRendererView();
+			item = new AgoraStreamItem();
+			item.setSurfaceView(surfaceView);
+			item.setUid(uid);
+			mStreams.put(uid, item);
+		}else {
+			item = mStreams.get(uid);
+		}
+		ViewParent parent = item.getSurfaceView().getParent();
+		if (parent instanceof ViewGroup){
+			((ViewGroup) parent).removeView(item.getSurfaceView());
+		}
+		return item;
+	}
+
+	private void joinChannel(ZuoXiSendRequestObj obj) {
+		if (fl_local.getChildCount() > 0) {
+			fl_local.removeAllViews();
+		}
+		SurfaceView surfaceView = createZiJiSurfaceView(0).getSurfaceView();
+		fl_local.addView(surfaceView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+		mAgoraRtcEngine.setupLocalVideo(surfaceView, AgoraRtcEngine.RENDER_MODE_HIDDEN, obj.getUid());
+		mAgoraRtcEngine.joinChannel(obj.getToken(), obj.getChannel(), obj.getUid());
+	}
 
 	private void initViews(){
-		mCurrentSurfaceView = (CallSurfaceView) findViewById(R.id.call_surfaceview);
+
 		mBottomContainer = findViewById(R.id.bottom_container);
-		mCurrentSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
 		mTvTitleTips = (TextView) findViewById(R.id.tv_title_tip);
 		mMembersContainer = (RadioLayoutGroup) findViewById(R.id.rlg_container);
 		mCallControllers = (CallControllers) findViewById(R.id.layout_controllers);
@@ -151,64 +335,75 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	}
 
 
+
 	private void initListeners(){
+		// 接通
 		mIvAccept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				mIsClick = true;
+				sendIsOnLineState(true);
 				mHandler.sendEmptyMessage(MSG_CALL_ANSWER);
 			}
 		});
+
+		// 挂断
 		mIvHangup.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				mIsClick = true;
 				mHandler.sendEmptyMessage(MSG_CALL_END);
 			}
 		});
+
+		// 视频窗口大小切换
 		mVideoModeFit.setOnClickListener(new View.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				mVideoModeFit.setVisibility(View.INVISIBLE);
 				mVideoModeFill.setVisibility(View.VISIBLE);
-				mCurrentSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFit);
+				fl_local.setPadding(0, 600, 0, 600);
 			}
 		});
 
+		// 视频窗口大小切换
 		mVideoModeFill.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mVideoModeFill.setVisibility(View.INVISIBLE);
 				mVideoModeFit.setVisibility(View.VISIBLE);
-				mCurrentSurfaceView.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+				fl_local.setPadding(0, 0, 0, 0);
 			}
 		});
 
+		// 切换摄像头
 		mCallControllers.setSwitchCameraOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ChatClient.getInstance().callManager().switchCamera();
+				mAgoraRtcEngine.switchCamera();
 			}
 		});
+
 		mCallControllers.setMuteOnCheckedChangeListener(new CallControllers.OnCheckedChangeListener() {
 			@Override
 			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
-				if (isChecked){
-					ChatClient.getInstance().callManager().pauseVoice();
+				Log.e("onCheckedChanged","onCheckedChanged = "+isChecked);
+				mAgoraRtcEngine.muteLocalAudioStream(isChecked);
+				/*if (isChecked){
+					mAgoraRtcEngine.disableAudio();
 				}else{
-					ChatClient.getInstance().callManager().resumeVoice();
-				}
+					mAgoraRtcEngine.enableAudio();
+				}*/
 				return true;
 			}
 		});
 
+		// 开启/关闭扬声器播放
 		mCallControllers.setSpeakerOnCheckedChangedListener(new CallControllers.OnCheckedChangeListener() {
 			@Override
 			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
-				if (isChecked){
-					closeSpeakerOn();
-				}else{
-					openSpeakerOn();
-				}
+				mAgoraRtcEngine.setEnableSpeakerphone(!isChecked);
 				return true;
 			}
 		});
@@ -216,27 +411,42 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		mCallControllers.setLocalVideoOnCheckedChangeListener(new CallControllers.OnCheckedChangeListener() {
 			@Override
 			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
-				if (isChecked){
-					ChatClient.getInstance().callManager().pauseVideo();
-				}else{
-					ChatClient.getInstance().callManager().resumeVideo();
+				mAgoraRtcEngine.muteLocalVideoStream(isChecked);
+				return true;
+
+			}
+		});
+
+		// 桌面分享
+		mCallControllers.setSharedWindowOnCheckedChangeListener(new CallControllers.OnCheckedChangeListener() {
+			@Override
+			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
+
+				// 临时测试分享
+				if (!isSharing) {
+					mAgoraRtcEngine.shareWindows(mSSClient, getApplication(), mZuoXiSendRequestObj.getAppId(), mZuoXiSendRequestObj.getToken(),
+							mZuoXiSendRequestObj.getChannel(), mZuoXiSendRequestObj.getUid(), new VideoEncoderConfigurations(
+									getScreenDimensions(),
+									VideoEncoderConfigurations.FRAME_RATE.FRAME_RATE_FPS_30,
+									VideoEncoderConfigurations.STANDARD_BITRATE,
+									VideoEncoderConfigurations.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE));
+
+					// 更新状态
+					// screenShare.setText(getResources().getString(R.string.stop));
+					isSharing = true;
+
+				} else {
+					mSSClient.stop(getApplication());
+					// 更新状态
+					// screenShare.setText(getResources().getString(R.string.screenshare));
+					isSharing = false;
+					joinChannel(mZuoXiSendRequestObj);
 				}
 				return true;
 			}
 		});
 
-		mCallControllers.setSharedWindowOnCheckedChangeListener(new CallControllers.OnCheckedChangeListener() {
-			@Override
-			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
-				if (isChecked){
-					ChatClient.getInstance().callManager().publishWindow(CallActivity.this, null);
-				}else{
-					ChatClient.getInstance().callManager().unPublishWindow(null);
-					stopForegroundService();
-				}
-				return true;
-			}
-		});
+
 		mIvHide.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -260,149 +470,97 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		});
 	}
 
-	private void info(String msg){
-		Log.d(TAG, " " + msg);
+
+	private VideoEncoderConfigurations.VideoDimensions getScreenDimensions(){
+		WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+		DisplayMetrics outMetrics = new DisplayMetrics();
+		manager.getDefaultDisplay().getMetrics(outMetrics);
+		return new VideoEncoderConfigurations.VideoDimensions(outMetrics.widthPixels / 2, outMetrics.heightPixels / 2);
 	}
 
 
-	private String getSelfNick() {
-		String nickName = Preferences.getInstance().getNickName();
-		if (TextUtils.isEmpty(nickName)) {
-			nickName = ChatClient.getInstance().currentUserName();
-		}
-		return nickName;
-	}
-
-	@Override
-	public void onAddStream(final MediaStream stream) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				streamIn(stream);
-			}
-		});
-
-	}
-
-	@Override
-	public void onRemoveStream(final MediaStream stream) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				streamOut(stream);
-			}
-		});
-	}
-
-	@Override
-	public void onUpdateStream(MediaStream stream) {
-
-	}
-
-	private void streamIn(MediaStream stream){
-		List<StreamItem> streamItemList;
-		if (!mStreamItemMaps.containsKey(stream.memberName)){
-			streamItemList = new ArrayList<>();
-		}else{
-			streamItemList = mStreamItemMaps.get(stream.memberName);
-		}
-		final StreamItem streamItem = new StreamItem();
-		streamItem.stream = stream;
-		streamItem.nickName = getNickName(stream.memberName);
-		streamItemList.add(streamItem);
-		if (!mStreamItemMaps.containsKey(stream.memberName)){
-			addRadioButton(streamItem.stream.memberName, streamItem.nickName);
-		}
-		mStreamItemMaps.put(stream.memberName, streamItemList);
-//		if (streamItemList.size() > 1) {
-//			ChatClient.getInstance().callManager().updateSubscribe(streamItemList.get(0).stream.streamId, null, null);
-//		} else {
-//
-//		}
-		ChatClient.getInstance().callManager().subscribe(streamItem.stream, null, null);
-		if (mSelectedMemberName != null && mSelectedMemberName.equals(stream.memberName)) {
-			if (!streamItemList.isEmpty()) {
-				setStreamToSurfaceView(streamItemList.get(streamItemList.size() - 1));
-			} else {
-				setStreamToSurfaceView(null);
-			}
-		}
-	}
-
-	private void streamOut(MediaStream stream){
-		if (!mStreamItemMaps.containsKey(stream.memberName)){
-			return;
-		}
-		List<StreamItem> streamItemList = mStreamItemMaps.get(stream.memberName);
-		if (streamItemList == null || streamItemList.isEmpty()){
-			mStreamItemMaps.remove(stream.memberName);
-			return;
-		}
-		int index = -1;
-		for (int i = streamItemList.size() - 1; i >=0; i--){
-			StreamItem item = streamItemList.get(i);
-			if (item.stream.streamId.equals(stream.streamId)){
-				index = i;
-				break;
-			}
-		}
-		if (index != -1){
-			streamItemList.remove(index);
-		}
-
-		if (streamItemList.isEmpty()){
-			removeRadioButton(stream.memberName);
-			mStreamItemMaps.remove(stream.memberName);
-			setStreamToSurfaceView(null);
-		}else{
-			setStreamToSurfaceView(streamItemList.get(streamItemList.size() - 1));
-		}
-	}
 
 	private int selfRadioButtonId = -1;
 
-	private void addSelfRadioButton(){
-		final RadioLayout selfRadioBtn = (RadioLayout) mInflater.inflate(R.layout.layout_call_head_item, null);
-		selfRadioButtonId = View.generateViewId();
-		selfRadioBtn.setId(selfRadioButtonId);
-		selfRadioBtn.setChecked(true);
-		final CircleImageView imageView = (CircleImageView) selfRadioBtn.findViewById(R.id.iv_avatar);
-		imageView.setImageResource(R.drawable.hd_default_avatar);
-		imageView.setBorderColor(Color.WHITE);
-		imageView.setBorderWidth(dp2px(2));
+	private void addAgoraSelfRadioButton(String niceName, int uid){
+		RadioLayout selfRadioBtn = getRadioLayoutView(uid);
+		if (selfRadioBtn == null){
+			selfRadioBtn = (RadioLayout) mInflater.inflate(R.layout.layout_call_head_item, null);
+			selfRadioBtn.setId(getViewIdByMemberName(String.valueOf(uid)));
+			selfRadioBtn.setTag(uid);
+			selfRadioBtn.setChecked(true);
+			CircleImageView imageView = (CircleImageView) selfRadioBtn.findViewById(R.id.iv_avatar);
+			imageView.setImageResource(R.drawable.hd_default_avatar);
+			imageView.setBorderColor(Color.WHITE);
+			imageView.setBorderWidth(dp2px(2));
 
-		TextView ivNick = (TextView) selfRadioBtn.findViewById(R.id.tv_nick);
-		ivNick.setText(getSelfNick());
-		selfRadioBtn.setOnCheckedChangeListener(mOnCheckedChangeListener);
-		ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		lp.leftMargin = lp.topMargin = lp.rightMargin = lp.bottomMargin = dp2px(15);
-		mMembersContainer.addView(selfRadioBtn, lp);
+			TextView ivNick = (TextView) selfRadioBtn.findViewById(R.id.tv_nick);
+			ivNick.setText(TextUtils.isEmpty(niceName) ? "" : niceName);
+			selfRadioBtn.setOnCheckedChangeListener(mOnCheckedChangeListener);
+			ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			lp.leftMargin = lp.topMargin = lp.rightMargin = lp.bottomMargin = dp2px(15);
+			mMembersContainer.addView(selfRadioBtn, lp);
+		}else {
+			CircleImageView imageView = (CircleImageView) selfRadioBtn.findViewById(R.id.iv_avatar);
+			imageView.setImageResource(R.drawable.hd_default_avatar);
+			imageView.setBorderColor(Color.WHITE);
+			imageView.setBorderWidth(dp2px(2));
+
+			TextView ivNick = (TextView) selfRadioBtn.findViewById(R.id.tv_nick);
+			ivNick.setText(TextUtils.isEmpty(niceName) ? "" : niceName);
+		}
+		notifyTitleTips();
+	}
+
+	private RadioLayout getRadioLayoutView(int uid){
+		if (mMembersContainer != null){
+			for (int i = 0; i < mMembersContainer.getChildCount(); i ++){
+				RadioLayout childAt = (RadioLayout) mMembersContainer.getChildAt(i);
+				Object tag = childAt.getTag();
+				if (tag instanceof Integer){
+					Integer u = (Integer)tag;
+					if (u == uid){
+						return childAt;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private void addAgoraRadioButton(String niceName, int uid){
+
+		RadioLayout radioLayoutView = getRadioLayoutView(uid);
+
+		if (radioLayoutView == null){
+			radioLayoutView = (RadioLayout) mInflater.inflate(R.layout.layout_call_head_item, null);
+			radioLayoutView.setTag(uid);
+			radioLayoutView.setId(getViewIdByMemberName(String.valueOf(uid)));
+			final CircleImageView imageView = (CircleImageView) radioLayoutView.findViewById(R.id.iv_avatar);
+			imageView.setImageResource(R.drawable.hd_default_image);
+			imageView.setBorderColor(Color.WHITE);
+			// Glide.with(this).load(R.drawable.hd_default_image).transform(new GlideCircleTransform(this)).into(imageView);
+			TextView ivNick = (TextView) radioLayoutView.findViewById(R.id.tv_nick);
+			ivNick.setText(TextUtils.isEmpty(niceName) ? "" : niceName);
+			radioLayoutView.setOnCheckedChangeListener(mOnCheckedChangeListener);
+			ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+			lp.leftMargin = lp.topMargin = lp.rightMargin = lp.bottomMargin = dp2px(15);
+			mMembersContainer.addView(radioLayoutView, lp);
+
+		}else {
+			CircleImageView imageView = (CircleImageView) radioLayoutView.findViewById(R.id.iv_avatar);
+			imageView.setImageResource(R.drawable.hd_default_image);
+			imageView.setBorderColor(Color.WHITE);
+			// Glide.with(this).load(R.drawable.hd_default_image).transform(new GlideCircleTransform(this)).into(imageView);
+			TextView ivNick = (TextView) radioLayoutView.findViewById(R.id.tv_nick);
+			ivNick.setText(TextUtils.isEmpty(niceName) ? "" : niceName);
+		}
 		notifyTitleTips();
 	}
 
 	private int dp2px(float dpValue){
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
 	}
-
-
-	private void addRadioButton(String memberName, String nickName){
-		final RadioLayout radioBtn = (RadioLayout) mInflater.inflate(R.layout.layout_call_head_item, null);
-		radioBtn.setTag(memberName);
-		radioBtn.setId(getViewIdByMemberName(memberName));
-		final CircleImageView imageView = (CircleImageView) radioBtn.findViewById(R.id.iv_avatar);
-		imageView.setImageResource(R.drawable.hd_default_image);
-		imageView.setBorderColor(Color.WHITE);
-
-//		Glide.with(this).load(R.drawable.hd_default_image).transform(new GlideCircleTransform(this)).into(imageView);
-		TextView ivNick = (TextView) radioBtn.findViewById(R.id.tv_nick);
-		ivNick.setText(nickName);
-		radioBtn.setOnCheckedChangeListener(mOnCheckedChangeListener);
-		ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		lp.leftMargin = lp.topMargin = lp.rightMargin = lp.bottomMargin = dp2px(15);
-		mMembersContainer.addView(radioBtn, lp);
-		notifyTitleTips();
-	}
-
 
 	private int getViewIdByMemberName(String memberName){
 		if (mMemberViewIds.containsKey(memberName)){
@@ -414,7 +572,7 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	}
 
 	private void removeRadioButton(String memberName){
-		int viewId = mMemberViewIds.get(memberName).intValue();
+		int viewId = mMemberViewIds.get(memberName);
 		if (viewId <= 0){
 			return;
 		}
@@ -427,98 +585,48 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 
 
 	private void notifyTitleTips(){
-		mTvTitleTips.setText(String.format(getString(R.string.tip_video_calling), (mMemberViewIds.size() + 1)));
+		mTvTitleTips.setText(String.format(getString(R.string.tip_video_calling), mMemberViewIds.size()));
+	}
+
+	private void createZuoXiSurfaceView(Integer uid){
+		if (!mStreams.containsKey(uid)){
+			SurfaceView surfaceView = mAgoraRtcEngine.createRendererView();
+			surfaceView.setZOrderMediaOverlay(true);
+			AgoraStreamItem item = new AgoraStreamItem();
+			item.setSurfaceView(surfaceView);
+			item.setUid(uid);
+			mStreams.put(uid, item);
+		}
+	}
+
+	private SurfaceView getZuoXiSurfaceView(Integer uid){
+		AgoraStreamItem item = mStreams.get(uid);
+		ViewParent parent = item.getSurfaceView().getParent();
+		if (parent instanceof ViewGroup){
+			((ViewGroup) parent).removeView(item.getSurfaceView());
+		}
+		return item.getSurfaceView();
 	}
 
 
-
-	private CompoundLayout.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundLayout.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(CompoundLayout compoundLayout, boolean isChecked) {
-			CircleImageView imageView = (CircleImageView) compoundLayout.findViewById(R.id.iv_avatar);
-			if (isChecked){
-				if (imageView != null){
-					imageView.setBorderWidth(dp2px(2));
-				}
-				mSelectedMemberName = (String) compoundLayout.getTag();
-				if (TextUtils.isEmpty(mSelectedMemberName)){
-					setStreamToSurfaceView(null);
-					return;
-				}
-				List<StreamItem> list = mStreamItemMaps.get(mSelectedMemberName);
-				if (list != null && !list.isEmpty()){
-					setStreamToSurfaceView(list.get(list.size() -1));
-				}
-			}else{
-				if (imageView != null){
-					imageView.setBorderWidth(0);
-				}
-			}
-
+	private final Map<Integer, AgoraStreamItem> mStreams = new ConcurrentHashMap<>();
+	private void showZuoXiAgoraSurfaceView(Integer uid){
+		if (fl_local.getChildCount() > 0) {
+			fl_local.removeAllViews();
 		}
-	};
-
-	private String lastStreamId = null;
-
-
-	private void setStreamToSurfaceView(StreamItem item){
-		if (item == null){
-			if (lastStreamId != null){
-				ChatClient.getInstance().callManager().updateSubscribe(lastStreamId, null, null);
-				lastStreamId = null;
-				ChatClient.getInstance().callManager().setLocalView(mCurrentSurfaceView);
-			}
-			return;
-		}
-		if (lastStreamId == null){
-			ChatClient.getInstance().callManager().setLocalView(null);
-			lastStreamId = item.stream.streamId;
-			ChatClient.getInstance().callManager().updateSubscribe(item.stream.streamId, mCurrentSurfaceView, null);
-			return;
-		}
-
-		if (!lastStreamId.equals(item.stream.streamId)){
-			ChatClient.getInstance().callManager().updateSubscribe(lastStreamId, null, null);
-			lastStreamId = item.stream.streamId;
-			ChatClient.getInstance().callManager().updateSubscribe(item.stream.streamId, mCurrentSurfaceView, null);
-		}
-
+		SurfaceView surfaceView = getZuoXiSurfaceView(uid);
+		fl_local.addView(surfaceView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mAgoraRtcEngine.setupRemoteVideo(surfaceView, AgoraRtcEngine.RENDER_MODE_HIDDEN, uid);
 	}
 
-
-	@Override
-	public void onCallEnd(int reason, String desc) {
-		EMLog.d(TAG, "onCallend-reason:" + reason + "， desc:" + desc);
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				finish();
-			}
-		});
-
-	}
-
-
-	static class StreamItem {
-		MediaStream stream;
-		String nickName;
-	}
-
-
-	@Override
-	public void onNotice(CallManager.HMediaNoticeCode code, String arg1, String arg2, Object arg3) {
-		switch (code){
-			case HMediaNoticeOpenCameraFail:
-				EMLog.e(TAG, "onNotice:HMediaNoticeOpenCameraFail");
-				break;
-			case HMediaNoticeOpenMicFail:
-				EMLog.e(TAG, "onNotice:HMediaNoticeOpenMicFail");
-				break;
-			case HMediaNoticeTakeCameraPictureFailed:
-				ToastHelper.show(getBaseContext(), "截图失败！" + arg1);
-				break;
+	private void showZiJiAgoraSurfaceView(){
+		if (fl_local.getChildCount() > 0) {
+			fl_local.removeAllViews();
 		}
 
+		SurfaceView surfaceView = createZiJiSurfaceView(0).getSurfaceView();
+		fl_local.addView(surfaceView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mAgoraRtcEngine.setupLocalVideo(surfaceView, AgoraRtcEngine.RENDER_MODE_HIDDEN, mZuoXiSendRequestObj.getUid());
 	}
 
 	class HeadsetReceiver extends BroadcastReceiver {
@@ -549,10 +657,8 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	Handler mHandler = new Handler(callHandlerThread.getLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
-			EMLog.d(TAG, "handleMessage -- what:" + msg.what);
 			switch (msg.what) {
 				case MSG_CALL_ANSWER:
-					EMLog.d(TAG, "MSG_CALL_ANSWER");
 					mHandler.removeCallbacks(timeoutHangup);
 					runOnUiThread(new Runnable() {
 						@Override
@@ -564,32 +670,13 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 							mChronometer.setVisibility(View.VISIBLE);
 							mChronometer.setBase(SystemClock.elapsedRealtime());
 							mChronometer.start();
-							ChatClient.getInstance().callManager().acceptCall(getSelfNick(), new com.hyphenate.helpdesk.callback.Callback() {
-								@Override
-								public void onSuccess() {
-									runOnUiThread(new Runnable() {
-										@Override
-										public void run() {
-											notifyAcceptedStateUI();
-											addSelfRadioButton();
-											ChatClient.getInstance().callManager().setLocalView(mCurrentSurfaceView);
-										}
-									});
-								}
 
+							runOnUiThread(new Runnable() {
 								@Override
-								public void onError(int code, final String error) {
-									runOnUiThread(new Runnable() {
-										@Override
-										public void run() {
-											ToastHelper.show(getBaseContext(), "Publish Failed:" + error);
-										}
-									});
-								}
-
-								@Override
-								public void onProgress(int progress, String status) {
-
+								public void run() {
+									notifyAcceptedStateUI();
+									addAgoraSelfRadioButton(getName(mZuoXiSendRequestObj), 0);
+									joinChannel(mZuoXiSendRequestObj);
 								}
 							});
 						}
@@ -603,9 +690,11 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 								mRingtone.stop();
 							}
 							mChronometer.stop();
-							ChatClient.getInstance().callManager().endCall();
-							stopForegroundService();
+							ChatClient.getInstance().callManager().endCall(mZuoXiSendRequestObj.getCallId(), isOnLine);
+							//stopForegroundService();
+							// 挂断
 							finish();
+
 						}
 					});
 					break;
@@ -613,9 +702,9 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							info("click hangup");
-							ChatClient.getInstance().callManager().endCall();
-							stopForegroundService();
+							// 拒接
+							ChatClient.getInstance().callManager().endCall(mZuoXiSendRequestObj.getCallId(), false);
+							//stopForegroundService();
 							mHandler.removeCallbacks(timeoutHangup);
 							mHandler.removeMessages(MSG_CALL_ANSWER);
 							mHandler.removeMessages(MSG_CALL_END);
@@ -629,6 +718,14 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		}
 	};
 
+	private String getName(ZuoXiSendRequestObj obj){
+		return TextUtils.isEmpty(obj.getTrueName()) || "null".equals(obj.getTrueName()) ? obj.getNiceName() : obj.getTrueName();
+	}
+
+	private String getThreeName(ZuoXiSendRequestObj obj){
+		return TextUtils.isEmpty(obj.getThreeTrueName()) || "null".equals(obj.getThreeTrueName()) ? obj.getThreeNiceName() : obj.getThreeTrueName();
+	}
+
 
 	void releaseHandler(){
 		mHandler.sendEmptyMessage(MSG_CALL_RELEASE_HANDLER);
@@ -637,50 +734,24 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 	Runnable timeoutHangup = new Runnable() {
 		@Override
 		public void run() {
-			mHandler.sendEmptyMessage(MSG_CALL_END);
+			mHandler.sendEmptyMessage(MSG_CALL_RELEASE_HANDLER);
 		}
 	};
 
+	private boolean mIsClick;
 	@Override
 	public void onBackPressed() {
-		mHandler.sendEmptyMessage(MSG_CALL_END);
+		if (!mIsClick){
+			if (isOnLine){
+				mHandler.sendEmptyMessage(MSG_CALL_END);
+			}else {
+				mHandler.sendEmptyMessage(MSG_CALL_RELEASE_HANDLER);
+			}
+		}
 		finish();
 		super.onBackPressed();
 	}
 
-	/**
-	 * 停止服务
-	 */
-	private void stopForegroundService() {
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			Intent service = new Intent(this, SRForegroundService.class);
-			stopService(service);
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		ChatClient.getInstance().callManager().removeDelegate(this);
-		if (mRingtone != null && mRingtone.isPlaying()){
-			mRingtone.stop();
-		}
-		unregisterReceiver(mHeadsetReceiver);
-		mAudioManager.setMode(AudioManager.MODE_NORMAL);
-		mAudioManager.setMicrophoneMute(false);
-		releaseHandler();
-	}
-
-	public String getNickName(String memberName){
-		EMediaEntities.EMediaMember mediaMember = ChatClient.getInstance().callManager().getEMediaMember(memberName);
-		if (mediaMember != null && !TextUtils.isEmpty(mediaMember.extension)){
-			try {
-				JSONObject jsonObject = new JSONObject(mediaMember.extension);
-				return jsonObject.getString("nickname");
-			}catch (Exception ignored){}
-		}
-		return memberName;
-	}
 
 	private void openSpeakerOn(){
 		try{
@@ -704,20 +775,104 @@ public class CallActivity extends DemoBaseActivity implements CallManager.CallMa
 		}catch (Exception e){e.printStackTrace();}
 	}
 
+
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ScreenCaptureManager.RECORD_REQUEST_CODE) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-					Intent service = new Intent(this, SRForegroundService.class);
-					service.putExtra("code", resultCode);
-					service.putExtra("data", data);
-					startForegroundService(service);
-				}else {
-					ChatClient.getInstance().callManager().onActivityResult(requestCode, resultCode, data);
+	public void zuoXiToBreakOff() {
+		// 先检测房间里是否还有人，如果没有人直接退出
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (mUids.size() >= 1){
+					return;
 				}
+				mHandler.sendEmptyMessage(MSG_CALL_END);
+			}
+		});
+	}
+
+
+	private final Map<Integer, ZuoXiSendRequestObj> mZuoXis = new ConcurrentHashMap<>();
+	@Override
+	public void zuoXiSendThreeUserRequest(ZuoXiSendRequestObj obj) {
+		// 访客端添加第三方人员进入视频
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				// 检测三方视频是否已经加入
+				int threeUid = obj.getThreeUid();
+				mZuoXis.put(threeUid, obj);
+				if (mUids.containsKey(threeUid)){
+					// 执行加入
+					createZuoXiSurfaceView(threeUid);
+					addAgoraRadioButton(TextUtils.isEmpty(obj.getThreeTrueName()) || "null".equals(obj.getTrueName()) ? obj.getThreeNiceName() : obj.getThreeTrueName(), threeUid);
+				}else {
+					mUids.put(threeUid, threeUid);
+				}
+
+			}
+		});
+
+	}
+
+	/*@Override
+	public void zuoXiSendRequest(ZuoXiSendRequestObj obj) {
+		for (ZuoXiSendRequestObj obs : mZuoXis.values()){
+			if (obs.getUid() == obj.getUid()){
+				return;
 			}
 		}
+		mZuoXis.put(obj.getUid(), obj);
+	}*/
+	
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mUids.clear();
+
+		mIsClick = false;
+		sendIsOnLineState(false);
+		if (mRingtone != null && mRingtone.isPlaying()){
+			mRingtone.stop();
+		}
+		if (mHandler != null){
+			mHandler.removeCallbacks(timeoutHangup);
+			mHandler.removeCallbacksAndMessages(null);
+		}
+
+		unregisterReceiver(mHeadsetReceiver);
+		mAudioManager.setMode(AudioManager.MODE_NORMAL);
+		mAudioManager.setMicrophoneMute(false);
+		releaseHandler();
+
+
+		AgoraMessage.newAgoraMessage().unRegisterAgoraMessageNotify(getClass().getSimpleName());
+
+		for (AgoraStreamItem item : mStreams.values()){
+			item.onDestroy();
+		}
+
+		// 释放屏幕分享
+		if (isSharing && mSSClient != null) {
+			mSSClient.stop(getApplication());
+		}
+
+		if (mAgoraRtcEngine != null){
+			mAgoraRtcEngine.onDestroy();
+		}
+
+
+		mStreams.clear();
+		mZuoXis.clear();
+	}
+
+	boolean isOnLine;
+	private void sendIsOnLineState(boolean isOnLine){
+		this.isOnLine = isOnLine;
+		Intent intent = new Intent(ChatClient.getInstance().callManager().getIncomingCallBroadcastAction());
+		intent.setAction("calling.state");
+		intent.putExtra("state", isOnLine);
+		sendBroadcast(intent);
 	}
 }

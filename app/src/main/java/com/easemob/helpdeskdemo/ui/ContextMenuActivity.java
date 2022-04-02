@@ -20,7 +20,9 @@ public class ContextMenuActivity extends DemoBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Message message = getIntent().getParcelableExtra("message");
-
+        if (message == null){
+            return;
+        }
         int type = message.getType().ordinal();
         if (type == Message.Type.TXT.ordinal()){
             setContentView(R.layout.em_context_menu_for_text);
