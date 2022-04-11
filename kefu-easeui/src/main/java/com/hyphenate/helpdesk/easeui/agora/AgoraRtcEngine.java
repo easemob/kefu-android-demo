@@ -550,18 +550,10 @@ public class AgoraRtcEngine {
     }
 
 
-    public void shareWindows(ScreenSharingClient aa, Context context, String appId, String token, String channelName, int uid, VideoEncoderConfigurations configurations){
-        VideoEncoderConfigurations.ORIENTATION_MODE orientationMode = configurations.orientationMode;
-        VideoEncoderConfiguration.ORIENTATION_MODE mode;
-        if (orientationMode.getValue() == 0){
-            mode = ORIENTATION_MODE_ADAPTIVE;
-        }else if (orientationMode.getValue() == 1){
-            mode = ORIENTATION_MODE_FIXED_LANDSCAPE;
-        }else {
-            mode = ORIENTATION_MODE_FIXED_PORTRAIT;
-        }
-        aa.start(context, appId, token,
-                channelName, uid, new VideoEncoderConfiguration(new VideoEncoderConfiguration.VideoDimensions(configurations.dimensions.width,configurations.dimensions.height),VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30, configurations.bitrate, mode));
+    // 分享桌面
+    public void shareWindows(ScreenSharingClient client, Context context, String appId, String token, String channelName, int uid, VideoEncoderConfiguration configurations){
+        client.start(context, appId, token,
+                channelName, uid, configurations);
     }
 
 

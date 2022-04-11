@@ -165,6 +165,7 @@
             />
         <!-- 视频通话 -->
         <activity android:name=".ui.CallActivity"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"

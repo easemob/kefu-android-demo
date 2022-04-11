@@ -9,11 +9,11 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -43,7 +43,6 @@ import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.easeui.agora.AgoraRtcEngine;
 import com.hyphenate.helpdesk.easeui.agora.ScreenSharingClient;
-import com.hyphenate.helpdesk.easeui.agora.VideoEncoderConfigurations;
 import com.jaouan.compoundlayout.CompoundLayout;
 import com.jaouan.compoundlayout.RadioLayout;
 import com.jaouan.compoundlayout.RadioLayoutGroup;
@@ -52,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.agora.rtc.video.VideoEncoderConfiguration;
 
 
 /**
@@ -96,9 +96,11 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 
 	private boolean isSharing = false;
 	private ScreenSharingClient mSSClient;
+	// private PowerManager.WakeLock mWakeLock;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
 			finish();
@@ -120,8 +122,8 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 		}else {
 			// 在其它页面调用方法，开启此页面，查看效果 startActivity(new Intent(this, CallActivity.class)
 			//                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-			// TODO 临时Demo测试，需要指定：appId，token，channel，uid（可以默认给0，内不自动创建）
-			// TODO 在Constant类里指定 appId，token，channel
+			// TODO 临时Demo测试，需要指定：appId，token，channel，uid（可以默认给0，内部自动创建）
+			// TODO 在Constant类里指定 appId，token，channel具体值
 			// TODO 采用此种方式不要点击挂断按钮，会有异常，此方式只是为了方便查看效果
 			mZuoXiSendRequestObj = new ZuoXiSendRequestObj();
 			mZuoXiSendRequestObj.setAppId(Constant.APP_ID);
@@ -199,10 +201,16 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 					}
 				});
 
-		// 屏幕分享
+		// 初始化屏幕共享进程
 		mSSClient = ScreenSharingClient.getInstance();
 		mSSClient.setListener(mListener);
 
+		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+		/*mWakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "tag");
+		//是否需计算锁的数量
+		mWakeLock.setReferenceCounted(false);
+		mWakeLock.acquire();*/
 	}
 
 	/*private String appId = "74855635d3a64920b0c7ee3684f68a9f";
@@ -218,13 +226,13 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 		@Override
 		public void onTokenWillExpire() {
 			Log.d(TAG, "Screen share service token will expire");
-			mSSClient.renewToken(null); // Replace the token with your valid token
+			mSSClient.renewToken(mZuoXiSendRequestObj.getToken()); // Replace the token with your valid token
 		}
 
+		// 分享桌面，弹出对话框点击确认回调
 		@Override
 		public void onDialogStart() {
 			// 权限点击确认
-
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -237,6 +245,7 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 					}, 200);
 				}
 			});
+
 
 		}
 
@@ -422,15 +431,16 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 			@Override
 			public boolean onCheckedChanged(View buttonView, boolean isChecked) {
 
-				// 临时测试分享
-				if (!isSharing) {
-					mAgoraRtcEngine.shareWindows(mSSClient, getApplication(), mZuoXiSendRequestObj.getAppId(), mZuoXiSendRequestObj.getToken(),
-							mZuoXiSendRequestObj.getChannel(), mZuoXiSendRequestObj.getUid(), new VideoEncoderConfigurations(
-									getScreenDimensions(),
-									VideoEncoderConfigurations.FRAME_RATE.FRAME_RATE_FPS_30,
-									VideoEncoderConfigurations.STANDARD_BITRATE,
-									VideoEncoderConfigurations.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE));
 
+				// 执行屏幕共享进程，将 App ID，channel ID 等信息发送给屏幕共享进程
+				if (!isSharing) {
+
+					mSSClient.start(getApplication(), mZuoXiSendRequestObj.getAppId(), mZuoXiSendRequestObj.getToken(),
+							mZuoXiSendRequestObj.getChannel(), mZuoXiSendRequestObj.getUid(), new VideoEncoderConfiguration(
+									getScreenDimensions(),
+									VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
+									VideoEncoderConfiguration.STANDARD_BITRATE,
+									VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE));
 					// 更新状态
 					// screenShare.setText(getResources().getString(R.string.stop));
 					isSharing = true;
@@ -471,11 +481,11 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 	}
 
 
-	private VideoEncoderConfigurations.VideoDimensions getScreenDimensions(){
+	private VideoEncoderConfiguration.VideoDimensions getScreenDimensions(){
 		WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		manager.getDefaultDisplay().getMetrics(outMetrics);
-		return new VideoEncoderConfigurations.VideoDimensions(outMetrics.widthPixels / 2, outMetrics.heightPixels / 2);
+		return new VideoEncoderConfiguration.VideoDimensions(outMetrics.widthPixels / 2, outMetrics.heightPixels / 2);
 	}
 
 
@@ -779,15 +789,10 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 	@Override
 	public void zuoXiToBreakOff() {
 		// 先检测房间里是否还有人，如果没有人直接退出
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mUids.size() >= 1){
-					return;
-				}
-				mHandler.sendEmptyMessage(MSG_CALL_END);
-			}
-		});
+		if (mUids.size() >= 1){
+			return;
+		}
+		mHandler.sendEmptyMessage(MSG_CALL_END);
 	}
 
 
@@ -829,6 +834,10 @@ public class CallActivity extends DemoBaseActivity implements IAgoraMessageNotif
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		/*if (mWakeLock != null){
+			mWakeLock.release();
+		}*/
+
 		mUids.clear();
 
 		mIsClick = false;

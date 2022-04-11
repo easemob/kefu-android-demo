@@ -81,11 +81,13 @@ public class ScreenSharingService extends Service {
         mScreenCapture.mImgTexSrcConnector.connect(new SinkConnector<ImgTexFrame>() {
             @Override
             public void onFormatChanged(Object obj) {
+                Log.e("aaaaaaaaaaaaaa","onFormatChanged");
                 Log.d(LOG_TAG, "onFormatChanged " + obj.toString());
             }
 
             @Override
             public void onFrameAvailable(ImgTexFrame frame) {
+                Log.e("aaaaaaaaaaaaaa","onFrameAvailable = "+mRtcEngine);
                 Log.d(LOG_TAG, "onFrameAvailable " + frame.toString() + " " + frame.pts);
                 if (mRtcEngine == null) {
                     return;
@@ -95,11 +97,19 @@ public class ScreenSharingService extends Service {
                         frame.mFormat.mHeight, 0, frame.pts, frame.mTexMatrix);
                 //Log.i(LOG_TAG, String.format("On consumeTextureFrame, width: %d, height: %d", frame.mFormat.mWidth, frame.mFormat.mHeight));
             }
+
+            @Override
+            protected synchronized void onDisconnect() {
+                super.onDisconnect();
+                Log.e("aaaaaaaaaaaaaa","onDisconnect");
+            }
+
         });
 
         mScreenCapture.setOnScreenCaptureListener(new ScreenCapture.OnScreenCaptureListener() {
             @Override
             public void onStarted() {
+                Log.e("aaaaaaaaaaaaaa","onStarted");
                 Log.d(LOG_TAG, "Screen Record Started");
                 final int N = mCallbacks.beginBroadcast();
                 for (int i = 0; i < N; i++) {
@@ -115,6 +125,7 @@ public class ScreenSharingService extends Service {
 
             @Override
             public void onError(int err) {
+                Log.e("aaaaaaaaaaaaaa","onError");
                 Log.d(LOG_TAG, "onError " + err);
                 final int N = mCallbacks.beginBroadcast();
                 for (int i = 0; i < N; i++) {
@@ -133,6 +144,7 @@ public class ScreenSharingService extends Service {
                         break;
                 }
             }
+
         });
 
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -182,7 +194,7 @@ public class ScreenSharingService extends Service {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Invalid offscreen resolution");
         }
-
+        Log.e("aaaaaaaaaaaaaa","initOffscreenPreview");
         mScreenGLRender.init(width, height);
     }
 
@@ -197,11 +209,12 @@ public class ScreenSharingService extends Service {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Invalid offscreen resolution");
         }
-
+        Log.e("aaaaaaaaaaaaaa","updateOffscreenPreview");
         mScreenGLRender.update(width, height);
     }
 
     private void startCapture() {
+        Log.e("aaaaaaaaaaaaaa","startCapture");
         mScreenCapture.start();
         startForeground(55431, getForeNotification());
     }
@@ -221,11 +234,13 @@ public class ScreenSharingService extends Service {
     }
 
     private void stopCapture() {
+        Log.e("aaaaaaaaaaaaaa","stopCapture");
         stopForeground(true);
         mScreenCapture.stop();
     }
 
     private void refreshToken(String token) {
+        Log.e("aaaaaaaaaaaaaa","refreshToken");
         if (mRtcEngine != null) {
             mRtcEngine.renewToken(token);
         } else {
@@ -250,11 +265,12 @@ public class ScreenSharingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.e("aaaaaaaaaaaaaa","onDestroy");
         deInitModules();
     }
 
     private void joinChannel(Intent intent) {
-
+        Log.e("aaaaaaaaaaaaaa","joinChannel");
         ChannelMediaOptions option = new ChannelMediaOptions();
         option.autoSubscribeAudio = true;
         option.autoSubscribeVideo = true;
@@ -279,10 +295,12 @@ public class ScreenSharingService extends Service {
                 @Override
                 public void onError(int err) {
                     Log.d(LOG_TAG, "onError " + err);
+                    Log.e("aaaaaaaaaaaaaa","aaaa onError");
                 }
 
                 @Override
                 public void onRequestToken() {
+                    Log.e("aaaaaaaaaaaaaa","onRequestToken");
                     final int N = mCallbacks.beginBroadcast();
                     for (int i = 0; i < N; i++) {
                         try {
@@ -297,6 +315,7 @@ public class ScreenSharingService extends Service {
 
                 @Override
                 public void onTokenPrivilegeWillExpire(String token) {
+                    Log.e("aaaaaaaaaaaaaa","onTokenPrivilegeWillExpire");
                     final int N = mCallbacks.beginBroadcast();
                     for (int i = 0; i < N; i++) {
                         try {
@@ -311,6 +330,7 @@ public class ScreenSharingService extends Service {
 
                 @Override
                 public void onConnectionStateChanged(int state, int reason) {
+                    Log.e("aaaaaaaaaaaaaa","onConnectionStateChanged");
                     switch (state) {
                         case Constants.CONNECTION_STATE_FAILED :
                             final int N = mCallbacks.beginBroadcast();
@@ -331,7 +351,7 @@ public class ScreenSharingService extends Service {
             });
         } catch (Exception e) {
             Log.e(LOG_TAG, Log.getStackTraceString(e));
-
+            Log.e("aaaaaaaaaaaaaa","Exception");
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
 
@@ -348,6 +368,7 @@ public class ScreenSharingService extends Service {
 
         mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
 
+        // 实际情况根据项目进行设置
         mRtcEngine.muteAllRemoteAudioStreams(true);
         mRtcEngine.muteAllRemoteVideoStreams(true);
         mRtcEngine.disableAudio();

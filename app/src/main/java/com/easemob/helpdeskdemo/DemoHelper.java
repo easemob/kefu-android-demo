@@ -90,6 +90,7 @@ public class DemoHelper {
                 .enableFCM("570662061026");
 
         options.setPushConfig(builder.build());
+        // TODO 沙箱测试，只为测试
         options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
@@ -97,7 +98,7 @@ public class DemoHelper {
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
-        options.setAppVersion("1.3.0");
+        options.setAppVersion("1.3.1");
 
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
