@@ -1,5 +1,6 @@
 package com.easemob.helpdeskdemo.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chat.Message;
-import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
@@ -35,9 +35,8 @@ import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
-
-import org.json.JSONObject;
 
 public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener {
 
@@ -213,6 +212,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 break;
 
             case ITEM_VIDEO:
+                // TODO 这里简单处理下权限
                 startVideoCall();
                 break;
             case ITEM_EVALUATION:
@@ -232,9 +232,9 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
 
     private void startVideoCall(){
         inputMenu.hideExtendMenuContainer();
-
-        Message message = Message.createVideoInviteSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
-        ChatClient.getInstance().chatManager().sendMessage(message);
+        /*Message message = Message.createVideoInviteSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
+        ChatClient.getInstance().chatManager().sendMessage(message);*/
+        ChatClient.getInstance().callManager().callVideo(getString(R.string.em_chat_invite_video_call), toChatUsername);
     }
 
 

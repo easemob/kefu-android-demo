@@ -31,11 +31,13 @@ import com.easemob.helpdeskdemo.widget.flow.FlowTagLayout;
 import com.easemob.helpdeskdemo.widget.flow.OnTagSelectListener;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.model.EvaluationInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -23,6 +23,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.OfficialAccount;
+import com.hyphenate.helpdesk.easeui.Constant;
 import com.hyphenate.helpdesk.easeui.Notifier;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
@@ -34,6 +35,7 @@ import com.hyphenate.push.EMPushConfig;
 import com.heytap.mcssdk.PushManager;
 import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
+import com.hyphenate.util.EMLog;
 
 import org.json.JSONObject;
 
@@ -88,14 +90,15 @@ public class DemoHelper {
                 .enableFCM("570662061026");
 
         options.setPushConfig(builder.build());
-        //options.setKefuRestServer("https://sandbox.kefu.easemob.com");
+        // TODO 沙箱测试，只为测试
+        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
 	    options.setConsoleLog(true);
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
-        options.setAppVersion("1.2.5");
+        options.setAppVersion("1.3.1");
 
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
@@ -108,6 +111,8 @@ public class DemoHelper {
             setGlobalListeners();
 
         }
+
+
     }
 
 
@@ -301,6 +306,7 @@ public class DemoHelper {
         registerEventListener();
 
         IntentFilter callFilter = new IntentFilter(ChatClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        callFilter.addAction("calling.state");
         if (callReceiver == null){
             callReceiver = new CallReceiver();
         }
@@ -320,7 +326,6 @@ public class DemoHelper {
             public void onMessage(List<Message> msgs) {
                 for (Message message : msgs){
                     Log.d(TAG, "onMessageReceived id : " + message.messageId());
-//
                     //这里全局监听通知类消息,通知类消息是通过普通消息的扩展实现
                     if (MessageHelper.isNotificationMessage(message)){
                         // 检测是否为留言的通知消息

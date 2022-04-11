@@ -1,23 +1,49 @@
 language: android
-env:
-  global:
-  - MALLOC_ARENA_MAX=2
-sudo: required
+jdk: oraclejdk8
+sudo: false
+
 android:
   components:
-  - build-tools-25.0.0
-  - android-25
-  - extra-android-support
-  - extra-android-m2repository
-  - extra-google-m2repository
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-26.0.2
+    - android-26
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-26
+
+branches:
+  only:
+    - dev
+  
+before_install:
+  - curl -OfsSL https://raw.github.com/easemob/kefu-scripts/master/sdk-travis.sh
+  - chmod +x sdk-travis.sh
+  - chmod +x gradlew
+
+before_script:
+  # Create and start an emulator for instrumentation tests.
+  #- echo no | android create avd --force -n test -t android-16 --abi armeabi-v7a
+  #- emulator -avd test -no-audio -no-window &
+  #- android-wait-for-emulator
+  #- adb shell input keyevent 82
+
+  
 script:
-- "./gradlew :app:assembleDebug"
-deploy:
-  provider: releases
-  api_key:
-    secure: etdqFuvdHmgyrSKecpNKz5p+C6lSMF7QbhvwW+iSJLu9nCVwF/05HwUxDC6qJNF6bzhZpmjlcpURDeshaoa40Ozngvnbm7N/4SCpBl0EkDCxMgMRgI8O+Q5zJJLAJBA8ppdEXYwG8h0xdHJSMv+SDuN/Vq2g+23wLzzh/ucneig=
-  file: 'app/build/outputs/apk/app-debug.apk'
-  skip_cleanup: true
-  on:
-    repo: easemob/kefu-android-demo
-    tags: true
+ - ./sdk-travis.sh :kefu-sdk:clean :kefu-sdk:sonarqube
+
+ 
+cache:
+  directories:
+    - $HOME/.gradle
+    - $HOME/.m2/repository
+    - $HOME/.android/build-cache
+
+notifications:
+    slack: easemob:tYWZJo2ydkdNkexGpLSVFac5 
+
+env:
+   global:
+     - SONAR_URL=http://sonar.easemob.com:9000
+     - SONAR_USER=zhaoliang
+     - SONAR_PASSWORD=sonarsdk 

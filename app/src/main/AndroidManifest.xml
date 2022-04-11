@@ -165,6 +165,7 @@
             />
         <!-- 视频通话 -->
         <activity android:name=".ui.CallActivity"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
@@ -319,9 +320,9 @@
         <!-- FCM required end -->
 
         <!--捕获屏幕service-->
-        <service android:name=".ui.SRForegroundService"
+        <!--<service android:name=".ui.SRForegroundService"
             android:enabled="true"
-            android:foregroundServiceType="mediaProjection"/>
+            android:foregroundServiceType="mediaProjection"/>-->
 
 
         <!--华为 HMS Config-->

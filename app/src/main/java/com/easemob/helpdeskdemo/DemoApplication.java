@@ -44,7 +44,7 @@ public class DemoApplication extends Application {
         }
 
         //注册Bugly Crash统计，用户可忽略
-        CrashReport.initCrashReport(getApplicationContext(), "900012496", false);
+        // CrashReport.initCrashReport(getApplicationContext(), "900012496", false);
     }
 
     @Override
