@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_face_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <com.easemob.veckit.ui.widget.EmojiconPagerView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/pager_view"
+        />
+
+    <com.easemob.veckit.ui.widget.EmojiconIndicatorView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/indicator_view"
+        android:layout_marginBottom="2dp"
+        />
+
+
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#CFCFCF"
+        />
+    
+    <com.easemob.veckit.ui.widget.EmojiconScrollTabBar
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:paddingRight="60dp"
+        android:id="@+id/tab_bar"
+         />
+
+
+</LinearLayout>

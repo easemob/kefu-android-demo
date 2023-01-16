@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="2dip"
+    android:paddingTop="2dip" >
+
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_normal" />
+
+    <LinearLayout
+        android:addStatesFromChildren="true"
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@drawable/item_chat_send_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!--<Button
+            android:id="@+id/btn_set_mode_voice"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/hd_chatting_setmode_voice_btn_normal"
+            android:visibility="visible" />-->
+
+        <com.easemob.veckit.ui.IconTextView
+            android:layout_gravity="center_vertical"
+            android:text="\ue860"
+            android:layout_marginLeft="15dp"
+            android:paddingEnd="@dimen/dp_6"
+            android:gravity="center"
+            android:textColor="@color/hint_color"
+            android:textSize="@dimen/sp_22"
+            android:id="@+id/btn_set_mode_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_set_mode_keyboard"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:cropToPadding="true"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/hd_chatting_setmode_keyboard_btn_normal"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/edittext_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
+
+            <EditText
+                android:id="@+id/et_sendmessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:hint="@string/chat_primary_text_hint"
+                android:inputType="text"
+                android:maxLines="3"
+                android:minHeight="20dp"
+                android:textColor="@color/new_leave_text_color"
+                android:textColorHint="@color/hint_color"
+                android:textCursorDrawable="@drawable/hd_cursor_color"
+                android:textSize="16sp" />
+
+            <RelativeLayout 
+                android:id="@+id/rl_face"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                >
+            <ImageView
+                android:id="@+id/iv_face"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="2dp"
+                android:cropToPadding="true"
+                android:scaleType="fitCenter"
+                android:layout_centerVertical="true"
+                android:src="@drawable/hd_chatting_biaoqing_btn_normal"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_face_keyboard"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="2dp"
+                android:cropToPadding="true"
+                android:scaleType="fitCenter"
+                android:layout_centerVertical="true"
+                android:src="@drawable/hd_chatting_setmode_keyboard_btn_normal"
+                android:visibility="gone" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            >
+            <FrameLayout
+                android:visibility="gone"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                >
+                <Button
+                    android:id="@+id/btn_more"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:cropToPadding="true"
+                    android:background="@drawable/hd_type_select_btn_nor"
+                    android:visibility="visible"/>
+
+                <Button
+                    android:id="@+id/btn_less"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="2dp"
+                    android:cropToPadding="true"
+                    android:background="@drawable/hd_type_less_btn_nor"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+            <!--<Button
+                android:id="@+id/btn_send"
+                android:layout_width="49dp"
+                android:layout_height="30dp"
+                android:cropToPadding="true"
+                android:background="@color/emoji_send_btn_enable_bg_color"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/vec_button_send"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:visibility="gone"/>-->
+
+            <com.easemob.veckit.ui.IconTextView
+                android:text="\ue860"
+                android:id="@+id/btn_send"
+                android:gravity="center"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/sp_22"
+                android:layout_width="42dp"
+                android:layout_height="42dp"/>
+
+        </RelativeLayout>
+
+
+
+
+    </LinearLayout>
+
+    <!--语音输入-->
+    <com.easemob.veckit.ui.widget.RecorderMenu
+        android:id="@+id/record_menu"
+        android:layout_width="match_parent"
+        android:layout_height="139dp"
+        android:visibility="gone"/>
+</LinearLayout>

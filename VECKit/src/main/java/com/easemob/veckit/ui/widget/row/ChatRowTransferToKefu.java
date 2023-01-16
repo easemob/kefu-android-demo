@@ -1,0 +1,101 @@
+package com.easemob.veckit.ui.widget.row;
+
+import android.content.Context;
+import android.text.Spannable;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.easemob.veckit.R;
+import com.easemob.veckit.ui.widget.ChatRow;
+import com.easemob.veckit.ui.widget.utils.SmileUtils;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
+
+/**
+ */
+public class ChatRowTransferToKefu extends ChatRow {
+
+    Button btnTransfer;
+    TextView tvContent;
+
+    public ChatRowTransferToKefu(Context context, Message message, int position, BaseAdapter adapter) {
+        super(context, message, position, adapter);
+    }
+
+    @Override
+    protected void onInflatView() {
+        inflater.inflate(message.direct() == Message.Direct.RECEIVE ? R.layout.vec_row_received_transfertokefu
+                : R.layout.vec_row_sent_transfertokefu, this);
+    }
+
+    @Override
+    protected void onFindViewById() {
+        btnTransfer = (Button) findViewById(R.id.btn_transfer);
+        tvContent = (TextView) findViewById(R.id.tv_chatcontent);
+        // TODO 转人工按钮，文本
+        if (message.direct() == Message.Direct.RECEIVE){
+            if (btnTransfer != null){
+                ToCustomServiceInfo toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message);
+                btnTransfer.setVisibility(toCustomServiceInfo != null ? VISIBLE : GONE);
+                btnTransfer.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (toCustomServiceInfo != null){
+                            toCustomServiceInfo.sendToCustomServiceMessage(message);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onUpdateView() {
+
+    }
+
+    @Override
+    protected void onSetUpView() {
+        final ToCustomServiceInfo toCustomServiceInfo;
+        if ((toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message)) != null){
+            EMTextMessageBody txtBody = (EMTextMessageBody) message.body();
+            Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
+            // 设置内容
+            tvContent.setText(span, TextView.BufferType.SPANNABLE);
+            String btnLable = toCustomServiceInfo.getLable();
+            if (!TextUtils.isEmpty(btnLable)){
+                btnTransfer.setText(btnLable);
+            }
+            btnTransfer.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // sendToCustomServiceMessage(toCustomServiceInfo);
+                    toCustomServiceInfo.sendToCustomServiceMessage(message);
+                }
+            });
+
+        }
+    }
+
+    // 转人工
+    private void sendToCustomServiceMessage(ToCustomServiceInfo info){
+        if (TextUtils.isEmpty(info.getTransferKFID())
+                &&  (TextUtils.isEmpty(info.getId()) || TextUtils.isEmpty(info.getServiceSessionId()))){
+            return;
+        }
+
+        ChatClient.getInstance().chatManager().sendMessage(Message.createTranferToKefuMessage(message.from(), info));
+    }
+
+
+    @Override
+    protected void onBubbleClick() {
+
+    }
+}

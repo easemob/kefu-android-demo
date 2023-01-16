@@ -2,12 +2,15 @@ package com.hyphenate.helpdesk.easeui.util;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.StrictMode;
+import android.util.TypedValue;
 
 import com.hyphenate.helpdesk.easeui.ui.ImageGridActivity;
 
@@ -90,7 +93,19 @@ public class Utils {
 
 	}
 
+	public static int getStateHeight(Context context) {
+		int stateHeight = 0;
+		Resources resources = context.getApplicationContext().getResources();
+		int identifierState = resources.getIdentifier("status_bar_height", "dimen", "android");
+		if (identifierState > 0) {
+			stateHeight = resources.getDimensionPixelSize(identifierState);
+		}
+		if (stateHeight == 0){
+			return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, resources.getDisplayMetrics());
+		}
 
+		return stateHeight;
+	}
 
 
 }

@@ -67,7 +67,6 @@ public class FileUploadManager {
         @Multipart
         @POST("chatfiles")
         Call<ResponseBody> upload(@Part MultipartBody.Part file);
-
     }
 
 

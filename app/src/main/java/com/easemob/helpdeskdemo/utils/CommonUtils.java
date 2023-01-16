@@ -1,6 +1,9 @@
 package com.easemob.helpdeskdemo.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.TypedValue;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -134,5 +137,17 @@ public class CommonUtils {
     }
 
 
+    public static int getStateHeight(Context context) {
+        int stateHeight = 0;
+        Resources resources = context.getApplicationContext().getResources();
+        int identifierState = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (identifierState > 0) {
+            stateHeight = resources.getDimensionPixelSize(identifierState);
+        }
+        if (stateHeight == 0){
+            return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, resources.getDisplayMetrics());
+        }
 
+        return stateHeight;
+    }
 }

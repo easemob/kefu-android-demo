@@ -1,6 +1,9 @@
 package com.easemob.helpdeskdemo;
 
+import android.util.Log;
+
 import com.huawei.hms.push.HmsMessageService;
+import com.huawei.hms.push.RemoteMessage;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.util.EMLog;
 
@@ -15,6 +18,12 @@ public class HMSPushService extends HmsMessageService {
         }else{
             EMLog.e("HWHMSPush", "service register huawei hms push token fail!");
         }
+    }
+
+    @Override
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
+
     }
 
 }

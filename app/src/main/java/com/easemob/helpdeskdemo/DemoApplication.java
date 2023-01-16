@@ -16,8 +16,10 @@ package com.easemob.helpdeskdemo;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
 
+import androidx.multidex.MultiDex;
+
+import com.heytap.msp.push.HeytapPushManager;
 import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
 import com.hyphenate.push.PushListener;
@@ -31,7 +33,8 @@ public class DemoApplication extends Application {
 
         Preferences.init(this);
         DemoHelper.getInstance().init(this);
-
+        //OPPO SDK升级到2.1.0后需要进行初始化
+        HeytapPushManager.init(this, true);
         // 请确保环信SDK相关方法运行在主进程，子进程不会初始化环信SDK（该逻辑在EaseUI.java中）
         if(isMainProcess(this)){
             EMPushHelper.getInstance().setPushListener(new PushListener() {
@@ -43,8 +46,9 @@ public class DemoApplication extends Application {
             });
         }
 
+
         //注册Bugly Crash统计，用户可忽略
-        CrashReport.initCrashReport(getApplicationContext(), "900012496", false);
+        CrashReport.initCrashReport(getApplicationContext(), "675c7d4ed4", false);
     }
 
     @Override

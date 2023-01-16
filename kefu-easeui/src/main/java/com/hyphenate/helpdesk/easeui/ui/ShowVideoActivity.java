@@ -1,36 +1,21 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.MimeTypeMap;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.hyphenate.EMError;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.Callback;
-import com.hyphenate.helpdesk.easeui.util.CommonUtils;
-import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
-import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
-import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.UriUtils;
 
 import java.io.File;

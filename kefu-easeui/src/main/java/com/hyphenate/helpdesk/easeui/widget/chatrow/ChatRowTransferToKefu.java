@@ -15,6 +15,7 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.util.SmileUtils;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
+import com.hyphenate.helpdesk.util.Log;
 
 /**
  */
@@ -37,7 +38,21 @@ public class ChatRowTransferToKefu extends ChatRow {
     protected void onFindViewById() {
         btnTransfer = (Button) findViewById(R.id.btn_transfer);
         tvContent = (TextView) findViewById(R.id.tv_chatcontent);
-
+        // TODO 转人工按钮，文本
+        if (message.direct() == Message.Direct.RECEIVE){
+            if (btnTransfer != null){
+                ToCustomServiceInfo toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message);
+                btnTransfer.setVisibility(toCustomServiceInfo != null ? VISIBLE : GONE);
+                btnTransfer.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (toCustomServiceInfo != null){
+                            toCustomServiceInfo.sendToCustomServiceMessage(message);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -60,13 +75,15 @@ public class ChatRowTransferToKefu extends ChatRow {
             btnTransfer.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sendToCustomServiceMessage(toCustomServiceInfo);
+                    // sendToCustomServiceMessage(toCustomServiceInfo);
+                    toCustomServiceInfo.sendToCustomServiceMessage(message);
                 }
             });
 
         }
     }
 
+    // 转人工
     private void sendToCustomServiceMessage(ToCustomServiceInfo info){
         if (TextUtils.isEmpty(info.getTransferKFID())
                 &&  (TextUtils.isEmpty(info.getId()) || TextUtils.isEmpty(info.getServiceSessionId()))){

@@ -43,8 +43,8 @@ android{
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //环信客服SDK
-    compile 'com.hyphenate:kefu-easeui-android:latest.release' //或者 compile 'com.hyphenate:kefu-easeui-android:1.1.9'
+    //环信客服SDK，demo里引用jar包，查看demo
+    // compile 'com.hyphenate:kefu-easeui-android:latest.release' //或者 compile 'com.hyphenate:kefu-easeui-android:1.1.9'
     //EaseUI中 头像获取用到了glide，请添加glide库
     compile 'com.github.bumptech.glide:glide:4.7.0' //其他版本也可以
     //EaseUI中，fragment用到了android-support-v4包

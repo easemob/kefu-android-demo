@@ -26,12 +26,15 @@ import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
+import com.hyphenate.push.EMPushConfig;
+import com.hyphenate.push.EMPushHelper;
 
 
 public class LoginActivity extends DemoBaseActivity {
@@ -149,6 +152,8 @@ public class LoginActivity extends DemoBaseActivity {
 				if (!progressShow) {
 					return;
 				}
+				// 保存用户名
+				Preferences.getInstance().saveLoginUserName(uname);
 				toChatActivity();
 			}
 
@@ -184,6 +189,7 @@ public class LoginActivity extends DemoBaseActivity {
 				// 获取华为 HMS 推送 token
 				HMSPushHelper.getInstance().getHMSToken(LoginActivity.this);
 
+
 				//此处演示设置技能组,如果后台设置的技能组名称为[shouqian|shouhou],这样指定即分配到技能组中.
 				//为null则不按照技能组分配,同理可以设置直接指定客服scheduleAgent
 				String queueName = null;
@@ -199,12 +205,13 @@ public class LoginActivity extends DemoBaseActivity {
 				}
 				Bundle bundle = new Bundle();
 				bundle.putInt(Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex);
-			 //设置点击通知栏跳转事件
+			 	//设置点击通知栏跳转事件
 				Conversation conversation = ChatClient.getInstance().chatManager().getConversation(Preferences.getInstance().getCustomerAccount());
 				String titleName = null;
 				if (conversation.officialAccount() != null){
 					titleName = conversation.officialAccount().getName();
 				}
+				AgoraMessage.newAgoraMessage().setCurrentChatUsername(Preferences.getInstance().getCustomerAccount());
 				// 进入主页面
 				Intent intent = new IntentBuilder(LoginActivity.this)
 						.setTargetClass(ChatActivity.class)

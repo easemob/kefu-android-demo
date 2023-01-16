@@ -41,6 +41,7 @@ public class ChatRowEvaluation extends ChatRow{
     @Override
     protected void onSetUpView() {
         try {
+            // 立即评价
             if(MessageHelper.getEvalRequest(message) != null){
                 btnEval.setEnabled(true);
                 btnEval.setText(R.string.chatrow_eval_btn_text);

@@ -1,12 +1,13 @@
 package com.hyphenate.helpdesk.easeui.adapter;
 
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.List;
 
-public class EmojiconPagerAdapter extends PagerAdapter{
+public class EmojiconPagerAdapter extends PagerAdapter {
 
     private List<View> views;
 

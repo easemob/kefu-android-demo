@@ -1,9 +1,10 @@
 package com.hyphenate.helpdesk.easeui.ui;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
+
+import androidx.annotation.IdRes;
+import androidx.fragment.app.FragmentActivity;
 
 import com.hyphenate.helpdesk.easeui.UIProvider;
 

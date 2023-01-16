@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
@@ -14,14 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.FileProvider;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,15 +26,16 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chat.KefuConversationManager;
 import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
@@ -73,9 +68,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.charset.Charset;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 可以直接new出来使用的聊天对话页面fragment，
@@ -174,17 +167,6 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             cameraFilePath = savedInstanceState.getString("cameraFilePath");
         }
         ChatClient.getInstance().chatManager().bindChat(toChatUsername);
-        PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-
-            }
-
-            @Override
-            public void onDenied(String permission) {
-
-            }
-        });
         ChatClient.getInstance().chatManager().addAgentInputListener(agentInputListener);
 
         // 为测试获取账号用，无实际意义
@@ -303,6 +285,27 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         }
     };
 
+    private void readMessage(Message message) {
+        String sessionId = AgoraMessage.getSessionIdFromMessage(message);
+        if (TextUtils.isEmpty(sessionId)) {
+            return;
+        }
+
+        String tenantId = ChatClient.getInstance().tenantId();
+        ChatClient.getInstance().chatManager().asyncMarkAllMessagesAsRead(tenantId, sessionId, new ValueCallBack<String>() {
+            @Override
+            public void onSuccess(String value) {
+                EMLog.e("asyncMarkAllMessagesAsRead","value = "+value);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                EMLog.e("asyncMarkAllMessagesAsRead","errorMsg = "+errorMsg);
+            }
+        });
+
+    }
+
     /**
      * 设置属性，监听等
      */
@@ -318,6 +321,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
         onConversationInit();
         onMessageListInit();
+
 
         // 设置标题栏点击事件
         titleBar.setLeftLayoutClickListener(new OnClickListener() {
@@ -396,6 +400,16 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
             // 把此会话的未读数置为0
             conversation.markAllMessagesAsRead();
             final List<Message> msgs = conversation.getAllMessages();
+            if (msgs != null && msgs.size() > 0) {
+                for (Message message : msgs) {
+                    Message.Direct direct = message.direct();
+                    if (direct == Message.Direct.RECEIVE) {
+                        readMessage(message);
+                        break;
+                    }
+                }
+            }
+
             int msgCount = msgs != null ? msgs.size() : 0;
             if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
                 String msgId = null;
@@ -479,7 +493,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     }
 
     protected void setRefreshLayoutListener() {
-        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
@@ -833,15 +847,17 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     @Override
     public void onMessage(List<Message> msgs) {
+
         for (Message message : msgs) {
             String username = null;
             username = message.from();
-
             // 如果是当前会话的消息，刷新聊天页面
             if (username != null && username.equals(toChatUsername)) {
                 messageList.refreshSelectLast();
                 // 声音和震动提示有新消息
                 UIProvider.getInstance().getNotifier().viberateAndPlayTone(message);
+                // TODO 测试，通知座席端 消息已读
+                readMessage(message);
             } else {
                 // 如果消息不是和当前聊天ID的消息
                 UIProvider.getInstance().getNotifier().onNewMsg(message);

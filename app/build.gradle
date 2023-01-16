@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
 
-Properties prop = new Properties()
-prop.load(new FileInputStream(file("signing.properties")))
+
+/*Properties prop = new Properties()
+prop.load(new FileInputStream(file("signing.properties")))*/
 
 
 android {
@@ -11,10 +12,11 @@ android {
 
     defaultConfig {
         applicationId "com.easemob.helpdeskdemo"
-        minSdkVersion 17
+        // 电子白板，最低要求21
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 22
-        versionName "2.2"
+        versionCode 24
+        versionName "1.3.3.0"
         multiDexEnabled true
 
         ndk {
@@ -23,32 +25,38 @@ android {
             //还可以添加 'armeabi', 'x86'
 
         }
+
+        // Program type already present: org.intellij.lang.annotations.JdkConstants$PatternFlags
+        configurations {
+            cleanedAnnotations
+            compile.exclude group: 'org.jetbrains' , module:'annotations'
+        }
     }
 
     dexOptions {
         javaMaxHeapSize "4g"
     }
 
-    signingConfigs{
+    /*signingConfigs{
         release{
             storeFile file(prop['KEY_FILE'])
             storePassword prop['STORE_PASSWORD']
             keyAlias prop['KEY_ALIAS']
             keyPassword prop['KEY_PASSWORD']
         }
-    }
+    }*/
 
     buildTypes {
         debug {
             //apk签名
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         release {
             minifyEnabled false
             //apk签名
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -70,6 +78,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
+
 }
 
 repositories {
@@ -78,12 +89,14 @@ repositories {
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     //noinspection GradleCompatible
-    compile 'com.android.support:support-v4:28.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0'
+    /*compile 'com.android.support:support-v4:28.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'*/
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     compile 'com.github.jaouan:compoundlayout:1.0.1'
-    compile project(':kefu-easeui')
+    //compile project(':kefu-easeui')
+    compile project(':VECKit')
     compile project(':bottomnavigation')
     compile 'com.jude:easyrecyclerview:4.0.6'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
@@ -95,7 +108,9 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.wefika:flowlayout:0.4.0'
     compile 'com.tencent.bugly:crashreport:2.2.0'
-    compile 'com.android.support:multidex:1.0.1'
+    // compile 'com.android.support:multidex:1.0.1'
+    compile 'androidx.multidex:multidex:2.0.1'
+
     // Google firebase cloud messaging start
     compile 'com.google.android.gms:play-services-base:11.4.2'
     compile 'com.google.firebase:firebase-messaging:11.4.2'
@@ -106,6 +121,12 @@ dependencies {
 
     // meizu push
     compile 'com.meizu.flyme.internet:push-internal:3.7.0@aar' //配置集成sdk
+
+
+    //oppo push需添加以下依赖
+    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'commons-codec:commons-codec:1.6'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
 
 // Google firebase cloud messaging ADD THIS AT THE BOTTOM

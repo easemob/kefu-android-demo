@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="fast_day_night_border_bg">@color/fast_light_mode_border_bg</color>
+    <color name="fast_day_night_bg">@color/fast_light_mode_bg</color>
+</resources>

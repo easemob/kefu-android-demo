@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/normal_bg_color"
@@ -64,6 +65,83 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/pintJiaCLlt"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:paddingLeft="20dp"
+                android:paddingEnd="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/pingJiaTv"
+                    android:text="@string/ping_jia_title"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/pingJiaOneLlt"
+                        android:layout_weight="1"
+                        android:paddingLeft="20dp"
+                        android:paddingEnd="20dp"
+                        android:background="@drawable/item_option_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp">
+                        <ImageView
+                            android:src="@drawable/item_one_bg"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"/>
+                        <TextView
+                            android:textColor="@color/normal_text_color"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:id="@+id/pingJiaOneTv"
+                            android:duplicateParentState="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="已解决"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/pingJiaTwoLlt"
+                        android:layout_marginLeft="20dp"
+                        android:layout_weight="1"
+                        android:paddingLeft="20dp"
+                        android:paddingEnd="20dp"
+                        android:background="@drawable/item_option_bg"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp">
+                        <ImageView
+                            android:src="@drawable/item_two_bg"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"/>
+                        <TextView
+                            android:textColor="@color/normal_text_color"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:id="@+id/pingJiaTwoTv"
+                            android:duplicateParentState="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="未解决"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +161,7 @@
                     android:textColor="#BABABB"
                     android:textSize="12sp" />
 
-                <View
+                <!--<View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_centerVertical="true"
@@ -95,7 +173,7 @@
                     android:layout_height="1dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_description"
-                    android:background="#E8E8E9" />
+                    android:background="#E8E8E9" />-->
             </RelativeLayout>
 
             <RelativeLayout
@@ -104,7 +182,22 @@
                 android:layout_marginBottom="10dip"
                 android:layout_marginTop="30dip" >
 
-                <RatingBar
+                <com.easemob.helpdeskdemo.widget.RatingBar
+                    android:id="@+id/ratingBar1"
+                    android:paddingTop="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    app:starCount="5"
+                    android:layout_centerHorizontal="true"
+                    app:starEmpty="@drawable/hd_icon_star_normal"
+                    app:starFill="@drawable/hd_icon_star_select"
+                    app:starHalf="@drawable/hd_icon_star_select"
+                    app:starImageSize="35dp"
+                    app:starPadding="10dp"
+                    app:starStep="0"
+                    app:stepSize="Full"/>
+
+                <!--<RatingBar
                     android:id="@+id/ratingBar1"
                     style="@style/myRatingBar"
                     android:layout_width="wrap_content"
@@ -113,7 +206,7 @@
                     android:layout_marginLeft="20dip"
                     android:numStars="5"
                     android:rating="5"
-                    android:stepSize="1.0" />
+                    android:stepSize="1.0" />-->
             </RelativeLayout>
 
             <TextView

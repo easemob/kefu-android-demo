@@ -3,7 +3,6 @@ package com.hyphenate.helpdesk.easeui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.IdRes;
 
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.util.DensityUtil;

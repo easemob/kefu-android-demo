@@ -126,7 +126,6 @@ public class ChatRowOrder extends ChatRow {
                     ToastHelper.show(context, R.string.em_notice_sending);
                     return;
                 }
-
                 ChatClient.getInstance().chatManager().resendMessage(message);
             }
         });

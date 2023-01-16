@@ -6,10 +6,9 @@ android {
     buildToolsVersion "28.0.2"
 
     defaultConfig {
-        minSdkVersion 14
+        // 电子白板，最低要求21
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.2.3"
     }
 
     buildTypes {
@@ -28,16 +27,33 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:28.0.0'
-    compile 'com.github.bumptech.glide:glide:4.7.1'
-//    compile project(':kefu-sdk')
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    api 'androidx.appcompat:appcompat:1.2.0'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0-rc01'
+    api files('libs/kefu-sdk-1.3.3.0.jar')
+    // compile 'com.github.bumptech.glide:glide:4.7.1'
+    compile 'com.github.bumptech.glide:glide:4.12.0'
+    api 'com.google.code.gson:gson:2.8.5'
+
     api project(path: ':player')
-    api 'com.android.support:appcompat-v7:28.0.0-alpha1'
-    compile 'com.easemob:kefu-sdk:1.2.5'
+
+    // x.y.z，请填写具体的 SDK 版本号，如：3.6.2。
+    // 通过发版说明获取最新版本号。
+    api 'io.agora.rtc:full-sdk:3.7.0'
+    // api 'io.agora.rtc:full-sdk:3.6.2'
+    // 电子白板
+    api 'com.github.netless-io:fastboard-android:1.2.3'
+
 }
-apply from: 'jcenter.gradle'
+// apply from: 'jcenter.gradle'

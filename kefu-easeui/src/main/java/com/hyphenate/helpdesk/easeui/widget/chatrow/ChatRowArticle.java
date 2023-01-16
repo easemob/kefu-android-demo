@@ -18,6 +18,7 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.model.ArticlesInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
 import com.hyphenate.util.DensityUtil;
 
 import java.util.Random;
@@ -57,7 +58,7 @@ public class ChatRowArticle extends ChatRow {
 		ArticlesInfo msgArticles;
 
 		if ((msgArticles = MessageHelper.getArticlesMessage(message)) != null) {
-			addViews(msgArticles);
+			addViews(msgArticles, message);
 		}
 	}
 
@@ -66,7 +67,7 @@ public class ChatRowArticle extends ChatRow {
 	}
 
 
-	private void addViews(ArticlesInfo msgArticles) {
+	private void addViews(ArticlesInfo msgArticles, Message message) {
 		artticlesContainer.removeAllViews();
 
 		if (msgArticles == null || msgArticles.getArticles() == null)
@@ -78,6 +79,19 @@ public class ChatRowArticle extends ChatRow {
 
 			if (view == null) {
 				return;
+			}
+
+			// TODO 转人工按钮
+			View btn_transfer = view.findViewById(R.id.btn_transfer);
+			if (btn_transfer != null){
+				ToCustomServiceInfo toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message);
+				btn_transfer.setVisibility(toCustomServiceInfo != null ? VISIBLE : GONE);
+				btn_transfer.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						toCustomServiceInfo.sendToCustomServiceMessage(message);
+					}
+				});
 			}
 
 			if (bean.getTitle() != null) {

@@ -2,28 +2,33 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.hyphenate.helpdesk">
 
-
+    <!-- 悬浮窗所需权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>-->
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
-    <application android:usesCleartextTraffic="true">
+    <application android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false"/>
@@ -68,7 +73,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <!-- 声明sdk所需的service -->
-        <service
+        <!--<service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
             tools:ignore="ExportedService"/>
@@ -79,19 +84,20 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             />
 
-        <!-- 声明sdk所需的receiver -->
+        &lt;!&ndash; 声明sdk所需的receiver &ndash;&gt;
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 
                 <data android:scheme="package"/>
             </intent-filter>
-            <!-- 可选filter -->
+            &lt;!&ndash; 可选filter &ndash;&gt;
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
-        </receiver>
+        </receiver>-->
+
         <provider
             android:name="com.hyphenate.helpdesk.easeui.util.EaseFileProvider"
             android:authorities="${applicationId}.ease"
@@ -102,6 +108,29 @@
                 android:resource="@xml/file_ease_paths"/>
         </provider>
 
-    </application>
+        <!--屏幕分享-->
+        <!--<uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
+        <!--<activity
+            android:name=".easeui.agora.impl.ScreenCapture$ScreenCaptureAssistantActivity"
+            android:process=":screensharingsvc"
+            android:screenOrientation="fullUser"
+            android:theme="@android:style/Theme.Translucent" />-->
 
+        <activity android:name=".easeui.ui.CloudActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBars"/>
+
+       <!-- <service
+            android:name=".easeui.agora.impl.ScreenSharingService"
+            android:foregroundServiceType="mediaProjection"
+            android:process=":screensharingsvc">
+            <intent-filter>
+                <action android:name="android.intent.action.screenshare" />
+            </intent-filter>
+        </service>-->
+
+    </application>
 </manifest>

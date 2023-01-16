@@ -5,4 +5,18 @@
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
 
+    <!--<style name="horizontal_slide_translucent" parent="android:Theme.Holo.Light.NoActionBar.TranslucentDecor">
+        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
+        <item name="android:background">@android:color/transparent</item>              &lt;!&ndash;设置布局背景&ndash;&gt;
+        <item name="android:windowBackground">@android:color/transparent</item>        &lt;!&ndash;设置背景颜色&ndash;&gt;
+        <item name="android:windowContentOverlay">@android:color/transparent</item>    &lt;!&ndash;设置主题&ndash;&gt;
+        <item name="android:backgroundDimAmount">0.0</item>                            &lt;!&ndash;设置背景模糊的透明度&ndash;&gt;
+        <item name="android:windowNoTitle">true</item>                                 &lt;!&ndash;设置是否没有标题&ndash;&gt;
+        <item name="android:windowIsFloating">true</item>                              &lt;!&ndash;设置dialog是否悬浮在activity上&ndash;&gt;
+        <item name="android:backgroundDimEnabled">true</item>                          &lt;!&ndash;设置弹出的对话框背景是否是暗的&ndash;&gt;
+        <item name="android:windowIsTranslucent">true</item>                           &lt;!&ndash;设置是否半透明&ndash;&gt;
+    </style>-->
+
+
+
 </resources>

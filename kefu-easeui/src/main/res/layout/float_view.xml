@@ -1,0 +1,27 @@
+<com.hyphenate.helpdesk.easeui.permission.AVCallFloatView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:visibility="gone"
+    android:id="@+id/floatFlt"
+    android:padding="8dp"
+    android:background="@drawable/float_grey_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:background="@drawable/float_write_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.hyphenate.helpdesk.easeui.ui.IconTextView
+            android:text="\ue600"
+            android:textColor="#446BB7"
+            android:textSize="32sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:id="@+id/timeFlt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</com.hyphenate.helpdesk.easeui.permission.AVCallFloatView>

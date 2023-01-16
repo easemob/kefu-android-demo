@@ -21,6 +21,7 @@
 	<dimen name="activity_comment_reply_file_layout_width">250dp</dimen>
 	<dimen name="activity_comment_reply_file_name_max_width">180dp</dimen>
 
+	<dimen name="bottom_navi_height_62">62dp</dimen>
 	<dimen name="bottom_navi_height">50dp</dimen>
 	<dimen name="bottom_text_margin_left_icon">8dp</dimen>
 	<dimen name="bottom_btn_margin_right">16dp</dimen>
@@ -57,4 +58,18 @@
 	<dimen name="image_thumbnail_size">100dp</dimen>
 	<dimen name="image_thumbnail_spacing">1dp</dimen>
 	<dimen name="custom_emoji_default_wh">100dp</dimen>
+
+	<dimen name="sample_gap_1">8dp</dimen>
+	<dimen name="sample_gap_2">16dp</dimen>
+	<dimen name="sample_gap_3">24dp</dimen>
+	<dimen name="sample_gap_4">32dp</dimen>
+	<dimen name="sample_gap_5">40dp</dimen>
+	<dimen name="sample_gap_6">48dp</dimen>
+	<dimen name="sample_gap_25">200dp</dimen>
+
+	<dimen name="room_class_button_size">32dp</dimen>
+	<dimen name="room_class_button_padding_size">4dp</dimen>
+
+
+	<dimen name="dp_8">8dp</dimen>
 </resources>

@@ -30,6 +30,8 @@
 # Keep GSON stuff
 -keep class com.google.gson.** { *; }
 
+-keep class com.hyphenate.helpdesk.easeui.ui.** { *; }
+
 #gson
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.* { *; }
@@ -92,6 +94,17 @@
 -keep public class com.huawei.android.hms.agent.** extends android.app.Activity { public *; protected *; }
 -keep interface com.huawei.android.hms.agent.common.INoProguard {*;}
 -keep class * extends com.huawei.android.hms.agent.common.INoProguard {*;}
+
+# 音视频 声网
+-keep class io.agora.**{*;}
+# 电子白板
+-keep class com.herewhite.** { *; }
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+# 二维码
+-keep class cn.bertsir.zbar.** {*;}
 
 
 

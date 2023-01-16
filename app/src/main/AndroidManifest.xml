@@ -3,11 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.easemob.helpdeskdemo">
 
+    <!--精准闹钟-->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- 悬浮窗所需权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <!--<uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />-->
+
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 这个权限用于访问GPS定位 -->
@@ -16,8 +26,12 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+
+
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
@@ -31,9 +45,10 @@
 
     <!-- 音视频 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission
+
+    <!--<uses-permission
         android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions"/>
+        tools:ignore="ProtectedPermissions"/>-->
 
 
     <!-- 魅族推送配置 start-->
@@ -51,7 +66,7 @@
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <!-- 魅族推送配置 end-->
 
-    <!-- Oppo推送配置 start -->
+    <!-- Oppo推送配置（如果应用无透传权限，则不用配置） start -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
     <!-- Oppo推送配置 end -->
@@ -70,12 +85,12 @@
         android:largeHeap="true"
         android:icon="@drawable/em_logo_uidemo"
         android:label="@string/app_name"
-        android:requestLegacyExternalStorage="false"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
 
         <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:grantUriPermissions="true"
             android:exported="false">
@@ -168,8 +183,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:theme="@style/horizontal_slide">
-        </activity>
+            android:theme="@style/horizontal_slide_no_anim" />
+
+        <!-- 视频通话 -->
         <activity android:name=".ui.RobotCommentTagsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
@@ -193,6 +209,12 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".ui.CallInterfaceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
+        <activity android:name=".ui.TestLoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
         <!--推送配置项-->
         <meta-data
             android:name="com.vivo.push.api_key"
@@ -232,20 +254,21 @@
 
         <!-- Oppo推送配置 start -->
         <service
-            android:name="com.heytap.mcssdk.PushService"
+            android:name="com.heytap.msp.push.service.CompatibleDataMessageCallbackService"
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
             </intent-filter>
-        </service>
+        </service> <!--兼容Q以下版本-->
 
         <service
-            android:name="com.heytap.mcssdk.AppPushService"
-            android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE">
+            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
+            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
             <intent-filter>
                 <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE"/>
             </intent-filter>
-        </service>
+        </service> <!--兼容Q版本-->
         <!-- Oppo推送配置 end -->
 
         <!-- Mi推送配置 start -->
@@ -319,11 +342,12 @@
         <!-- FCM required end -->
 
         <!--捕获屏幕service-->
-        <service android:name=".ui.SRForegroundService"
+        <!--<service android:name=".ui.SRForegroundService"
             android:enabled="true"
-            android:foregroundServiceType="mediaProjection"/>
+            android:foregroundServiceType="mediaProjection"/>-->
 
 
+        <meta-data android:name="com.huawei.hms.client.appid" android:value="102920687"/>
         <!--华为 HMS Config-->
         <service android:name=".HMSPushService"
             android:exported="false">
@@ -332,6 +356,8 @@
             </intent-filter>
         </service>
         <!-- huawei push end -->
+
+        <service android:name=".service.VideoCallWindowService" />
     </application>
 
 </manifest>

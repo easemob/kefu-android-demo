@@ -16,31 +16,45 @@ package com.easemob.helpdeskdemo.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.easemob.veckit.utils.FlatFunctionUtils;
+import com.hyphenate.helpdesk.Error;
 import com.easemob.bottomnavigation.BottomNavigation;
 import com.easemob.bottomnavigation.OnBottomNavigationSelectedListener;
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoHelper;
 import com.easemob.helpdeskdemo.HMSPushHelper;
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
+import com.hyphenate.agora.FunctionIconItem;
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Message;
-import com.hyphenate.helpdesk.Error;
+import com.hyphenate.chat.VecConfig;
+import com.hyphenate.helpdesk.callback.ValueCallBack;
+import com.hyphenate.helpdesk.easeui.permission.FloatWindowManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
 import com.hyphenate.util.EasyUtils;
 
 import java.util.List;
+
 
 public class MainActivity extends DemoBaseActivity implements OnBottomNavigationSelectedListener {
 
@@ -52,6 +66,27 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     private int currentTabIndex = 0;
     private MyConnectionListener connectionListener = null;
     private BottomNavigation mBottomNav;
+
+    private View mContent;
+    private WindowManager mWm;
+    private Point mPoint;
+
+    private final ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            DemoHelper.sNavHeight = getNav(mWm, mContent, mPoint);
+            mContent.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
+        }
+    };
+
+    private int getNav(WindowManager wm, View content, Point point){
+        Display display = wm.getDefaultDisplay();
+        display.getRealSize(point);
+        if (content.getBottom() == 0){
+            return 0;
+        }
+        return point.y - content.getBottom();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +109,27 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         }
 
+        mContent = getWindow().getDecorView().findViewById(android.R.id.content);
+        mWm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+        mPoint = new Point();
+        mContent.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
+
+        // 获取可用功能
+        getTenantIdFunctionIcons();
+
         setContentView(R.layout.em_activity_main);
+        String customerAccount = Preferences.getInstance().getCustomerAccount();
+
+        if (!TextUtils.isEmpty(customerAccount)){
+            AgoraMessage.newAgoraMessage().setCurrentChatUsername(customerAccount);
+        }
 
         FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             currentTabIndex = savedInstanceState.getInt("selectedIndex", 0);
             //Activity被杀死的时候，有些情况Fragment不被销毁
-            if (shopFragment == null){
+            if (shopFragment == null) {
                 shopFragment = getSupportFragmentManager().findFragmentByTag("shopFragment");
                 settingFragment = getSupportFragmentManager().findFragmentByTag("settingFragment");
                 ticketListFragment = getSupportFragmentManager().findFragmentByTag("ticketListFragment");
@@ -113,11 +161,11 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         // 把shopFragment设为选中状态
         trx.hide(settingFragment)
-           .hide(ticketListFragment)
-           .hide(conversationsFragment)
-           .hide(shopFragment)
-           .show(fragments[currentTabIndex])
-           .commit();
+                .hide(ticketListFragment)
+                .hide(conversationsFragment)
+                .hide(shopFragment)
+                .show(fragments[currentTabIndex])
+                .commit();
 
 
         mBottomNav = $(R.id.bottom_navigation);
@@ -131,6 +179,34 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         // 检查华为推送服务
         HMSPushHelper.getInstance().getHMSToken(this);
+
+        // 给新版vec呼叫页面设置用户名称
+        VecConfig.newVecConfig().setUserName(Preferences.getInstance().getNickName());
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!FloatWindowManager.getInstance().checkPermission(this)){
+            FloatWindowManager.getInstance().applyPermission(this);
+        }
+    }
+
+    private void getTenantIdFunctionIcons(){
+        // 动态获取功能按钮，在视频页面使用到
+        AgoraMessage.asyncGetTenantIdFunctionIcons(ChatClient.getInstance().tenantId(), new ValueCallBack<List<FunctionIconItem>>() {
+            @Override
+            public void onSuccess(List<FunctionIconItem> value) {
+                FlatFunctionUtils.get().setIconItems(value);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
     @TargetApi(23)
@@ -138,12 +214,10 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
             @Override
             public void onGranted() {
-
             }
 
             @Override
             public void onDenied(String permission) {
-
             }
         });
     }
@@ -152,6 +226,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+
     }
 
 
@@ -225,6 +300,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         if (connectionListener != null) {
             ChatClient.getInstance().removeConnectionListener(connectionListener);
         }
+        FlatFunctionUtils.get().clear();
     }
 
     @Override
@@ -263,15 +339,16 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //未读数可以显示在UI上
-//                    int unreadMsgCount = ChatClient.getInstance().chatManager().getUnreadMsgsCount();
 
-                    if (EasyUtils.isAppRunningForeground(MainActivity.this)){
+                    // 未读数可以显示在UI上
+                    // int unreadMsgCount = ChatClient.getInstance().chatManager().getUnreadMsgsCount();
+                    if (EasyUtils.isAppRunningForeground(MainActivity.this)) {
                         DemoHelper.getInstance().getNotifier().onNewMesg(msgs);
                     }
 
-                    if (conversationsFragment != null){
-                        ((ConversationListFragment)conversationsFragment).refresh();
+
+                    if (conversationsFragment != null) {
+                        ((ConversationListFragment) conversationsFragment).refresh();
                     }
                 }
             });
@@ -292,6 +369,5 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
 
         }
     };
-
 }
 

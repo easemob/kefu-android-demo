@@ -12,11 +12,13 @@ public class Preferences {
 	static private Preferences instance = null;
 	static private String PREFERENCE_NAME = "info";
 	static private String KEY_APPKEY = "appkey";
+	static private String KEY_CONFIG_ID = "configId";
 	static private String KEY_CUSTOMER_ACCOUNT = "customer_account";
 	static private String KEY_NICKNAME = "nickname";
 	static private String KEY_TENANT_ID = "tenantId";
 	static private String KEY_PROJECT_ID = "projectId";
-	
+	static private String KEY_USER_NAME = "key_user_name";
+
 	private SharedPreferences pref = null;
 	private SharedPreferences.Editor editor = null;
 	
@@ -61,6 +63,15 @@ public class Preferences {
         editor.commit();
     	
     }
+
+	public void setConfigId(String configId){
+		editor.putString(KEY_CONFIG_ID, configId);
+		editor.commit();
+	}
+
+	public String getConfigId(){
+		return pref.getString(KEY_CONFIG_ID, "");
+	}
     
     public String getCustomerAccount(){
     	return pref.getString(KEY_CUSTOMER_ACCOUNT, Constant.DEFAULT_CUSTOMER_ACCOUNT);
@@ -102,6 +113,13 @@ public class Preferences {
     	}
     	return val.toLowerCase(Locale.getDefault());
     }
-    
-    
+
+
+	public void saveLoginUserName(String uname) {
+		editor.putString(KEY_USER_NAME, uname).commit();
+	}
+
+	public String getLoginUserName(){
+    	return pref.getString(KEY_USER_NAME,"");
+	}
 }

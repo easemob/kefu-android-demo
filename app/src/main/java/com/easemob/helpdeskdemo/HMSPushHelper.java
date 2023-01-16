@@ -2,6 +2,7 @@ package com.easemob.helpdeskdemo;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
@@ -56,7 +57,6 @@ public class HMSPushHelper {
 							try {
 								// read from agconnect-services.json
 								String appId = AGConnectServicesConfig.fromContext(activity).getString("client/app_id");
-
 								// 申请华为推送token
 								String token = HmsInstanceId.getInstance(activity).getToken(appId, "HCM");
 								EMLog.d("HWHMSPush", "get huawei hms push token:" + token);

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:clickable="true"
+    android:id="@+id/lltVecChatView"
+    android:paddingLeft="@dimen/dp_6"
+    android:paddingRight="@dimen/dp_6"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/item_chat_shape"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+        <TextView
+            android:text="聊天"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/vecChatTvClose"
+            android:text="X"
+            android:gravity="center"
+            android:layout_gravity="end"
+            android:layout_width="42dp"
+            android:layout_height="42dp"/>
+    </FrameLayout>
+
+    <View
+        android:visibility="gone"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.easemob.veckit.ui.widget.MessageList
+            android:layout_above="@+id/input_menu"
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <com.easemob.veckit.ui.widget.EaseChatInputMenu
+            android:id="@+id/input_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="72dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:id="@+id/toastTv"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_6"
+            android:paddingBottom="@dimen/dp_6"
+            android:gravity="center"
+            android:background="#ee999999"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/item_chat_send_shape"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <com.easemob.veckit.ui.IconTextView
+            android:text="\ue860"
+            android:textColor="#B2B1B1"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+
+        <EditText
+            android:id="@+id/vecChatEdt"
+            android:textSize="@dimen/sp_16"
+            android:textCursorDrawable="@drawable/hd_cursor_color"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <com.easemob.veckit.ui.IconTextView
+            android:text="\ue860"
+            android:textColor="@color/blue_color"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+
+</LinearLayout>

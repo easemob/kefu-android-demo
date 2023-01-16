@@ -28,6 +28,7 @@
     <string name="qrcode_fail">二维码扫描失败</string>
     <string name="qrcode_permission_fail">打开摄像头失败，请检查权限！</string>
     <string name="customernumber"> IM服务号</string>
+    <string name="customernumber_config"> ConfigId</string>
     <string name="connect_customer"> 联系客服</string>
     <string name="feedback"> 意见反馈</string>
     <string name="history_record">历史记录</string>
@@ -39,9 +40,9 @@
     <string name="appkey">AppKey</string>
     <string name="pop_pre_sales">售前客服</string>
     <string name="pop_after_sales">售后客服</string>
-
+    <string name="call_interface">接口调用</string>
     <string name="register_user_fail">注册失败!</string>
-
+    <string name="userName">登录名称</string>
     <string name="leave_title">留言</string>
     <string name="leave_name">名字:</string>
     <string name="leave_phone">电话:</string>
@@ -80,6 +81,7 @@
     <string name="comment_suc">评论成功</string>
     <string name="comment_fail">评论失败</string>
     <string name="file_uploading">文件上传中…</string>
+    <string name="flat_loading">正在加载…</string>
     <string name="comment_content_not_null">评论内容不能为空</string>
     <string name="please_wait_noti">请等待…</string>
     <string name="send_suc">发送成功</string>
@@ -141,7 +143,7 @@
     <string name="answering">接受中…</string>
     <string name="tip_multi_video_calling">多人视频通话中…</string>
 
-    <string name="tip_video_calling">正在通话中...(%d)</string>
+    <string name="tip_video_calling">正在通话中</string>
     <string name="tip_video_in">收到视频通话...</string>
     <!-- call end -->
     <string name="setting_name">名字:</string>
@@ -198,4 +200,5 @@
     <string name="robot_comment_tags">机器人评价标签</string>
     <string name="unsolved_reason">未解决原因</string>
     <string name="share_screen_ongoing">共享屏幕运行中...</string>
+    <string name="ping_jia_title">请问客服是否解决了您的问题？</string>
 </resources>

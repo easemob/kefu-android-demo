@@ -10,8 +10,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
+
+import androidx.fragment.app.FragmentManager;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Executor;
@@ -108,7 +109,7 @@ public abstract class ImageWorker {
 	 * @param cacheParams The cache parameters to use for the image cache.
 	 */
 	public void addImageCache(FragmentManager fragmentManager,
-	                          ImageCache.ImageCacheParams cacheParams) {
+							  ImageCache.ImageCacheParams cacheParams) {
 		mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
 		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
 	}
@@ -373,7 +374,7 @@ public abstract class ImageWorker {
 	 * <p>
 	 * If work is paused, be sure setPauseWork(false) is called again
 	 * before your fragment or activity is destroyed (for example during
-	 * {@link android.app.Activity#onPause()}), or there is a risk the
+	 * {@link android.app.Activity# onPause()}), or there is a risk the
 	 * background thread will never finish.
 	 */
 	public void setPauseWork(boolean pauseWork) {

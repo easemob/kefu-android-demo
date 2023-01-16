@@ -9,8 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 public class GCMPushBroadCast extends BroadcastReceiver {
 
@@ -54,7 +55,6 @@ public class GCMPushBroadCast extends BroadcastReceiver {
 			mBuilder.setContentText(message);
 			mBuilder.setContentIntent(pendingIntent);
 			Notification notification = mBuilder.build();
-
 			notificationManager.notify(notifyID, notification);
 		}catch (Exception e){
 			e.printStackTrace();

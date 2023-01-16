@@ -52,6 +52,7 @@
             android:layout_centerHorizontal="true"
             android:background="#fff" >
         <Button
+            android:visibility="gone"
             android:id="@+id/btn_transfer"
             android:layout_width="wrap_content"
             android:layout_height="40dip"

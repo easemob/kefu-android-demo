@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:sign="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/dp_6"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="@dimen/dp_3"
+        android:orientation="vertical"
+        android:background="@drawable/signature_corners_bg"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="280dp">
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <com.easemob.veckit.signature.SignatureView
+                android:id="@+id/signatureView"
+                sign:enableSignature="true"
+                sign:penSize="3dp"
+                sign:backgroundColor="@color/white"
+                sign:penColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <com.easemob.veckit.ui.SignatureTextView
+                android:id="@+id/hintTv"
+                android:gravity="center"
+                android:textSize="@dimen/sp_42"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/clearTv"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginLeft="@dimen/dp_4"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:layout_gravity="bottom"
+                android:src="@drawable/back_signature" />
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/okTv"
+                android:text="@string/vec_submit"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:paddingRight="@dimen/dp_30"
+                android:paddingLeft="@dimen/dp_30"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:background="@drawable/hd_blue_shape"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">HuanXin Kefu</string>
     <string name="text_ack_msg">Read</string>
@@ -29,8 +29,10 @@
     <string name="qrcode_invalid">QrCode Invalid</string>
     <string name="qrcode_fail">QrCode scanning fail</string>
     <string name="customernumber">IM service No.</string>
+    <string name="customernumber_config">ConfigId.</string>
     <string name="connect_customer">Contact us</string>
     <string name="feedback">Feedback</string>
+    <string name="call_interface">Call Interface</string>
     <string name="history_record">History record</string>
     <string name="set_nick">Set Nick</string>
     <string name="set_tenantId">TenantId</string>
@@ -42,6 +44,7 @@
     <string name="pop_after_sales">After_Sales</string>
     <!-- demo -->
     <string name="register_user_fail">register user failed!</string>
+    <string name="userName">login name</string>
 
     <string name="leave_title">Note</string>
     <string name="leave_name">Name:</string>
@@ -78,6 +81,7 @@
     <string name="comment_suc">Add comment successful.</string>
     <string name="comment_fail">Add comment fail.</string>
     <string name="file_uploading">File is uploading.</string>
+    <string name="flat_loading">loading…</string>
     <string name="comment_content_not_null">Comment content cannot be empty.</string>
     <string name="please_wait_noti">Please waiting for a moment.</string>
     <string name="send_suc">Send successful</string>
@@ -138,7 +142,7 @@
     <string name="answering">answering...</string>
     <string name="tip_multi_video_calling">Multiple people video call...</string>
 
-    <string name="tip_video_calling">on the Calling...(%d)</string>
+    <string name="tip_video_calling">on the Calling</string>
     <string name="tip_video_in">received video call...</string>
 	<!-- call end -->
 
@@ -196,4 +200,16 @@
     <string name="robot_comment_tags">Robot Comment Tags</string>
     <string name="unsolved_reason">unresolved reasons</string>
     <string name="share_screen_ongoing">Shared screen running...</string>
+    <string name="ping_jia_title">Has the customer service solved your problem？</string>
+
+
+    <!--电子白板-->
+    <!--<string name="switch_dark_mode" translatable="false">Switch DarkMode</string>
+    <string name="delete_scenes" translatable="false">Delete Scenes</string>
+    <string name="change_toolbox" translatable="false" tools:ignore="ExtraTranslation">Toolbox Mode</string>
+    <string name="change_toolbox_gravity" translatable="false" tools:ignore="ExtraTranslation">Toolbox Gravity</string>
+    <string name="change_redo_undo" translatable="false" tools:ignore="ExtraTranslation">RedoUndo Mode</string>
+    <string name="change_width" translatable="false" tools:ignore="ExtraTranslation">width</string>
+    <string name="change_height" translatable="false" tools:ignore="ExtraTranslation">height</string>-->
+
 </resources>

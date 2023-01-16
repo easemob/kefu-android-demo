@@ -65,7 +65,66 @@
 				/>
 		</LinearLayout>
     </ScrollView>
-    <RelativeLayout 
+
+	<LinearLayout
+		android:id="@+id/llt"
+		android:orientation="horizontal"
+		android:layout_alignParentBottom="true"
+		android:layout_height="@dimen/bottom_navi_height"
+		android:background="@color/normal_bg_color"
+		android:layout_width="match_parent">
+		<LinearLayout
+			android:id="@+id/rl_tochat"
+			android:layout_weight="1"
+			android:orientation="horizontal"
+			android:layout_width="0dp"
+			android:gravity="center"
+			android:layout_height="match_parent">
+			<ImageView
+				android:src="@drawable/hd_chat_icon_red"
+				android:layout_width="22dp"
+				android:layout_height="22dp"/>
+			<TextView
+				android:layout_marginLeft="8dp"
+				android:text="在线沟通"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+		</LinearLayout>
+		<View
+			android:id="@+id/lineView"
+			android:background="#c4c4c4"
+			android:layout_width="1dp"
+			android:layout_height="match_parent"/>
+		<LinearLayout
+			android:id="@+id/callVideoLlt"
+			android:gravity="center"
+			android:layout_weight="1"
+			android:orientation="horizontal"
+			android:layout_width="0dp"
+			android:layout_height="match_parent">
+			<com.hyphenate.helpdesk.easeui.ui.IconTextView
+				android:text="\ue76c"
+				android:textColor="#3B84F7"
+				android:gravity="center"
+				android:textSize="26sp"
+				android:layout_width="28dp"
+				android:layout_height="28dp"/>
+			<TextView
+				android:layout_marginLeft="6dp"
+				android:text="视频沟通"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+		</LinearLayout>
+	</LinearLayout>
+
+	<View
+		android:layout_above="@id/llt"
+		android:layout_height="1dp"
+		android:layout_width="match_parent"
+		android:background="#c4c4c4"
+		/>
+
+    <!--<RelativeLayout
         android:id="@+id/rl_tochat"
         android:layout_alignParentBottom="true"
         android:layout_height="@dimen/bottom_navi_height"
@@ -77,12 +136,13 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-	        <ImageView 
-	            android:layout_marginLeft="@dimen/title_text_margin"
-	            android:id="@+id/iv_connect_customer"
-	            android:layout_height="@dimen/title_customer_icon_size"
-	            android:layout_width="@dimen/title_customer_icon_size"
-	            android:background="@drawable/hd_chat_icon_red"/>
+
+			<ImageView
+				android:id="@+id/iv_connect_customer"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/title_text_margin"
+				android:background="@drawable/hd_chat_icon_red" />
 	        <TextView 
 	            android:layout_marginLeft="@dimen/bottom_text_margin_left_icon"
 	            android:layout_height="wrap_content"
@@ -101,10 +161,11 @@
 		        android:background="@drawable/hd_icon_like_gray"/>
         </LinearLayout>
     </RelativeLayout>
+
 	<View 
 	    	android:layout_above="@id/rl_tochat"
             android:layout_height="1dp"
             android:layout_width="match_parent"
             android:background="#c4c4c4"
-            />
+            />-->
 </RelativeLayout>

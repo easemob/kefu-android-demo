@@ -2,6 +2,7 @@ package com.hyphenate.helpdesk.easeui;
 
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,10 +14,12 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EasyUtils;
 
@@ -240,6 +243,7 @@ public class Notifier {
                     break;
             }
 
+
             PackageManager packageManager = appContext.getPackageManager();
 
             // notification titile
@@ -258,8 +262,18 @@ public class Notifier {
                 }
             }
 
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                NotificationChannel notificationChannel=new NotificationChannel("001","channel_name",NotificationManager.IMPORTANCE_HIGH);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+
             // create and send notificaiton
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
+            /*NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
+                    .setSmallIcon(appContext.getApplicationInfo().icon)
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true);*/
+
+            NotificationCompat.Builder mBuilder=new NotificationCompat.Builder(appContext,"001")
                     .setSmallIcon(appContext.getApplicationInfo().icon)
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(true);
@@ -304,7 +318,10 @@ public class Notifier {
             mBuilder.setContentText(summaryBody);
             mBuilder.setContentIntent(pendingIntent);
             // mBuilder.setNumber(notificationNum);
+
+
             Notification notification = mBuilder.build();
+
             if (isForeground) {
                 notificationManager.notify(foregroundNotifyID, notification);
                 notificationManager.cancel(foregroundNotifyID);
@@ -343,6 +360,7 @@ public class Notifier {
                 Log.e(TAG, "in slient mode now");
                 return;
             }
+
             UIProvider.SettingsProvider settingsProvider = UIProvider.getInstance().getSettingsProvider();
             if(settingsProvider.isMsgVibrateAllowed(message)){
                 long[] pattern = new long[] { 0, 180, 80, 120 };

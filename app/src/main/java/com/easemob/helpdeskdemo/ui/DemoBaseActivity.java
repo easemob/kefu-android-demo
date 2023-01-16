@@ -14,8 +14,9 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.view.View;
+
+import androidx.annotation.IdRes;
 
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical"
+			  android:paddingTop="13dp">
+
+	<TextView
+		android:id="@+id/timestamp"
+		style="@style/chat_text_date_style"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center" />
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/dp_5" >
+
+		<ImageView
+			android:id="@+id/iv_userhead"
+			android:layout_width="@dimen/dp_48"
+			android:layout_height="@dimen/dp_48"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:layout_marginLeft="@dimen/dp_5"
+			android:scaleType="fitXY"
+			/>
+
+		<TextView
+			android:id="@+id/tv_userid"
+			style="@style/chat_text_name_style"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="@dimen/dp_12"
+			android:textSize="@dimen/sp_13"
+			android:layout_toRightOf="@id/iv_userhead"
+			android:visibility="gone" />
+
+		<RelativeLayout
+			android:id="@+id/bubble"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="16dp"
+			android:layout_marginRight="16dp"
+			android:layout_below="@id/tv_userid"
+			android:layout_toRightOf="@id/iv_userhead"
+			android:clickable="false">
+
+			<LinearLayout
+				android:id="@+id/articlesContainer"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+			    android:padding="10dp"
+			    android:background="#ffffff"
+				>
+
+			</LinearLayout>
+		</RelativeLayout>
+
+	</RelativeLayout>
+
+</LinearLayout>

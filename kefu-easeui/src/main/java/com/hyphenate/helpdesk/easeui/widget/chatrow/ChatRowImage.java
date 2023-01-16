@@ -21,6 +21,8 @@ import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.easeui.ImageCache;
 import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.ui.ShowBigImageActivity;
+import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
 import com.hyphenate.util.DensityUtil;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.ImageUtils;
@@ -34,6 +36,7 @@ public class ChatRowImage extends ChatRowFile{
     protected ImageView imageView;
     private EMImageMessageBody imgBody;
     private static final String TAG = ChatRowImage.class.getSimpleName();
+    private View mBtn_transfer;
 
 
     public ChatRowImage(Context context, Message message, int position, BaseAdapter adapter) {
@@ -49,6 +52,18 @@ public class ChatRowImage extends ChatRowFile{
     protected void onFindViewById() {
         percentageView = (TextView) findViewById(R.id.percentage);
         imageView = (ImageView) findViewById(R.id.image);
+        mBtn_transfer = findViewById(R.id.btn_transfer);
+        if(mBtn_transfer != null){
+            mBtn_transfer.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToCustomServiceInfo toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message);
+                    if (toCustomServiceInfo != null){
+                        toCustomServiceInfo.sendToCustomServiceMessage(message);
+                    }
+                }
+            });
+        }
     }
 
 
@@ -69,6 +84,10 @@ public class ChatRowImage extends ChatRowFile{
                 Uri filePath = imgBody.getLocalUri();
                 Uri thumbnailUrl = imgBody.thumbnailLocalUri();
                 showImageView(thumbnailUrl, filePath, message);
+            }
+            if (mBtn_transfer != null){
+                ToCustomServiceInfo toCustomServiceInfo = MessageHelper.getToCustomServiceInfo(message);
+                mBtn_transfer.setVisibility(toCustomServiceInfo != null ? VISIBLE : GONE);
             }
             return;
         }

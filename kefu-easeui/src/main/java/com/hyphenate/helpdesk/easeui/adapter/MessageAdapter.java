@@ -12,7 +12,9 @@ import android.widget.ListView;
 
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
+import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.Message;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.widget.MessageList.MessageListItemClickListener;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
@@ -21,6 +23,7 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowBigExpression;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowCustomEmoji;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowFile;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowImage;
+import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowRichText;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowRobotMenu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowText;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTextCommentInvite;
@@ -29,7 +32,11 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowTransferToKefu;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
+import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
+
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -64,7 +71,8 @@ public class MessageAdapter extends BaseAdapter {
 	private static final int MESSAGE_TYPE_RECV_CUSTOMEMOJI = 17;
 	private static final int MESSAGE_TYPE_SENT_CUSTOMEMOJI = 18;
 	private static final int MESSAGE_TYPE_COMMENT_INVITE = 19;
-
+	private static final int MESSAGE_TYPE_RECV_HTML_WEBVIEW = 20;
+	private static final int MESSAGE_TYPE_SENT_HTML_WEBVIEW = 21;
 
 
 	private static final int MESSAGE_TYPE_COUNT = 20;
@@ -235,7 +243,7 @@ public class MessageAdapter extends BaseAdapter {
 		if (message == null) {
 			return -1;
 		}
-		
+
 		if(customRowProvider != null && customRowProvider.getCustomChatRowType(message) > 0){
 		    return customRowProvider.getCustomChatRowType(message) + MESSAGE_TYPE_COUNT;
 		}
@@ -262,6 +270,8 @@ public class MessageAdapter extends BaseAdapter {
 							MESSAGE_TYPE_RECV_CUSTOMEMOJI : MESSAGE_TYPE_SENT_CUSTOMEMOJI;
 				case RobotCommentInviteMsg:
 					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_COMMENT_INVITE: MESSAGE_TYPE_COMMENT_INVITE; // ONLY HAVE RECEIVED TYPE
+				case RichText:
+					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_HTML_WEBVIEW : MESSAGE_TYPE_SENT_HTML_WEBVIEW;
 				default:
 					return message.direct() == Message.Direct.RECEIVE ? MESSAGE_TYPE_RECV_TXT : MESSAGE_TYPE_SENT_TXT;
 			}
@@ -283,7 +293,7 @@ public class MessageAdapter extends BaseAdapter {
 	}
 
 	protected ChatRow createChatRow(Context context, Message message, int position) {
-        ChatRow chatRow = null;
+		ChatRow chatRow = null;
         if(customRowProvider != null && customRowProvider.getCustomChatRow(message, position, this) != null){
             return customRowProvider.getCustomChatRow(message, position, this);
         }
@@ -311,6 +321,9 @@ public class MessageAdapter extends BaseAdapter {
 		        case CustomEmojiMsg:
 			        chatRow = new ChatRowCustomEmoji(context, message, position, this);
 			        break;
+				case RichText:
+					chatRow = new ChatRowRichText(context, message, position, this);
+					break;
 		        default:
 			        chatRow = new ChatRowText(context, message, position, this);
 	        }
@@ -341,6 +354,7 @@ public class MessageAdapter extends BaseAdapter {
 		if(convertView == null ){
 			convertView = createChatRow(context, message, position);
 		}
+
 		//缓存的view的message很可能不是当前item的，传入当前message和position更新ui
 		((ChatRow)convertView).setUpView(message, position, itemClickListener);
 		

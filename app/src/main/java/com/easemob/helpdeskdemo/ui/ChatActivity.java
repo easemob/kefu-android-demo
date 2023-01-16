@@ -1,19 +1,25 @@
+
+
 package com.easemob.helpdeskdemo.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.DemoMessageHelper;
 import com.easemob.helpdeskdemo.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.BaseActivity;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.Config;
+
+import java.util.HashMap;
 
 public class ChatActivity extends BaseActivity {
 
@@ -75,9 +81,21 @@ public class ChatActivity extends BaseActivity {
      * @param selectedIndex
      */
     private void sendOrderMessage(int selectedIndex){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("createTicketEnable",true);
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(DemoMessageHelper.createOrderInfo(this, selectedIndex));
+        message.addMsgTypeDictionary(map);
         ChatClient.getInstance().chatManager().saveMessage(message);
+
+        String stringAttribute = null;
+        try {
+            stringAttribute = message.getStringAttribute(Message.KEY_MSGTYPE);
+            Log.e("ppppppppppp","msgType = " + stringAttribute);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -85,8 +103,11 @@ public class ChatActivity extends BaseActivity {
      * @param selectedIndex
      */
     private void sendTrackMessage(int selectedIndex) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("createTicketEnable",true);
         Message message = Message.createTxtSendMessage(getMessageContent(selectedIndex), toChatUsername);
         message.addContent(DemoMessageHelper.createVisitorTrack(this, selectedIndex));
+        message.addMsgTypeDictionary(map);
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 

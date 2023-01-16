@@ -19,28 +19,35 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
+import com.easemob.veckit.utils.FlatFunctionUtils;
+import com.hyphenate.agora.FunctionIconItem;
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.chat.VecConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
+import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
+import com.hyphenate.helpdesk.util.Log;
 //import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.bertsir.zbar.QrConfig;
@@ -61,6 +68,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private TextView tvTenantId;
 	private TextView tvProjectId;
 	private TextView tvVersion;
+	private TextView iv_account_right_config;
+	private View callInterface;
 
 
 	private static final int REQUEST_CODE_APPKEY = 1;
@@ -70,6 +79,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_PROJECT_ID = 5;
 
 	private Dialog dialog;
+	private TextView mTextView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +110,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		tvTenantId = (TextView) getView().findViewById(R.id.tv_setting_tenant_id);
 		tvProjectId = (TextView) getView().findViewById(R.id.tv_setting_project_id);
 		tvVersion = (TextView) getView().findViewById(R.id.tv_version);
+		iv_account_right_config = (TextView) getView().findViewById(R.id.tv_setting_account_config);
 
 		rlAppkey = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_appkey);
 		rlAccount = (RelativeLayout) getView().findViewById(R.id.ll_setting_list_account);
@@ -107,6 +118,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlTenantId = (RelativeLayout) getView().findViewById(R.id.ll_setting_tenant_id);
 		rlProjectId = (RelativeLayout) getView().findViewById(R.id.ll_setting_project_id);
 		rlQcode = (RelativeLayout) getView().findViewById(R.id.rl_qcode);
+		callInterface = getView().findViewById(R.id.callInterface);
+
+		mTextView = getView().findViewById(R.id.tv_setting_nick_login);
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mTextView != null){
+			mTextView.setText(Preferences.getInstance().getLoginUserName());
+		}
 	}
 
 	private void initListener() {
@@ -115,6 +138,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		tvNick.setText(Preferences.getInstance().getNickName());
 		tvTenantId.setText(Preferences.getInstance().getTenantId());
 		tvProjectId.setText(Preferences.getInstance().getProjectId());
+		iv_account_right_config.setText(Preferences.getInstance().getConfigId());
 
 		rlAppkey.setOnClickListener(this);
 		rlAccount.setOnClickListener(this);
@@ -122,6 +146,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlTenantId.setOnClickListener(this);
 		rlProjectId.setOnClickListener(this);
 		rlQcode.setOnClickListener(this);
+		callInterface.setOnClickListener(this);
 	}
 
 
@@ -165,6 +190,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				case REQUEST_CODE_NICK:
 					String oldNick = tvNick.getText().toString();
 					String newNick = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					VecConfig.newVecConfig().setUserName(newNick);
 					if (oldNick.equals(newNick)) {
 						return;
 					}
@@ -238,6 +264,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				@Override
 				public void onSuccess() {
 					changeAppKey(newAppkey);
+					Preferences.getInstance().saveLoginUserName("");
 				}
 
 				@Override
@@ -353,21 +380,48 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					}
 				});
 				break;
+			case R.id.callInterface:
+				Intent in = new Intent(getActivity(), CallInterfaceActivity.class);
+				startActivity(in);
+				break;
 			default:
 				break;
 		}
 
 	}
 
+	private void setTenantId(String tenantId){
+		// 动态获取功能按钮，在视频页面使用到
+		AgoraMessage.asyncGetTenantIdFunctionIcons(tenantId, new ValueCallBack<List<FunctionIconItem>>() {
+			@Override
+			public void onSuccess(List<FunctionIconItem> value) {
+				FlatFunctionUtils.get().setIconItems(value);
+			}
+
+			@Override
+			public void onError(int error, String errorMsg) {
+
+			}
+		});
+	}
+
 
 	private void dealWithQrcodeResult(String result) {
+
+
 		//处理扫描结果
 		try {
+			Log.e("uuuuuuuu","url = "+result);
 			Map<String, String> paramMap = urlParamParse(result);
 			String appkey = paramMap.get("appkey");
 			String imServiceNum = paramMap.get("imservicenum");
 			String tenantId = paramMap.get("tenantid");
 			String projectId = paramMap.get("projectid");
+			String configId = paramMap.get("configid");
+			Log.e("uuuuuuuu","appkey = "+appkey);
+			Log.e("uuuuuuuu","imServiceNum = "+imServiceNum);
+			Log.e("uuuuuuuu","tenantId = "+tenantId);
+			Log.e("uuuuuuuu","configId = "+configId);
 			if (!TextUtils.isEmpty(appkey)) {
 				tvAppkey.setText(appkey);
 				showCustomMessage(appkey);
@@ -380,7 +434,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				tvTenantId.setText(tenantId);
 				Preferences.getInstance().setTenantId(tenantId);
 				ChatClient.getInstance().changeTenantId(tenantId);
+				setTenantId(tenantId);
 			}
+
+			configId = TextUtils.isEmpty(configId) ? "" : configId;
+			iv_account_right_config.setText(configId);
+			Preferences.getInstance().setConfigId(configId);
+			ChatClient.getInstance().changeConfigId(configId);
+
 			if (!TextUtils.isEmpty(imServiceNum)) {
 				tvAccount.setText(imServiceNum);
 				Preferences.getInstance().setCustomerAccount(imServiceNum);

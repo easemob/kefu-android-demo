@@ -1,12 +1,13 @@
 package com.easemob.helpdeskdemo.widget;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
 
 import com.easemob.helpdeskdemo.R;
 
