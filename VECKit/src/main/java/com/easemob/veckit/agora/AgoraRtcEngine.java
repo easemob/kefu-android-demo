@@ -93,6 +93,10 @@ public class AgoraRtcEngine {
         mEngine.startScreenCapture(screenCaptureParameters);
     }
 
+    /*public void stop(boolean is){
+        mEngine.muteLocalVideoStream(is);
+    }*/
+
     public void stopScreenCapture(){
         mEngine.setVideoSource(new AgoraDefaultSource());
         mEngine.stopScreenCapture();

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.easemob.helpdeskdemo.R;
-import com.easemob.helpdeskdemo.utils.Calling;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowEvaluation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
@@ -39,6 +38,7 @@ import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.helpdesk.videokit.ui.Calling;
 import com.hyphenate.util.EMLog;
 
 
@@ -276,7 +276,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         //增加扩展的item
         inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map, extendMenuItemClickListener);
         inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg, extendMenuItemClickListener);
-        if (VecConfig.newVecConfig().isOldVideo()){
+        if (VecConfig.newVecConfig().isOldVideoEnable()){
             inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call, extendMenuItemClickListener);
         }
 

@@ -8,7 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.easemob.veckit.R;
+
+import com.easemob.helpdeskdemo.R;
 
 import java.math.BigDecimal;
 

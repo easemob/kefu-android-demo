@@ -1,7 +1,25 @@
 plugins {
     id 'com.android.library'
+    id "org.sonarqube" version "2.6.2"
 }
 
+/*apply plugin: 'com.kezong.fat-aar'
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "veckit"
+        property "sonar.projectKey", "vec-kit-android"
+    }
+}*/
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "veckit"
+        property "sonar.projectKey", "vec-kit-android"
+    }
+}
+
+apply plugin: 'org.sonarqube'
 
 android {
 
@@ -53,41 +71,24 @@ repositories {
 /*fataar {
     transitive = true
 }*/
-
 dependencies {
-    // implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    // implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    //testImplementation 'junit:junit:4.+'
-    //androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    //androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    // implementation 'io.agora.rtc:full-sdk:3.6.2'
-    // api 'io.agora.rtc:full-sdk:3.7.0'
+    implementation 'io.agora.rtc:full-sdk:3.7.0'
+    // 电子白板
+    //api 'com.github.netless-io:fastboard-android:1.2.3'
+
+    // api files('libs/kefu-sdk-1.3.3.1.jar')
 
     implementation 'com.google.code.gson:gson:2.8.5'
-    // api "com.github.netless-io:fastboard-android:4436eeefcb94d5fc38888280f3b2253ddacdd608"
+    // implementation "com.github.netless-io:fastboard-android:4436eeefcb94d5fc38888280f3b2253ddacdd608"
+    implementation "com.github.netless-io:fastboard-android:1.3.4"
     api project(':kefu-easeui')
+
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0-rc01'
-
-    //embed project(path: ':kefu-sdk', configuration:'default')
-    //embed ('com.google.code.gson:gson:2.8.5'){ transitive = true}
-    //embed ('io.agora.rtc:full-sdk:3.7.0'){ transitive = true}
-    //embed ('com.github.netless-io:fastboard-android:4436eeefcb94d5fc38888280f3b2253ddacdd608'){ transitive = true}
-
-    /*embed(name: 'aar包名称', ext: 'aar'){ transitive = true}
-    embed ('com.squareup.okio:okio:1.14.1'){ transitive = true}
-    embed ('com.squareup.okhttp3:okhttp:3.8.0'){ transitive = true}
-    embed ('com.google.code.gson:gson:2.8.0'){ transitive = true}*/
-
-    /*embed project(path: ':opposdklib', configuration:'default')   //本地项目
-    embed project(path: ':opencvsdk', configuration:'default')
-    embed project(path: ':ijkplayer-xiaomi', configuration:'default')
-    embed "com.blankj:utilcode:1.23.4"           //远程依赖
-    embed 'io.reactivex.rxjava2:rxjava:2.1.17'
-    embed 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    embed 'com.google.code.gson:gson:2.8.2'
-    embed 'org.reactivestreams:reactive-streams:1.0.2'
-    embed (name:'ijkplayer-java-mate',ext:'aar')  //本地aar*/
-
 }
+
+

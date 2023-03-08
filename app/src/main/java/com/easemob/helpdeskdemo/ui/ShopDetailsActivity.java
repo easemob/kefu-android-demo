@@ -29,7 +29,6 @@ import com.easemob.helpdeskdemo.HMSPushHelper;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.veckit.VECKitCalling;
-import com.easemob.veckit.utils.FlatFunctionUtils;
 import com.hyphenate.agora.FunctionIconItem;
 import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
@@ -42,7 +41,6 @@ import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import java.util.List;
 import java.util.Locale;
 
-import static java.lang.Compiler.enable;
 
 public class ShopDetailsActivity extends DemoBaseActivity {
 	private View rl_tochat;
@@ -91,8 +89,8 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 
 
 				if (ChatClient.getInstance().isLoggedInBefore()){
+					// TODO 发送vec视频邀请
 					VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
-					// CallVideoActivity.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
 				}else {
 					createRandomAccountThenLoginChatServer();
 				}
@@ -319,7 +317,7 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 				// 获取华为 HMS 推送 token
 				HMSPushHelper.getInstance().getHMSToken(ShopDetailsActivity.this);
 				AgoraMessage.newAgoraMessage().setCurrentChatUsername(Preferences.getInstance().getCustomerAccount());
-				//CallVideoActivity.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
+				// TODO 发送vec视屏邀请
 				VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
 			}
 		});

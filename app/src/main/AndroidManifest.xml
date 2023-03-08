@@ -179,11 +179,6 @@
             android:theme="@style/MyDialogStyle"
             />
         <!-- 视频通话 -->
-        <activity android:name=".ui.CallActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            android:theme="@style/horizontal_slide_no_anim" />
 
         <!-- 视频通话 -->
         <activity android:name=".ui.RobotCommentTagsActivity"
@@ -357,7 +352,6 @@
         </service>
         <!-- huawei push end -->
 
-        <service android:name=".service.VideoCallWindowService" />
     </application>
 
 </manifest>

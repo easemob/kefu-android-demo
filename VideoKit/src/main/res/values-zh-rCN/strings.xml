@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tip_video_calling">正在通话中</string>
+    <string name="flat_loading">正在加载…</string>
+    <string name="file_uploading">文件上传中…</string>
+</resources>

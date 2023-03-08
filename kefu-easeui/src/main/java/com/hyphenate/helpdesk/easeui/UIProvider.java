@@ -3,6 +3,7 @@ package com.hyphenate.helpdesk.easeui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 

@@ -1,2 +1,3 @@
 include ':VECKit'
-include ':app', ':kefu-easeui', ':kefu-sdk', ':bottomnavigation',':zbarlibary', ':compoundlayout', ":player"
+include ':VideoKit'
+include ':app', ':kefu-easeui', ':bottomnavigation',':zbarlibary', ':compoundlayout', ":player"

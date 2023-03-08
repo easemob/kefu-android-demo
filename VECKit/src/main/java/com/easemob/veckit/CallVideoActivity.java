@@ -36,7 +36,6 @@ import com.easemob.veckit.floating.FloatWindowManager;
 import com.easemob.veckit.ui.EvaluateView;
 import com.easemob.veckit.ui.flow.FlowBean;
 import com.easemob.veckit.ui.flow.FlowTagLayout;
-import com.easemob.veckit.utils.FlatFunctionUtils;
 import com.easemob.veckit.utils.Utils;
 import com.easemob.veckit.utils.WaitNetworkUtils;
 import com.google.gson.Gson;
@@ -46,7 +45,7 @@ import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
-import com.hyphenate.helpdesk.util.Log;
+import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
 import com.hyphenate.util.EMLog;
 
 import org.json.JSONException;
@@ -57,10 +56,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 
 public class CallVideoActivity extends BaseActivity implements View.OnClickListener, IEndCallback, RatingBar.OnRatingChangeListener {
-    private final static String TAG = "VECVideo";
+    private final static String TAG = CallVideoActivity.class.getSimpleName();
     public final static String DIALOG_TYPE_KEY = "dialog_type_key";
     public final static String LOAD_LOCAL_STYLE = "load_local_style";
     // 数据key
@@ -130,11 +130,9 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
         intent.putExtra(DIALOG_TYPE_KEY, DIALOG_TYPE_DEFAULT);
         // 主动
         intent.putExtra(VideoCallWindowService.INTENT_CALLING_TAG, VideoCallWindowService.INTENT_CALLING_TAG_ACTIVE_VALUE);
-        if (TextUtils.isEmpty(toChatUserName)) {
+        /*if (TextUtils.isEmpty(toChatUserName)) {
             toChatUserName = AgoraMessage.newAgoraMessage().getCurrentChatUsername();
-        }
-        EMLog.e("VECVideo","主动 CallVideoActivity.callingRequest toChatUserName = "
-                +toChatUserName);
+        }*/
         intent.putExtra(VideoCallWindowService.CURRENT_CHAT_USER_NAME, toChatUserName);
         context.startActivity(intent);
     }
@@ -148,12 +146,12 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
         // 主动
         intent.putExtra(VideoCallWindowService.INTENT_CALLING_TAG, VideoCallWindowService.INTENT_CALLING_TAG_ACTIVE_VALUE);
         intent.putExtra(VIDEO_STYLE_KEY, jsonStyle);
-        if (TextUtils.isEmpty(toChatUserName)) {
+        /*if (TextUtils.isEmpty(toChatUserName)) {
             toChatUserName = AgoraMessage.newAgoraMessage().getCurrentChatUsername();
-        }
+        }*/
         intent.putExtra(VideoCallWindowService.CURRENT_CHAT_USER_NAME, toChatUserName);
-        EMLog.e("VECVideo","主动 CallVideoActivity.callingRequest toChatUserName = "
-                +toChatUserName+", jsonStyle = "+jsonStyle);
+
+        EMLog.e(TAG,"访客主动发送视频邀请 callingRequest");
         context.startActivity(intent);
     }
 
@@ -176,9 +174,9 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
         intent.putExtra(LOAD_LOCAL_STYLE, true);
         // 主动
         intent.putExtra(VideoCallWindowService.INTENT_CALLING_TAG, VideoCallWindowService.INTENT_CALLING_TAG_ACTIVE_VALUE);
-        if (TextUtils.isEmpty(toChatUserName)) {
+        /*if (TextUtils.isEmpty(toChatUserName)) {
             toChatUserName = AgoraMessage.newAgoraMessage().getCurrentChatUsername();
-        }
+        }*/
         intent.putExtra(VideoCallWindowService.CURRENT_CHAT_USER_NAME, toChatUserName);
         context.startActivity(intent);
     }
@@ -218,13 +216,16 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
 
             // 被动
             i.putExtra(VideoCallWindowService.INTENT_CALLING_TAG, VideoCallWindowService.INTENT_CALLING_TAG_PASSIVE_VALUE);
-            EMLog.e("VECVideo","访客主动发送视频邀请，坐席响应访客视频邀请 CallVideoActivity.callingResponse");
+            EMLog.e(TAG,"访客主动发送视频邀请，坐席响应访客视频邀请 callingResponse");
         }else {
             // 坐席主动发送邀请
             i.putExtra("msg", intent.getStringExtra("msg"));
             i.putExtra(VideoCallWindowService.INTENT_CALLING_TAG, VideoCallWindowService.INTENT_CALLING_TAG_ZUO_XI_ACTIVE_VALUE);
-            EMLog.e("VECVideo","坐席主动发送视频邀请 CallVideoActivity.callingResponse");
+            EMLog.e(TAG,"坐席主动发送视频邀请 callingResponse");
         }
+
+        Parcelable message = intent.getParcelableExtra("message");
+        i.putExtra("message", message);
 
         context.startActivity(i);
 
@@ -375,6 +376,7 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
     private void request(Callback callback) {
         String tenantId = ChatClient.getInstance().tenantId();// "77556"
         String configId = ChatClient.getInstance().getConfigId();
+
         if (TextUtils.isEmpty(configId)) {
             return;
         }
@@ -455,6 +457,9 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
             mEvaluateFlt.setIsAllowClick(true);
             initRetry(intent);
             return;
+        }else {
+            showAndHiddenInvisible(mCloseTv, false);
+            showAndHidden(mEvaluateFlt, false);
         }
 
 
@@ -526,7 +531,7 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
 
     private void activeVideo(boolean checkPermission) {
         EMLog.e(TAG, "主动发起请求 是否有悬浮权限 = " + checkPermission);
-        VecConfig.newVecConfig().setVecVideo(true);
+        // VecConfig.newVecConfig().setVecVideo(true);
         sendCmd();
         startTimerOut();
     }
@@ -548,7 +553,8 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
     private void sendCmd() {
         mIsRun = true;
         EMLog.e(TAG, "发送请求建立视频 sendCmd");
-        ChatClient.getInstance().callManager().callVecVideo(Utils.getString(getApplicationContext(), R.string.vec_agent_to_visitor), mToChatUserName);
+        // ChatClient.getInstance().callManager().callVecVideo(Utils.getString(getApplicationContext(), R.string.vec_agent_to_visitor), mToChatUserName);
+        AgoraMessage.callVecVideo(Utils.getString(getApplicationContext(), R.string.vec_agent_to_visitor));
         EMLog.e(TAG, "发送请求建立视频 sendCmd 结束");
     }
 
@@ -557,14 +563,14 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
     private void startTimerOut() {
         if (mCloseTimerOut == null) {
             mCloseTimerOut = () -> {
-                Log.e("aaaaaaaaaa", "挂断");
+                EMLog.e(TAG, "挂断");
                 // 超时拒接
                 EMLog.e(TAG, "主动发起请求，坐席端超时，挂断");
                 mIsCreate = false;
                 mIsRun = false;
                 // ChatClient.getInstance().callManager().endCall(0, true);
                 VECKitCalling.endCallFromOff();
-                VecConfig.newVecConfig().setVecVideo(false);
+                //VecConfig.newVecConfig().setVecVideo(false);
                 // 回复状态
                 dialogType(DIALOG_TYPE_DEFAULT);
             };
@@ -600,7 +606,6 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
                 // finishPage();
                 dialogType(DIALOG_TYPE_END);
             } else if (DIALOG_TYPE_WAIT == mCurrentDialogType) {
-                Log.e(TAG, "wait");
                 // 排队等待时，挂断：分两种情况，1.正在排队挂断。2.待接入时，挂断
                 mIsCreate = false;
                 mIsRun = false;
@@ -885,14 +890,14 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
             mVideoStyleBean = VideoStyleBean.create(getApplicationContext());
         }
         String jsonStyle = intent.getStringExtra(VIDEO_STYLE_KEY);
-        Log.e("aaaaaaaaaaaa", "传递值 = " + jsonStyle);
+        EMLog.e(TAG, "传递值 = " + jsonStyle);
         if (!TextUtils.isEmpty(jsonStyle)) {
             initStyleFromIntent(jsonStyle);
         } else {
             if (!loadLocalStyle) {
                 netWork();
             } else {
-                Log.e("aaaaaaaaaa", "加载本地样式");
+                EMLog.e(TAG, "加载本地样式");
             }
         }
     }
@@ -1088,7 +1093,6 @@ public class CallVideoActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onInitWaitPage(int callType, String rtcSessionId, String tenantId) {
         EMLog.e(TAG, "访客主动邀请坐席 onInitWaitPage callType = "+callType);
-        Log.e("ppppppppp","onInitWaitPage = "+callType);
         if (callType == 0){
             // 访客主动邀请坐席
             requestWait(rtcSessionId, tenantId);

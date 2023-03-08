@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tip_video_calling">on the Calling</string>
+    <string name="flat_loading">loading…</string>
+    <string name="file_uploading">File is uploading.</string>
+</resources>

@@ -119,8 +119,7 @@ public class CloudActivity extends AppCompatActivity implements View.OnClickList
             if (selectedImage != null){
                 mRealPathFromUri = GetRealFilePathFromUri.getFileAbsolutePath(this, selectedImage);
                 if (mRealPathFromUri != null){
-                    /*File file = new File(mRealPathFromUri);
-                    Log.e("oooooooo","url exists = "+file.exists());*/
+                    /*File file = new File(mRealPathFromUri);*/
                     if (mClickType != getFileTypeByFilePath(mRealPathFromUri)){
                         Toast.makeText(this, String.format(Utils.getString(getApplicationContext(), R.string.vec_please_select_type),getFileTypeName(mClickType)), Toast.LENGTH_LONG).show();
                         return;

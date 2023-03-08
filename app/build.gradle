@@ -16,7 +16,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 24
-        versionName "1.3.3.0"
+        versionName "1.3.3.1"
         multiDexEnabled true
 
         ndk {
@@ -95,8 +95,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.0'*/
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     compile 'com.github.jaouan:compoundlayout:1.0.1'
-    //compile project(':kefu-easeui')
-    compile project(':VECKit')
+    api project(':VideoKit')
+    // api project(':VECKit')
+    api project(':kefu-easeui')
     compile project(':bottomnavigation')
     compile 'com.jude:easyrecyclerview:4.0.6'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'

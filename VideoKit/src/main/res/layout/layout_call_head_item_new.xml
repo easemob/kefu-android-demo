@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hyphenate.helpdesk.videokit.ui.views.FrameLayoutClickView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/remoteView"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"/>
+
+
+    <FrameLayout
+        android:visibility="invisible"
+        android:background="@color/white"
+        android:id="@+id/cameraView"
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+        <com.hyphenate.helpdesk.videokit.ui.views.IconTextView
+            android:layout_gravity="center"
+            android:text="\ue650"
+            android:textColor="#BFBFBF"
+            android:textSize="46sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/whiteboardDef"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:src="@drawable/call_whiteboard_def"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"/>
+
+    <TextView
+        android:id="@+id/tv_nick"
+        android:background="@drawable/hd_gray_shape"
+        android:textSize="12sp"
+        android:text=""
+        android:layout_marginBottom="2dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:paddingTop="3dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="2dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:maxWidth="90dp"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.hyphenate.helpdesk.videokit.ui.views.IconTextView
+        android:background="@drawable/hd_write_shape"
+        android:text="\ue6a7"
+        android:id="@+id/remoteIconTextView"
+        android:textColor="#ff4400"
+        android:textSize="12sp"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</com.hyphenate.helpdesk.videokit.ui.views.FrameLayoutClickView>

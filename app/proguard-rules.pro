@@ -32,6 +32,8 @@
 
 -keep class com.hyphenate.helpdesk.easeui.ui.** { *; }
 
+-keep class com.hyphenate.helpdesk.videokit.** { *; }
+
 #gson
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.* { *; }

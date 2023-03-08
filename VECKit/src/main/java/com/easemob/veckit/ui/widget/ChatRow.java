@@ -204,24 +204,20 @@ public abstract class ChatRow extends LinearLayout {
      * 设置消息接收callback
      */
     protected void setMessageReceiveCallback() {
-        Log.e(TAG,"messageReceiveCallback = "+messageReceiveCallback);
         if (messageReceiveCallback == null) {
             messageReceiveCallback = new Callback() {
                 @Override
                 public void onSuccess() {
-                    Log.e(TAG,"onSuccess");
                     updateView();
                 }
 
                 @Override
                 public void onError(int i, String s) {
-                    Log.e(TAG,"error = "+s+", code = "+i);
                     updateView();
                 }
 
                 @Override
                 public void onProgress(final int progress, String s) {
-                    Log.e(TAG,"onProgress = "+s);
                     mHandler.post(new Runnable() {
                         public void run() {
                             if (percentageView != null && progress < 100) {

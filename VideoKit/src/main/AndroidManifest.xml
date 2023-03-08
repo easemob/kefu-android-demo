@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hyphenate.helpdesk.videokit">
+    <!-- 悬浮窗所需权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+
+    <application
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+        <!-- 视频通话 -->
+        <activity android:name=".ui.CallActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:theme="@style/horizontal_slide_no_anim" />
+
+        <activity android:name=".board.CloudActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ligtht_default_style"/>
+
+        <service android:name=".ui.VideoCallWindowService" />
+    </application>
+
+</manifest>

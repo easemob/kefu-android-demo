@@ -292,6 +292,13 @@ public class FloatWindowManager {
         dialog.show();
     }
 
+    public void onDestroy(){
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        dialog = null;
+    }
+
     public interface OnConfirmResult {
         void confirmResult(boolean confirm);
     }

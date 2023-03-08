@@ -17,11 +17,7 @@
         <item name="android:activityCloseEnterAnimation">@anim/hd_slide_in_from_left</item>
     </style>
 
-    <style name="default_style" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowAnimationStyle">@null</item>
-    </style>
-
-    <style name="ligtht_default_style" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="default_style" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
@@ -68,7 +64,16 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="horizontal_slide" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
+    </style>
+
+    <style name="ligtht_default_style" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+<!--
     <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
+-->
 </resources>

@@ -85,6 +85,9 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 		case Constant.MODIFY_INDEX_LEAVE_CONTENT:
 			txtTitle.setText(R.string.leave_content);
 			break;
+		case Constant.MODIFY_INDEX_LEAVE_CONFIG:
+			txtTitle.setText(R.string.leave_config);
+			break;
 		default:
 			break;
 		}

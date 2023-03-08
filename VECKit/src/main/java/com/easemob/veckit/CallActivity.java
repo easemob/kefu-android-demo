@@ -18,7 +18,6 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -42,14 +41,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.easemob.veckit.agora.AgoraRtcEngine;
-import com.easemob.veckit.agora.board.misc.CloudFile;
-import com.easemob.veckit.agora.board.misc.flat.ConversionInfo;
-import com.easemob.veckit.agora.board.misc.flat.ConvertException;
-import com.easemob.veckit.agora.board.misc.flat.ConvertedFiles;
-import com.easemob.veckit.agora.board.misc.flat.ConverterCallbacks;
-import com.easemob.veckit.agora.board.misc.flat.FileConverter;
-import com.easemob.veckit.agora.board.misc.flat.PptPage;
-import com.easemob.veckit.agora.board.misc.flat.Scene;
+import com.easemob.veckit.board.CloudFile;
+import com.easemob.veckit.board.ConversionInfo;
+import com.easemob.veckit.board.ConvertException;
+import com.easemob.veckit.board.ConvertedFiles;
+import com.easemob.veckit.board.ConverterCallbacks;
+import com.easemob.veckit.board.FileConverter;
+import com.easemob.veckit.board.PptPage;
+import com.easemob.veckit.board.Scene;
 import com.easemob.veckit.help.PushMessageLink;
 import com.easemob.veckit.signature.SignatureView;
 import com.easemob.veckit.ui.BottomContainerView;
@@ -59,7 +58,6 @@ import com.easemob.veckit.ui.IconTextView;
 import com.easemob.veckit.ui.MyChronometer;
 import com.easemob.veckit.ui.SignatureTextView;
 import com.easemob.veckit.ui.VideoItemContainerView;
-import com.easemob.veckit.utils.FlatFunctionUtils;
 import com.easemob.veckit.utils.Utils;
 import com.herewhite.sdk.RoomParams;
 import com.herewhite.sdk.domain.WindowAppParam;
@@ -73,6 +71,7 @@ import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
+import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,7 +89,6 @@ import io.agora.board.fast.Fastboard;
 import io.agora.board.fast.FastboardView;
 import io.agora.board.fast.extension.FastResult;
 import io.agora.board.fast.internal.PromiseResultAdapter;
-import io.agora.board.fast.model.FastInsertDocParams;
 import io.agora.board.fast.model.FastRegion;
 import io.agora.board.fast.model.FastRoomOptions;
 import io.agora.board.fast.model.FastStyle;
@@ -191,7 +189,7 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
 
     // 主动发起呼叫
     public static void show(Context context, String toChatUserName, Intent i){
-        VecConfig.newVecConfig().setVecVideo(true);
+        //VecConfig.newVecConfig().setVecVideo(true);
         Intent intent = new Intent(context.getApplicationContext(), CallActivity.class);
         intent.putExtra("type", i.getStringExtra("type"));
         intent.putExtra("appid", i.getStringExtra("appid"));
@@ -824,6 +822,15 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
         showAndHidden(mBottomContainerView, true);
         if (!isFullScreen){
             mFixHeightFrameLayout.showFullHeight();
+        }
+
+        try {
+            if (fastRoom != null){
+                fastRoom.destroy();
+                fastRoom = null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1857,7 +1864,7 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
 
     // 座席端邀请三方人员加入房间回调函数
     @Override
-    public void zuoXiSendThreeUserRequest(ZuoXiSendRequestObj obj) {
+    public void zuoXiSendThreeUserRequest(com.hyphenate.chat.Message message, ZuoXiSendRequestObj obj) {
         // 访客端添加第三方人员进入视频
 
         runOnUiThread(new Runnable() {
@@ -1883,7 +1890,7 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
     private boolean mIsSend;
 
     @Override
-    public void createFlatRoom(ZuoXiSendRequestObj obj) {
+    public void createFlatRoom(com.hyphenate.chat.Message message, ZuoXiSendRequestObj obj) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1922,7 +1929,7 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
 
         AgoraMessage.newAgoraMessage().unRegisterVecPushMessage(getClass().getSimpleName());
         VecConfig.newVecConfig().setIsOnLine(false);
-        VecConfig.newVecConfig().setVecVideo(false);
+        // VecConfig.newVecConfig().setVecVideo(false);
         mIsCreate = false;
         mIsStartBoard = false;
         mIsSend = false;
@@ -1954,10 +1961,14 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                 unregisterReceiver(mHeadsetReceiver);
                 mHeadsetReceiver = null;
             }
+
+            if (fastRoom != null){
+                fastRoom.destroy();
+                fastRoom = null;
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
-
 
         if (mAudioManager != null) {
             mAudioManager.setMode(AudioManager.MODE_NORMAL);
@@ -2249,7 +2260,7 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                         mFlatRoomItem.findViewById(R.id.full).setTag("0");
                         mBottomContainerView.setCustomItemState(getIconIndex(BottomContainerView.ViewIconData.TYPE_ITEM_FLAT), false);
                         // 发送请求到服务器，创建电子白板roomId，结果会回调createFlatRoom方法
-                        ChatClient.getInstance().callManager().createFlatRoom(mZuoXiSendRequestObj.getCallId());
+                        ChatClient.getInstance().callManager().createVecFlatRoom(mZuoXiSendRequestObj.getCallId());
                     } else {
                         showToast(Utils.getString(getApplicationContext(), R.string.vec_not_repeat_open_whiteboard));
                     }
@@ -2603,8 +2614,8 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
             @Override
             public void run() {
                 try {
-                    Log.e("uuuuuuuuuuuuuu","msgtype = "+msgtype);
-                    Log.e("uuuuuuuuuuuuuu","type = "+type);
+                    Log.e(TAG,"msgtype = "+msgtype);
+                    Log.e(TAG,"type = "+type);
                     if (AgoraMessage.TYPE_LINK_MESSAGE_PUSH.equalsIgnoreCase(type)) {
                         if (!isRun(type, "")){
                             return;
@@ -2726,7 +2737,6 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                         }
 
                     } else if (AgoraMessage.TYPE_FOCUS_CAMERA.equalsIgnoreCase(type)) {
-                        Log.e(TAG, "开关聚焦");
                         // 聚焦
                         if (mAgoraRtcEngine.isCameraFocusSupported()) {
                             if (!mCurrentCameraIsBack) {
@@ -2759,7 +2769,6 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                         }
 
                     } else if (AgoraMessage.TYPE_CAMERA_TORCH_ON.equalsIgnoreCase(type)) {
-                        Log.e(TAG, "开关闪光灯");
                         // 开关闪光灯
                         if (!mCurrentCameraIsBack) {
                             String msg = Utils.getString(getApplicationContext(), R.string.vec_need_switch_rear_camera);
@@ -2804,7 +2813,6 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                         }
                     } else if (AgoraMessage.TYPE_FLASH_LIGHT.equalsIgnoreCase(type)) {
                         // 开关手电筒
-                        Log.e(TAG, "开关手电筒");
                         // 判断是否为前置
                         if (!mCurrentCameraIsBack) {
                             String msg = Utils.getString(getApplicationContext(), R.string.vec_need_switch_rear_camera);
@@ -2882,9 +2890,9 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
             if ("cardocr_face_end".equals(action) || "cardocr_back_end".equals(action)
                     || "cardocr_bank_end".equals(action) || "elecsign_end".equals(action)
                     || "identityauth_end".equals(action)){
-                Log.e("uuuuuuuuuuuuuu", "mPreType = "+mPreType);
-                Log.e("uuuuuuuuuuuuuu", "action = "+action);
-                Log.e("uuuuuuuuuuuuuu", "type = "+type);
+                Log.e(TAG, "mPreType = "+mPreType);
+                Log.e(TAG, "action = "+action);
+                Log.e(TAG, "type = "+type);
                 return false;
             }else {
                 return true;
@@ -3242,54 +3250,35 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
         }
     }
 
-    /**
-     * 智能辅助（手电筒）：通知坐席端开启手电筒的状态
-     * @param isOk 是否开启成功：true开启成功，false开启失败
-     * @param msg 内容（通知坐席端开启失败的原因，如果isOK指定为true，msg传入""）
-     */
+    // 手电筒
     private void sendFlashLight(boolean isOk, String msg) {
-        AgoraMessage.sendFlashLight(isOk, msg);
+        Log.e(TAG,"sendFlashLight 不发送");
+        VECKitCalling.sendNotify("flashlightcallback", "flashlightcallback", isOk ? "on" : "off", msg);
     }
 
-    /**
-     * 智能辅助（闪光灯）：通知坐席端开启光灯的状态
-     * @param isOk 是否开启成功：true开启成功，false开启失败
-     * @param msg 内容（通知坐席端开启失败的原因，如果isOK指定为true，msg传入""）
-     */
+    // 闪光灯
     private void sendCameraTorch(boolean isOk, String msg) {
-        AgoraMessage.sendCameraTorch(isOk, msg);
+        VECKitCalling.sendNotify("cameraTorchOncallback", "cameraTorchOncallback", isOk ? "on" : "off", msg);
     }
 
-    /**
-     * 智能辅助（聚焦）：通知坐席端开启的状态
-     * @param msg 内容（通知坐席端聚焦失败的原因，聚焦成功msg传入""）
-     */
+    // 聚焦
     private void sendCameraFocus(String msg) {
-        AgoraMessage.sendCameraFocus(msg);
+        VECKitCalling.sendNotify("focusCameracallback", "focusCameracallback", "", msg);
     }
 
-    /**
-     * 智能辅助（麦克风）：通知坐席端开启的状态
-     * @param msg 内容（通知坐席端开启失败的原因，麦克风开启成功msg传入""）
-     */
+    // 麦克风
     private void sendMicrophone(String msg) {
-        AgoraMessage.sendMicrophone(msg);
+        VECKitCalling.sendNotify("microphonecallback", "microphonecallback", "", msg);
     }
 
-    /**
-     * 智能辅助（相机）：通知坐席端开启的状态
-     * @param msg 内容（通知坐席端开启失败的原因，相机开启成功msg传入""）
-     */
+    // 相机
     private void sendCamera(String msg) {
-        AgoraMessage.sendCamera(msg);
+        VECKitCalling.sendNotify("cameracallback", "cameracallback", "", msg);
     }
 
-    /**
-     * 智能辅助（切换相机）：通知坐席端切换的状态
-     * @param msg 内容（通知坐席端切换相机失败的原因，切换相机成功msg传入""）
-     */
+    // 切换相机
     private void sendChangeCamera(String msg) {
-        AgoraMessage.sendChangeCamera(msg);
+        VECKitCalling.sendNotify("cameraChangecallback", "cameraChangecallback", "", msg);
     }
 
     private boolean mIsClickFace;
@@ -3305,8 +3294,10 @@ public class CallActivity extends Activity implements IAgoraMessageNotify, Video
                 }else {
                     mCurrentCameraIsBack = true;
                 }
+
             }
         }
+
 
         View sdcardView = View.inflate(getApplicationContext(), R.layout.item_face, null);
         mPushView.addView(sdcardView, 0);

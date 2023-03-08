@@ -32,7 +32,6 @@ import android.view.WindowManager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.easemob.veckit.utils.FlatFunctionUtils;
 import com.hyphenate.helpdesk.Error;
 import com.easemob.bottomnavigation.BottomNavigation;
 import com.easemob.bottomnavigation.OnBottomNavigationSelectedListener;
@@ -48,9 +47,10 @@ import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
-import com.hyphenate.helpdesk.easeui.permission.FloatWindowManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
+import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
+import com.hyphenate.helpdesk.videokit.permission.FloatWindowManager;
 import com.hyphenate.util.EasyUtils;
 
 import java.util.List;

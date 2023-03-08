@@ -54,6 +54,7 @@
     <string name="leave_detail">Detail:</string>
     <string name="leave_content">Input content</string>
     <string name="leave_sending">Sending...</string>
+    <string name="leave_config">Config...</string>
 
     <string name="delete_message">Delete message</string>
     <string name="copy_message">Copy message</string>

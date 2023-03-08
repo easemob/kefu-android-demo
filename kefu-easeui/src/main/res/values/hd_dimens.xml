@@ -70,6 +70,8 @@
 	<dimen name="room_class_button_size">32dp</dimen>
 	<dimen name="room_class_button_padding_size">4dp</dimen>
 
+	<dimen name="dp_10">10dp</dimen>
+
 
 	<dimen name="dp_8">8dp</dimen>
 </resources>

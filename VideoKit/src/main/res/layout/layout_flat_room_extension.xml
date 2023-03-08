@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sample_flat_layout_bg"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ext_tools"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.hyphenate.helpdesk.videokit.ui.views.IconTextView
+            android:tag="0"
+            android:id="@+id/full"
+            android:text="\ue60c"
+            android:gravity="center"
+            android:layout_width="@dimen/room_class_button_size"
+            android:layout_height="@dimen/room_class_button_size"
+            />
+
+
+        <com.hyphenate.helpdesk.videokit.ui.views.IconTextView
+            android:id="@+id/cloud"
+            android:text="\ue6b3"
+            android:gravity="center"
+            android:layout_width="@dimen/room_class_button_size"
+            android:layout_height="@dimen/room_class_button_size"
+            />
+
+        <com.hyphenate.helpdesk.videokit.ui.views.IconTextView
+            android:id="@+id/exit"
+            android:text="\ue64b"
+            android:gravity="center"
+            android:layout_width="@dimen/room_class_button_size"
+            android:layout_height="@dimen/room_class_button_size"
+             />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="AppTheme" parent="android:Theme.Light" />
+
+    <style name="horizontal_slide_no_anim" parent="android:Theme.Holo.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="ligtht_default_style" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

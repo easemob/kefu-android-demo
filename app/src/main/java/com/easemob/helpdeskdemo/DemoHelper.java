@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ import com.heytap.msp.push.HeytapPushManager;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.OfficialAccount;
@@ -29,7 +29,6 @@ import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.IntentBuilder;
 import com.hyphenate.helpdesk.model.AgentInfo;
 import com.hyphenate.helpdesk.model.MessageHelper;
-import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.push.EMPushConfig;
 import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
@@ -37,6 +36,7 @@ import com.hyphenate.push.EMPushType;
 import org.json.JSONObject;
 
 import java.util.List;
+
 
 public class DemoHelper {
 
@@ -94,20 +94,20 @@ public class DemoHelper {
                 .enableOppoPush("b08eb4a4b43f49799f45d136a5e2eabe", "52d5f8b887c14987bd306f6ffcd33044")
                 .enableHWPush() // 需要在AndroidManifest.xml中配置appId
                 .enableFCM("570662061026");
-
+        
 
 
         options.setPushConfig(builder.build());
         // TODO 沙箱测试，只为测试
         // options.setKefuRestServer("https://helps.live");
-        // options.setKefuRestServer("https://sandbox.kefu.easemob.com");
+        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
 	    options.setConsoleLog(true);
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
-        options.setAppVersion("1.3.3.0");
+        options.setAppVersion("1.3.3.1");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
             _uiProvider = UIProvider.getInstance();

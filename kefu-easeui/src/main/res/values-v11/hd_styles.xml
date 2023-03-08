@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="horizontal_slide" parent="android:style/Theme.Holo.Light.NoActionBar">
+   <!-- <style name="horizontal_slide" parent="android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
-    </style>
+    </style>-->
 
     <!--<style name="horizontal_slide_translucent" parent="android:Theme.Holo.Light.NoActionBar.TranslucentDecor">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>

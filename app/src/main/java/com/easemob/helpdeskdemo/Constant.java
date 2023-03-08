@@ -56,4 +56,7 @@ public class Constant {
 	public static final int MODIFY_INDEX_LEAVE_PHONE = 7;
 	public static final int MODIFY_INDEX_LEAVE_EMAIL = 8;
 	public static final int MODIFY_INDEX_LEAVE_CONTENT = 9;
+
+	public static final int MODIFY_INDEX_CONFIG_ID = 10;
+	public static final int MODIFY_INDEX_LEAVE_CONFIG = 11;
 }

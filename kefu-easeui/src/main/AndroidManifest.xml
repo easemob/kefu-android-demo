@@ -119,11 +119,7 @@
             android:screenOrientation="fullUser"
             android:theme="@android:style/Theme.Translucent" />-->
 
-        <activity android:name=".easeui.ui.CloudActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBars"/>
-
-       <!-- <service
+        <!-- <service
             android:name=".easeui.agora.impl.ScreenSharingService"
             android:foregroundServiceType="mediaProjection"
             android:process=":screensharingsvc">

@@ -32,7 +32,6 @@ import com.easemob.helpdeskdemo.Constant;
 import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
-import com.easemob.veckit.utils.FlatFunctionUtils;
 import com.hyphenate.agora.FunctionIconItem;
 import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
@@ -40,6 +39,7 @@ import com.hyphenate.chat.VecConfig;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
+import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.util.Log;
 //import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -77,6 +77,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_NICK = 3;
 	private static final int REQUEST_CODE_TENANT_ID = 4;
 	private static final int REQUEST_CODE_PROJECT_ID = 5;
+	private static final int REQUEST_CODE_CONFIG_ID = 6;
 
 	private Dialog dialog;
 	private TextView mTextView;
@@ -147,6 +148,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlProjectId.setOnClickListener(this);
 		rlQcode.setOnClickListener(this);
 		callInterface.setOnClickListener(this);
+		iv_account_right_config.setOnClickListener(this);
 	}
 
 
@@ -221,6 +223,19 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 					}
 					tvProjectId.setText(newProjectId);
 					Preferences.getInstance().setSettingProjectId(newProjectId);
+					break;
+				case REQUEST_CODE_CONFIG_ID:
+					String oldConfigId = iv_account_right_config.getText().toString();
+					String newConfigId = data.getStringExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT);
+					/*if (!TextUtils.isDigitsOnly(newConfigId)) {
+						return;
+					}*/
+					if (oldConfigId.equals(newConfigId)) {
+						return;
+					}
+					iv_account_right_config.setText(newConfigId);
+					Preferences.getInstance().setConfigId(newConfigId);
+					ChatClient.getInstance().changeConfigId(newConfigId);
 					break;
 				default:
 					break;
@@ -351,6 +366,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_PROJECT_ID);
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strProjectId);
 				startActivityForResult(intent, REQUEST_CODE_PROJECT_ID);
+				break;
+			case R.id.tv_setting_account_config:
+				String strConfigId = iv_account_right_config.getText().toString();
+				intent.setClass(getActivity(), ModifyActivity.class);
+				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_CONFIG_ID);
+				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strConfigId);
+				startActivityForResult(intent, REQUEST_CODE_CONFIG_ID);
 				break;
 			case R.id.rl_qcode:
 				QrConfig qrConfig = new QrConfig.Builder()
