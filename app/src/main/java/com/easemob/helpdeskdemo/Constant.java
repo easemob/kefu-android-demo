@@ -59,4 +59,7 @@ public class Constant {
 
 	public static final int MODIFY_INDEX_CONFIG_ID = 10;
 	public static final int MODIFY_INDEX_LEAVE_CONFIG = 11;
+
+	public static final int MODIFY_INDEX_VEC_ACCOUNT = 12;
+	public static final int MODIFY_INDEX_LEAVE_VEC_CONFIG = 13;
 }

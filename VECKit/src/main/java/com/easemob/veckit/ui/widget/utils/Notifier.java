@@ -14,13 +14,12 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EasyUtils;
 
 import java.util.HashSet;

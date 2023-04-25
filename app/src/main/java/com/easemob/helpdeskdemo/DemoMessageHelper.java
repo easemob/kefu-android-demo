@@ -74,7 +74,7 @@ public class DemoMessageHelper {
 
 		JSONObject content = track.getContent();
 		try {
-			JSONObject object = new JSONObject();
+			// JSONObject object = new JSONObject();
 			// object.put("test","sdfdsfdsfsdfdsfdsfadda");
 			content.put("android","android端测试");
 		}catch (Exception e){

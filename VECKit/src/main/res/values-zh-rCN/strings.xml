@@ -13,6 +13,8 @@
     <string name="vec_switch_camera">切换摄像头</string>
     <string name="vec_close_camera_success">关闭摄像头成功！</string>
     <string name="vec_close_camera_fail">关闭摄像头失败，请检查网络！</string>
+    <string name="vec_no_support_share">此设备不支持屏幕分享！</string>
+    <string name="vec_close_share_ok">屏幕分享已关闭！</string>
     <string name="vec_loading">正在加载…</string>
     <string name="vec_whiteboard">白板</string>
     <string name="vec_upload_file_fail">上传文件失败，请查看网络！</string>

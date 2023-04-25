@@ -13,6 +13,8 @@
     <string name="vec_switch_camera">switch camera</string>
     <string name="vec_close_camera_success">close the camera successfully</string>
     <string name="vec_close_camera_fail">failed to close the camera, please check the network</string>
+    <string name="vec_no_support_share">this device does not support screen sharing!</string>
+    <string name="vec_close_share_ok">Screen sharing is turned off.</string>
     <string name="vec_loading">loading…</string>
     <string name="vec_whiteboard">whiteboard</string>
     <string name="vec_upload_file_fail">failed to upload file, please check the network</string>

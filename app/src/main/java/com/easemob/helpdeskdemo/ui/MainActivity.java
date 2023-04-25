@@ -14,20 +14,30 @@
 package com.easemob.helpdeskdemo.ui;
 
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Point;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -121,7 +131,8 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         String customerAccount = Preferences.getInstance().getCustomerAccount();
 
         if (!TextUtils.isEmpty(customerAccount)){
-            AgoraMessage.newAgoraMessage().setCurrentChatUsername(customerAccount);
+            AgoraMessage.newAgoraMessage().setVecImServiceNumber(customerAccount);
+            AgoraMessage.newAgoraMessage().setCecImServiceNumber(customerAccount);
         }
 
         FragmentTransaction trx = getSupportFragmentManager().beginTransaction();
@@ -183,8 +194,38 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         // 给新版vec呼叫页面设置用户名称
         VecConfig.newVecConfig().setUserName(Preferences.getInstance().getNickName());
 
-    }
 
+        /*IBinder.DeathRecipient deathRecipient = new IBinder.DeathRecipient() {
+            @Override
+            public void binderDied() {
+                Log.e("ooooooooooooooo","binderDied");
+            }
+        };
+
+
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                try {
+                    //注册死亡回调
+                    service.linkToDeath(deathRecipient,0);
+                    Log.e("ooooooooooooooo","onServiceConnected");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    Log.e("ooooooooooooooo","error = "+e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.e("ooooooooooooooo","onServiceDisconnected");
+            }
+        };
+        Intent intent = new Intent(this, TestService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);*/
+
+    }
 
     @Override
     protected void onStart() {

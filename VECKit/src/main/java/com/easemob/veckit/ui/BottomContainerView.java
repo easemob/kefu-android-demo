@@ -18,13 +18,14 @@ import androidx.annotation.Nullable;
 
 import com.easemob.veckit.R;
 import com.easemob.veckit.utils.Utils;
+import com.easemob.veckit.utils.ViewOnClickUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BottomContainerView extends LinearLayout implements View.OnClickListener {
+public class BottomContainerView extends LinearLayout implements ViewOnClickUtils.OnClickListener {
     private List<ViewIconData> mDataList;
     private int mHeight;
 
@@ -170,7 +171,8 @@ public class BottomContainerView extends LinearLayout implements View.OnClickLis
 
 
         FrameLayout f = new FrameLayout(getContext());
-        f.setOnClickListener(this);
+        // f.setOnClickListener(this);
+        ViewOnClickUtils.onClick(f, this);
         f.setTag(mDataList.get(2));
         f.setPadding(Utils.dp2px(getContext(), 12),Utils.dp2px(getContext(), 12), Utils.dp2px(getContext(), 12),Utils.dp2px(getContext(), 12));
 
@@ -343,7 +345,8 @@ public class BottomContainerView extends LinearLayout implements View.OnClickLis
         LayoutParams layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
         layoutParams.weight = 1;
         linearLayout.setLayoutParams(layoutParams);
-        linearLayout.setOnClickListener(this);
+        // linearLayout.setOnClickListener(this);
+        ViewOnClickUtils.onClick(linearLayout, this);
         return linearLayout;
     }
 
@@ -351,7 +354,8 @@ public class BottomContainerView extends LinearLayout implements View.OnClickLis
         FrameLayout linearLayout = new FrameLayout(getContext());
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         linearLayout.setLayoutParams(layoutParams);
-        linearLayout.setOnClickListener(this);
+        // linearLayout.setOnClickListener(this);
+        ViewOnClickUtils.onClick(linearLayout, this);
         return linearLayout;
     }
 

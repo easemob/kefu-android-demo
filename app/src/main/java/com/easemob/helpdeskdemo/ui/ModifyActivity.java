@@ -88,16 +88,28 @@ public class ModifyActivity extends DemoBaseActivity implements View.OnClickList
 		case Constant.MODIFY_INDEX_LEAVE_CONFIG:
 			txtTitle.setText(R.string.leave_config);
 			break;
+
+		case Constant.MODIFY_INDEX_VEC_ACCOUNT:
+			txtTitle.setText(R.string.vec_customernumber);
+			break;
+
+		case Constant.MODIFY_INDEX_LEAVE_VEC_CONFIG:
+			txtTitle.setText(R.string.customernumber_config);
+			break;
 		default:
 			break;
 		}
-		if (index >= Constant.MODIFY_INDEX_LEAVE_NAME) {
+		/*if (index >= Constant.MODIFY_INDEX_LEAVE_NAME) {
 			titleLayout.setBackgroundResource(R.color.sub_page_title_bg_color);
 			saveLayout.setBackgroundResource(R.color.sub_page_title_bg_color);
 		} else {
 			titleLayout.setBackgroundResource(R.color.title_bg_color);
 			saveLayout.setBackgroundResource(R.color.title_bg_color);
-		}
+		}*/
+
+		titleLayout.setBackgroundResource(R.color.title_bg_color);
+		saveLayout.setBackgroundResource(R.color.title_bg_color);
+
 		if (!TextUtils.isEmpty(txtContent)) {
 			edittext.setText(txtContent);
 			edittext.setSelection(txtContent.length());

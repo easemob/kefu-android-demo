@@ -69,8 +69,8 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 
 		mLineView = $(R.id.lineView);
 		mCallVideoLlt = $(R.id.callVideoLlt);
-		mLineView.setVisibility(VecConfig.newVecConfig().isEnableVideo() ? View.VISIBLE : View.GONE);
-		mCallVideoLlt.setVisibility(VecConfig.newVecConfig().isEnableVideo() ? View.VISIBLE : View.GONE);
+		mLineView.setVisibility(VecConfig.newVecConfig().isEnableVecVideo() ? View.VISIBLE : View.GONE);
+		mCallVideoLlt.setVisibility(VecConfig.newVecConfig().isEnableVecVideo() ? View.VISIBLE : View.GONE);
 
 		/*if (!VecConfig.newVecConfig().isEnableVideo()){
 			getIconEndable(ChatClient.getInstance().tenantId());
@@ -82,7 +82,7 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 			@Override
 			public void onClick(View v) {
 				//设置点击通知栏跳转事件
-				if (!VecConfig.newVecConfig().isEnableVideo()){
+				if (!VecConfig.newVecConfig().isEnableVecVideo()){
 					Toast.makeText(getApplication(), "未开灰度！", Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -90,7 +90,7 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 
 				if (ChatClient.getInstance().isLoggedInBefore()){
 					// TODO 发送vec视频邀请
-					VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
+					VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount(), ChatClient.getInstance().getConfigId());
 				}else {
 					createRandomAccountThenLoginChatServer();
 				}
@@ -148,12 +148,11 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 		AgoraMessage.asyncGetTenantIdFunctionIcons(tenantId, new ValueCallBack<List<FunctionIconItem>>() {
 			@Override
 			public void onSuccess(List<FunctionIconItem> value) {
-
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						mLineView.setVisibility(VecConfig.newVecConfig().isEnableVideo() ? View.VISIBLE : View.GONE);
-						mCallVideoLlt.setVisibility(VecConfig.newVecConfig().isEnableVideo() ? View.VISIBLE : View.GONE);
+						mLineView.setVisibility(VecConfig.newVecConfig().isEnableVecVideo() ? View.VISIBLE : View.GONE);
+						mCallVideoLlt.setVisibility(VecConfig.newVecConfig().isEnableVecVideo() ? View.VISIBLE : View.GONE);
 					}
 				});
 			}
@@ -316,9 +315,8 @@ public class ShopDetailsActivity extends DemoBaseActivity {
 
 				// 获取华为 HMS 推送 token
 				HMSPushHelper.getInstance().getHMSToken(ShopDetailsActivity.this);
-				AgoraMessage.newAgoraMessage().setCurrentChatUsername(Preferences.getInstance().getCustomerAccount());
 				// TODO 发送vec视屏邀请
-				VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount());
+				VECKitCalling.callingRequest(ShopDetailsActivity.this, Preferences.getInstance().getCustomerAccount(), ChatClient.getInstance().getConfigId());
 			}
 		});
 	}

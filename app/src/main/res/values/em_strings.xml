@@ -29,10 +29,12 @@
     <string name="qrcode_invalid">QrCode Invalid</string>
     <string name="qrcode_fail">QrCode scanning fail</string>
     <string name="customernumber">IM service No.</string>
+    <string name="vec_customernumber">VEC IM service No.</string>
     <string name="customernumber_config">ConfigId.</string>
     <string name="connect_customer">Contact us</string>
     <string name="feedback">Feedback</string>
     <string name="call_interface">Call Interface</string>
+    <string name="guide_item">Pre inquiry guidance settings</string>
     <string name="history_record">History record</string>
     <string name="set_nick">Set Nick</string>
     <string name="set_tenantId">TenantId</string>

@@ -33,6 +33,7 @@ import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVideo;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRowVoice;
 import com.hyphenate.helpdesk.model.MessageHelper;
 import com.hyphenate.helpdesk.model.ToCustomServiceInfo;
+import com.hyphenate.helpdesk.model.TransferGuideMenuInfo;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.util.EMLog;
 
@@ -42,7 +43,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
-public class MessageAdapter extends BaseAdapter {
+public class MessageAdapter extends BaseAdapter implements ChatRowTransferGuideMenu.OnClickTransferGuideMenuItemCallVideo{
 	private final static String TAG = "msg";
 
 	private Context context;
@@ -86,6 +87,7 @@ public class MessageAdapter extends BaseAdapter {
 
     private MessageListItemClickListener itemClickListener;
     private CustomChatRowProvider customRowProvider;
+	private IGuideMenuItemCallVideo mIGuideMenuItemCallVideo;
     
     private boolean showUserNick;
     private boolean showAvatar;
@@ -170,6 +172,10 @@ public class MessageAdapter extends BaseAdapter {
 		wm.getDefaultDisplay().getMetrics(displayMetrics);
 		mMaxItemWidth = (int)(displayMetrics.widthPixels * 0.4f);
 		mMinItemWidth = (int)(displayMetrics.widthPixels * 0.15f);
+	}
+
+	public Message[] getMessages() {
+		return messages;
 	}
 
 	/**
@@ -357,9 +363,15 @@ public class MessageAdapter extends BaseAdapter {
 
 		//缓存的view的message很可能不是当前item的，传入当前message和position更新ui
 		((ChatRow)convertView).setUpView(message, position, itemClickListener);
-		
+
+		try{
+			guideMenuItemCallVideo(convertView, message);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return convertView;
 	}
+
 
 	public String getToChatUsername(){
 	    return toChatUsername;
@@ -395,6 +407,9 @@ public class MessageAdapter extends BaseAdapter {
 	    customRowProvider = rowProvider;
 	}
 
+	public void setGuideMenuItemCallVideo(IGuideMenuItemCallVideo callback){
+		this.mIGuideMenuItemCallVideo = callback;
+	}
 
     public boolean isShowUserNick() {
         return showUserNick;
@@ -414,6 +429,32 @@ public class MessageAdapter extends BaseAdapter {
     public Drawable getOtherBuddleBg() {
         return otherBuddleBg;
     }
-	
-	
+
+	public interface IGuideMenuItemCallVideo {
+		void onClickTransferGuideMenuItemCallVideo(TransferGuideMenuInfo.Item item);
+	}
+
+
+	private void guideMenuItemCallVideo(View convertView, Message message){
+		if (mIGuideMenuItemCallVideo != null){
+			MessageHelper.ExtMsgType messageExtType = MessageHelper.getMessageExtType(message);
+			if (messageExtType == MessageHelper.ExtMsgType.TransferGuideMenuMsg){
+				ChatRowTransferGuideMenu guideMenu = (ChatRowTransferGuideMenu) convertView;
+				guideMenu.setOnClickTransferGuideMenuItemCallVideo(this);
+			}
+		}
+	}
+
+
+	@Override
+	public void onClickGuideMenuItemCallVideo(TransferGuideMenuInfo.Item item) {
+		if (mIGuideMenuItemCallVideo != null){
+			mIGuideMenuItemCallVideo.onClickTransferGuideMenuItemCallVideo(item);
+		}
+	}
+
+
+	public void onDestroy(){
+		mIGuideMenuItemCallVideo = null;
+	}
 }

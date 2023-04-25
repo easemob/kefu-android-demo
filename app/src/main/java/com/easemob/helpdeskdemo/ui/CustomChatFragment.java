@@ -8,18 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.easemob.helpdeskdemo.Preferences;
 import com.easemob.helpdeskdemo.R;
+import com.easemob.helpdeskdemo.utils.GuideMenuUtils;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowEvaluation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowForm;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowLocation;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowOrder;
 import com.easemob.helpdeskdemo.widget.chatrow.ChatRowTrack;
+import com.easemob.veckit.VECKitCalling;
 import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.EMLocationMessageBody;
@@ -28,6 +31,7 @@ import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chat.Message;
 import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
+import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.ui.ChatFragment;
@@ -37,13 +41,14 @@ import com.hyphenate.helpdesk.easeui.widget.MessageList;
 import com.hyphenate.helpdesk.easeui.widget.ToastHelper;
 import com.hyphenate.helpdesk.easeui.widget.chatrow.ChatRow;
 import com.hyphenate.helpdesk.model.MessageHelper;
+import com.hyphenate.helpdesk.model.TransferGuideMenuInfo;
 import com.hyphenate.helpdesk.util.Log;
 import com.hyphenate.helpdesk.videokit.ui.Calling;
 import com.hyphenate.util.EMLog;
 
 
 
-public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener {
+public class CustomChatFragment extends ChatFragment implements ChatFragment.EaseChatFragmentListener{
 
     //避免和基类定义的常量可能发生冲突,常量从11开始定义
     private static final int ITEM_MAP = 11;
@@ -75,9 +80,15 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        GuideMenuUtils.getGuideMenuUtils().registerReceiver(getContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        GuideMenuUtils.getGuideMenuUtils().unregisterReceiver(getContext());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     protected void setUpView() {
         //这是新添加的扩展点击事件
         setChatFragmentListener(this);
+        //setGuideMenuItemCallVideo(this);
         super.setUpView();
         //可以在此处设置titleBar(标题栏)的属性
 //        titleBar.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
@@ -219,10 +231,6 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
                 break;
 
             case ITEM_VIDEO:
-                // TODO 这里简单处理下权限
-                // VideoCallWindowService.show(getContext());
-                // CallActivity.show(getContext());
-                Calling.callingRequest(getContext(), AgoraMessage.newAgoraMessage().getCurrentChatUsername());
                 startVideoCall();
                 break;
             case ITEM_EVALUATION:
@@ -256,10 +264,10 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
 
 
     private void startVideoCall(){
+        // TODO 这里简单处理下权限
+        Calling.callingRequest(getContext(), toChatUsername);
+
         inputMenu.hideExtendMenuContainer();
-        /*Message message = Message.createVideoInviteSendMessage(getString(R.string.em_chat_invite_video_call), toChatUsername);
-        ChatClient.getInstance().chatManager().sendMessage(message);*/
-        ChatClient.getInstance().callManager().callVideo(getString(R.string.em_chat_invite_video_call), toChatUsername);
     }
 
 
@@ -276,7 +284,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
         //增加扩展的item
         inputMenu.registerExtendMenuItem(R.string.attach_location, R.drawable.hd_chat_location_selector, ITEM_MAP, R.id.chat_menu_map, extendMenuItemClickListener);
         inputMenu.registerExtendMenuItem(R.string.leave_title, R.drawable.em_chat_phrase_selector, ITEM_LEAVE_MSG, R.id.chat_menu_leave_msg, extendMenuItemClickListener);
-        if (VecConfig.newVecConfig().isOldVideoEnable()){
+        if (VecConfig.newVecConfig().isEnableCecVideo()){
             inputMenu.registerExtendMenuItem(R.string.attach_call_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, R.id.chat_menu_video_call, extendMenuItemClickListener);
         }
 
@@ -332,6 +340,7 @@ public class CustomChatFragment extends ChatFragment implements ChatFragment.Eas
     public void onMessageSent() {
         messageList.refreshSelectLast();
     }
+
 
     /**
      * chat row provider

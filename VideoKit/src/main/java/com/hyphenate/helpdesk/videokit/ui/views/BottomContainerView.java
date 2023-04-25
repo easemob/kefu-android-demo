@@ -14,11 +14,12 @@ import androidx.annotation.Nullable;
 
 
 import com.hyphenate.helpdesk.videokit.R;
+import com.hyphenate.helpdesk.videokit.uitls.ViewOnClickUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BottomContainerView extends LinearLayout implements View.OnClickListener {
+public class BottomContainerView extends LinearLayout implements ViewOnClickUtils.OnClickListener {
     private List<ViewIconData> mDataList;
     private int mHeight;
 
@@ -164,7 +165,8 @@ public class BottomContainerView extends LinearLayout implements View.OnClickLis
         LayoutParams layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT);
         layoutParams.weight = 1;
         linearLayout.setLayoutParams(layoutParams);
-        linearLayout.setOnClickListener(this);
+        // linearLayout.setOnClickListener(this);
+        ViewOnClickUtils.onClick(linearLayout, this);
         return linearLayout;
     }
 

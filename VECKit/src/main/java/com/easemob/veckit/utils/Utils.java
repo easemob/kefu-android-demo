@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.TypedValue;
@@ -436,5 +437,9 @@ public class Utils {
 
     public static String getString(Context context, int stringId) {
         return context.getApplicationContext().getResources().getString(stringId);
+    }
+
+    public static boolean isSupportScreenShare(){
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP;
     }
 }

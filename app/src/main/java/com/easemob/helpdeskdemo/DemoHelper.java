@@ -16,6 +16,7 @@ import com.easemob.helpdeskdemo.receiver.CallReceiver;
 import com.easemob.helpdeskdemo.ui.ChatActivity;
 import com.easemob.helpdeskdemo.utils.ListenerManager;
 import com.heytap.msp.push.HeytapPushManager;
+import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.ChatManager;
 import com.hyphenate.chat.Conversation;
@@ -107,7 +108,7 @@ public class DemoHelper {
 //	    options.setUse2channel(true);
 //        options.setAutoLogin(false);
 
-        options.setAppVersion("1.3.3.1");
+        options.setAppVersion("1.3.3.2");
         // 环信客服 SDK 初始化, 初始化成功后再调用环信下面的内容
         if (ChatClient.getInstance().init(context, options)){
             _uiProvider = UIProvider.getInstance();

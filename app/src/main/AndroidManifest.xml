@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.easemob.helpdeskdemo">
 
-    <!--精准闹钟-->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <!-- 悬浮窗所需权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -111,6 +109,7 @@
         <!-- 主界面 -->
         <activity
             android:name="com.easemob.helpdeskdemo.ui.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan"/>
@@ -208,6 +207,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
         <activity android:name=".ui.TestLoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"/>
+        <activity android:name=".ui.GuideActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
         <!--推送配置项-->

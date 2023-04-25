@@ -3,4 +3,5 @@
     <string name="tip_video_calling">正在通话中</string>
     <string name="flat_loading">正在加载…</string>
     <string name="file_uploading">文件上传中…</string>
+    <string name="no_support_share">此设备不支持屏幕分享！</string>
 </resources>

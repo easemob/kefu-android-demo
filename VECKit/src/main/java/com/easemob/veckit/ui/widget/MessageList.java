@@ -17,6 +17,7 @@ import com.easemob.veckit.R;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.Conversation;
 import com.hyphenate.chat.Message;
+import com.hyphenate.helpdesk.util.Log;
 
 public class MessageList extends RelativeLayout {
     protected static final String TAG = MessageList.class.getSimpleName();
@@ -61,7 +62,6 @@ public class MessageList extends RelativeLayout {
      */
     public void init(String toChatUsername, CustomChatRowProvider customChatRowProvider) {
         this.toChatUsername = toChatUsername;
-
         conversation = ChatClient.getInstance().chatManager().getConversation(toChatUsername);
         messageAdapter = new MessageAdapter(context, toChatUsername, listView);
         messageAdapter.setShowAvatar(showAvatar);

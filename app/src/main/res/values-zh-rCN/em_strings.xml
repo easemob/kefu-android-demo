@@ -28,6 +28,7 @@
     <string name="qrcode_fail">二维码扫描失败</string>
     <string name="qrcode_permission_fail">打开摄像头失败，请检查权限！</string>
     <string name="customernumber"> IM服务号</string>
+    <string name="vec_customernumber">VEC IM服务号</string>
     <string name="customernumber_config"> ConfigId</string>
     <string name="connect_customer"> 联系客服</string>
     <string name="feedback"> 意见反馈</string>
@@ -41,6 +42,7 @@
     <string name="pop_pre_sales">售前客服</string>
     <string name="pop_after_sales">售后客服</string>
     <string name="call_interface">接口调用</string>
+    <string name="guide_item">询前引导设置</string>
     <string name="register_user_fail">注册失败!</string>
     <string name="userName">登录名称</string>
     <string name="leave_title">留言</string>

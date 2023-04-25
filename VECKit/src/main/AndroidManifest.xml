@@ -4,12 +4,11 @@
     <!-- 悬浮窗所需权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!--精准闹钟-->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application>
         <!--android:screenOrientation="portrait"-->
         <activity android:name=".CallVideoActivity"
-            android:configChanges="orientation"
+            android:configChanges=
+                "screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:theme="@style/translucent_style_vec"/>
 
@@ -21,9 +20,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/default_style"/>
 
+        <!--android:configChanges="orientation|keyboardHidden|screenSize"-->
         <activity android:name=".CallActivity"
             android:theme="@style/default_style"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges=
+                "screenSize|smallestScreenSize|screenLayout|orientation"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
 
@@ -39,6 +40,10 @@
         <activity android:name=".ShowBigImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/default_style"/>
+
+        <activity android:name=".BlankSpaceActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/translucent_style_vec" />
 
         <service android:name=".VideoCallWindowService" />
     </application>

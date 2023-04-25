@@ -19,9 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.easemob.veckit.floating.FloatWindowManager;
-
-import io.agora.rtc.RtcEngine;
+import com.easemob.veckit.utils.AppStateVecCallback;
+import com.hyphenate.helpdesk.util.Log;
 
 
 public abstract class BaseActivity extends Activity {
@@ -135,7 +134,6 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        FloatWindowManager.getInstance().onDestroy();
         if (mHandler != null){
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;

@@ -97,7 +97,7 @@ public class VecChatViewUtils implements View.OnLayoutChangeListener, View.OnCli
         mSwipeRefreshLayout = mMessageList.getSwipeRefreshLayout();
         mSwipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_light,
                 R.color.holo_orange_light, R.color.holo_red_light);
-        mMessageList.init(AgoraMessage.newAgoraMessage().getCurrentChatUsername(), null);
+        mMessageList.init(AgoraMessage.newAgoraMessage().getVecImServiceNumber(), null);
         setListItemClickListener();
 
         ViewGroup.LayoutParams chatViewParams = mChatView.getLayoutParams();
@@ -168,7 +168,7 @@ public class VecChatViewUtils implements View.OnLayoutChangeListener, View.OnCli
 
     protected void onConversationInit() {
         // 获取当前conversation对象
-        conversation = ChatClient.getInstance().chatManager().getConversation(AgoraMessage.newAgoraMessage().getCurrentChatUsername());
+        conversation = ChatClient.getInstance().chatManager().getConversation(AgoraMessage.newAgoraMessage().getVecImServiceNumber());
         if (conversation != null) {
             // 把此会话的未读数置为0
             conversation.markAllMessagesAsRead();
@@ -592,7 +592,7 @@ public class VecChatViewUtils implements View.OnLayoutChangeListener, View.OnCli
     }
 
     protected void sendImageMessage(Uri imageUri) {
-        com.hyphenate.chat.Message message = com.hyphenate.chat.Message.createImageSendMessage(imageUri, false, AgoraMessage.newAgoraMessage().getCurrentChatUsername());
+        com.hyphenate.chat.Message message = com.hyphenate.chat.Message.createImageSendMessage(imageUri, false, AgoraMessage.newAgoraMessage().getVecImServiceNumber());
         if (message != null) {
             // attachMessageAttrs(message);
             ChatClient.getInstance().chatManager().sendMessage(message);
@@ -604,7 +604,7 @@ public class VecChatViewUtils implements View.OnLayoutChangeListener, View.OnCli
         if (content.length() == 0){
             return;
         }
-        Message message = Message.createTxtSendMessage(content, AgoraMessage.newAgoraMessage().getCurrentChatUsername());
+        Message message = Message.createTxtSendMessage(content, AgoraMessage.newAgoraMessage().getVecImServiceNumber());
         //attachMessageAttrs(message);
         ChatClient.getInstance().chatManager().sendMessage(message);
         mMessageList.refreshSelectLast();
@@ -617,7 +617,7 @@ public class VecChatViewUtils implements View.OnLayoutChangeListener, View.OnCli
         for (Message message : msgs) {
             String username = message.from();
             // 如果是当前会话的消息，刷新聊天页面
-            if (username != null && username.equals(AgoraMessage.newAgoraMessage().getCurrentChatUsername())) {
+            if (username != null && username.equals(AgoraMessage.newAgoraMessage().getVecImServiceNumber())) {
                 mMessageList.refreshSelectLast();
                 if (!mIsShowChatView){
                     mNum = mNum + msgs.size();

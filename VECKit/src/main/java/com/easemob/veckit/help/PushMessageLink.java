@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Outline;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -28,7 +27,6 @@ import com.easemob.veckit.ui.VecVebView;
 import com.easemob.veckit.ui.webview.JsCall;
 import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
-import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.util.Log;
 
@@ -208,7 +206,7 @@ public class PushMessageLink implements JsCall.IJsCallback {
             e.printStackTrace();
         }
 
-        AgoraMessage.getAsyncVisitorIdAndVecSessionId(AgoraMessage.newAgoraMessage().getCurrentChatUsername(), new ValueCallBack<String>() {
+        AgoraMessage.getAsyncVisitorIdAndVecSessionId(AgoraMessage.newAgoraMessage().getVecImServiceNumber(), new ValueCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 AgoraMessage.resultReporting(ChatClient.getInstance().tenantId(),

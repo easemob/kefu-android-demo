@@ -70,6 +70,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private TextView tvVersion;
 	private TextView iv_account_right_config;
 	private View callInterface;
+	private View guideItem;
 
 
 	private static final int REQUEST_CODE_APPKEY = 1;
@@ -77,7 +78,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 	private static final int REQUEST_CODE_NICK = 3;
 	private static final int REQUEST_CODE_TENANT_ID = 4;
 	private static final int REQUEST_CODE_PROJECT_ID = 5;
-	private static final int REQUEST_CODE_CONFIG_ID = 6;
+	private static final int REQUEST_CODE_CONFIG_ID = 200;
 
 	private Dialog dialog;
 	private TextView mTextView;
@@ -120,6 +121,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlProjectId = (RelativeLayout) getView().findViewById(R.id.ll_setting_project_id);
 		rlQcode = (RelativeLayout) getView().findViewById(R.id.rl_qcode);
 		callInterface = getView().findViewById(R.id.callInterface);
+		guideItem = getView().findViewById(R.id.guide_item);
 
 		mTextView = getView().findViewById(R.id.tv_setting_nick_login);
 
@@ -148,6 +150,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 		rlProjectId.setOnClickListener(this);
 		rlQcode.setOnClickListener(this);
 		callInterface.setOnClickListener(this);
+		guideItem.setOnClickListener(this);
 		iv_account_right_config.setOnClickListener(this);
 	}
 
@@ -370,7 +373,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			case R.id.tv_setting_account_config:
 				String strConfigId = iv_account_right_config.getText().toString();
 				intent.setClass(getActivity(), ModifyActivity.class);
-				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_CONFIG_ID);
+				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_INDEX, Constant.MODIFY_INDEX_LEAVE_CONFIG);
 				intent.putExtra(Constant.MODIFY_ACTIVITY_INTENT_CONTENT, strConfigId);
 				startActivityForResult(intent, REQUEST_CODE_CONFIG_ID);
 				break;
@@ -405,6 +408,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
 			case R.id.callInterface:
 				Intent in = new Intent(getActivity(), CallInterfaceActivity.class);
 				startActivity(in);
+				break;
+			case R.id.guide_item:
+				Intent guide = new Intent(getActivity(), GuideActivity.class);
+				startActivity(guide);
 				break;
 			default:
 				break;

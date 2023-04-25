@@ -19,7 +19,10 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import com.easemob.veckit.utils.AppStateVecCallback;
 import com.heytap.msp.push.HeytapPushManager;
+import com.hyphenate.helpdesk.easeui.util.EaseUiStateUtils;
+import com.hyphenate.helpdesk.videokit.uitls.AppStateCecCallback;
 import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
 import com.hyphenate.push.PushListener;
@@ -30,6 +33,10 @@ public class DemoApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
+
+        AppStateVecCallback.init(this);
+        AppStateCecCallback.init(this);
+        EaseUiStateUtils.getEaseUiStateUtils().init(this);
 
         Preferences.init(this);
         DemoHelper.getInstance().init(this);
@@ -68,4 +75,6 @@ public class DemoApplication extends Application {
         }
         return false;
     }
+
+
 }

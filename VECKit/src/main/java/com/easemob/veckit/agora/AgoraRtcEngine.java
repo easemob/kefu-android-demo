@@ -3,26 +3,26 @@ package com.easemob.veckit.agora;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 
-import com.hyphenate.helpdesk.util.Log;
+import io.agora.rtc2.ChannelMediaOptions;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.ScreenCaptureParameters;
+import io.agora.rtc2.video.VideoCanvas;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
+import io.agora.rtc2.video.WatermarkOptions;
 
-import io.agora.rtc.Constants;
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcEngine;
-import io.agora.rtc.ScreenCaptureParameters;
-import io.agora.rtc.mediaio.AgoraDefaultSource;
-import io.agora.rtc.models.ChannelMediaOptions;
-import io.agora.rtc.video.VideoCanvas;
-import io.agora.rtc.video.VideoEncoderConfiguration;
-import io.agora.rtc.video.WatermarkOptions;
-
-import static io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360;
 
 
 public class AgoraRtcEngine {
+
+    private final static String TAG = "AgoraRtcEngine";
 
     public static final int RENDER_MODE_HIDDEN = 1;
     public static final int RENDER_MODE_FIT = 2;
@@ -40,6 +40,7 @@ public class AgoraRtcEngine {
     private WatermarkOptions mOptions;
     private VideoEncoderConfiguration.VideoDimensions mVideoEncodingDimension;
     private IRtcEngineEventHandler mEngineEventHandler;
+    private boolean mIsOpenScreenCapturePaused;
 
     private AgoraRtcEngine(Context context, String appId, IRtcEngineEventHandler handler,
                            int profile, int role, VideoEncoderConfiguration config,
@@ -53,7 +54,7 @@ public class AgoraRtcEngine {
         this.mirrorMode = mirrorMode;
 
         if (mProfile == -1){
-            mProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+            mProfile = Constants.CHANNEL_PROFILE_CLOUD_GAMING;
         }else {
             this.mProfile = profile;
         }
@@ -69,39 +70,93 @@ public class AgoraRtcEngine {
 
 
         if(videoEncodingDimension == null){
-            this.mVideoEncodingDimension = VD_640x360;
+            this.mVideoEncodingDimension = VideoEncoderConfiguration.VD_640x360;
         }else {
             this.mVideoEncodingDimension = videoEncodingDimension;
         }
 
         mEngineEventHandler = handler;
+
+        RtcEngineConfig configs = new RtcEngineConfig();
+        configs.mContext = context.getApplicationContext();
+        configs.mAppId = appId;
+        configs.mChannelProfile = Constants.CHANNEL_PROFILE_CLOUD_GAMING;
+        configs.mEventHandler = mEngineEventHandler;
+        configs.mAudioScenario = Constants.AudioScenario.getValue(Constants.AudioScenario.DEFAULT);
+
         try {
             // // reason：5 --> 远端用户禁用 6 --> 远端用户恢复
-            mEngine = RtcEngine.create(context.getApplicationContext(), appId, mEngineEventHandler);
+            // mEngine = RtcEngine.create(context.getApplicationContext(), appId, mEngineEventHandler);
+            mEngine = RtcEngine.create(configs);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void startScreenCapture(){
+    public int startScreenCapture(){
         ScreenCaptureParameters screenCaptureParameters = new ScreenCaptureParameters();
-        //screenCaptureParameters.captureAudio = true;
+        screenCaptureParameters.captureAudio = true;
         screenCaptureParameters.captureVideo = true;
         ScreenCaptureParameters.VideoCaptureParameters videoCaptureParameters = new ScreenCaptureParameters.VideoCaptureParameters();
         screenCaptureParameters.videoCaptureParameters = videoCaptureParameters;
+        int i = mEngine.startScreenCapture(screenCaptureParameters);
+        Log.e(TAG,"startScreenCapture = "+i);
 
-        mEngine.startScreenCapture(screenCaptureParameters);
+
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishScreenCaptureVideo = true;
+        options.publishCameraTrack = false;
+        int i1 = mEngine.updateChannelMediaOptions(options);
+        Log.e(TAG,"startScreenCapture updateChannelMediaOptions = "+i1);
+
+        return i;
     }
 
-    /*public void stop(boolean is){
-        mEngine.muteLocalVideoStream(is);
-    }*/
 
-    public void stopScreenCapture(){
-        mEngine.setVideoSource(new AgoraDefaultSource());
+    public int stopScreenCapture(){
         mEngine.stopScreenCapture();
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishScreenCaptureVideo = false;
+        options.publishCameraTrack = true;
+        int i = mEngine.updateChannelMediaOptions(options);
+        Log.e(TAG,"stopScreenCapture updateChannelMediaOptions = "+i);
+        return i;
     }
 
+    public boolean isOpenScreenCapturePaused(){
+        return mIsOpenScreenCapturePaused;
+    }
+    public void screenCaptureResumed() {
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishScreenCaptureVideo = true;
+        options.publishCameraTrack = false;
+        int i1 = mEngine.updateChannelMediaOptions(options);
+        if (i1 == 0){
+            mIsOpenScreenCapturePaused = false;
+        }
+        Log.e(TAG,"screenCaptureResumed updateChannelMediaOptions = "+i1);
+    }
+
+    public void screenCapturePaused() {
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.publishScreenCaptureVideo = false;
+        options.publishCameraTrack = true;
+        int i1 = mEngine.updateChannelMediaOptions(options);
+        Log.e(TAG,"screenCapturePaused updateChannelMediaOptions = "+i1);
+        if (i1 == 0){
+            mIsOpenScreenCapturePaused = true;
+        }
+    }
+
+    /**
+     * 截图
+     * @param uid uid
+     * @param filePath 路径
+     * @return 路径
+     */
+    public int takeSnapshot(int uid, String filePath){
+        return mEngine.takeSnapshot(uid, filePath);
+    }
 
     /**
      * 创建 RendererView
@@ -199,12 +254,27 @@ public class AgoraRtcEngine {
             mEngine.addVideoWatermark(mWatermarkUrl, mOptions);
         }
 
-        ChannelMediaOptions option = new ChannelMediaOptions();
+
+        /*ChannelMediaOptions option = new ChannelMediaOptions();
         option.autoSubscribeAudio = true;
         option.autoSubscribeVideo = true;
+        option.publishMicrophoneTrack = true;
+        option.publishCameraTrack = true;*/
 
         // 使用 Token 加入频道。
-        return mEngine.joinChannel(token, channelName, "", optionalUid, option);
+        // return mEngine.joinChannel(token, channelName,"",optionalUid);
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+        options.autoSubscribeVideo = true;
+        options.autoSubscribeAudio = true;
+        options.publishCameraTrack = true;
+        options.publishMicrophoneTrack = true;
+
+
+
+
+        return mEngine.joinChannel(token, channelName, optionalUid, options);
+        //return mEngine.joinChannel(token, channelName, "", optionalUid, option);
     }
 
     /**
@@ -252,7 +322,8 @@ public class AgoraRtcEngine {
             // 添加视频水印
             mEngine.addVideoWatermark(mWatermarkUrl, mOptions);
         }
-        return mEngine.joinChannel(token, channelName, optionalInfo, optionalUid, options);
+        // return mEngine.joinChannel(token, channelName, optionalInfo, optionalUid, options);
+        return mEngine.joinChannel(token, channelName, optionalUid,new ChannelMediaOptions());
     }
 
     /*private VideoEncoderConfiguration.VideoDimensions getVideoEncodingDimensionObject() {
@@ -575,7 +646,7 @@ public class AgoraRtcEngine {
             RtcEngine.destroy();
 
         }
-
+        mIsOpenScreenCapturePaused = false;
         mEngineEventHandler = null;
         mContext = null;
     }

@@ -498,6 +498,37 @@
                 android:layout_alignParentBottom="true"
                 android:background="#D6D5DB"/>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="visible"
+            android:id="@+id/guide_item"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="20dp"
+            android:background="#FFFFFF"
+            android:onClick="contactCustomer"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="@string/guide_item"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:textColor="#000000"
+                android:textSize="17sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentTop="true"
+                android:background="#D6D5DB"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentBottom="true"
+                android:background="#D6D5DB"/>
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -38,11 +38,17 @@ public class WaitNetworkUtils {
                 @Override
                 public void run() {
                     while (mIsRun){
+                        if (!mIsRun){
+                            break;
+                        }
                         getWaitNumber(rtcSessionId, tenantId, callBack);
                         if (mIsRun){
                             SystemClock.sleep(3000);
+                        }else {
+                            break;
                         }
                     }
+                    mIsRun = false;
                 }
             });
         }
@@ -61,7 +67,7 @@ public class WaitNetworkUtils {
                         boolean waitingFlag = entity.getBoolean("waitingFlag");
                         String visitorWaitingNumber = entity.getString("visitorWaitingNumber");
                         mIsRun = waitingFlag;
-                        callBack.onWaitData(waitingFlag, visitorWaitingNumber);
+                        callBack.onWaitData(waitingFlag, visitorWaitingNumber, rtcSessionId);
                     }
 
                 }catch (Exception e){
@@ -97,7 +103,7 @@ public class WaitNetworkUtils {
     }
 
     public interface IWaitCallBack{
-        void onWaitData(boolean waitingFlag, String visitorWaitingNumber);
+        void onWaitData(boolean waitingFlag, String visitorWaitingNumber, String session);
         void onWaitError(String errorMsg);
     }
 }

@@ -10,7 +10,8 @@
         android:theme="@style/AppTheme">
         <!-- 视频通话 -->
         <activity android:name=".ui.CallActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges=
+                "screenSize|smallestScreenSize|screenLayout|orientation"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/horizontal_slide_no_anim" />
@@ -18,6 +19,9 @@
         <activity android:name=".board.CloudActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ligtht_default_style"/>
+
+        <activity android:name=".ui.CecBlankSpaceActivity"
+            android:theme="@style/translucent_style_vec" />
 
         <service android:name=".ui.VideoCallWindowService" />
     </application>

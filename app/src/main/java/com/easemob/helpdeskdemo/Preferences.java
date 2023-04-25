@@ -13,7 +13,9 @@ public class Preferences {
 	static private String PREFERENCE_NAME = "info";
 	static private String KEY_APPKEY = "appkey";
 	static private String KEY_CONFIG_ID = "configId";
+	static private String KEY_GUIDE_VEC_CONFIG_ID = "guide_vec_config_id";
 	static private String KEY_CUSTOMER_ACCOUNT = "customer_account";
+	static private String KEY_GUIDE_VEC_IM_SERVICE_NUMBER = "guide_vec_im_service_number";
 	static private String KEY_NICKNAME = "nickname";
 	static private String KEY_TENANT_ID = "tenantId";
 	static private String KEY_PROJECT_ID = "projectId";
@@ -61,8 +63,26 @@ public class Preferences {
     public void setCustomerAccount(String account){
         editor.putString(KEY_CUSTOMER_ACCOUNT, account);
         editor.commit();
-    	
     }
+
+    public void setGuideVecImServiceNumber(String vecImServiceNumber){
+        editor.putString(KEY_GUIDE_VEC_IM_SERVICE_NUMBER, vecImServiceNumber);
+        editor.commit();
+    }
+
+	public String getGuideVecImServiceNumber(){
+		// Constant.DEFAULT_CUSTOMER_ACCOUNT
+		return pref.getString(KEY_GUIDE_VEC_IM_SERVICE_NUMBER, "");
+	}
+
+	public void setGuideVecConfigId(String configId){
+		editor.putString(KEY_GUIDE_VEC_CONFIG_ID, configId);
+		editor.commit();
+	}
+
+	public String getGuideVecConfigId(){
+		return pref.getString(KEY_GUIDE_VEC_CONFIG_ID, "");
+	}
 
 	public void setConfigId(String configId){
 		editor.putString(KEY_CONFIG_ID, configId);

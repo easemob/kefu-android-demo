@@ -207,7 +207,8 @@ public class TestLoginActivity extends DemoBaseActivity {
                 if (conversation.officialAccount() != null){
                     titleName = conversation.officialAccount().getName();
                 }
-                AgoraMessage.newAgoraMessage().setCurrentChatUsername(Preferences.getInstance().getCustomerAccount());
+                AgoraMessage.newAgoraMessage().setVecImServiceNumber(Preferences.getInstance().getCustomerAccount());
+                AgoraMessage.newAgoraMessage().setCecImServiceNumber(Preferences.getInstance().getCustomerAccount());
                 // 进入主页面
                 Intent intent = new IntentBuilder(TestLoginActivity.this)
                         .setTargetClass(ChatActivity.class)

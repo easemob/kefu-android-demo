@@ -68,7 +68,7 @@ public class ToastView extends RelativeLayout {
 
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            params.bottomMargin = dp2px(40);
+            params.bottomMargin = dp2px(100);
             mTextView.setLayoutParams(params);
 
             mTextView.setPadding(dp2px(10),dp2px(6),dp2px(10),dp2px(6));

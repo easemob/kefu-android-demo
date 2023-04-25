@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.hyphenate.chat.Message;
+
 
 public class ChangeHeightFrameLayout extends RelativeLayout implements Animator.AnimatorListener {
 

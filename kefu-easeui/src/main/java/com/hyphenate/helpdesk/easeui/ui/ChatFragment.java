@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,10 +39,12 @@ import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.R;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
 import com.hyphenate.helpdesk.easeui.UIProvider;
+import com.hyphenate.helpdesk.easeui.adapter.MessageAdapter;
 import com.hyphenate.helpdesk.easeui.provider.CustomChatRowProvider;
 import com.hyphenate.helpdesk.easeui.recorder.MediaManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsManager;
 import com.hyphenate.helpdesk.easeui.runtimepermission.PermissionsResultAction;
+import com.hyphenate.helpdesk.easeui.util.EaseUiReportUtils;
 import com.hyphenate.helpdesk.easeui.util.CommonUtils;
 import com.hyphenate.helpdesk.easeui.util.Config;
 import com.hyphenate.helpdesk.easeui.widget.AlertDialog;
@@ -64,7 +65,6 @@ import com.hyphenate.util.PathUtil;
 import com.hyphenate.util.UriUtils;
 import com.hyphenate.util.VersionUtils;
 
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +76,7 @@ import java.util.List;
  * app也可继承此fragment续写
  * 参数传入示例可查看demo里的ChatActivity
  */
-public class ChatFragment extends BaseFragment implements ChatManager.MessageListener, EmojiconManager.EmojiconManagerDelegate {
+public class ChatFragment extends BaseFragment implements ChatManager.MessageListener, EmojiconManager.EmojiconManagerDelegate{
 
     protected static final String TAG = ChatFragment.class.getSimpleName();
     private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
@@ -382,6 +382,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         ChatClient.getInstance().chatManager().unbindChat();
         ChatClient.getInstance().chatManager().removeAgentInputListener(agentInputListener);
         ChatClient.getInstance().chatManager().removeVisitorWaitListener(visitorWaitListener);
+        EaseUiReportUtils.getEaseUiReportUtils().closeReport();
     }
 
     /**
@@ -424,7 +425,7 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
 
     protected void onMessageListInit() {
         messageList.init(toChatUsername, chatFragmentListener != null ?
-                chatFragmentListener.onSetCustomChatRowProvider() : null);
+                chatFragmentListener.onSetCustomChatRowProvider() : null, callback);
         //设置list item里的控件的点击事件
         setListItemClickListener();
 
@@ -595,6 +596,11 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         UIProvider.getInstance().popActivity(getActivity());
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EaseUiReportUtils.getEaseUiReportUtils().startReport(toChatUsername);
+    }
 
     public void onBackPressed() {
         inputMenu.onBackPressed();
@@ -800,9 +806,14 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
     }
 
     protected EaseChatFragmentListener chatFragmentListener;
+    protected MessageAdapter.IGuideMenuItemCallVideo callback;
 
     public void setChatFragmentListener(EaseChatFragmentListener chatFragmentListener) {
         this.chatFragmentListener = chatFragmentListener;
+    }
+
+    public void setGuideMenuItemCallVideo(MessageAdapter.IGuideMenuItemCallVideo callback){
+        this.callback = callback;
     }
 
     public interface EaseChatFragmentListener {
@@ -1036,7 +1047,5 @@ public class ChatFragment extends BaseFragment implements ChatManager.MessageLis
         super.onPause();
         MediaManager.pause();
     }
-
-
 
 }

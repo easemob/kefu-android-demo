@@ -111,6 +111,7 @@ public class ChatActivity extends BaseActivity {
         ChatClient.getInstance().chatManager().sendMessage(message);
     }
 
+
     private String getMessageContent(int selectedIndex){
         switch (selectedIndex){
             case 1:

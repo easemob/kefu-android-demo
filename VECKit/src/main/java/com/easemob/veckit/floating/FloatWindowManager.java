@@ -52,20 +52,24 @@ public class FloatWindowManager {
     }
 
     public void applyPermission(Context context, String message, String okContent, String cancelContent, OnConfirmResult result) {
-        if (Build.VERSION.SDK_INT < 23) {
-            if (RomUtils.checkIsMiuiRom()) {
-                miuiROMPermissionApply(context, message, okContent, cancelContent, result);
-            } else if (RomUtils.checkIsMeizuRom()) {
-                meizuROMPermissionApply(context, message, okContent, cancelContent, result);
-            } else if (RomUtils.checkIsHuaweiRom()) {
-                huaweiROMPermissionApply(context, message, okContent, cancelContent, result);
-            } else if (RomUtils.checkIs360Rom()) {
-                ROM360PermissionApply(context, message, okContent, cancelContent, result);
-            } else if (RomUtils.checkIsOppoRom()) {
-                oppoROMPermissionApply(context, message, okContent, cancelContent, result);
+        try{
+            if (Build.VERSION.SDK_INT < 23) {
+                if (RomUtils.checkIsMiuiRom()) {
+                    miuiROMPermissionApply(context, message, okContent, cancelContent, result);
+                } else if (RomUtils.checkIsMeizuRom()) {
+                    meizuROMPermissionApply(context, message, okContent, cancelContent, result);
+                } else if (RomUtils.checkIsHuaweiRom()) {
+                    huaweiROMPermissionApply(context, message, okContent, cancelContent, result);
+                } else if (RomUtils.checkIs360Rom()) {
+                    ROM360PermissionApply(context, message, okContent, cancelContent, result);
+                } else if (RomUtils.checkIsOppoRom()) {
+                    oppoROMPermissionApply(context, message, okContent, cancelContent, result);
+                }
+            } else {
+                commonROMPermissionApply(context, message, okContent, cancelContent, result);
             }
-        } else {
-            commonROMPermissionApply(context, message, okContent, cancelContent, result);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -290,13 +294,6 @@ public class FloatWindowManager {
                         }).create();
 
         dialog.show();
-    }
-
-    public void onDestroy(){
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        dialog = null;
     }
 
     public interface OnConfirmResult {

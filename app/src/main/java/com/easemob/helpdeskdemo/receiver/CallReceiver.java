@@ -25,11 +25,11 @@ public class CallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (!ChatClient.getInstance().isLoggedInBefore()){
+            mIsOnLine = false;
             return;
         }
         String action = intent.getAction();
         EMLog.e(TAG,"广播接收 onReceive action = "+action + "， mIsOnLine = "+mIsOnLine);
-        Log.e(TAG,"广播接收 onReceive action = "+action + "， mIsOnLine = "+mIsOnLine);
         if ("calling.state".equals(action)){
             // 防止正在通话中，又新发来视频请求，isOnLine代表是否接通通话中
             mIsOnLine = intent.getBooleanExtra("state", false);
@@ -37,11 +37,13 @@ public class CallReceiver extends BroadcastReceiver {
             //call type
             String type = intent.getStringExtra("type");
             EMLog.e(TAG,"广播接收 onReceive type = "+type + "， mIsOnLine = "+mIsOnLine);
-            Log.e(TAG,"广播接收 onReceive type = "+type + "， mIsOnLine = "+mIsOnLine);
+            boolean isVecVideo = intent.getBooleanExtra("isVecVideo", false);
+            // isVecVideo = true;
+            Log.e("ppppppppppppp","isVecVideo = "+isVecVideo);
             if ("video".equals(type)){// video call
                 if (!mIsOnLine){
                     // 新版vec视频客服
-                    if (VecConfig.newVecConfig().isVecVideo()){
+                    if (isVecVideo/*VecConfig.newVecConfig().isVecVideo()*/){
                         EMLog.e(TAG,"onReceive 广播接收 新版vec");
                         Log.e(TAG,"onReceive 广播接收 新版vec");
                         VECKitCalling.callingResponse(context, intent);
@@ -54,7 +56,7 @@ public class CallReceiver extends BroadcastReceiver {
                 }
             }else if (AgoraMessage.TYPE_ENQUIRYINVITE.equalsIgnoreCase(type)){
                 // 满意度评价
-                VECKitCalling.callingRetry(context, intent.getStringExtra("content"));
+                VECKitCalling.callingEvaluation(context, intent.getStringExtra("content"));
             }
 
         }

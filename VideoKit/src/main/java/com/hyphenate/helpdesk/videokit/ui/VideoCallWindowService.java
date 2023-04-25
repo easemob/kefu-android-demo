@@ -1,5 +1,6 @@
 package com.hyphenate.helpdesk.videokit.ui;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,12 +47,13 @@ import com.herewhite.sdk.domain.WindowAppParam;
 import com.herewhite.sdk.domain.WindowParams;
 import com.hyphenate.agora.AgoraStreamItem;
 import com.hyphenate.agora.FunctionIconItem;
-import com.hyphenate.agora.IAgoraMessageNotify;
+import com.hyphenate.agora.ICecMessageNotify;
 import com.hyphenate.agora.ZuoXiSendRequestObj;
 import com.hyphenate.chat.AgoraMessage;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.chat.VecConfig;
 import com.hyphenate.helpdesk.callback.ValueCallBack;
+import com.hyphenate.helpdesk.easeui.util.EaseUiReportUtils;
 import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
 import com.hyphenate.helpdesk.videokit.R;
 import com.hyphenate.helpdesk.videokit.agora.AgoraRtcEngine;
@@ -73,9 +75,12 @@ import com.hyphenate.helpdesk.videokit.ui.views.MyChronometer;
 import com.hyphenate.helpdesk.videokit.ui.views.ProgressDialog;
 import com.hyphenate.helpdesk.videokit.ui.views.ToastView;
 import com.hyphenate.helpdesk.videokit.ui.views.VideoItemContainerView;
+import com.hyphenate.helpdesk.videokit.uitls.AppStateCecCallback;
+import com.hyphenate.helpdesk.videokit.uitls.CecBlankSpaceUtils;
 import com.hyphenate.helpdesk.videokit.uitls.CloudCallbackUtils;
 import com.hyphenate.helpdesk.videokit.uitls.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -96,12 +101,12 @@ import io.agora.board.fast.model.FastInsertDocParams;
 import io.agora.board.fast.model.FastRegion;
 import io.agora.board.fast.model.FastRoomOptions;
 import io.agora.board.fast.model.FastStyle;
-import io.agora.rtc.Constants;
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.video.VideoEncoderConfiguration;
+import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class VideoCallWindowService extends Service implements IAgoraMessageNotify,
-        VideoItemContainerView.OnVideoIconViewClickListener,
+public class VideoCallWindowService extends Service implements ICecMessageNotify,
+        VideoItemContainerView.OnVideoIconViewClickListener, AppStateCecCallback.IAppStateCecCallback,
         FixHeightFrameLayout.ICloseFlatCallback, CloudCallbackUtils.ICloudCallback {
 
     private WindowManager.LayoutParams mLayoutParams;
@@ -186,8 +191,8 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
     }
 
     // 主动发起呼叫
-    public static void show(Context context){
-        VecConfig.newVecConfig().setVecVideo(false);
+    public static void show(Context context, String cecImServiceNumber){
+        AgoraMessage.newAgoraMessage().setCecImServiceNumber(cecImServiceNumber);
         Intent intent = new Intent(context.getApplicationContext(), VideoCallWindowService.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(INTENT_CALLING_TAG, INTENT_CALLING_TAG_ACTIVE_VALUE);
@@ -204,6 +209,17 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
             stopSelf();
         }else {
             CloudCallbackUtils.newCloudCallbackUtils().addICloudCallback(this);
+            AppStateCecCallback appStateCallback = AppStateCecCallback.getAppStateCallback();
+            getSettingShareScreen();
+            if (appStateCallback != null){
+                mIsInit = true;
+                appStateCallback.registerIAppStateCecCallback(this);
+            }else{
+                mIsInit = false;
+                /*mIsBack = true;
+                stopSelf();
+                throw new RuntimeException("需要先初始化AppStateCecCallback类， 应在 Application 里调用 AppStateCecCallback.init(this)方法！！！");*/
+            }
         }
 
     }
@@ -371,6 +387,10 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
                 // 点击变成固定高度
                 v.setTag("0");
                 mIsStartDraw = true;
+
+                // TODO
+                notifyBlankSpaceActivityFinish();
+
                 mCurrentHeight = mFitHeight;
                 mDrawAndDrawIcon.setText("\ue61c");
                 if (mIsStartBoard){
@@ -390,6 +410,10 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
 
             }else {
                 v.setTag("1");
+
+                // TODO
+                CecBlankSpaceActivity.startBlankSpaceActivity(getApplicationContext());
+
                 mIsStartDraw = false;
                 mCurrentHeight = mHeight;
                 mDrawAndDrawIcon.setText("\ue7c6");
@@ -422,6 +446,9 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         mFloatTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 显示悬浮按钮
+                notifyBlankSpaceActivityFinish();
+                floatViewShow();
                 showFloatView();
             }
         });
@@ -430,6 +457,8 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         mFloatView.setOnAVCallFloatViewCallback(new AVCallFloatView.OnAVCallFloatViewCallback() {
             @Override
             public void onClick() {
+                showFullView();
+                floatViewHidden();
                 showView();
             }
         });
@@ -521,7 +550,7 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         mStreams.clear();
 
 
-        AgoraMessage.newAgoraMessage().registerAgoraMessageNotify(getClass().getSimpleName(), this);
+        AgoraMessage.newAgoraMessage().registerCecMessageNotify(getClass().getSimpleName(), this);
 
         mAgoraRtcEngine = AgoraRtcEngine.builder()
                 .build(getApplicationContext(), mZuoXiSendRequestObj.getAppId(), new IRtcEngineEventHandler() {
@@ -1148,39 +1177,6 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         return null;
     }
 
-    // * 2 * 12
-    /*private final ScreenSharingClient.IStateListener mListener = new ScreenSharingClient.IStateListener() {
-        @Override
-        public void onError(int error) {
-            Log.e(TAG, "Screen share service error happened: " + error);
-        }
-
-        @Override
-        public void onTokenWillExpire() {
-            //mSSClient.renewToken(null);
-            mSSClient.renewToken(mZuoXiSendRequestObj.getToken()); // Replace the token with your valid token
-        }
-
-        // 分享桌面，弹出对话框点击确认回调
-        @Override
-        public void onDialogStart() {
-            // 权限点击确认
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mBottomContainerView.setCustomItemState(getIconIndex(BottomContainerView.ViewIconData.TYPE_ITEM_SHARE), true);
-                }
-            });
-
-        }
-
-        @Override
-        public void onDialogDeniedError(int error) {
-            // 权限拒绝
-            isSharing = false;
-        }
-    };*/
-
     private void initAgoraStreamItem() {
         mCacheLocalViewShowPositionUid = -1;
         mCacheLocalViewRealUid = mLocalViewItem.getRealUid();
@@ -1195,6 +1191,11 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
     }
 
     private void shareWindow() {
+        if (!Utils.isSupportScreenShare()){
+            showToast("此设备不支持屏幕分享！");
+            mBottomContainerView.setCustomItemState(getIconIndex(BottomContainerView.ViewIconData.TYPE_ITEM_SHARE), true);
+            return;
+        }
         // 执行屏幕共享进程，将 App ID，channel ID 等信息发送给屏幕共享进程
         if (!isSharing) {
             /*mSSClient.start(getApplication(), mZuoXiSendRequestObj.getAppId(), mZuoXiSendRequestObj.getToken(),
@@ -1204,11 +1205,14 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
                             VideoEncoderConfiguration.STANDARD_BITRATE,
                             VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE));*/
             isSharing = true;
+            mIsClickShare = true;
+            mIsStartShareToBackground = VecConfig.newVecConfig().isSettingShareScreen();
             mAgoraRtcEngine.startScreenCapture();
             mBottomContainerView.setCustomItemState(getIconIndex(BottomContainerView.ViewIconData.TYPE_ITEM_SHARE), false);
         } else {
             /*mSSClient.stop(getApplication());*/
             isSharing = false;
+            mIsClickShare = false;
             mAgoraRtcEngine.stopScreenCapture();
             mBottomContainerView.setCustomItemState(getIconIndex(BottomContainerView.ViewIconData.TYPE_ITEM_SHARE), true);
             //joinChannel(mZuoXiSendRequestObj);
@@ -2029,6 +2033,7 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
 
     private void clear() {
         Log.e("yyyyyyyyy","clear");
+        notifyBlankSpaceActivityFinish();
         if (mFloatView != null){
             mFloatView.clear();
         }
@@ -2050,11 +2055,12 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         mIsStartBoard = false;
         mIsSend = false;
         isSharing = false;
+        mIsClickShare = false;
         closePopupWindow();
 
         mPopupWindow = null;
         mUids.clear();
-        AgoraMessage.newAgoraMessage().unRegisterAgoraMessageNotify(getClass().getSimpleName());
+        AgoraMessage.newAgoraMessage().unRegisterCecMessageNotify(getClass().getSimpleName());
         mIsClick = false;
         sendIsOnLineState(false);
         /*if (mRingtone != null && mRingtone.isPlaying()) {
@@ -2243,6 +2249,9 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
 
             @Override
             public boolean onPressStateChange(int index, boolean isClick, boolean isCustomState) {
+                if (mIconDatas == null || index >= mIconDatas.size()){
+                    return false;
+                }
                 // 默认 true 开启
                 if (BottomContainerView.ViewIconData.TYPE_ITEM_VOICE.equalsIgnoreCase(mIconDatas.get(index).getName())) {
                     // 声音
@@ -2765,4 +2774,166 @@ public class VideoCallWindowService extends Service implements IAgoraMessageNoti
         return mFlatRoomItem.getMeasuredHeight() / 2;
     }
 
+
+    private volatile boolean mIsAppToBackground;
+    // app进入后台，是否允许分享画面
+    private boolean mIsStartShareToBackground = false;
+    private boolean mIsRunClickFloatView;
+    // 控制类是否初始化
+    private boolean mIsInit;
+
+    @Override
+    public void onAppForeground() {
+        mIsAppToBackground = false;
+        if (!mIsAppToBackground && isSharing && !mIsStartShareToBackground){
+            if (mAgoraRtcEngine != null && mAgoraRtcEngine.isOpenScreenCapturePaused()){
+                mAgoraRtcEngine.screenCaptureResumed();
+            }
+        }
+    }
+
+    @Override
+    public void onAppBackground() {
+        if (mIsStartDraw){
+            showFullView();
+        }
+        notifyBlankSpaceActivityFinish();
+
+        mIsAppToBackground = true;
+        if (mIsAppToBackground && isSharing && !mIsStartShareToBackground){
+            if (mAgoraRtcEngine != null && !mAgoraRtcEngine.isOpenScreenCapturePaused()){
+                if (mIsRunClickFloatView){
+                    mAgoraRtcEngine.screenCapturePaused();
+                }
+            }
+        }
+    }
+
+    private void notifyBlankSpaceActivityFinish(){
+        try {
+            CecBlankSpaceUtils.getCecBlankSpaceUtils().notifyFinish();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean mIsClickShare;
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+        if ("CecBlankSpaceActivity".equalsIgnoreCase(activity.getClass().getSimpleName())
+                && isShowPage() && !mIsClickShare){
+
+            // TODO
+            if (!mIsStartDraw){
+                floatViewShow();
+                showFloatView();
+            }
+
+        }else if (!"Calling".equalsIgnoreCase(activity.getClass().getSimpleName())
+                && isShowPage() && !mIsClickShare){
+            floatViewShow();
+            showFloatView();
+        }
+
+        mIsClickShare = false;
+    }
+
+    private boolean isShowPage(){
+        return mShowView != null && mShowView.getVisibility() == View.VISIBLE;
+    }
+
+    // 当半屏时，点击缩小按钮时，要恢复全屏
+    private void showFullView(){
+        if (mDrawAndDrawIcon == null){
+            return;
+        }
+        // 全屏
+        mDrawAndDrawIcon.setTag("1");
+
+        mIsStartDraw = false;
+        mCurrentHeight = mHeight;
+        mDrawAndDrawIcon.setText("\ue7c6");
+        bottomMargin(78);
+        updateHeight(mHeight);
+        if (mIsStartBoard) {
+            // 判断电子白板是否全屏
+            if (mFixHeightFrameLayout.isFullScreen()) {
+                showAndHidden(mBottomContainerView, false);
+                showAndHidden(mMembersContainer, false);
+            } else {
+                showAndHidden(mBottomContainerView, true);
+                showAndHidden(mMembersContainer, true);
+            }
+            // 显示电子白板全屏图标
+            showAndHidden(mFullView, true);
+        } else {
+            showAndHidden(mBottomContainerView, true);
+            showAndHidden(mMembersContainer, true);
+        }
+
+    }
+
+    // 点击缩小按钮，显示悬浮按钮
+    private void floatViewShow() {
+        if (!mIsInit){
+            return;
+        }
+        mIsRunClickFloatView = true;
+        if (mIsAppToBackground && isSharing && !mIsStartShareToBackground){
+            if (mAgoraRtcEngine != null && !mAgoraRtcEngine.isOpenScreenCapturePaused()){
+                mAgoraRtcEngine.screenCapturePaused();
+            }
+        }
+    }
+
+    // 点击悬浮按钮，显示视频页面
+    private void floatViewHidden() {
+        if (!mIsInit){
+            return;
+        }
+
+        if (!mIsStartDraw || mIsAppToBackground){
+            CecBlankSpaceActivity.startBlankSpaceActivity(getApplicationContext());
+        }
+
+        mIsRunClickFloatView = false;
+        if (isSharing && !mIsStartShareToBackground){
+            if (mAgoraRtcEngine != null && mAgoraRtcEngine.isOpenScreenCapturePaused()){
+                mAgoraRtcEngine.screenCaptureResumed();
+            }
+        }
+    }
+
+    private void getSettingShareScreen() {
+        ChatClient.getInstance().chatManager().asyncGetSettingShareScreen(ChatClient.getInstance().tenantId(), new ValueCallBack<String>() {
+            @Override
+            public void onSuccess(String value) {
+                com.hyphenate.helpdesk.util.Log.e(TAG,"getSettingShareScreen = "+value);
+                try {
+                    JSONObject object = new JSONObject(value);
+                    if (object.has("status")){
+                        String status = object.getString("status");
+                        if ("OK".equalsIgnoreCase(status)){
+                            if (object.has("entities")){
+                                JSONArray entities = object.getJSONArray("entities");
+                                JSONObject jsonObject = entities.getJSONObject(0);
+                                boolean optionValue = jsonObject.getBoolean("optionValue");
+                                com.hyphenate.helpdesk.util.Log.e("ppppppppp","optionValue = "+optionValue);
+                                VecConfig.newVecConfig().setShareScreen(optionValue);
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    com.hyphenate.helpdesk.util.Log.e("VECKitCalling","getSettingShareScreen error = "+e.getMessage());
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                com.hyphenate.helpdesk.util.Log.e(TAG,"getSettingShareScreen error = "+errorMsg);
+            }
+        });
+    }
 }

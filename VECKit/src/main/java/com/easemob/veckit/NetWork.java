@@ -37,7 +37,6 @@ public class NetWork {
                     conn.setUseCaches(false);
                     conn.connect();
                     int code = conn.getResponseCode();
-                    Log.e("wwwwwwwwwwwwww","code = "+ code);
                     if (code == 200) {
                         inputStream = conn.getInputStream();
                         outputStream = new FileOutputStream(saveUrl);
@@ -52,7 +51,6 @@ public class NetWork {
                     if (callBack != null){
                         callBack.fail(-1, e.getMessage());
                     }
-                    Log.e("wwwwwwwwwwwwww","error = "+ e.toString());
                 }finally {
                     try {
                         if (inputStream != null){

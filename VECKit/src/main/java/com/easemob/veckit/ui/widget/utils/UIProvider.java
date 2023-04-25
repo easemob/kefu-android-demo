@@ -3,7 +3,6 @@ package com.easemob.veckit.ui.widget.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -121,7 +120,6 @@ public class UIProvider {
 
     void initNotifier(){
         notifier = createNotifier();
-        Log.e("pppppppppppp","initNotifier = "+notifier);
         notifier.init(appContext);
     }
 
