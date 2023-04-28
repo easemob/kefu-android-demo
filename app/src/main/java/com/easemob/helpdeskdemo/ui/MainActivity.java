@@ -63,6 +63,7 @@ import com.hyphenate.helpdesk.easeui.util.FlatFunctionUtils;
 import com.hyphenate.helpdesk.videokit.permission.FloatWindowManager;
 import com.hyphenate.util.EasyUtils;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -224,6 +225,7 @@ public class MainActivity extends DemoBaseActivity implements OnBottomNavigation
         };
         Intent intent = new Intent(this, TestService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);*/
+        
 
     }
 

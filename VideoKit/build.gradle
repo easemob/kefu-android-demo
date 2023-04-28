@@ -51,14 +51,14 @@ repositories {
 
 dependencies {
     //implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
     api project(':kefu-easeui')
-    //api files('libs/kefu-sdk-1.3.3.2.jar')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-
-    // implementation 'io.agora.rtc:full-sdk:3.7.0'
+    // 声网音视频
     implementation 'io.agora.rtc:full-sdk:4.1.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    // implementation "com.github.netless-io:fastboard-android:4436eeefcb94d5fc38888280f3b2253ddacdd608"
+    // 视频 电子白板
     implementation "com.github.netless-io:fastboard-android:1.3.4"
+
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.easemob.veckit">
-    <!-- 悬浮窗所需权限 -->
+
+    <!--存储权限：-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--相机和麦克风相关权限：-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--悬浮权限（视频页面使用）-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+
+
     <application>
         <!--android:screenOrientation="portrait"-->
         <activity android:name=".CallVideoActivity"

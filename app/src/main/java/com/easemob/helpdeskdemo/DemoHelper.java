@@ -101,7 +101,7 @@ public class DemoHelper {
         options.setPushConfig(builder.build());
         // TODO 沙箱测试，只为测试
         // options.setKefuRestServer("https://helps.live");
-        options.setKefuRestServer("https://sandbox.kefu.easemob.com");
+        // options.setKefuRestServer("https://sandbox.kefu.easemob.com");
 
 	    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
 	    options.setConsoleLog(true);
